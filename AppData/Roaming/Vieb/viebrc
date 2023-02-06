@@ -1,0 +1,219 @@
+" Options
+set adblocker=update
+set cache=clearonquit
+set noclearcookiesonquit
+set nocleardownloadsoncompleted
+set nocleardownloadsonquit
+set noclearhistoryonquit
+set noclearlocalstorageonquit
+set noclosablepinnedtabs
+set commandhist=useronly
+set containercolors=temp\d+~#ff0
+set containerkeeponreopen
+set containernewtab=s:usecurrent
+set containershowname=automatic
+set containersplitpage=s:usecurrent
+set containerstartuppage=main
+set countlimit=100
+set devtoolsposition=window
+set downloadmethod=automatic
+set downloadpath=~/Downloads/
+set explorehist
+set externalcommand=
+set favicons=session
+set follownewtabswitch
+set guifontsize=16
+set guifullscreennavbar=oninput
+set guifullscreentabbar=onupdate
+set guihidetimeout=2000
+set guinavbar=always
+set guitabbar=always
+set ignorecase
+set incsearch
+set keeprecentlyclosed
+set mapsuggest=9000000000000000
+set mapsuggestposition=topright
+set maxmapdepth=10
+set menupage=elementasneeded
+set menuvieb=both
+set mintabwidth=28
+set modifiers=
+set modifiers+=Ctrl
+set modifiers+=Shift
+set modifiers+=Alt
+set modifiers+=Meta
+set modifiers+=NumLock
+set modifiers+=CapsLock
+set modifiers+=ScrollLock
+set nomousefocus
+set mousenewtabswitch
+set mousevisualmode=onswitch
+set nativenotification=never
+set notificationduration=6000
+set notificationposition=bottomright
+set permissioncamera=ask
+set permissionclipboardread=block
+set permissionclosepage=allow
+set permissiondisplaycapture=ask
+set permissionfullscreen=allow
+set permissiongeolocation=block
+set permissionmediadevices=block
+set permissionmicrophone=ask
+set permissionmidi=block
+set permissionmidisysex=block
+set permissionnotifications=ask
+set permissionopenexternal=ask
+set permissionpersistentstorage=block
+set permissionpointerlock=block
+set permissionsasked=
+set permissionsblocked=
+set permissionscreenwakelock=block
+set permissionsensors=block
+set noquitonlasttabclose
+set redirects=https?://(www\.)?google\.com(\.\w+)?/amp/s/amp\.(.*)~https://$3
+set noredirecttohttp
+set requesttimeout=20000
+set restoretabs
+set restorewindowmaximize
+set restorewindowposition
+set restorewindowsize
+
+" Search Engines
+set search=https://search.brave.com/search?q=%s&source=webset 
+set searchwords=startpage~https://www.startpage.com/do/dsearch?query=%s
+set searchwords+=brave~https://search.brave.com/search?q=%ssource=web
+set searchwords+=translate~https://translate.google.com/?sl=auto&tl=en&text=%s
+set searchwords+=duckduckgo~https://duckduckgo.com/?q=%s
+set searchwords+=google~https://www.google.com/search?hl=en&q=%s
+set searchwords+=youtube~https://www.youtube.com/results?search_query=%s
+set searchwords+=wikipedia~https://en.wikipedia.org/?search=%s
+set searchwords+=stackoverflow~https://stackoverflow.com/search?q=%s
+set searchwords+=github~https://github.com/search?q=%s
+set searchwords+=GitHub~https://github.com/search?q=%s
+
+set showcmd
+set smartcase
+set spell
+set spelllang=system
+set startuppages=
+set storenewvisits=pages
+set suggestcommands=9000000000000000
+set suggestorder=
+set suggestorder+=history
+set suggestorder+=searchword
+set suggestorder+=file
+set suggesttopsites=10
+set suspendonrestore=regular
+set suspendtimeout=0
+set tabcycle
+set tabnexttocurrent
+set taboverflow=scroll
+set timeout
+set timeoutlen=3000
+set windowtitle=simple
+
+" Derek Settings
+
+" Basic settings
+set splitbelow
+set splitright
+set tabclosefocusright
+" set firefoxmode=google
+set mouse='all'
+
+" Command mappings
+unmap d
+unmap D
+nmap d <scrollPageDownHalf>
+nmap u <scrollPageUpHalf>
+map <C-d> <scrollPageDownHalf>
+map <C-u> <scrollPageUpHalf>
+map <C-r> <:reload>
+nmap x <:close>
+nmap X <reopenTab>
+set tabreopenposition=previous
+nmap T :buffer<Space>
+nmap R <:reload>
+
+" Use arrow keys to go through history
+cmap <Up> <commandHistoryPrevious>
+cmap <Down> <commandHistoryNext>
+
+" Allow Control + C to copy text in insert mode
+map <C-c> <p.copyText>
+
+" Change tabs and shift tabs position
+nmap J <previousTab>
+nmap K <nextTab>
+nmap <C-j> <moveTabBackward>
+nmap <C-k> <moveTabForward>
+
+" Don't let <C-[> work as escape
+unmap <C-[>
+inoremap <C-[> <ESC>
+
+" Copy C-number to go to exact tab
+nmap <C-1> <:buffer 0>
+nmap <C-2> <:buffer 1>
+nmap <C-3> <:buffer 2>
+nmap <C-4> <:buffer 3>
+nmap <C-5> <:buffer 4>
+nmap <C-6> <:buffer 5>
+nmap <C-7> <:buffer 6>
+nmap <C-8> <:buffer 7>
+nmap <C-9> <:buffer 8>
+
+" Use ctrl + E or U to move tab left and right
+map « <previousTab>
+map » <nextTab>
+nmap <C-Left> <:lclose>
+nmap <C-Right> <:rclose>
+
+" Go up one url level
+nmap gu <toParentUrl>
+
+" Use my custom color theme
+colorscheme derek-custom-reversed
+
+" Source my Favorite pages list (aka Bookmarks)
+source ./vieb_favorite_pages
+
+" Stop elements from being clickable
+set followelement-="image"
+set followelement-="media"
+
+" Permissions
+" set notificationforpermissions
+set permissionunknown=ask
+set permissionsallowed+=teams.microsoft.com~microphone~camera~notifications~mediadevices
+set permissionsallowed+=outlook.office365.com~notifications~mediadevices
+set permissionsallowed+=zoom.us~openexternal
+set permissionsallowed+=discord.com~mediadevices
+set permissionsallowed+=trello.com~notifications
+set permissionsallowed+=codingame.com~notifications
+
+" Use a neovim GUI client as a editor for text boxes
+set vimcommand=neovide.exe
+
+" Set followchars to numbers. This is best option for steno one stroke searching
+set followchars=numbers
+
+" Need to press yy after to actually copy link
+nmap yf <pointer.start><startFollowCurrentTab>
+nmap Y <pointer.start><startFollowCurrentTab>
+
+" This mapping helps make it easier by doing escape after the copy
+pmap yy <p.copyLink><esc>
+
+nmap ,d <:runjsinpage document.body.style.backgroundColor = "#222"; document.body.style.foregroundColor = "555">
+
+" Use dark theme for everything
+set nativetheme=dark
+set darkreaderbg='#202746'
+set darkreader=true
+set darkreaderbrightness=100
+" set darkreadersepia=15
+" set darkreadergrayscale=20
+set darkreaderblocklist=(.*mail.google.com.*)~(.*dereklomax.com.*)~(.*codingame.*)
+
+" vim: ft=vim

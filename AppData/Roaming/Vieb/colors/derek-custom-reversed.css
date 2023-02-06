@@ -1,0 +1,148 @@
+:root {
+  /* general */
+  --bg: #333333;
+  --fg: #eeeeee;
+  --tab-background: #444444;
+  --tab-suspended: #000000;
+  --visible-tab: #666666;
+  --tab-split: #ff9900;
+  --tab-audio: #0099ff;
+  --tab-muted: #ffffff;
+  --tab-muted-playing: #ffff33;
+  --tab-crashed: #ff0000;
+  --tab-scrollbar: #55ffff;
+  --container-background: none;
+  --mode-normal-fg: #eeeeee;
+  --mode-normal-bg: none;
+  --mode-command-fg: #ff3333;
+  --mode-command-bg: none;
+  --mode-insert-fg: #33ff33;
+  --mode-insert-bg: none;
+  --mode-follow-fg: #ff33ff;
+  --mode-follow-bg: none;
+  --mode-explore-fg: #33ffff;
+  --mode-explore-bg: none;
+  --mode-search-fg: #ffff33;
+  --mode-search-bg: none;
+  --mode-pointer-fg: #777777;
+  --mode-pointer-bg: #ffffff;
+  --mode-visual-fg: #000000;
+  --mode-visual-bg: #33aaff;
+  --url-default: #666666;
+  --url-search: #ff9900;
+  --url-searchwords: #ffccff;
+  --url-url: #33ffff;
+  --url-suggest: #33ff33;
+  --url-file: #ffff99;
+  --url-invalid: #ff3333;
+  --follow-text: #111111;
+  --follow-url-bg: #ccffff;
+  --follow-url-border: #55cccc;
+  --follow-click-bg: #ffcccc;
+  --follow-click-border: #cc5555;
+  --follow-insert-bg: #ccffcc;
+  --follow-insert-border: #55cc55;
+  --follow-onclick-bg: #ffffcc;
+  --follow-onclick-border: #cccc55;
+  --follow-other-bg: #cccccc;
+  --follow-other-border: #aaaaaa;
+  --suggestions-border: #777777;
+  --suggestions-bg: #444444;
+  --suggestions-selected: #666666;
+  --suggestions-searchwords: #ffccff;
+  --suggestions-url: #bbffff;
+  --suggestions-file: #ffffbb;
+  --notification-border: #111111;
+  --notification-date: #aaaaaa;
+  --notification-permission: #aaaaaa;
+  --notification-error: #ff3333;
+  --notification-warning: #ffdd00;
+  --notification-info: #00ccff;
+  --notification-success: #33ff33;
+  --url-hover-fg: #000000;
+  --url-hover-bg: #ffffff;
+  /* special pages */
+  --link-color: #00ccff;
+  --link-underline: #005599;
+  --scrollbar-bg: #444444;
+  --scrollbar-thumb: #bbbbbb;
+  --button-disabled: #999999;
+  --code-fg: #ffffff;
+  --code-bg: #111111;
+  --code-command: #ff8888;
+  --placeholder-text: #cccccc;
+  --special-page-element-bg: #444444;
+  --special-page-element-border: #222222;
+  --input-unfocused: #666666;
+  --input-focused: #aaaaaa;
+  --download-progress-fg: #cccccc;
+  --download-progress-bg: #666666;
+  --helppage-h1: #dd3333;
+  --helppage-h2: #ff7766;
+  --helppage-h3: #ffbb99;
+  --helppage-countable: #ffcc00;
+}
+#app {
+  flex-direction: column-reverse;
+}
+#url-hover {
+  bottom: 4em;
+}
+#suggest-dropdown {
+  top: auto;
+  bottom: 2.1em;
+  flex-direction: column-reverse;
+}
+#mode-suggestions {
+  top: auto;
+  bottom: 2em;
+  flex-direction: column-reverse;
+}
+.bottomright {
+  right: 0.7em;
+  bottom: 4em;
+}
+.bottomleft {
+  left: 0.7em;
+  bottom: 4em;
+}
+.topright {
+  right: 0.7em;
+  top: 0.7em;
+}
+.topleft {
+  left: 0.7em;
+  top: 0.7em;
+}
+#app.tabshidden .topright,
+#app.tabshidden .topleft {
+  top: 0.7em;
+}
+#app.navigationhidden .topright,
+#app.navigationhidden .topleft {
+  top: 0.7em;
+}
+#app.tabshidden .bottomright,
+#app.tabshidden .bottomleft {
+  bottom: 2em;
+}
+#app.navigationhidden .bottomright,
+#app.navigationhidden .bottomleft {
+  bottom: 2em;
+}
+#app.navigationhidden.tabshidden .bottomright,
+#app.navigationhidden.tabshidden .bottomleft {
+  bottom: 0;
+}
+/* hidden bars */
+#app.tabshidden #url-hover,
+#app.navigationhidden #url-hover {
+  bottom: 2em;
+}
+#app.tabshidden.navigationhidden #url-hover {
+  bottom: 0;
+}
+#app.navigationhidden #suggest-dropdown {
+  top: auto;
+  bottom: 0.1em;
+}

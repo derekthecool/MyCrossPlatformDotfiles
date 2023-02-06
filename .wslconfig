@@ -1,0 +1,2 @@
+[wsl2]
+localhostForwarding=true # Boolean specifying if ports bound to wildcard or localhost in the WSL2 VM should be connectable from the host via localhost:port (default true).

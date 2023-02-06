@@ -1,0 +1,128 @@
+"Derek's .vsvimrc
+"Github reference https://github.com/VsVim/VsVim/wiki/Settings-Reference
+
+" Map <Leader>
+" Change leader to comma
+let mapleader=","
+
+" Quickly Edit This File
+noremap <Leader>rc :tabnew ~/.vsvimrc<CR>
+map <Leader>rl     :so ~/.vsvimrc<CR>
+
+" Basic Settings
+set nowrap
+set number relativenumber
+set magic  " Better regex
+set vsvimcaret=60  "Changes opacity of cursor from 0 - 100
+set clipboard=unnamed
+set backspace=indent,eol,start " Make backspace more effective
+set visualbell " This seems to remove the audio beeping
+set scrolloff=10 " Always keep cursor centered vertically
+inoremap II <ESC>I
+inoremap AA <ESC>A
+inoremap OO <ESC>o
+inoremap JJ <ESC>J
+inoremap UU <ESC>u
+inoremap kj <Esc>
+inoremap uu <Esc>
+nnoremap zz :w<CR>
+
+" Search Settings
+set ignorecase
+set hlsearch
+set incsearch " Increment search
+nmap <leader><Esc> :set hls!<cr>  " Toggle the highlighting of search results
+" Navigate folded lines easily
+noremap ; :
+"Center search results
+:nnoremap n nzz
+:nnoremap N Nzz
+:nnoremap * *zz
+:nnoremap # #zz
+:nnoremap g* g*zz
+:nnoremap g# g#zz
+:nnoremap <C-o>  : vsc Edit.GoToPrevLocation<CR>
+
+"Visual Studio Settings
+"Don't allow remaps on these keys
+nnoremap <C-u>
+nnoremap <C-d>
+nnoremap <C-a>
+nnoremap <C-x>
+
+"Visual Studio Commands
+map <Leader>qk      : vsc Tools.CustomizeKeyboard<CR>
+map <Leader>b       : vsc Build.BuildSolution<CR>
+map <Leader>s       : vsc Edit.SurroundWith 
+map <Leader>se      : vsc View.SolutionExplorer<CR> 
+map <Leader>te      : vsc View.TfsTeamExplorer<CR> 
+map <Leader>is      : vsc Edit.GoToNextIssueInFile<CR>
+map <Leader>cc		: vsc Edit.CommentSelection<CR>
+map <Leader>cu		: vsc Edit.UncommentSelection<CR>
+map <Leader>/		: vsc Edit.ToggleLineComment<CR>
+map gcc     		: vsc Edit.ToggleLineComment<CR>
+map <Leader><Leader>/  : vsc Edit.ToggleBlockComment<CR>
+map <Enter>         :w
+map <Leader><Enter> :wa
+
+map <Leader>e       :vsc View.NextError<CR>
+nnoremap <Leader>gn      :vsc View.NextError<CR>
+map <Leader>]d      :vsc View.NextError<CR>
+nnoremap <Leader>gp      :vsc View.PreviousError<CR>
+map <Leader>[d      :vsc View.PreviousError<CR>
+map <Leader>far     :vsc Edit.FindAllReferences<CR>
+map gr              :vsc Edit.FindAllReferences<CR>
+map <Leader>.       :vsc EditorContextMenus.CodeWindow.QuickActionsForPosition<CR>
+
+" Visual Studio Debug Commands (matching my vimspector/which-key setup)
+map <Leader>db       :vsc Debug.ToggleBreakpoint<CR>
+map <Leader>dc       :vsc Debug.RunToCursor<CR>
+map <Leader>dd		:vsc Debug.Start<CR>
+map <Leader>dp      :vsc ClassViewContextMenus.ClassViewProject.Debug.Startnewinstance<CR>
+map <Leader>dP      :vsc ClassViewContextMenus.ClassViewProject.Build<CR>
+map <Leader>dD		:vsc Debug.StartWithoutDebugging<CR>
+map <Leader>df		:vsc Debug.FunctionBreakpoint<CR>
+map <Leader>do		:vsc Debug.StepOver<CR>
+map <Leader>dO		:vsc Debug.StepOut<CR>
+map <Leader>di		:vsc Debug.StepInto<CR>
+map <Leader>dq		:vsc Debug.StopDebugging<CR>
+map <Leader>dr		:vsc Debug.Restart<CR>
+
+" Visual Studio Test Commands
+map <Leader>ui      :vsc TestExplorer.RunAllTests<CR>
+map <Leader>uis      :vsc TestExplorer.RunAllTestsInContext<CR>
+
+" Jump to different windows
+map <Leader>wl       :vsc Debug.Locals<CR>
+map <Leader>wa       :vsc Debug.Autos<CR>
+map <Leader>wc       :vsc View.ViewCode<CR>
+map <Leader>we       :vsc View.Errors<CR>
+
+" <Leader>g commands for goto
+" map <leader>g       :vsc Tools.ExternalCommand2<CR>
+map <Leader>gb      :vsc Build.BuildSolution<CR>
+map <Leader>gp      :vsc Edit.PeekDefinition<CR>
+map <Leader>gnc     :vsc View.PackageManagerConsole<CR>
+map <Leader>gnp     :vsc Project.ManageNuGetPackages<CR>
+map <Leader>gns     :vsc Tools.ManageNugetPackagesforSolution<CR>
+map <Leader>ga      :vsc Edit.GotoAll<CR>
+map <Leader>gi      :vsc Edit.QuickInfo<CR>
+map <Leader>gc      :vsc View.CommandWindow<CR>
+
+" <Leader>f commands for files
+map <Leader>fa      :vsc Edit.GotoAll<CR>
+map <Leader>ff      :vsc Edit.GotoFile<CR>
+map <C-f>           :vsc Edit.GotoFile<CR>
+
+" <Leader>r commands for refactoring
+map <Leader>rn      :vsc Refactor.Rename<CR>
+map <Leader>rm      :vsc Refactor.ExtractMethod<CR>
+map <Leader>rp      :vsc Refactor.RemoveParameters<CR>
+map <Leader>ro      :vsc Refactor.ReorderParameters<CR>
+
+" git command
+map <Leader>gg      :vsc View.GitWindow<CR>
+map » :vsc Window.NextTab<CR>
+map « :vsc Window.PreviousTab<CR>
+
+" vim:ft=vim
