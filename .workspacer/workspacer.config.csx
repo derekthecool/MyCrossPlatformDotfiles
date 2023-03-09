@@ -1,9 +1,9 @@
-#r "C:\Users\Derek Lomax\source\repos\workspacer\src\workspacer\bin\Debug\net5.0-windows\win10-x64\workspacer.Shared.dll"
-#r "C:\Users\Derek Lomax\source\repos\workspacer\src\workspacer\bin\Debug\net5.0-windows\win10-x64\plugins\workspacer.Bar\workspacer.Bar.dll"
-#r "C:\Users\Derek Lomax\source\repos\workspacer\src\workspacer\bin\Debug\net5.0-windows\win10-x64\plugins\workspacer.Gap\workspacer.Gap.dll"
-#r "C:\Users\Derek Lomax\source\repos\workspacer\src\workspacer\bin\Debug\net5.0-windows\win10-x64\plugins\workspacer.TitleBar\workspacer.TitleBar.dll"
-#r "C:\Users\Derek Lomax\source\repos\workspacer\src\workspacer\bin\Debug\net5.0-windows\win10-x64\plugins\workspacer.ActionMenu\workspacer.ActionMenu.dll"
-#r "C:\Users\Derek Lomax\source\repos\workspacer\src\workspacer\bin\Debug\net5.0-windows\win10-x64\plugins\workspacer.FocusIndicator\workspacer.FocusIndicator.dll"
+#r "C:\Users\dlomax\scoop\apps\workspacer\current\workspacer.Shared.dll"
+#r "C:\Users\dlomax\scoop\apps\workspacer\current\plugins\workspacer.Bar\workspacer.Bar.dll"
+#r "C:\Users\dlomax\scoop\apps\workspacer\current\plugins\workspacer.Gap\workspacer.Gap.dll"
+#r "C:\Users\dlomax\scoop\apps\workspacer\current\plugins\workspacer.TitleBar\workspacer.TitleBar.dll"
+#r "C:\Users\dlomax\scoop\apps\workspacer\current\plugins\workspacer.ActionMenu\workspacer.ActionMenu.dll"
+#r "C:\Users\dlomax\scoop\apps\workspacer\current\plugins\workspacer.FocusIndicator\workspacer.FocusIndicator.dll"
 
 /* #r "C:\Users\Derek Lomax\source\repos\workspacer\src\workspacer\bin\Release\net5.0-windows\win10-x64\workspacer.Shared.dll" */
 /* #r "C:\Users\Derek Lomax\source\repos\workspacer\src\workspacer\bin\Release\net5.0-windows\win10-x64\plugins\workspacer.Bar\workspacer.Bar.dll" */
