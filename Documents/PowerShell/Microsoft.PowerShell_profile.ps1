@@ -1,7 +1,7 @@
 # Personal settings
 # PowerShell 7 (pwsh)
 
-[System.Console]::Title = "PowerShell 7"
+[System.Console]::Title = "pwsh v$($PSVersionTable.PSVersion.ToString())"
 
 # Function to using my git bare repo for my windows config files
 function dot{git --git-dir="$env:USERPROFILE\.cfg" --work-tree="$env:USERPROFILE" $args}
@@ -23,27 +23,28 @@ Set-PSReadLineOption -ViModeIndicator Prompt
 Set-PsReadlineOption -PredictionSource History
 Set-PSReadLineOption -PredictionViewStyle ListView
 
-# Add additional folders to path variable to make it easier to call scripts
-$env:Path += ";$env:USERPROFILE\Documents\WindowsPowerShell\Scripts\Wallaby"
-$env:Path += ";$env:USERPROFILE\Documents\WindowsPowerShell\Scripts\CATM1"
-$env:Path += ';C:\Users\Derek Lomax\scoop\apps\netcoredbg\2.0.0-895\'
-# $env:Path +=  ";$env:LOCALAPPDATA\programs\Open Steno Project\Plover 4.0.0.dev10+82.g2012d4b\"
-$env:Path +=  ";$env:LOCALAPPDATA\programs\Open Steno Project\Plover 4.0.0.dev12\"
+$env:Path +=  ";$env:PROGRAMFILES\Open Steno Project\Plover 4.0.0.dev12\"
 $env:Path += ';C:\Windows\System32'
 $env:Path += ';C:\Program Files\Oracle\VirtualBox\'
 
 Set-Alias 'v' 'nvim'
 
+# Hack for running visual Studio for dotnet framework projects with terminal only
 function Enter-VS {
     C:\WINDOWS\SysWOW64\WindowsPowerShell\v1.0\powershell.exe -noe -c "&{Import-Module 'C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\Microsoft.VisualStudio.DevShell.dll'; Enter-VsDevShell 0e7efad8}"
     Write-Host "Run msbuild -p:Configuration=Release"
 }
 
-$WallabyFunctionsScript = Join-Path -Path "$env:USERPROFILE\Documents\WindowsPowerShell" -ChildPath "Scripts\Wallaby\WallabyFunctions.ps1"
-& "$WallabyFunctionsScript"
+# TODO: find a way to auto source scripts in a known directory 2023-03-09
+# Add additional folders to path variable to make it easier to call scripts
+# $env:Path += ";$env:USERPROFILE\Documents\WindowsPowerShell\Scripts\Wallaby"
+# $env:Path += ";$env:USERPROFILE\Documents\WindowsPowerShell\Scripts\CATM1"
 
-$CATM1FunctionsScript = Join-Path -Path "$env:USERPROFILE\Documents\WindowsPowerShell" -ChildPath "Scripts\CAT1M1\CAT1M1-Functions.ps1"
-& "$CATM1FunctionsScript"
+# $WallabyFunctionsScript = Join-Path -Path "$env:USERPROFILE\Documents\WindowsPowerShell" -ChildPath "Scripts\Wallaby\WallabyFunctions.ps1"
+# & "$WallabyFunctionsScript"
+#
+# $CATM1FunctionsScript = Join-Path -Path "$env:USERPROFILE\Documents\WindowsPowerShell" -ChildPath "Scripts\CAT1M1\CAT1M1-Functions.ps1"
+# & "$CATM1FunctionsScript"
 
 # Set Starship prompt
 $ENV:STARSHIP_CONFIG = "$HOME\.starship\config.toml"
@@ -51,12 +52,6 @@ Invoke-Expression (&starship init powershell)
 
 # gh (GitHub CLI) completion
 Invoke-Expression -Command $(gh completion -s powershell | Out-String)
-
-# Chocolatey profile
-$ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
-if (Test-Path($ChocolateyProfile)) {
-    Import-Module "$ChocolateyProfile"
-}
 
 function Update-Nvim_stimpack_config {
 Push-Location .
