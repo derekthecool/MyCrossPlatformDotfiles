@@ -49,6 +49,9 @@ $CATM1FunctionsScript = Join-Path -Path "$env:USERPROFILE\Documents\WindowsPower
 $ENV:STARSHIP_CONFIG = "$HOME\.starship\config.toml"
 Invoke-Expression (&starship init powershell)
 
+# gh (GitHub CLI) completion
+Invoke-Expression -Command $(gh completion -s powershell | Out-String)
+
 # Chocolatey profile
 $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
 if (Test-Path($ChocolateyProfile)) {
