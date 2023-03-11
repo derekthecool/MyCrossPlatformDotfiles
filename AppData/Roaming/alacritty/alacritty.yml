@@ -115,7 +115,7 @@ key_bindings:
 #   - (Linux/BSD) user login shell
 #   - (Windows) powershell
 shell:
-  program: 'C:\Users\Derek Lomax\scoop\shims\pwsh.exe'
+  program: 'C:\Users\dlomax\scoop\shims\pwsh.exe'
   args:
    - -nologo
 
@@ -123,7 +123,7 @@ shell:
 #
 # Directory the shell is started in. If this is unset, or `None`, the working
 # directory of the parent process will be used.
-working_directory: 'C:\Users\Derek Lomax'
+working_directory: 'C:\Users\dlomax'
 
 ############################
 #Default config from website
