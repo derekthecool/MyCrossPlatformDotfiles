@@ -18,7 +18,11 @@ end)
 local config = {}
 
 config.font = wezterm.font('JetBrains Mono')
--- color_scheme = 'Batman',
+-- Enable ligatures
+config.harfbuzz_features = { 'calt=1', 'clig=1', 'liga=1' }
+
+-- Use the same color scheme as neovim
+config.color_scheme = 'Atelier Sulphurpool (base16)'
 
 -- Set different default shell
 config.default_prog = { 'pwsh' }
@@ -26,18 +30,70 @@ config.default_prog = { 'pwsh' }
 config.use_fancy_tab_bar = false
 config.tab_bar_at_bottom = true
 
-config.window_padding = {
-    left = 0,
-    right = 0,
-    top = 0,
-    bottom = 0,
+config.window_padding = { left = 0, right = 0, top = 0, bottom = 0 }
+
+-- Easy picks for steno keyboard
+config.quick_select_alphabet = '1234567890'
+
+-- Slightly translucent background
+config.window_background_opacity = 0.92
+
+config.colors = {
+    -- Colors for copy_mode and quick_select
+    -- available since: 20220807-113146-c2fee766
+    -- In copy_mode, the color of the active text is:
+    -- 1. copy_mode_active_highlight_* if additional text was selected using the mouse
+    -- 2. selection_* otherwise
+    copy_mode_active_highlight_bg = { Color = '#000000' },
+    -- use `AnsiColor` to specify one of the ansi color palette values
+    -- (index 0-15) using one of the names "Black", "Maroon", "Green",
+    --  "Olive", "Navy", "Purple", "Teal", "Silver", "Grey", "Red", "Lime",
+    -- "Yellow", "Blue", "Fuchsia", "Aqua" or "White".
+    copy_mode_active_highlight_bg = { Color = '#3b009f' },
+    copy_mode_active_highlight_fg = { Color = '#ffffff' },
+    copy_mode_inactive_highlight_bg = { Color = '#6e00d2' },
+    copy_mode_inactive_highlight_fg = { Color = '#fa0046' },
+
+    quick_select_label_bg = { Color = '#00ff00' },
+    quick_select_label_fg = { Color = '#222222' },
+    quick_select_match_bg = { Color = '#009600' },
+    quick_select_match_fg = { Color = '#000000' },
 }
 
+config.leader = { key = 'a', mods = 'CTRL', timeout_milliseconds = 1000 }
 config.keys = {
     -- My keymaps
+    -- When using steno, shift is not needed. It just seems to be implied because normal keyboard needs a shift
+    { key = '|', mods = 'LEADER|SHIFT', action = wezterm.action.SplitHorizontal({ domain = 'CurrentPaneDomain' }) },
+    { key = '-', mods = 'LEADER', action = act.SplitVertical({ domain = 'CurrentPaneDomain' }) },
+    -- -- Send "CTRL-A" to the terminal when pressing CTRL-A, CTRL-A
+    { key = 'a', mods = 'LEADER|CTRL', action = wezterm.action.SendString('\x01') },
+
+    --[[
+    Command launcher
+    https://wezfurlong.org/wezterm/config/lua/keyassignment/ShowLauncherArgs.html
+
+    * "FUZZY" - activate in fuzzy-only mode. By default the launcher will allow
+      using the number keys to select from the first few items, as well as vi
+      movement keys to select items. Pressing / will enter fuzzy filtering mode,
+      allowing you to type a search term and reduce the set of matches. When you
+      use the "FUZZY" flag, the launcher activates directly in fuzzy filtering mode.
+    * "TABS" - include the list of tabs from the current window
+    * "LAUNCH_MENU_ITEMS" - include the launch_menu items
+    * "DOMAINS" - include multiplexing domains
+    * "KEY_ASSIGNMENTS" - include items taken from your key assignments
+    * "WORKSPACES" - include workspaces
+    * "COMMANDS" - include a number of default commands (Since: 20220408-101518-b908e2dd)
+    ]]
+    -- { key = '°', action = act.ShowLauncherArgs { flags = 'TABS|FUZZY' }, },
     { key = '°', action = act.ShowLauncher },
+
     { key = '»', action = act.ActivateTabRelative(1) },
-    { key = '«', action = act.ActivateTabRelative(1) },
+    { key = '«', action = act.ActivateTabRelative(-1) },
+    { key = 'h', mods = 'LEADER', action = act.ActivatePaneDirection('Left') },
+    { key = 'l', mods = 'LEADER', action = act.ActivatePaneDirection('Right') },
+    { key = 'j', mods = 'LEADER', action = act.ActivatePaneDirection('Down') },
+    { key = 'k', mods = 'LEADER', action = act.ActivatePaneDirection('Up') },
 
     -- Default key maps
     { key = 'X', mods = 'CTRL', action = act.ActivateCopyMode },
@@ -192,6 +248,13 @@ config.keys = {
 
 config.key_tables = {
     copy_mode = {
+        -- Custom mappings
+        { key = 'd', mods = 'CTRL', action = act.CopyMode('PageDown') },
+        { key = 'd', action = act.CopyMode('PageDown') },
+        { key = 'u', mods = 'CTRL', action = act.CopyMode('PageUp') },
+        { key = 'u', action = act.CopyMode('PageUp') },
+
+        -- Default mappings
         { key = 'Escape', mods = 'NONE', action = act.CopyMode('Close') },
         { key = 'c', mods = 'CTRL', action = act.CopyMode('Close') },
         { key = 'g', mods = 'CTRL', action = act.CopyMode('Close') },
@@ -256,6 +319,12 @@ config.key_tables = {
     },
 
     search_mode = {
+        -- Custom mappings
+        -- This mapping fails to scroll, instead it clears the search input
+        { key = 'd', mods = 'CTRL', action = act.CopyMode('PriorMatchPage') },
+        { key = 'u', mods = 'CTRL', action = act.CopyMode('NextMatchPage') },
+
+        -- Default mappings
         { key = 'Enter', mods = 'NONE', action = act.CopyMode('PriorMatch') },
         { key = 'Escape', mods = 'NONE', action = act.CopyMode('Close') },
         { key = 'n', mods = 'CTRL', action = act.CopyMode('NextMatch') },
