@@ -1,5 +1,16 @@
 local wezterm = require('wezterm')
 local act = require('wezterm').action
+local mux = wezterm.mux
+
+wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_width)
+    if tab.is_active then
+        return {
+            { Background = { Color = '#000044' } },
+            { Text = ' ' .. tab.active_pane.title .. ' ' },
+        }
+    end
+    return tab.active_pane.title
+end)
 
 wezterm.on('update-right-status', function(window, pane)
     -- "Wed Mar 3 08:14"
@@ -15,6 +26,62 @@ wezterm.on('update-right-status', function(window, pane)
     }))
 end)
 
+-- Build my default set of sessions, tabs, etc.
+wezterm.on('gui-startup', function(cmd)
+    local args = {}
+    if cmd then
+        args = cmd.args
+    end
+
+    local workspaces = {
+        'CommandStation',
+        'Development',
+    }
+
+    -- Set a workspace for coding on a current project
+    -- Top pane is for the editor, bottom pane is for the build tool
+    local tab, build_pane, window = mux.spawn_window({
+        workspace = workspaces[1],
+        cwd = os.getenv('USERPROFILE') .. [[\.config\wezterm]],
+        args = args,
+    })
+
+    -- Open neovim to wezterm config
+    build_pane:send_text('nvim wezterm.lua\r\n')
+    tab:set_title('Wezterm')
+
+    -- Neovim tab
+    local nvimTab, nvimPane, nvimWindow = window:spawn_tab({ cwd = os.getenv('LOCALAPPDATA') .. [[\nvim]] })
+    nvimPane:send_text('nvim init.lua\r\n')
+    nvimTab:set_title('Neovim')
+
+    -- Plover
+    local ploverTab, ploverPane, ploverWindow = window:spawn_tab({ cwd = os.getenv('LOCALAPPDATA') .. [[\plover]] })
+    ploverPane:send_text('nvim plover/programming.md\r\n')
+    ploverTab:set_title('Plover')
+
+    -- Example of splitting the window
+    -- local editor_pane = build_pane:split {
+    --   direction = 'Top',
+    --   size = 0.6,
+    --   cwd = os.getenv('USERPROFILE') .. [[\.workspacer]],
+    -- }
+
+    -- A workspace for interacting with a local machine that
+    -- runs some docker containners for home automation
+
+    local tab, pane, window = mux.spawn_window({
+        workspace = workspaces[2],
+        cwd = os.getenv('USERPROFILE') .. [[\repos]],
+        -- args = { 'ntop' },
+    })
+
+    local extraTab, extraPane, extraWindow =
+        window:spawn_tab({ cwd = [[D:\Wallaby\wearable_post_BelleW_research\PPG_code\2023-01-24_ESP_IDF\i2c_simple\]] })
+
+    mux.set_active_workspace(workspaces[1])
+end)
+
 local config = {}
 
 config.font = wezterm.font('JetBrains Mono')
@@ -25,12 +92,63 @@ config.harfbuzz_features = { 'calt=1', 'clig=1', 'liga=1' }
 config.color_scheme = 'Atelier Sulphurpool (base16)'
 
 -- Set different default shell
-config.default_prog = { 'pwsh' }
+-- config.default_prog = { 'pwsh' }
+-- On windows you can set the default shell with this administrator command
+-- [System.Environment]::SetEnvironmentVariable("COMSPEC", 'C:\Users\dlomax\scoop\apps\pwsh\current\pwsh.exe', 'User')
 
 config.use_fancy_tab_bar = false
 config.tab_bar_at_bottom = true
 
 config.window_padding = { left = 0, right = 0, top = 0, bottom = 0 }
+
+config.audible_bell = 'Disabled'
+config.visual_bell = {
+    fade_in_function = 'EaseIn',
+    fade_in_duration_ms = 150,
+    fade_out_function = 'EaseOut',
+    fade_out_duration_ms = 150,
+}
+wezterm.on('bell', function(window, pane)
+    -- TODO: change highlight of tab if not current like tmux
+    wezterm.log_info('the bell was rung in pane ' .. pane:pane_id() .. '!')
+end)
+
+config.ssh_domains = {
+    {
+        -- The name of this specific domain.  Must be unique amongst
+        -- all types of domain in the configuration file.
+        name = 'device.MQTTBroker',
+
+        -- identifies the host:port pair of the remote server
+        -- Can be a DNS name or an IP address with an optional
+        -- ":port" on the end.
+        remote_address = '192.168.100.35',
+
+        -- Whether agent auth should be disabled.
+        -- Set to true to disable it.
+        -- no_agent_auth = false,
+
+        -- The username to use for authenticating with the remote host
+        username = 'jgarner',
+
+        -- Set to 'None' for ssh hosts that do not have wezterm available
+        -- multiplexing = 'None',
+        -- Only set the default_prog if using 'None'
+        -- default_prog = { 'bash' },
+        multiplexing = 'WezTerm',
+
+        -- If true, connect to this domain automatically at startup
+        -- connect_automatically = true,
+
+        -- Specify an alternative read timeout
+        -- timeout = 60,
+
+        -- The path to the wezterm binary on the remote host.
+        -- Primarily useful if it isn't installed in the $PATH
+        -- that is configure for ssh.
+        remote_wezterm_path = '~/WezTerm-20221119-145034-49b9839f-Ubuntu18.04.AppImage',
+    },
+}
 
 -- Easy picks for steno keyboard
 config.quick_select_alphabet = '1234567890'
@@ -39,6 +157,7 @@ config.quick_select_alphabet = '1234567890'
 config.window_background_opacity = 0.92
 
 config.colors = {
+    visual_bell = '#202020',
     -- Colors for copy_mode and quick_select
     -- available since: 20220807-113146-c2fee766
     -- In copy_mode, the color of the active text is:
@@ -69,6 +188,27 @@ config.keys = {
     -- -- Send "CTRL-A" to the terminal when pressing CTRL-A, CTRL-A
     { key = 'a', mods = 'LEADER|CTRL', action = wezterm.action.SendString('\x01') },
 
+    -- Launch specific programs
+    {
+        key = 't',
+        mods = 'LEADER',
+        action = wezterm.action.SplitHorizontal({ domain = 'CurrentPaneDomain', args = { 'ntop' } }),
+    },
+    {
+        key = 'v',
+        mods = 'LEADER',
+        action = wezterm.action.SpawnCommandInNewTab({ domain = 'CurrentPaneDomain', args = { 'ntop' } }),
+    },
+    {
+        key = 'w',
+        mods = 'LEADER',
+        action = wezterm.action.SpawnCommandInNewTab({ domain = 'CurrentPaneDomain', args = { 'pwsh -c ls' } }),
+    },
+
+    -- { key = 'T', mods = 'CTRL', action = act.SpawnTab('CurrentPaneDomain') },
+
+    -- { key = '|', mods = 'LEADER|SHIFT', action = wezterm.action.SplitHorizontal({ domain = 'CurrentPaneDomain' }) },
+
     --[[
     Command launcher
     https://wezfurlong.org/wezterm/config/lua/keyassignment/ShowLauncherArgs.html
@@ -94,6 +234,8 @@ config.keys = {
     { key = 'l', mods = 'LEADER', action = act.ActivatePaneDirection('Right') },
     { key = 'j', mods = 'LEADER', action = act.ActivatePaneDirection('Down') },
     { key = 'k', mods = 'LEADER', action = act.ActivatePaneDirection('Up') },
+    -- NOTE: requires a nightly version as of 2023-03-16
+    -- { key = 'P', mods = 'CTRL', action = act.ActivateCommandPalette },
 
     -- Default key maps
     { key = 'X', mods = 'CTRL', action = act.ActivateCopyMode },
@@ -198,7 +340,7 @@ config.keys = {
     { key = '=', mods = 'SUPER', action = act.IncreaseFontSize },
     { key = 'PageUp', mods = 'SHIFT|CTRL', action = act.MoveTabRelative(-1) },
     { key = 'PageDown', mods = 'SHIFT|CTRL', action = act.MoveTabRelative(1) },
-    { key = 'P', mods = 'CTRL', action = act.PaneSelect({ alphabet = '', mode = 'Activate' }) },
+    -- { key = 'P', mods = 'CTRL', action = act.PaneSelect({ alphabet = '', mode = 'Activate' }) },
     { key = 'P', mods = 'SHIFT|CTRL', action = act.PaneSelect({ alphabet = '', mode = 'Activate' }) },
     { key = 'p', mods = 'SHIFT|CTRL', action = act.PaneSelect({ alphabet = '', mode = 'Activate' }) },
     { key = 'V', mods = 'CTRL', action = act.PasteFrom('Clipboard') },

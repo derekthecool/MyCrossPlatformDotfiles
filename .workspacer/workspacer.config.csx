@@ -5,13 +5,6 @@
 #r "C:\Users\dlomax\scoop\apps\workspacer\current\plugins\workspacer.ActionMenu\workspacer.ActionMenu.dll"
 #r "C:\Users\dlomax\scoop\apps\workspacer\current\plugins\workspacer.FocusIndicator\workspacer.FocusIndicator.dll"
 
-/* #r "C:\Users\Derek Lomax\source\repos\workspacer\src\workspacer\bin\Release\net5.0-windows\win10-x64\workspacer.Shared.dll" */
-/* #r "C:\Users\Derek Lomax\source\repos\workspacer\src\workspacer\bin\Release\net5.0-windows\win10-x64\plugins\workspacer.Bar\workspacer.Bar.dll" */
-/* #r "C:\Users\Derek Lomax\source\repos\workspacer\src\workspacer\bin\Release\net5.0-windows\win10-x64\plugins\workspacer.Gap\workspacer.Gap.dll" */
-/* #r "C:\Users\Derek Lomax\source\repos\workspacer\src\workspacer\bin\Release\net5.0-windows\win10-x64\plugins\workspacer.TitleBar\workspacer.TitleBar.dll" */
-/* #r "C:\Users\Derek Lomax\source\repos\workspacer\src\workspacer\bin\Release\net5.0-windows\win10-x64\plugins\workspacer.ActionMenu\workspacer.ActionMenu.dll" */
-/* #r "C:\Users\Derek Lomax\source\repos\workspacer\src\workspacer\bin\Release\net5.0-windows\win10-x64\plugins\workspacer.FocusIndicator\workspacer.FocusIndicator.dll" */
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -133,7 +126,9 @@ return new Action<IConfigContext>((IConfigContext context) =>
     // Terminal applications
     context.WindowRouter.RouteProcessName("WindowsTerminal", MyWorkSpaceNames.Terminal);
     context.WindowRouter.RouteTitle("Email", MyWorkSpaceNames.Chat); // thunderbird neovim terminal
-    // context.WindowRouter.RouteProcessName("alacritty", MyWorkSpaceNames.Terminal);
+    context.WindowRouter.RouteProcessName("alacritty", MyWorkSpaceNames.Terminal);
+    context.WindowRouter.RouteProcessName("wezterm-gui", MyWorkSpaceNames.Terminal);
+    // context.WindowRouter.RouteWindowClass("org.wezfurlong.wezterm", MyWorkSpaceNames.Terminal);
     // Terminal catch all
     // context.WindowRouter.RouteWindowClass("ConsoleWindowClass", MyWorkSpaceNames.Terminal);
 
