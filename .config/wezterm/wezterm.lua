@@ -2,14 +2,37 @@ local wezterm = require('wezterm')
 local act = require('wezterm').action
 local mux = wezterm.mux
 
+-- Allow custom tab rename
+-- https://github.com/wez/wezterm/issues/522
+-- Requires sending special escape sequence and then title from shell
+-- Running `rename_wezterm_title "test"` will do it
+-- Powershell version ready and working, need to get Linux shell versions too
 wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_width)
-    if tab.is_active then
-        return {
-            { Background = { Color = '#000044' } },
-            { Text = ' ' .. tab.active_pane.title .. ' ' },
-        }
+    local pane_title = tab.active_pane.title
+    local user_title = tab.active_pane.user_vars.panetitle
+
+    if user_title ~= nil and #user_title > 0 then
+        pane_title = user_title
     end
-    return tab.active_pane.title
+
+    return {
+        { Text = ' ' .. pane_title .. ' ' },
+    }
+end)
+
+-- wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_width)
+--     if tab.is_active then
+--         return {
+--             { Background = { Color = '#000044' } },
+--             { Text = ' ' .. tab.active_pane.title .. ' ' },
+--         }
+--     end
+--     return tab.active_pane.title
+-- end)
+
+wezterm.on('bell', function(window, pane)
+    -- TODO: change highlight of tab if not current like tmux
+    wezterm.log_info('the bell was rung in pane ' .. pane:pane_id() .. '!')
 end)
 
 wezterm.on('update-right-status', function(window, pane)
@@ -60,6 +83,11 @@ wezterm.on('gui-startup', function(cmd)
     ploverPane:send_text('nvim plover/programming.md\r\n')
     ploverTab:set_title('Plover')
 
+    -- My wiki
+    local wikiTab, wikiPane, wikiWindow = window:spawn_tab({ cwd = os.getenv('USERPROFILE') .. [[\.mywiki]] })
+    wikiPane:send_text('nvim README.md\r\n')
+    wikiTab:set_title('Wiki')
+
     -- Example of splitting the window
     -- local editor_pane = build_pane:split {
     --   direction = 'Top',
@@ -97,8 +125,13 @@ config.color_scheme = 'Atelier Sulphurpool (base16)'
 -- [System.Environment]::SetEnvironmentVariable("COMSPEC", 'C:\Users\dlomax\scoop\apps\pwsh\current\pwsh.exe', 'User')
 
 config.use_fancy_tab_bar = false
+config.show_new_tab_button_in_tab_bar = false
+config.show_tab_index_in_tab_bar = false
 config.tab_bar_at_bottom = true
+config.switch_to_last_active_tab_when_closing_tab = true
 
+-- Give me my precious terminal space back by having no padding and no title bar
+config.window_decorations = 'RESIZE'
 config.window_padding = { left = 0, right = 0, top = 0, bottom = 0 }
 
 config.audible_bell = 'Disabled'
@@ -108,10 +141,8 @@ config.visual_bell = {
     fade_out_function = 'EaseOut',
     fade_out_duration_ms = 150,
 }
-wezterm.on('bell', function(window, pane)
-    -- TODO: change highlight of tab if not current like tmux
-    wezterm.log_info('the bell was rung in pane ' .. pane:pane_id() .. '!')
-end)
+
+config.exit_behavior = 'CloseOnCleanExit'
 
 config.ssh_domains = {
     {
@@ -177,6 +208,78 @@ config.colors = {
     quick_select_label_fg = { Color = '#222222' },
     quick_select_match_bg = { Color = '#009600' },
     quick_select_match_fg = { Color = '#000000' },
+
+    tab_bar = {
+        -- The color of the strip that goes along the top of the window
+        -- (does not apply when fancy tab bar is in use)
+        background = '#202746',
+
+        -- The active tab is the one that has focus in the window
+        active_tab = {
+            -- The color of the background area for the tab
+            bg_color = '#202746',
+            -- The color of the text for the tab
+            fg_color = '#c0c0c0',
+
+            -- Specify whether you want "Half", "Normal" or "Bold" intensity for the
+            -- label shown for this tab.
+            -- The default is "Normal"
+            intensity = 'Normal',
+
+            -- Specify whether you want "None", "Single" or "Double" underline for
+            -- label shown for this tab.
+            -- The default is "None"
+            underline = 'None',
+
+            -- Specify whether you want the text to be italic (true) or not (false)
+            -- for this tab.  The default is false.
+            italic = false,
+
+            -- Specify whether you want the text to be rendered with strikethrough (true)
+            -- or not for this tab.  The default is false.
+            strikethrough = false,
+        },
+
+        -- Inactive tabs are the tabs that do not have focus
+        inactive_tab = {
+            bg_color = '#121938',
+            fg_color = '#808080',
+
+            -- The same options that were listed under the `active_tab` section above
+            -- can also be used for `inactive_tab`.
+        },
+
+        -- You can configure some alternate styling when the mouse pointer
+        -- moves over inactive tabs
+        inactive_tab_hover = {
+            bg_color = '#3b3052',
+            fg_color = '#909090',
+            italic = true,
+
+            -- The same options that were listed under the `active_tab` section above
+            -- can also be used for `inactive_tab_hover`.
+        },
+
+        -- The new tab button that let you create new tabs
+        new_tab = {
+            bg_color = '#1b1032',
+            fg_color = '#808080',
+
+            -- The same options that were listed under the `active_tab` section above
+            -- can also be used for `new_tab`.
+        },
+
+        -- You can configure some alternate styling when the mouse pointer
+        -- moves over the new tab button
+        new_tab_hover = {
+            bg_color = '#3b3052',
+            fg_color = '#909090',
+            italic = true,
+
+            -- The same options that were listed under the `active_tab` section above
+            -- can also be used for `new_tab_hover`.
+        },
+    },
 }
 
 config.leader = { key = 'a', mods = 'CTRL', timeout_milliseconds = 1000 }
@@ -225,8 +328,11 @@ config.keys = {
     * "WORKSPACES" - include workspaces
     * "COMMANDS" - include a number of default commands (Since: 20220408-101518-b908e2dd)
     ]]
-    -- { key = '°', action = act.ShowLauncherArgs { flags = 'TABS|FUZZY' }, },
+
+    -- Open with all launch options, this is powerful but over the top sometimes
     { key = '°', action = act.ShowLauncher },
+    -- Op with just item set from launch_menu
+    { key = '÷', action = act.ShowLauncherArgs({ flags = 'LAUNCH_MENU_ITEMS|FUZZY' }) },
 
     { key = '»', action = act.ActivateTabRelative(1) },
     { key = '«', action = act.ActivateTabRelative(-1) },
@@ -236,6 +342,7 @@ config.keys = {
     { key = 'k', mods = 'LEADER', action = act.ActivatePaneDirection('Up') },
     -- NOTE: requires a nightly version as of 2023-03-16
     -- { key = 'P', mods = 'CTRL', action = act.ActivateCommandPalette },
+    { key = 'F9', mods = 'NONE', action = wezterm.action.ShowTabNavigator },
 
     -- Default key maps
     { key = 'X', mods = 'CTRL', action = act.ActivateCopyMode },
@@ -479,5 +586,22 @@ config.key_tables = {
         { key = 'DownArrow', mods = 'NONE', action = act.CopyMode('NextMatch') },
     },
 }
+
+-- TODO: add more items here to launch
+config.launch_menu = {
+    { args = { 'ntop' } },
+    { args = { 'lftp' } },
+    { args = { 'scoop update *' } },
+    { args = { 'scoop', 'cleanup', '*' } },
+}
+
+-- TODO: perhaps need to make this apply with windows only
+config.quote_dropped_files = 'WindowsAlwaysQuoted'
+
+config.show_update_window = true
+
+-- WARNING: uses more graphics processing
+config.default_cursor_style = 'BlinkingBlock'
+config.cursor_blink_rate = 1300
 
 return config

@@ -81,3 +81,7 @@ function Get-TopProcesses {
         }
     } | Sort-Object -desc Mem_MB | Select-Object -First 25
 }
+
+function rename_wezterm_title($title) {
+  echo "$([char]27)]1337;SetUserVar=panetitle=$([Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($title)))$([char]7)"
+}
