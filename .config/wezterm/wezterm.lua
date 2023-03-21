@@ -45,7 +45,7 @@ wezterm.on('update-right-status', function(window, pane)
     end
 
     window:set_right_status(wezterm.format({
-        { Text = bat .. '   ' .. date },
+        { Text = window:active_workspace() .. '   ' .. bat .. '   ' .. date },
     }))
 end)
 
@@ -142,7 +142,10 @@ config.visual_bell = {
     fade_out_duration_ms = 150,
 }
 
-config.exit_behavior = 'CloseOnCleanExit'
+-- exit_behavior can be Close, Hold, CloseOnCleanExit, Close
+-- Hold is the most forgiving as it does not autoshut down and helps detect errors
+-- Hold also requires a manual closing of the tab or pane
+config.exit_behavior = 'Hold'
 
 config.ssh_domains = {
     {
@@ -178,6 +181,23 @@ config.ssh_domains = {
         -- Primarily useful if it isn't installed in the $PATH
         -- that is configure for ssh.
         remote_wezterm_path = '~/WezTerm-20221119-145034-49b9839f-Ubuntu18.04.AppImage',
+    },
+    {
+        name = 'homeserver.Proxmox1',
+        remote_address = '192.168.1.57',
+        username = 'root',
+
+        -- Set to 'None' for ssh hosts that do not have wezterm available
+        -- multiplexing = 'None',
+        -- Only set the default_prog if using 'None'
+        -- default_prog = { 'bash' },
+        multiplexing = 'WezTerm',
+
+        -- If true, connect to this domain automatically at startup
+        -- connect_automatically = true,
+
+        -- Specify an alternative read timeout
+        -- timeout = 60,
     },
 }
 
@@ -259,32 +279,24 @@ config.colors = {
             -- The same options that were listed under the `active_tab` section above
             -- can also be used for `inactive_tab_hover`.
         },
-
-        -- The new tab button that let you create new tabs
-        new_tab = {
-            bg_color = '#1b1032',
-            fg_color = '#808080',
-
-            -- The same options that were listed under the `active_tab` section above
-            -- can also be used for `new_tab`.
-        },
-
-        -- You can configure some alternate styling when the mouse pointer
-        -- moves over the new tab button
-        new_tab_hover = {
-            bg_color = '#3b3052',
-            fg_color = '#909090',
-            italic = true,
-
-            -- The same options that were listed under the `active_tab` section above
-            -- can also be used for `new_tab_hover`.
-        },
     },
+
+    -- Cursor color settings
+    cursor_bg = '#52ad70',
+    cursor_fg = 'black',
+    cursor_border = '#52ad70',
+    -- Used during leader key press
+    compose_cursor = '#00ff00',
 }
 
+-- Set leader key
 config.leader = { key = 'a', mods = 'CTRL', timeout_milliseconds = 1000 }
+
+-- Disable all default key maps
+config.disable_default_key_bindings = true
+
+-- Set all key maps here
 config.keys = {
-    -- My keymaps
     -- When using steno, shift is not needed. It just seems to be implied because normal keyboard needs a shift
     { key = '|', mods = 'LEADER|SHIFT', action = wezterm.action.SplitHorizontal({ domain = 'CurrentPaneDomain' }) },
     { key = '-', mods = 'LEADER', action = act.SplitVertical({ domain = 'CurrentPaneDomain' }) },
@@ -331,11 +343,22 @@ config.keys = {
 
     -- Open with all launch options, this is powerful but over the top sometimes
     { key = '°', action = act.ShowLauncher },
-    -- Op with just item set from launch_menu
+    -- Open with just item set from launch_menu
     { key = '÷', action = act.ShowLauncherArgs({ flags = 'LAUNCH_MENU_ITEMS|FUZZY' }) },
 
     { key = '»', action = act.ActivateTabRelative(1) },
     { key = '«', action = act.ActivateTabRelative(-1) },
+
+    -- Use steno key group SKWH[EU]G to activate these commands
+    -- TODO: create non-steno mappings as well
+    { key = '±', action = act.ShowLauncherArgs({ flags = 'WORKSPACES' }) },
+    { key = '¶', action = act.SwitchWorkspaceRelative(1) },
+    { key = '∑', action = act.SwitchWorkspaceRelative(-1) },
+
+    -- Nightly builds only as of 2023-03-18
+    -- { key = '»', mods = 'CTRL', action = act.ActivateWindowRelative(1) },
+    -- { key = '«', mods = 'CTRL', action = act.ActivateWindowRelative(-1) },
+
     { key = 'h', mods = 'LEADER', action = act.ActivatePaneDirection('Left') },
     { key = 'l', mods = 'LEADER', action = act.ActivatePaneDirection('Right') },
     { key = 'j', mods = 'LEADER', action = act.ActivatePaneDirection('Down') },
@@ -343,6 +366,12 @@ config.keys = {
     -- NOTE: requires a nightly version as of 2023-03-16
     -- { key = 'P', mods = 'CTRL', action = act.ActivateCommandPalette },
     { key = 'F9', mods = 'NONE', action = wezterm.action.ShowTabNavigator },
+
+    { key = 'a', mods = 'LEADER', action = wezterm.action.AttachDomain('CommandStation') },
+    { key = 'x', mods = 'LEADER', action = wezterm.action.CloseCurrentTab({ confirm = false }) },
+    -- { key = 'F10', mods = 'NONE', action = wezterm.action.AttachDomain('device.MQTTBroker') },
+    -- { key = 'F10', mods = 'NONE', action = wezterm.action.AttachDomain('homeserver.Proxmox1') },
+    -- { key = 'F10', mods = 'NONE', action = wezterm.action.AttachDomain('Development') },
 
     -- Default key maps
     { key = 'X', mods = 'CTRL', action = act.ActivateCopyMode },
@@ -591,6 +620,7 @@ config.key_tables = {
 config.launch_menu = {
     { args = { 'ntop' } },
     { args = { 'lftp' } },
+    { args = { 'pwsh', '-c', [[Get-Content $env:LOCALAPPDATA\Plover\Plover\tapey_tape.txt -Tail 50 -Wait]] } },
     { args = { 'scoop update *' } },
     { args = { 'scoop', 'cleanup', '*' } },
 }
