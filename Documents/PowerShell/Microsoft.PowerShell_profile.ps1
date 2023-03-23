@@ -47,8 +47,20 @@ function Enter-VS {
 # & "$CATM1FunctionsScript"
 
 # Set Starship prompt
-$ENV:STARSHIP_CONFIG = "$HOME\.starship\config.toml"
+# Support for OSC7 (CWD detector or wezterm terminal emulator)
+$prompt = ""
+function Invoke-Starship-PreCommand {
+    $current_location = $executionContext.SessionState.Path.CurrentLocation
+    if ($current_location.Provider.Name -eq "FileSystem") {
+        $ansi_escape = [char]27
+        $provider_path = $current_location.ProviderPath -replace "\\", "/"
+        $prompt = "$ansi_escape]7;file://${env:COMPUTERNAME}/${provider_path}$ansi_escape\"
+    }
+    $host.ui.Write($prompt)
+}
+$ENV:STARSHIP_CONFIG = "$env:USERPROFILE\.starship\config.toml"
 Invoke-Expression (&starship init powershell)
+
 
 # gh (GitHub CLI) completion
 Invoke-Expression -Command $(gh completion -s powershell | Out-String)
