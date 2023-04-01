@@ -1,7 +1,7 @@
 # Personal settings
 # PowerShell 7 (pwsh)
 
-[System.Console]::Title = "pwsh v$($PSVersionTable.PSVersion.ToString())"
+# [System.Console]::Title = "pwsh v$($PSVersionTable.PSVersion.ToString())"
 
 # Function to using my git bare repo for my windows config files
 function dot{git --git-dir="$env:USERPROFILE\.cfg" --work-tree="$env:USERPROFILE" $args}
@@ -54,6 +54,8 @@ function Invoke-Starship-PreCommand {
     if ($current_location.Provider.Name -eq "FileSystem") {
         $ansi_escape = [char]27
         $provider_path = $current_location.ProviderPath -replace "\\", "/"
+
+        # OSC 7
         $prompt = "$ansi_escape]7;file://${env:COMPUTERNAME}/${provider_path}$ansi_escape\"
     }
     $host.ui.Write($prompt)
@@ -72,15 +74,17 @@ Write-Host 'Update success' -ForegroundColor Green
 Pop-Location
 }
 
+# This function sets all the build environment for ESP-IDF
 function Source-Espidf(){
-    # Set environment variable to esp-idf-v5
-    $env:IDF_PATH = 'C:\Espressif\frameworks\esp-idf-v5.0'
+    # Customize these for your install path and version
+    $version = '5.0.1'
+    $root_location = 'D:\'
 
-    # Command as seen in the desktop shortcut, way to long and it messes up your CWD
-    # pwsh -ExecutionPolicy Bypass -NoExit -File "C:\Espressif/Initialize-Idf.ps1" -IdfId esp-idf-121ffdbe0b35e1365bcc6c7122ca4a7a
+    # Set environment variable
+    $env:IDF_PATH = "${root_location}Espressif\frameworks\esp-idf-v${version}"
 
-    # Run the script
-    C:\Espressif/Initialize-Idf.ps1
+    # Run the setup script
+    Invoke-Expression "$root_location}Espressif/Initialize-Idf.ps1"
 }
 
 function Get-TopProcesses {
