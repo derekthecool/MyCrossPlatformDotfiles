@@ -151,6 +151,9 @@ return new Action<IConfigContext>((IConfigContext context) =>
     // Love 2D windows
     context.WindowRouter.RouteProcessName("love", MyWorkSpaceNames.Docs);
 
+    // Documents
+    context.WindowRouter.RouteProcessName("WINWORD", MyWorkSpaceNames.Docs);
+
     // QXDM
     context.WindowRouter.RouteProcessName("QXDM", MyWorkSpaceNames.PlusOne);
 
