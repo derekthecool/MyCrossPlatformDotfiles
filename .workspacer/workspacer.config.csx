@@ -108,7 +108,7 @@ return new Action<IConfigContext>((IConfigContext context) =>
     {
         (MyWorkSpaceNames.Web, new ILayoutEngine[] { new TallLayoutEngine(), new FullLayoutEngine() }),
         (MyWorkSpaceNames.Terminal, new ILayoutEngine[] {  new TallLayoutEngine(), new FullLayoutEngine() }),
-        (MyWorkSpaceNames.Chat, defaultLayouts()),
+        (MyWorkSpaceNames.Chat, new ILayoutEngine[] {  new TallLayoutEngine(), new FullLayoutEngine() }),
         (MyWorkSpaceNames.Plover, new ILayoutEngine[] { new TallLayoutEngine(), new FullLayoutEngine() }),
         (MyWorkSpaceNames.Docs, defaultLayouts()),
         (MyWorkSpaceNames.Device, defaultLayouts()),
