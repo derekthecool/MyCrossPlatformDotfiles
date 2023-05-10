@@ -58,6 +58,7 @@ function Invoke-Starship-PreCommand
     {
         $ansi_escape = [char]27
         $provider_path = $current_location.ProviderPath -replace "\\", "/"
+        $env:r = [IO.Path]::GetPathRoot($provider_path)
 
         # OSC 7
         $prompt = "$ansi_escape]7;file://${env:COMPUTERNAME}/${provider_path}$ansi_escape\"
