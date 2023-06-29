@@ -1,10 +1,10 @@
+" set noclearhistoryonquit
 " Options
 set adblocker=update
 set cache=clearonquit
 set noclearcookiesonquit
 set nocleardownloadsoncompleted
 set nocleardownloadsonquit
-set noclearhistoryonquit
 set noclearlocalstorageonquit
 set noclosablepinnedtabs
 set commandhist=useronly
@@ -79,7 +79,7 @@ set restorewindowposition
 set restorewindowsize
 
 " Search Engines
-set search=https://search.brave.com/search?q=%s&source=webset 
+set searchengine=https://search.brave.com/search?q=%s&source=webset 
 set searchwords=startpage~https://www.startpage.com/do/dsearch?query=%s
 set searchwords+=brave~https://search.brave.com/search?q=%ssource=web
 set searchwords+=translate~https://translate.google.com/?sl=auto&tl=en&text=%s
@@ -106,7 +106,6 @@ set suggesttopsites=10
 set suspendonrestore=regular
 set suspendtimeout=0
 set tabcycle
-set tabnexttocurrent
 set taboverflow=scroll
 set timeout
 set timeoutlen=3000
@@ -117,8 +116,6 @@ set windowtitle=simple
 " Basic settings
 set splitbelow
 set splitright
-set tabclosefocusright
-" set firefoxmode=google
 set mouse='all'
 
 " Command mappings
