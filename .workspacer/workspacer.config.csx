@@ -8,6 +8,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.IO;
 
 using workspacer;
 using workspacer.Bar;
@@ -153,6 +155,8 @@ return new Action<IConfigContext>((IConfigContext context) =>
 
     // Documents
     context.WindowRouter.RouteProcessName("WINWORD", MyWorkSpaceNames.Docs);
+    context.WindowRouter.RouteProcessName("EXCEL", MyWorkSpaceNames.Docs);
+    context.WindowRouter.RouteProcessName("POWERPNT", MyWorkSpaceNames.Docs);
 
     // QXDM
     context.WindowRouter.RouteProcessName("QXDM", MyWorkSpaceNames.PlusOne);
