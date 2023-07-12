@@ -1,0 +1,10 @@
+[main]
+color-tsharks = ['C:\Users\dlomax\scoop\shims\tshark.exe']
+dark-mode = true
+key-mappings = ['<C-d> <PgDn>', '<C-u> <PgUp>']
+last-used-tshark = 'C:\Users\dlomax\scoop\shims\tshark.exe'
+layout = 'altview2'
+recent-files = ['D:\debugging\2023-07-12_packet_capture\2023-07-12_DeviceTeamMqBroker_unknown_traffic.pcap']
+stream-view = 'hex'
+validated-tsharks = ['C:\Users\dlomax\scoop\shims\tshark.exe']
+
