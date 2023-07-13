@@ -213,4 +213,18 @@ set darkreaderbrightness=100
 " set darkreadergrayscale=20
 set darkreaderblocklist=(.*mail.google.com.*)~(.*dereklomax.com.*)~(.*codingame.*)
 
+" view, download, block, external
+set pdfbehavior=view
+
+" Confirm downloads
+set downloadmethod=confirm
+
+" Go right upon closing a tab
+set tabclosefocus=right
+
+" Hide some GUI settings when not needed
+set guinavbar=onupdate
+set guiscrollbar=never
+set guitabbar=onupdate
+
 " vim: ft=vim
