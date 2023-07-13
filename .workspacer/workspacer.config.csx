@@ -177,6 +177,9 @@ return new Action<IConfigContext>((IConfigContext context) =>
     context.WindowRouter.RouteTitle("FotaRemoteAdd", MyWorkSpaceNames.Device);
     context.WindowRouter.RouteProcessName("dotnet", MyWorkSpaceNames.PlusThree);
 
+    // Wireshark
+    context.WindowRouter.RouteProcessName("Wireshark", MyWorkSpaceNames.PlusThree);
+
     // Zoom and Teams video calls
     context.WindowRouter.RouteProcessName("Zoom", MyWorkSpaceNames.PlusOne);
 
