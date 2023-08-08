@@ -1,10 +1,13 @@
 [main]
 color-tsharks = ['C:\Users\dlomax\scoop\shims\tshark.exe']
+column-format = ['%t', 'Time', 'true', '%m', 'No.', 'true', '%s', 'Source', 'true', '%d', 'Dest', 'true', '%p', 'Proto', 'true', '%L', 'Length', 'true', '%i', 'Info', 'true', '%Cus:tcp.seq:0:R', 'Seq', 'true']
+column-format-bak = ['%m', 'No.', 'true', '%t', 'Time', 'true', '%s', 'Source', 'true', '%d', 'Dest', 'true', '%p', 'Proto', 'true', '%L', 'Length', 'true', '%i', 'Info', 'true']
 dark-mode = true
 key-mappings = ['<C-d> <PgDn>', '<C-u> <PgUp>']
 last-used-tshark = 'C:\Users\dlomax\scoop\shims\tshark.exe'
 layout = 'altview2'
-recent-files = ['D:\debugging\2023-07-12_packet_capture\2023-07-12_DeviceTeamMqBroker_unknown_traffic.pcap']
+recent-files = ['D:\Micron\BelleSVX\FotaFiles_2023-07-27\2023-07-27_BelleX_Rand_Verizon_GoodDownload.pcap', 'D:\Micron\BelleSVX\FotaFiles_2023-07-27\2023-07-27_BelleSVX_FotaTest11_DeviceCrashAgainDuringDownload.pcap', 'D:\Micron\BelleSVX\FotaFiles_2023-07-27\2023-07-27_BelleSVX_FotaTest4_DeviceFinallyStartsDownloading_DeviceCrashOccurs.pcap', 'D:\debugging\2023-07-12_packet_capture\2023-07-12_testing.pcapng', 'D:\debugging\2023-07-12_packet_capture\2023-07-12_DeviceTeamMqBroker_unknown_traffic.pcap']
+recent-filters = ['tcp.port == 8001 or tcp.port == 8000']
 stream-view = 'hex'
 validated-tsharks = ['C:\Users\dlomax\scoop\shims\tshark.exe']
 

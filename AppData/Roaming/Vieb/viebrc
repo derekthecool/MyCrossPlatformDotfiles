@@ -19,7 +19,6 @@ set devtoolsposition=window
 set downloadmethod=automatic
 set downloadpath=~/Downloads/
 set explorehist
-set externalcommand=
 set favicons=session
 set follownewtabswitch
 set guifontsize=16
@@ -211,10 +210,11 @@ set darkreader=true
 set darkreaderbrightness=100
 " set darkreadersepia=15
 " set darkreadergrayscale=20
-set darkreaderblocklist=(.*mail.google.com.*)~(.*dereklomax.com.*)~(.*codingame.*)
+set darkreaderblocklist=(.*mail.google.com.*)~(.*dereklomax.com.*)~(.*codingame.*)~(.*biffbish.github.io/steno-grade.*)
 
 " view, download, block, external
-set pdfbehavior=view
+set pdfbehavior=external
+set externalcommand=okular
 
 " Confirm downloads
 set downloadmethod=confirm

@@ -1,0 +1,14 @@
+[Core General]
+ExternalEditor=Custom
+ExternalEditorCommand=nvim
+
+[General]
+ShellOpenFileInTabs=true
+ttsEngine=sapi
+ttsVoice=Microsoft Zira Desktop
+
+[Reviews]
+QuickAnnotationTools=<tool name="Yellow Highlighter" type="highlight" default="true" id="1"><engine type="TextSelector" color="#ffff00"><annotation type="Highlight" color="#ffffff00"/></engine><shortcut>1</shortcut></tool>,<tool name="Green Highlighter" type="highlight" default="true" id="2"><engine type="TextSelector" color="#00ff00"><annotation type="Highlight" color="#ff00ff00"/></engine><shortcut>2</shortcut></tool>,<tool type="underline" id="3"><engine type="TextSelector" color="#ff0000"><annotation type="Underline" color="#ffff0000"/></engine><shortcut>3</shortcut></tool>,<tool name="Insert Text" type="typewriter" default="true" id="4"><engine block="true" type="PickPoint"><annotation type="Typewriter" textColor="#000000" color="#00ffffff" width="0"/></engine><shortcut>4</shortcut></tool>,<tool type="note-inline" id="5"><engine block="true" type="PickPoint" hoverIcon="tool-note-inline" color="#ffff00"><annotation type="FreeText" textColor="#ff000000" color="#ffffff00"/></engine><shortcut>5</shortcut></tool>,<tool type="note-linked" id="6"><engine type="PickPoint" hoverIcon="tool-note" color="#ffff00"><annotation type="Text" icon="Note" color="#ffffff00"/></engine><shortcut>6</shortcut></tool>
+
+[Zoom]
+ZoomMode=2

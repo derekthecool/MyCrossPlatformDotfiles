@@ -126,7 +126,6 @@ return new Action<IConfigContext>((IConfigContext context) =>
 
     // Routes: automatically send opened applications to the specified workspace
     // Terminal applications
-    context.WindowRouter.RouteProcessName("WindowsTerminal", MyWorkSpaceNames.Terminal);
     context.WindowRouter.RouteTitle("Email", MyWorkSpaceNames.Chat); // thunderbird neovim terminal
     context.WindowRouter.RouteProcessName("alacritty", MyWorkSpaceNames.Terminal);
     context.WindowRouter.RouteProcessName("wezterm-gui", MyWorkSpaceNames.Terminal);
@@ -148,8 +147,10 @@ return new Action<IConfigContext>((IConfigContext context) =>
     context.WindowRouter.RouteProcessName("Teams", MyWorkSpaceNames.Chat);
     context.WindowRouter.RouteProcessName("thunderbird", MyWorkSpaceNames.Chat);
 
-    // WSL gui applications
+    // WSL gui applications, mainly for zathura PDF viewer
     context.WindowRouter.RouteProcessName("vcxsrv", MyWorkSpaceNames.Docs);
+    // Okular PDF viewer
+    context.WindowRouter.RouteProcessName("okular", MyWorkSpaceNames.Docs);
     // Love 2D windows
     context.WindowRouter.RouteProcessName("love", MyWorkSpaceNames.Docs);
 
@@ -175,7 +176,11 @@ return new Action<IConfigContext>((IConfigContext context) =>
     context.WindowRouter.RouteWindowClass("Avalonia-eeffded2-1696-4c6b-b5c5-596e477cd4c5", MyWorkSpaceNames.PlusTwo);
     context.WindowRouter.RouteProcessName("FreeusSerialLogger", MyWorkSpaceNames.PlusTwo);
     context.WindowRouter.RouteTitle("FotaRemoteAdd", MyWorkSpaceNames.Device);
+
+    // When debugging dotnet applications in neovim, it opens a useless external terminal
     context.WindowRouter.RouteProcessName("dotnet", MyWorkSpaceNames.PlusThree);
+    context.WindowRouter.RouteTitle(@"C:\Program Files\dotnet\dotnet.exe", MyWorkSpaceNames.PlusThree);
+    context.WindowRouter.RouteProcessName("WindowsTerminal", MyWorkSpaceNames.PlusThree);
 
     // Wireshark
     context.WindowRouter.RouteProcessName("Wireshark", MyWorkSpaceNames.PlusThree);
