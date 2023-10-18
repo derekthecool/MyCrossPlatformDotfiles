@@ -8,3 +8,10 @@ continuation_prompt = "[ΓêÖ](bright-black) "
 scan_timeout = 30
 command_timeout = 3000
 add_newline = true
+
+[shell]
+fish_indicator = '󰈺 '
+powershell_indicator = '_'
+unknown_indicator = 'mystery shell'
+style = 'cyan bold'
+disabled = false

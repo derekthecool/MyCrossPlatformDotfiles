@@ -80,7 +80,6 @@ return new Action<IConfigContext>((IConfigContext context) =>
         RightWidgets = () => new IBarWidget[]
         {
             new FocusedMonitorWidget(),
-            new TimeWidget(1000 * 60, "hh:mm dd-MMM"), // Update every minute
             new ActiveLayoutWidget(),
         }
     });

@@ -38,7 +38,7 @@ function diff {
 }
 
 # Neovim setup
-Set-Alias 'v' 'nvim'
+$EDITOR = 'nvim'
 
 ## Add all these tools downloaded from neovim plugin Mason
 ## https://github.com/williamboman/mason.nvim
