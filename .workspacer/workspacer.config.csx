@@ -123,6 +123,12 @@ return new Action<IConfigContext>((IConfigContext context) =>
         context.WorkspaceContainer.CreateWorkspace(name, layouts);
     }
 
+    // Tips for finding window information:
+    // Ideally you can use the workspacer debug window, however this has not
+    // been working for me lately as of 2023.
+    // There is AHK window spy as well
+    // Or you can use an application named winspy, 'scoop install winspy' to get it
+
     // Routes: automatically send opened applications to the specified workspace
     // Terminal applications
     context.WindowRouter.RouteTitle("Email", MyWorkSpaceNames.Chat); // thunderbird neovim terminal
@@ -143,7 +149,10 @@ return new Action<IConfigContext>((IConfigContext context) =>
     context.WindowRouter.RouteProcessName("firefox", MyWorkSpaceNames.Web);
 
     // Chat apps
+    // Old teams
     context.WindowRouter.RouteProcessName("Teams", MyWorkSpaceNames.Chat);
+    // New teams released 2023
+    context.WindowRouter.RouteWindowClass("TeamsWebView", MyWorkSpaceNames.Chat);
     context.WindowRouter.RouteProcessName("thunderbird", MyWorkSpaceNames.Chat);
 
     // WSL gui applications, mainly for zathura PDF viewer

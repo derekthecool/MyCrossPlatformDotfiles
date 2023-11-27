@@ -78,7 +78,7 @@ set restorewindowposition
 set restorewindowsize
 
 " Search Engines
-set searchengine=https://search.brave.com/search?q=%s&source=webset 
+set searchengine=https://search.brave.com/search?q=%s&source=webset
 set searchwords=startpage~https://www.startpage.com/do/dsearch?query=%s
 set searchwords+=brave~https://search.brave.com/search?q=%ssource=web
 set searchwords+=translate~https://translate.google.com/?sl=auto&tl=en&text=%s
