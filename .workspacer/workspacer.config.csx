@@ -21,12 +21,12 @@ using workspacer.TitleBar;
 
 public static class MyWorkSpaceNames
 {
-    public static string Web = "web";
-    public static string Terminal = "terminal";
-    public static string Chat = "chat";
-    public static string Plover = "plover";
-    public static string Docs = "docs";
-    public static string Device = "device";
+    public static string Web = "🕸️";
+    public static string Terminal = "🛠️";
+    public static string Chat = "💬";
+    public static string Plover = "⌨️";
+    public static string Docs = "📄";
+    public static string Device = "📞";
     public static string PlusOne = "7";
     public static string PlusTwo = "8";
     public static string PlusThree = "9";
@@ -163,6 +163,8 @@ return new Action<IConfigContext>((IConfigContext context) =>
     context.WindowRouter.RouteProcessName("love", MyWorkSpaceNames.Docs);
 
     // Documents
+    // If obsidian needs a class use "Chrome_WidgetWin_1"
+    context.WindowRouter.RouteProcessName("Obsidian", MyWorkSpaceNames.Docs);
     context.WindowRouter.RouteProcessName("WINWORD", MyWorkSpaceNames.Docs);
     context.WindowRouter.RouteProcessName("EXCEL", MyWorkSpaceNames.Docs);
     context.WindowRouter.RouteProcessName("POWERPNT", MyWorkSpaceNames.Docs);
@@ -355,12 +357,13 @@ return new Action<IConfigContext>((IConfigContext context) =>
         context.Keybinds.Subscribe(mod, Keys.E, () => context.Workspaces.SwitchFocusedMonitor(2), "focus monitor 3");
         context.Keybinds.Subscribe(mod, Keys.U, () => context.Workspaces.SwitchFocusedMonitor(3), "focus monitor 4");
 
-        // Send app to specific monitor
-        // Use the steno vowels: AOEU for index
-        context.Keybinds.Subscribe(mod | KeyModifiers.LShift, Keys.A, () => context.Workspaces.MoveFocusedWindowToMonitor(0), "move focused window to monitor 1");
-        context.Keybinds.Subscribe(mod | KeyModifiers.LShift, Keys.O, () => context.Workspaces.MoveFocusedWindowToMonitor(1), "move focused window to monitor 2");
-        context.Keybinds.Subscribe(mod | KeyModifiers.LShift, Keys.E, () => context.Workspaces.MoveFocusedWindowToMonitor(2), "move focused window to monitor 3");
-        context.Keybinds.Subscribe(mod | KeyModifiers.LShift, Keys.U, () => context.Workspaces.MoveFocusedWindowToMonitor(3), "move focused window to monitor 4");
+        // // Send app to specific monitor -- I've never used this and now it
+        // // conflicts with the new teams shortcuts to start calls
+        // // Use the steno vowels: AOEU for index
+        // context.Keybinds.Subscribe(mod | KeyModifiers.LShift, Keys.A, () => context.Workspaces.MoveFocusedWindowToMonitor(0), "move focused window to monitor 1");
+        // context.Keybinds.Subscribe(mod | KeyModifiers.LShift, Keys.O, () => context.Workspaces.MoveFocusedWindowToMonitor(1), "move focused window to monitor 2");
+        // context.Keybinds.Subscribe(mod | KeyModifiers.LShift, Keys.E, () => context.Workspaces.MoveFocusedWindowToMonitor(2), "move focused window to monitor 3");
+        // context.Keybinds.Subscribe(mod | KeyModifiers.LShift, Keys.U, () => context.Workspaces.MoveFocusedWindowToMonitor(3), "move focused window to monitor 4");
 
         // Access workspace indexes
         context.Keybinds.Subscribe(mod, Keys.D1, () => context.Workspaces.SwitchToWorkspace(0), "switch to workspace 1");
