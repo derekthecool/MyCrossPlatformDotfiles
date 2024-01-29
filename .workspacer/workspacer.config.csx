@@ -187,6 +187,9 @@ return new Action<IConfigContext>((IConfigContext context) =>
     context.WindowRouter.RouteProcessName("FreeusSerialLogger", MyWorkSpaceNames.PlusTwo);
     context.WindowRouter.RouteTitle("FotaRemoteAdd", MyWorkSpaceNames.Device);
 
+    // Application development with flutter
+    context.WindowRouter.RouteWindowClass("FLUTTERVIEW", MyWorkSpaceNames.Chat);
+
     // When debugging dotnet applications in neovim, it opens a useless external terminal
     context.WindowRouter.RouteProcessName("dotnet", MyWorkSpaceNames.PlusThree);
     context.WindowRouter.RouteTitle(@"C:\Program Files\dotnet\dotnet.exe", MyWorkSpaceNames.PlusThree);
