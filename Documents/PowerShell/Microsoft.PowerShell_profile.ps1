@@ -63,6 +63,7 @@ function Enter-VS {
 }
 
 # Set Starship prompt
+# Config file is located: ~/.config/starship.toml
 # Support for OSC7 (CWD detector or wezterm terminal emulator)
 $prompt = ''
 function Invoke-Starship-PreCommand {
@@ -77,7 +78,6 @@ function Invoke-Starship-PreCommand {
     }
     $host.ui.Write($prompt)
 }
-$ENV:STARSHIP_CONFIG = "$env:USERPROFILE\.starship\config.toml"
 Invoke-Expression (&starship init powershell)
 
 
