@@ -118,3 +118,27 @@ function Get-TopProcesses {
 function rename_wezterm_title($title) {
     Write-Output "$([char]27)]1337;SetUserVar=panetitle=$([Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($title)))$([char]7)"
 }
+
+# Function designed to basically be like dotnet watch
+function Watch-FileChange {
+    param(
+        [string]$Path,
+        [string]$Filter = '*',
+        [scriptblock]$Action
+    )
+
+    $watcher = New-Object System.IO.FileSystemWatcher
+    $watcher.Path = $Path
+    $watcher.Filter = $Filter
+    $watcher.IncludeSubdirectories = $true
+    $watcher.EnableRaisingEvents = $true
+    $watcher.NotifyFilter = [System.IO.NotifyFilters]'FileName, LastWrite'
+
+    # Register-ObjectEvent -InputObject $watcher -EventName Created -SourceIdentifier FileCreated -Action $Action
+    Register-ObjectEvent -InputObject $watcher -EventName Changed -SourceIdentifier FileChanged -Action $Action
+    # Register-ObjectEvent -InputObject $watcher -EventName Deleted -SourceIdentifier FileDeleted -Action $Action
+    # Register-ObjectEvent -InputObject $watcher -EventName Renamed -SourceIdentifier FileRenamed -Action $Action
+
+    Write-Host "Monitoring changes to files in $Path with filter $Filter..."
+    Write-Host 'Press CTRL+C to stop.'
+}

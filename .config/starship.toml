@@ -4,7 +4,7 @@
 "$schema" = "https://starship.rs/config-schema.json"
 format = "$all"
 right_format = ""
-continuation_prompt = "[ΓêÖ](bright-black) "
+continuation_prompt = '[▶▶ ](purple)'
 scan_timeout = 30
 command_timeout = 3000
 add_newline = true
