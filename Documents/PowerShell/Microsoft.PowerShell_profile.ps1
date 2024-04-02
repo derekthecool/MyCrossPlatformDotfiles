@@ -1,10 +1,62 @@
 # Personal settings
 # PowerShell 7 (pwsh)
 
-# Source important script files
-. $HOME/MyCrossPlatformScripts/Invoke-DotGit.ps1
-. $HOME/MyCrossPlatformScripts/Setup-DotnetTools.ps1
-. $HOME/MyCrossPlatformScripts/Configure-PSReadLine.ps1
+# Set Starship prompt
+# Config file is located: ~/.config/starship.toml
+# Support for OSC7 (CWD detector or wezterm terminal emulator)
+$prompt = ''
+function Invoke-Starship-PreCommand {
+    $current_location = $executionContext.SessionState.Path.CurrentLocation
+    if ($current_location.Provider.Name -eq 'FileSystem') {
+        $ansi_escape = [char]27
+        $provider_path = $current_location.ProviderPath -replace '\\', '/'
+        $env:r = [IO.Path]::GetPathRoot($provider_path)
+
+        # OSC 7
+        $prompt = "$ansi_escape]7;file://${env:COMPUTERNAME}/${provider_path}$ansi_escape\"
+    }
+    $host.ui.Write($prompt)
+}
+Invoke-Expression (&starship init powershell)
+
+# Configure PSReadLine. Does not like to be loaded from another script with dot sourcing.
+Set-PSReadLineOption -EditMode vi
+Set-PSReadLineOption -ViModeIndicator Prompt
+Set-PSReadLineOption -PredictionSource History
+Set-PSReadLineOption -PredictionViewStyle ListView
+
+# Set editor environment variables
+$env:EDITOR = 'nvim'
+$env:VISUAL = 'nvim'
+
+# # Load these configuration items now (not lazy loaded)
+# . "$HOME/MyCrossPlatformScripts/Configure-PSReadLine.ps1"
+
+# Call function function lazy load dot sourced scripts
+# Initial setup cut my startup time from 1223ms to 700ms
+$LazyLoadFunctions = @{
+    'dot' = "$HOME/MyCrossPlatformScripts/Invoke-DotGit.ps1"
+    'Setup-DotnetTools' = "$HOME/MyCrossPlatformScripts/Setup-DotnetTools.ps1"
+}
+
+foreach ($entry in $LazyLoadFunctions.GetEnumerator()) {
+    $functionName = $entry.Key
+    $scriptPath = $entry.Value
+
+    Invoke-Expression @"
+function Global:$functionName {
+    # Remove the placeholder function
+    Remove-Item Function:\$functionName
+
+    # Dot-source the script containing the real function
+    . `"$scriptPath`"
+
+    # Now call the real function, passing along any arguments
+    &$functionName `@args
+}
+"@
+}
+
 
 if($IsWindows) {
     $env:Path +=  ";$env:PROGRAMFILES\Open Steno Project\Plover 4.0.0.dev12\"
@@ -44,23 +96,6 @@ if($IsWindows){
     }
 }
 
-# Set Starship prompt
-# Config file is located: ~/.config/starship.toml
-# Support for OSC7 (CWD detector or wezterm terminal emulator)
-$prompt = ''
-function Invoke-Starship-PreCommand {
-    $current_location = $executionContext.SessionState.Path.CurrentLocation
-    if ($current_location.Provider.Name -eq 'FileSystem') {
-        $ansi_escape = [char]27
-        $provider_path = $current_location.ProviderPath -replace '\\', '/'
-        $env:r = [IO.Path]::GetPathRoot($provider_path)
-
-        # OSC 7
-        $prompt = "$ansi_escape]7;file://${env:COMPUTERNAME}/${provider_path}$ansi_escape\"
-    }
-    $host.ui.Write($prompt)
-}
-Invoke-Expression (&starship init powershell)
 
 
 # gh (GitHub CLI) completion
