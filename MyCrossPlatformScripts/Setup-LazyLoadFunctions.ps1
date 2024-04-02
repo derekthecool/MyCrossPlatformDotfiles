@@ -37,6 +37,6 @@ function Setup-LazyLoadFunctions {
         $global:FunctionDefinitions[$functionName] = $scriptPath
 
         # Define the function using the script block
-        New-Item -Path "Function:Global:$functionName" -Value $functionScriptBlock | Out-Null
+        New-Item -Path "Function:Global:$functionName" -Value $functionScriptBlock -ErrorAction SilentlyContinue | Out-Null
     }
 }

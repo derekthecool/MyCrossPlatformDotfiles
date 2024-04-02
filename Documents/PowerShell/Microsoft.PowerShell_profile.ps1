@@ -54,5 +54,5 @@ Setup-LazyLoadFunctions -LazyLoadFunctions @{
 #     $env:Path += ';C:\Program Files\Oracle\VirtualBox\'
 # }
 
-# gh (GitHub CLI) completion
-Invoke-Expression -Command $(gh completion -s powershell | Out-String)
+# # gh (GitHub CLI) completion
+# Invoke-Expression -Command $(gh completion -s powershell | Out-String)
