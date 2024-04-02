@@ -3,28 +3,8 @@
 
 # Source important script files
 . $HOME/MyCrossPlatformScripts/Invoke-DotGit.ps1
-
-# Stop dotnet telemetry
-$env:DOTNET_CLI_TELEMETRY_OPTOUT = $true
-# PowerShell parameter completion shim for the dotnet CLI
-Register-ArgumentCompleter -Native -CommandName dotnet -ScriptBlock {
-    param($commandName, $wordToComplete, $cursorPosition)
-    dotnet complete --position $cursorPosition "$wordToComplete" | ForEach-Object {
-        [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_)
-    }
-}
-
-# Set PSReadLine Awesome Features
-# Set vi mode
-Set-PSReadLineOption -EditMode vi
-Set-PSReadLineOption -ViModeIndicator Prompt
-Set-PSReadLineOption -PredictionSource History
-Set-PSReadLineOption -PredictionViewStyle ListView
-
-# Setting the environment variables EDITOR, and VISUAL mean you can open current
-# command-line in neovim by pressing v in normal mode
-$env:EDITOR = 'nvim'
-$env:VISUAL = 'nvim'
+. $HOME/MyCrossPlatformScripts/Setup-DotnetTools.ps1
+. $HOME/MyCrossPlatformScripts/Configure-PSReadLine.ps1
 
 if($IsWindows) {
     $env:Path +=  ";$env:PROGRAMFILES\Open Steno Project\Plover 4.0.0.dev12\"
