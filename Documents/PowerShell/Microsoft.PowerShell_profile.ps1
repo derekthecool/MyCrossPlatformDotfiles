@@ -24,6 +24,10 @@ Set-PSReadLineOption -EditMode vi
 Set-PSReadLineOption -ViModeIndicator Prompt
 Set-PSReadLineOption -PredictionSource History
 Set-PSReadLineOption -PredictionViewStyle ListView
+# Setting the environment variables EDITOR, and VISUAL mean you can open current
+# command-line in neovim by pressing v in normal mode
+$env:EDITOR = 'nvim'
+$env:VISUAL = 'nvim'
 
 $env:Path +=  ";$env:PROGRAMFILES\Open Steno Project\Plover 4.0.0.dev12\"
 $env:Path += ';C:\Windows\System32'
@@ -119,6 +123,7 @@ function rename_wezterm_title($title) {
     Write-Output "$([char]27)]1337;SetUserVar=panetitle=$([Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($title)))$([char]7)"
 }
 
+
 # Function designed to basically be like dotnet watch
 function Watch-FileChange {
     param(
@@ -127,12 +132,21 @@ function Watch-FileChange {
         [scriptblock]$Action
     )
 
+    Get-EventSubscriber | Unregister-Event
+
     $watcher = New-Object System.IO.FileSystemWatcher
     $watcher.Path = $Path
     $watcher.Filter = $Filter
     $watcher.IncludeSubdirectories = $true
     $watcher.EnableRaisingEvents = $true
     $watcher.NotifyFilter = [System.IO.NotifyFilters]'FileName, LastWrite'
+
+    # # Create a new action that includes the original action plus the new output handling
+    # # For whatever reason only [console]::WriteLine() output is visible, Write-Host and Write-Output are not visible
+    # $ConsoleWriteLineWrappedAction = {
+    #     # Execute the original action and pipe its output
+    #     & $Action | ForEach-Object { [console]::WriteLine($_) }
+    # }
 
     # Register-ObjectEvent -InputObject $watcher -EventName Created -SourceIdentifier FileCreated -Action $Action
     Register-ObjectEvent -InputObject $watcher -EventName Changed -SourceIdentifier FileChanged -Action $Action
