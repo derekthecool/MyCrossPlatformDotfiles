@@ -1,8 +1,6 @@
 # Personal settings
 # PowerShell 7 (pwsh)
 
-# [System.Console]::Title = "pwsh v$($PSVersionTable.PSVersion.ToString())"
-
 # Function to using my git bare repo for my windows config files
 function dot {
     git --git-dir="$env:USERPROFILE\.cfg" --work-tree="$env:USERPROFILE" $args
@@ -24,6 +22,7 @@ Set-PSReadLineOption -EditMode vi
 Set-PSReadLineOption -ViModeIndicator Prompt
 Set-PSReadLineOption -PredictionSource History
 Set-PSReadLineOption -PredictionViewStyle ListView
+
 # Setting the environment variables EDITOR, and VISUAL mean you can open current
 # command-line in neovim by pressing v in normal mode
 $env:EDITOR = 'nvim'
@@ -40,9 +39,6 @@ Remove-Item alias:diff -Force
 function diff {
     git diff --no-index --color-words $args
 }
-
-# Neovim setup
-$EDITOR = 'nvim'
 
 ## Add all these tools downloaded from neovim plugin Mason
 ## https://github.com/williamboman/mason.nvim
@@ -88,13 +84,6 @@ Invoke-Expression (&starship init powershell)
 # gh (GitHub CLI) completion
 Invoke-Expression -Command $(gh completion -s powershell | Out-String)
 
-function Update-Nvim_stimpack_config {
-    Push-Location .
-    Set-Location $env:LOCALAPPDATA\nvim && git pull || Write-Host 'Failed to update' -ForegroundColor Red
-    Write-Host 'Update success' -ForegroundColor Green
-    Pop-Location
-}
-
 # This function sets all the build environment for ESP-IDF
 function Source-Espidf() {
     # Customize these for your install path and version
@@ -118,11 +107,6 @@ function Get-TopProcesses {
             }
         } | Sort-Object -desc Mem_MB | Select-Object -First 25
 }
-
-function rename_wezterm_title($title) {
-    Write-Output "$([char]27)]1337;SetUserVar=panetitle=$([Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($title)))$([char]7)"
-}
-
 
 # Function designed to basically be like dotnet watch
 function Watch-FileChange {
