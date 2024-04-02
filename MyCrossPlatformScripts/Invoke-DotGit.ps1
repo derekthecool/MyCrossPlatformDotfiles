@@ -11,7 +11,7 @@ function dot {
     }
 
     # Run git command with modified arguments
-    git --git-dir="$HOME\.cfg" --work-tree="$HOME" @arguments
+    git --git-dir="$HOME/.cfg" --work-tree="$HOME" @arguments
 }
 
 # Helpful alias for typos like: dotgit status
