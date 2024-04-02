@@ -30,14 +30,18 @@ $env:EDITOR = 'nvim'
 $env:VISUAL = 'nvim'
 
 # # Load these configuration items now (not lazy loaded)
+. "$HOME/MyCrossPlatformScripts/Invoke-DotGit.ps1"
 . "$HOME/MyCrossPlatformScripts/Setup-LazyLoadFunctions.ps1"
 
 # Call function function lazy load dot sourced scripts
 # Initial setup cut my startup time from 1223ms to 700ms
 Setup-LazyLoadFunctions -LazyLoadFunctions @{
-    'dot' = "$HOME/MyCrossPlatformScripts/Invoke-DotGit.ps1"
     'Setup-DotnetTools' = "$HOME/MyCrossPlatformScripts/Setup-DotnetTools.ps1"
     'Add-MasonToolsToPath' = "$HOME/MyCrossPlatformScripts/NeovimRelated/Add-MasonToolsToPath.ps1"
+    'Get-TopMemoryProcesses' = "$HOME/MyCrossPlatformScripts/Get-TopMemoryProcesses.ps1"
+    'Watch-FileChange' = "$HOME/MyCrossPlatformScripts/Watch-FileChange.ps1"
+    'Source-Espidf' = "$HOME/MyCrossPlatformScripts/Source-ESPIDF.ps1"
+    'Invoke-GitDiff' = "$HOME/MyCrossPlatformScripts/Invoke-GitDiff.ps1"
 
     # Windows only
     'Start-VSCompiler' = "$HOME/MyCrossPlatformScripts/Windows/Start-VSCompiler.ps1"
@@ -52,41 +56,3 @@ Setup-LazyLoadFunctions -LazyLoadFunctions @{
 
 # gh (GitHub CLI) completion
 Invoke-Expression -Command $(gh completion -s powershell | Out-String)
-
-
-function Get-TopProcesses {
-    Get-Process | Group-Object -Property ProcessName |
-        ForEach-Object {
-            [PSCustomObject]@{
-                ProcessName = $_.Name
-                Mem_MB = [math]::Round(($_.Group|Measure-Object WorkingSet64 -Sum).Sum / 1MB, 0)
-                ProcessCount = $_.Count
-            }
-        } | Sort-Object -desc Mem_MB | Select-Object -First 25
-}
-
-# Function designed to basically be like dotnet watch
-function Watch-FileChange {
-    param(
-        [string]$Path,
-        [string]$Filter = '*',
-        [scriptblock]$Action
-    )
-
-    Get-EventSubscriber | Unregister-Event
-
-    $watcher = New-Object System.IO.FileSystemWatcher
-    $watcher.Path = $Path
-    $watcher.Filter = $Filter
-    $watcher.IncludeSubdirectories = $true
-    $watcher.EnableRaisingEvents = $true
-    $watcher.NotifyFilter = [System.IO.NotifyFilters]'FileName, LastWrite'
-
-    # Register-ObjectEvent -InputObject $watcher -EventName Created -SourceIdentifier FileCreated -Action $Action
-    Register-ObjectEvent -InputObject $watcher -EventName Changed -SourceIdentifier FileChanged -Action $Action
-    # Register-ObjectEvent -InputObject $watcher -EventName Deleted -SourceIdentifier FileDeleted -Action $Action
-    # Register-ObjectEvent -InputObject $watcher -EventName Renamed -SourceIdentifier FileRenamed -Action $Action
-
-    Write-Host "Monitoring changes to files in $Path with filter $Filter..."
-    Write-Host 'Press CTRL+C to stop.'
-}
