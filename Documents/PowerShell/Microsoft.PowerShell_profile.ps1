@@ -37,51 +37,22 @@ $env:VISUAL = 'nvim'
 Setup-LazyLoadFunctions -LazyLoadFunctions @{
     'dot' = "$HOME/MyCrossPlatformScripts/Invoke-DotGit.ps1"
     'Setup-DotnetTools' = "$HOME/MyCrossPlatformScripts/Setup-DotnetTools.ps1"
+    'Add-MasonToolsToPath' = "$HOME/MyCrossPlatformScripts/NeovimRelated/Add-MasonToolsToPath.ps1"
 
     # Windows only
     'Start-VSCompiler' = "$HOME/MyCrossPlatformScripts/Windows/Start-VSCompiler.ps1"
 }
 
 
-if($IsWindows) {
-    $env:Path +=  ";$env:PROGRAMFILES\Open Steno Project\Plover 4.0.0.dev12\"
-    $env:Path += ';C:\Windows\System32'
-    $env:Path += ';C:\Program Files\Oracle\VirtualBox\'
-}
-
-# Better diff using git
-# First overwrite the annoying built in alias to Compare-Object
-Remove-Item alias:diff -Force
-# Now set the alias
-function diff {
-    git diff --no-index --color-words $args
-}
-
-## Add all these tools downloaded from neovim plugin Mason
-## https://github.com/williamboman/mason.nvim
-$mason_bin_path = "$env:LOCALAPPDATA\nvim-data\mason\bin"
-if(Test-Path $mason_bin_path) {
-    $env:Path += ";$mason_bin_path"
-}
-
-
-
+# if($IsWindows) {
+#     $env:Path +=  ";$env:PROGRAMFILES\Open Steno Project\Plover 4.0.0.dev12\"
+#     $env:Path += ';C:\Windows\System32'
+#     $env:Path += ';C:\Program Files\Oracle\VirtualBox\'
+# }
 
 # gh (GitHub CLI) completion
 Invoke-Expression -Command $(gh completion -s powershell | Out-String)
 
-# This function sets all the build environment for ESP-IDF
-function Source-Espidf() {
-    # Customize these for your install path and version
-    $version = '5.0.1'
-    $root_location = 'D:\'
-
-    # Set environment variable
-    $env:IDF_PATH = "${root_location}Espressif\frameworks\esp-idf-v${version}"
-
-    # Run the setup script
-    Invoke-Expression "${root_location}Espressif/Initialize-Idf.ps1"
-}
 
 function Get-TopProcesses {
     Get-Process | Group-Object -Property ProcessName |
