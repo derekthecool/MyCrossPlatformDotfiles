@@ -1,10 +1,8 @@
 # Personal settings
 # PowerShell 7 (pwsh)
 
-# Function to using my git bare repo for my windows config files
-function dot {
-    git --git-dir="$env:USERPROFILE\.cfg" --work-tree="$env:USERPROFILE" $args
-}
+# Source important script files
+. $HOME/MyCrossPlatformScripts/Invoke-DotGit.ps1
 
 # Stop dotnet telemetry
 $env:DOTNET_CLI_TELEMETRY_OPTOUT = $true
@@ -28,9 +26,11 @@ Set-PSReadLineOption -PredictionViewStyle ListView
 $env:EDITOR = 'nvim'
 $env:VISUAL = 'nvim'
 
-$env:Path +=  ";$env:PROGRAMFILES\Open Steno Project\Plover 4.0.0.dev12\"
-$env:Path += ';C:\Windows\System32'
-$env:Path += ';C:\Program Files\Oracle\VirtualBox\'
+if($IsWindows) {
+    $env:Path +=  ";$env:PROGRAMFILES\Open Steno Project\Plover 4.0.0.dev12\"
+    $env:Path += ';C:\Windows\System32'
+    $env:Path += ';C:\Program Files\Oracle\VirtualBox\'
+}
 
 # Better diff using git
 # First overwrite the annoying built in alias to Compare-Object
@@ -49,17 +49,19 @@ if(Test-Path $mason_bin_path) {
 
 # Hack for running visual Studio for dotnet framework projects with terminal only
 # https://intellitect.com/blog/enter-vsdevshell-powershell/
-function Enter-VS {
-    # First way I found. This way sources a dll then needs a unique GUID from your visual Studio
-    # C:\WINDOWS\SysWOW64\WindowsPowerShell\v1.0\powershell.exe -noe -c "&{Import-Module 'C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\Microsoft.VisualStudio.DevShell.dll'; Enter-VsDevShell 0e7efad8}"
+if($IsWindows){
+    function Enter-VS {
+        # First way I found. This way sources a dll then needs a unique GUID from your visual Studio
+        # C:\WINDOWS\SysWOW64\WindowsPowerShell\v1.0\powershell.exe -noe -c "&{Import-Module 'C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\Microsoft.VisualStudio.DevShell.dll'; Enter-VsDevShell 0e7efad8}"
 
-    # This way is better since you just have to run a powershell script
-    # Using the -SkipAutomaticLocation keeps you in your current directory instead of changing
-    & 'C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\Launch-VsDevShell.ps1' -SkipAutomaticLocation
-    Write-Host 'Commands to run to build dotnet framework project'
-    Write-Host 'nuget restore'
-    Write-Host 'msbuild -p:Configuration=Release # or Debug'
-    Write-Host 'msbuild -t:restore # maybe'
+        # This way is better since you just have to run a powershell script
+        # Using the -SkipAutomaticLocation keeps you in your current directory instead of changing
+        & 'C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\Launch-VsDevShell.ps1' -SkipAutomaticLocation
+        Write-Host 'Commands to run to build dotnet framework project'
+        Write-Host 'nuget restore'
+        Write-Host 'msbuild -p:Configuration=Release # or Debug'
+        Write-Host 'msbuild -t:restore # maybe'
+    }
 }
 
 # Set Starship prompt
@@ -124,13 +126,6 @@ function Watch-FileChange {
     $watcher.IncludeSubdirectories = $true
     $watcher.EnableRaisingEvents = $true
     $watcher.NotifyFilter = [System.IO.NotifyFilters]'FileName, LastWrite'
-
-    # # Create a new action that includes the original action plus the new output handling
-    # # For whatever reason only [console]::WriteLine() output is visible, Write-Host and Write-Output are not visible
-    # $ConsoleWriteLineWrappedAction = {
-    #     # Execute the original action and pipe its output
-    #     & $Action | ForEach-Object { [console]::WriteLine($_) }
-    # }
 
     # Register-ObjectEvent -InputObject $watcher -EventName Created -SourceIdentifier FileCreated -Action $Action
     Register-ObjectEvent -InputObject $watcher -EventName Changed -SourceIdentifier FileChanged -Action $Action
