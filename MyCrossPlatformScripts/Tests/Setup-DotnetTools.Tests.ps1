@@ -5,7 +5,7 @@ BeforeAll {
 Describe 'Setup-DotnetShellCompletion Tests' {
 
     It 'Sets the DOTNET_CLI_TELEMETRY_OPTOUT environment variable' {
-        Setup-DotnetShellCompletion
+        Setup-DotnetShellCompletion 2> $null
         $env:DOTNET_CLI_TELEMETRY_OPTOUT | Should -Be $true
     }
 
@@ -13,7 +13,7 @@ Describe 'Setup-DotnetShellCompletion Tests' {
         Mock Get-Command { return $true }
         Mock Register-ArgumentCompleter {}
 
-        Setup-DotnetShellCompletion
+        Setup-DotnetShellCompletion 2> $null
 
         Assert-MockCalled Register-ArgumentCompleter -Times 1 -ParameterFilter {
             $CommandName -eq 'dotnet'
@@ -24,7 +24,7 @@ Describe 'Setup-DotnetShellCompletion Tests' {
         Mock Get-Command { return $null }
         Mock Register-ArgumentCompleter {}
 
-        Setup-DotnetShellCompletion
+        Setup-DotnetShellCompletion 2> $null
 
         Assert-MockCalled Register-ArgumentCompleter -Times 0
     }

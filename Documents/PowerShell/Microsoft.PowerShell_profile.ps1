@@ -30,34 +30,16 @@ $env:EDITOR = 'nvim'
 $env:VISUAL = 'nvim'
 
 # # Load these configuration items now (not lazy loaded)
-# . "$HOME/MyCrossPlatformScripts/Configure-PSReadLine.ps1"
+. "$HOME/MyCrossPlatformScripts/Setup-LazyLoadFunctions.ps1"
 
 # Call function function lazy load dot sourced scripts
 # Initial setup cut my startup time from 1223ms to 700ms
-$LazyLoadFunctions = @{
+Setup-LazyLoadFunctions -LazyLoadFunctions @{
     'dot' = "$HOME/MyCrossPlatformScripts/Invoke-DotGit.ps1"
     'Setup-DotnetTools' = "$HOME/MyCrossPlatformScripts/Setup-DotnetTools.ps1"
 
     # Windows only
     'Start-VSCompiler' = "$HOME/MyCrossPlatformScripts/Windows/Start-VSCompiler.ps1"
-}
-
-foreach ($entry in $LazyLoadFunctions.GetEnumerator()) {
-    $functionName = $entry.Key
-    $scriptPath = $entry.Value
-
-    Invoke-Expression @"
-function Global:$functionName {
-    # Remove the placeholder function
-    Remove-Item Function:\$functionName
-
-    # Dot-source the script containing the real function
-    . `"$scriptPath`"
-
-    # Now call the real function, passing along any arguments
-    &$functionName `@args
-}
-"@
 }
 
 

@@ -4,16 +4,16 @@ BeforeAll {
 
 Describe 'dot Tests' {
     It 'Can call dot' {
-        { dot -Arguments @() } | Should -Not -Throw
+        { dot } | Should -Not -Throw
     }
 
     It 'Can call dot with an argument' {
-        { dot @('status') } | Should -Not -Throw
+        { dot @('status') 2> $null } | Should -Not -Throw
     }
 
     It 'Calls git with any arguments' {
         Mock git {}
-        dot 'status'
+        dot 'status' 2> $null
         Assert-MockCalled git -Exactly 1 -Scope It
     }
 
@@ -21,7 +21,7 @@ Describe 'dot Tests' {
         # Mock git to intercept and inspect the call
         Mock git {}
 
-        dot 'git' 'status'
+        dot 'git' 'status' 2> $null
         # Assert that git was called with 'status' only
         Assert-MockCalled git -Exactly 1 -Scope It -ParameterFilter { $Args -contains 'status' -and $Args.Contains('git') -eq $false }
     }
