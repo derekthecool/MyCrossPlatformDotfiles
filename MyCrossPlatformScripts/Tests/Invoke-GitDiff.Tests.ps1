@@ -1,5 +1,5 @@
 BeforeAll {
-    . $PSScriptRoot/../Invoke-GitDiff.ps1
+    . $PSScriptRoot/../PowershellTools/Invoke-GitDiff.ps1
 }
 
 Describe 'Using git as a diff tool tests' {

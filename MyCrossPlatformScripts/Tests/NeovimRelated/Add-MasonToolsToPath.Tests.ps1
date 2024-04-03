@@ -1,5 +1,5 @@
 BeforeAll {
-    . $PSScriptRoot/../../NeovimRelated/Add-MasonToolsToPath.ps1
+    . $PSScriptRoot/../../PowershellTools/NeovimRelated/Add-MasonToolsToPath.ps1
 }
 
 Describe 'Mason tools in path' {

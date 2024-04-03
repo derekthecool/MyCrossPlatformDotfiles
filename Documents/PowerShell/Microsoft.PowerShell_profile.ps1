@@ -33,20 +33,9 @@ $env:VISUAL = 'nvim'
 . "$HOME/MyCrossPlatformScripts/Invoke-DotGit.ps1"
 . "$HOME/MyCrossPlatformScripts/Setup-LazyLoadFunctions.ps1"
 
-# Call function function lazy load dot sourced scripts
-# Initial setup cut my startup time from 1223ms to 700ms
-Setup-LazyLoadFunctions -LazyLoadFunctions @{
-    'Setup-DotnetTools' = "$HOME/MyCrossPlatformScripts/Setup-DotnetTools.ps1"
-    'Add-MasonToolsToPath' = "$HOME/MyCrossPlatformScripts/NeovimRelated/Add-MasonToolsToPath.ps1"
-    'Get-TopMemoryProcesses' = "$HOME/MyCrossPlatformScripts/Get-TopMemoryProcesses.ps1"
-    'Watch-FileChange' = "$HOME/MyCrossPlatformScripts/Watch-FileChange.ps1"
-    'Source-Espidf' = "$HOME/MyCrossPlatformScripts/Source-ESPIDF.ps1"
-    'Invoke-GitDiff' = "$HOME/MyCrossPlatformScripts/Invoke-GitDiff.ps1"
+$env:psmodulepath += ";$HOME/MyCrossPlatformScripts/"
 
-    # Windows only
-    'Start-VSCompiler' = "$HOME/MyCrossPlatformScripts/Windows/Start-VSCompiler.ps1"
-}
-
+# Import-Module PowershellTools -Verbose
 
 # if($IsWindows) {
 #     $env:Path +=  ";$env:PROGRAMFILES\Open Steno Project\Plover 4.0.0.dev12\"

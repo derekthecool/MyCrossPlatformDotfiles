@@ -1,5 +1,5 @@
 BeforeAll {
-    . $PSScriptRoot/../Setup-DotnetTools.ps1
+    . $PSScriptRoot/../PowershellTools/Setup-DotnetTools.ps1
 }
 
 Describe 'Setup-DotnetShellCompletion Tests' {
