@@ -31,8 +31,8 @@ $env:VISUAL = 'nvim'
 
 # # Load these configuration items now (not lazy loaded)
 . "$HOME/MyCrossPlatformScripts/Invoke-DotGit.ps1"
-. "$HOME/MyCrossPlatformScripts/Setup-LazyLoadFunctions.ps1"
 
+# Add my custom powershell modules to the psmodulepath
 $env:psmodulepath += ";$HOME/MyCrossPlatformScripts/"
 
 # Import-Module PowershellTools -Verbose
