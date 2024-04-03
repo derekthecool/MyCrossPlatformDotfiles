@@ -19,6 +19,4 @@ jobs:
       - name: Run Pester Tests
         shell: pwsh
         run: |
-          pwd
-          ls
           Invoke-Pester -Path './MyCrossPlatformScripts/Tests' -Passthru -Output Detailed
