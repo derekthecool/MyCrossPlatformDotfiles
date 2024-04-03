@@ -39,9 +39,40 @@ configuration uses powershell modules. Modules by default are lazy loaded.
 Getting a profile to lazy load is nearly impossible, so moving functions out of
 the profile is best.
 
+#### Creating A Powershell Module
+
+Following the Microsoft guide titled [How To Write A Powershell Script Module](https://learn.microsoft.com/en-us/powershell/scripting/developer/module/how-to-write-a-powershell-script-module?view=powershell-7.4)
+shows these steps:
+
+1. Create a `psm1` file in a directory in your `$PSMODULEPATH`
+   `PowershellTools/PowershellTools.psm1`.
+2. Use the `Export-ModuleMember` if you want to only export some of your
+   functions. For my dotfile approach I want everything available.
+   Here is how you can load every single script and export everything:
+
+```powershell
+Get-ChildItem "$PSScriptRoot/*.ps1" -Recurse | ForEach-Object {
+    Write-Verbose "Sourcing: $($_.FullName)" -Verbose
+    . $_.FullName
+}
+```
+
+3. Create a module manifest `.psd1` file with this command
+
+```powershell
+New-ModuleManifest -Path ./PowershellTools.psd1 -ModuleVersion "1.0.0" -Author "Derek Lomax"
+```
+
+Now you can load your module by running this command
+
+```powershell
+# If making changes the -Force option is very important
+Import-Module PowershellTools -Force -Verbose
+```
+
 ### Powershell Profile
 
-You can find where your profile is from the built in variable `$Profile`.
+You can find where your profile is from the built in variable `$PROFILE`.
 It is important to not load more than necessary in your powershell profile.
 Only important items such as [PSReadLine](https://learn.microsoft.com/en-us/powershell/module/psreadline/about/about_psreadline?view=powershell-7.4)
 and [Starship prompt](https://starship.rs/) should stay in the
