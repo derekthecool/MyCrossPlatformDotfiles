@@ -1,5 +1,13 @@
 BeforeAll {
-    . $PSScriptRoot/../PowershellTools/Invoke-GitDiff.ps1
+    $scriptName = [System.IO.Path]::GetFileNameWithoutExtension($PSCommandPath).Replace('.Tests', '')
+    $scriptPath = Get-ChildItem "$HOME/MyCrossPlatformScripts/" -Recurse -Filter "$scriptName.ps1"
+    | Where-Object FullName -NotMatch 'Tests'
+    | Select-Object -First 1 -ExpandProperty FullName
+    if ($scriptPath) {
+        . $scriptPath
+    } else {
+        Write-Error "Expected script not found for: $scriptName"
+    }
 }
 
 Describe 'Using git as a diff tool tests' {
