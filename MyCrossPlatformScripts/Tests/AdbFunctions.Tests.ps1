@@ -27,9 +27,8 @@ Describe 'Adb function tests' {
     }
 
     It 'Adb-Devices should return false when adb command is not found' {
-        Mock Get-Command { return $null }
-        $output = Adb-Devices 2> $null
-        $output | Should -Be $false
+        Mock adb {return 'error: no devices/emulators found'}
+        {Adb-Devices 2> $null | Should -Throw -ExpectedMessage "adb command failed:.*"}
     }
 
     It 'Return for a single device' {

@@ -15,41 +15,41 @@ class AdbDevice {
 }
 
 function Adb-Devices {
-    if(-not $(Get-Command adb -ErrorAction SilentlyContinue))
-    {
-        Write-Error "adb command not found"
-        return $false
-    }
-
-    $adbStateOutput = adb get-state 2>&1
-    if($adbStateOutput -match 'error: no devices/emulators found') {
-        Write-Error 'No devices found'
-        return $false
-    }
-
-    $deviceLines = $(adb devices) -split '\r?\n' | Where-Object { $_ -match '\w+' } | Select-Object -Skip 1
-
-    $devices = $deviceLines | ForEach-Object {
-        $splitOutput = $_ -split '\s+'
-        $state = switch ($splitOutput[1]) {
-            'device' {
-                [AdbState]::Normal
-            }
-            'unauthorized' {
-                [AdbState]::Unauthorized
-            }
-            'offline' {
-                [AdbState]::Offline
-            }
-            Default {
-                [AdbState]::Offline
-            } # Fallback case if state is not recognized
+    try {
+        # Attempt to run `adb get-state` to see if adb is accessible
+        $adbStateOutput = adb get-state 2>&1
+        if($adbStateOutput -match 'error: no devices/emulators found') {
+            Write-Error 'No devices found'
+            return $false
         }
 
-        [AdbDevice]::new($splitOutput[0], $state)
-    }
+        $deviceLines = $(adb devices) -split '\r?\n' | Where-Object { $_ -match '\w+' } | Select-Object -Skip 1
 
-    return $devices
+        $devices = $deviceLines | ForEach-Object {
+            $splitOutput = $_ -split '\s+'
+            $state = switch ($splitOutput[1]) {
+                'device' {
+                    [AdbState]::Normal
+                }
+                'unauthorized' {
+                    [AdbState]::Unauthorized
+                }
+                'offline' {
+                    [AdbState]::Offline
+                }
+                Default {
+                    [AdbState]::Offline
+                } # Fallback case if state is not recognized
+            }
+
+            [AdbDevice]::new($splitOutput[0], $state)
+        }
+
+        return $devices
+    } catch {
+        Write-Error "adb command failed: $_"
+        return $false
+    }
 }
 
 function Get-AdbImages {
