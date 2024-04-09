@@ -40,22 +40,13 @@ function Initialize-Dotfiles {
         New-Item -ItemType Directory -Path $backupDir | Out-Null
     }
 
-    # Attempt to checkout and backup pre-existing dot files if checkout fails
-    dot checkout 2>&1 | Out-Null
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host 'Backing up pre-existing dot files.'
-        dot checkout 2>&1 | Select-String '\s+\.' | ForEach-Object {
-            $file = $_.Matches.Groups[1].Value.Trim()
-            $dest = Join-Path $backupDir (Split-Path $file -Leaf)
-            Move-Item "$HOME/$file" $dest -Force
-        }
-    }
-
     # Force checkout to overwrite conflicting dotfiles in the work tree
-    dot checkout -f
+    dot checkout --force
 
     # Configure git to not show untracked files
     dot config status.showUntrackedFiles no
 
     Write-Host 'Dotfiles are initialized and ready.'
 }
+
+Write-Host "Run Initialize-Dotfiles to clone dotfiles"
