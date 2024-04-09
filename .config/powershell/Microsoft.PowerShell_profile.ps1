@@ -1,2 +1,3 @@
-# Setup Starship prompt
-Invoke-Expression (&starship init powershell)
+# Dot source main powershell config stored in the windows style path from dotfiles
+# This is the powershell 7+ config using pwsh
+. ./Documents/PowerShell/Microsoft.PowerShell_profile.ps1

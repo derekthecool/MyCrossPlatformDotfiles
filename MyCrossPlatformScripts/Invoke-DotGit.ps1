@@ -48,5 +48,3 @@ function Initialize-Dotfiles {
 
     Write-Host 'Dotfiles are initialized and ready.'
 }
-
-Write-Host "Run Initialize-Dotfiles to clone dotfiles"
