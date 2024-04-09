@@ -31,7 +31,7 @@ function Initialize-Dotfiles {
 
     # Clone the repository as a bare repository if not already cloned
     if (-not (Test-Path $ConfigDirectory)) {
-        git clone --bare $RepositoryUrl $ConfigDirectory
+        git clone --bare --recurse-submodules $RepositoryUrl $ConfigDirectory
     }
 
     # Create a backup directory
