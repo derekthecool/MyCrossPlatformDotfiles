@@ -28,8 +28,8 @@ vim.defer_fn(function()
     -- vim.cmd('cd ./Benchmarks')
 
     -- Run initial start up commands in the terminal
-    vim.cmd('ToggleTerm direction=tab')
-    toggleterm.exec('Import-Module PowershellTools -Force -Verbose')
+    vim.cmd('ToggleTerm direction=vertical')
+    toggleterm.exec('Import-Module Dots -Force -Verbose')
 
     vim.notify('Ready to run', vim.log.levels.INFO, { title = '.nvim.lua commands' })
 end, delay_ms)
