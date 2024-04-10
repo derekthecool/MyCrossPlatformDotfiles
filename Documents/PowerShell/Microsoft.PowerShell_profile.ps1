@@ -42,7 +42,9 @@ function dot {
     Remove-Item function:\dot
 
     # Import the module
-    Import-Module Dots -Force
+    # -Force helps to always load the latest version
+    # -DisableNameChecking ignores warnings about unapproved verbs
+    Import-Module Dots -Force -DisableNameChecking
 
     # Call the new function so the first call is not noticeably different
     dot $args
