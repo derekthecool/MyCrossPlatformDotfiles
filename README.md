@@ -3,6 +3,20 @@
 I primarily live in the terminal for everything. Coding, journaling, email, web browsing... the list goes on.
 **To be comfortable on your computer you need to cherish your dot file configuration 💖!**
 
+## Quick Installation Guide
+
+Prerequisites before installing:
+
+- git
+- powershell 7 or higher
+- internet connection
+
+```sh
+Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/derekthecool/MyCrossPlatformDotfiles/master/MyCrossPlatformScripts/Invoke-DotGit.ps1' -OutFile ~/dot.ps1
+~/dot.ps1
+rm ~/dot.ps1
+```
+
 ## Cross Platform Support
 
 This configuration contains everything for my windows and Linux dot files.
@@ -77,17 +91,6 @@ It is important to not load more than necessary in your powershell profile.
 Only important items such as [PSReadLine](https://learn.microsoft.com/en-us/powershell/module/psreadline/about/about_psreadline?view=powershell-7.4)
 and [Starship prompt](https://starship.rs/) should stay in the
 actual profile.
-
-## Quick Installation Guide
-
-TODO: this is not working last time I tried it... 😦
-
-```sh
-curl -Lks https://github.com/derekthecool/MyLinuxConfigs/blob/master/.derek-shell-config/scripts/dotfilesetup.sh | /bin/bash
-```
-
-See the [dotfilesetup.sh script](~/.derek-shell-config/scripts/dotfilesetup.sh)
-for the full details on how to install.
 
 ## Included Programs
 

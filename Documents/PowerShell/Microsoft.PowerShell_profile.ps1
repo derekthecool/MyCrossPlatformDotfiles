@@ -29,19 +29,8 @@ Set-PSReadLineOption -PredictionViewStyle ListView
 $env:EDITOR = 'nvim'
 $env:VISUAL = 'nvim'
 
-# # Load these configuration items now (not lazy loaded)
-. "$HOME/MyCrossPlatformScripts/Invoke-DotGit.ps1"
+# # # Load these configuration items now (not lazy loaded)
+# . "$HOME/MyCrossPlatformScripts/Invoke-DotGit.ps1"
 
 # Add my custom powershell modules to the psmodulepath
-$env:psmodulepath += ";$HOME/MyCrossPlatformScripts/"
-
-# Import-Module PowershellTools -Verbose
-
-# if($IsWindows) {
-#     $env:Path +=  ";$env:PROGRAMFILES\Open Steno Project\Plover 4.0.0.dev12\"
-#     $env:Path += ';C:\Windows\System32'
-#     $env:Path += ';C:\Program Files\Oracle\VirtualBox\'
-# }
-
-# # gh (GitHub CLI) completion
-# Invoke-Expression -Command $(gh completion -s powershell | Out-String)
+$env:psmodulepath += ";$HOME/Scripts/"
