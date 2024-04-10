@@ -34,3 +34,16 @@ $env:VISUAL = 'nvim'
 
 # Add my custom powershell modules to the psmodulepath
 $env:psmodulepath += ";$HOME/Scripts/"
+
+# Proxy function to load my powershell module when needed
+# This function will delete itself and the proper one will be loaded
+function dot {
+    # Delete this proxy function
+    Remove-Item function:\dot
+
+    # Import the module
+    Import-Module Dots -Force
+
+    # Call the new function so the first call is not noticeably different
+    dot $args
+}
