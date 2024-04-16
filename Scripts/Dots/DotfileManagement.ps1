@@ -163,6 +163,10 @@ function dots {
     )
 
     $arguments = $args
+    Write-Host $args
+
+    # Save current directory
+    Push-Location
 
     $repositories | ForEach-Object {
         if(-not $(Test-Path "$_")) {
@@ -170,15 +174,20 @@ function dots {
             continue
         }
 
+        Set-Location "$_"
+
         # Run git on this repository with the arguments specified
-        $command = "git -C $_ $arguments"
-        Write-Host "Running git command: $command`nIn directory: $_"
+        $command = "git $arguments"
+        Write-Host "$(Get-Location): $command"
         Invoke-Expression -Command "$command"
         Write-Host ''
     }
 
     # Lastly run the dot files repository command as well
     $command = "dot $args"
-    Write-Host "Running git command: $command`nOn dotfiles bare repo"
+    Write-Host 'On dotfiles bare repo'
     Invoke-Expression -Command "$command"
+
+    # Restore location
+    Pop-Location
 }
