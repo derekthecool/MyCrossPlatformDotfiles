@@ -163,7 +163,6 @@ function dots {
     )
 
     $arguments = $args
-    Write-Host $args
 
     # Save current directory
     Push-Location
