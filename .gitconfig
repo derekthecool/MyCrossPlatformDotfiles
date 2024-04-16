@@ -1,0 +1,18 @@
+# This is Git's per-user configuration file.
+[user]
+	name = Derek Lomax
+	email = derekthecool@gmail.com
+[core]
+	editor = nvim
+	eol = lf
+	autocrlf = input
+[pull]
+	rebase = true
+[fetch]
+	prune = true
+[diff]
+	colorMoved = zebra
+[help]
+	format = man
+[credential "helperselector"]
+	selected = manager
