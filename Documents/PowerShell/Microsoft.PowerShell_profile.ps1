@@ -34,7 +34,7 @@ $env:VISUAL = 'nvim'
 
 # Add my custom powershell modules to the psmodulepath
 # Make sure to use PathSeparator because windows uses ';' and Linux uses ':'
-$env:psmodulepath += "$([System.IO.Path]::PathSeparator)$HOME/Scripts/"
+$env:PSModulePath += "$([System.IO.Path]::PathSeparator)$HOME/Scripts/"
 
 # Proxy function to load my powershell module when needed
 # This function will delete itself and the proper one will be loaded
@@ -45,7 +45,7 @@ function dot {
     # Import the module
     # -Force helps to always load the latest version
     # -DisableNameChecking ignores warnings about unapproved verbs
-    Import-Module Dots -Force -DisableNameChecking
+    Import-Module "$HOME/Scripts/Dots/Dots.psd1" -Force -DisableNameChecking
 
     # Call the new function so the first call is not noticeably different
     dot $args
