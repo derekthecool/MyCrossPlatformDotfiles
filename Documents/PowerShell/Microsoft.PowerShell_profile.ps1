@@ -33,7 +33,8 @@ $env:VISUAL = 'nvim'
 # . "$HOME/MyCrossPlatformScripts/Invoke-DotGit.ps1"
 
 # Add my custom powershell modules to the psmodulepath
-$env:psmodulepath += ";$HOME/Scripts/"
+# Make sure to use PathSeparator because windows uses ';' and Linux uses ':'
+$env:psmodulepath += "$([System.IO.Path]::PathSeparator)$HOME/Scripts/"
 
 # Proxy function to load my powershell module when needed
 # This function will delete itself and the proper one will be loaded
