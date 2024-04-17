@@ -61,7 +61,7 @@ end
 beautiful.init(gears.filesystem.get_themes_dir() .. 'default/theme.lua')
 
 -- This is used later as the default terminal and editor to run.
-Terminal = 'alacritty'
+Terminal = 'wezterm'
 Editor = os.getenv('EDITOR') or 'nvim'
 EditorCommand = Terminal .. ' -e ' .. Editor
 
@@ -608,12 +608,13 @@ awful.rules.rules = {
     -- Add titlebars to normal clients and dialogs
     { rule_any = { type = { 'normal', 'dialog' } }, properties = { titlebars_enabled = true } },
 
-    -- First tag: web
+    -- First tag: terminal
+    { rule = { class = 'Alacritty' }, properties = { screen = 1, tag = 'Terminal' } },
+    { rule = { class = 'Wezterm' }, properties = { screen = 1, tag = 'Terminal' } },
+
+    -- Second tag: web
     { rule = { class = 'Firefox' }, properties = { screen = 1, tag = 'Web' } },
     { rule = { class = 'Vieb' }, properties = { screen = 1, tag = 'Web' } },
-
-    -- Second tag: terminal
-    { rule = { class = 'Alacritty' }, properties = { screen = 1, tag = 'Terminal' } },
 
     -- Third tag: chat
 

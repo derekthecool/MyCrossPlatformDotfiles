@@ -21,8 +21,8 @@ using workspacer.TitleBar;
 
 public static class MyWorkSpaceNames
 {
-    public static string Web = "🕸️";
     public static string Terminal = "🛠️";
+    public static string Web = "🕸️";
     public static string Chat = "💬";
     public static string Plover = "⌨️";
     public static string Docs = "📄";
@@ -107,8 +107,8 @@ return new Action<IConfigContext>((IConfigContext context) =>
     // Array of workspace names and their layouts
     (string, ILayoutEngine[])[] workspaces =
     {
-        (MyWorkSpaceNames.Web, new ILayoutEngine[] { new TallLayoutEngine(), new FullLayoutEngine() }),
         (MyWorkSpaceNames.Terminal, new ILayoutEngine[] {  new TallLayoutEngine(), new FullLayoutEngine() }),
+        (MyWorkSpaceNames.Web, new ILayoutEngine[] { new TallLayoutEngine(), new FullLayoutEngine() }),
         (MyWorkSpaceNames.Chat, new ILayoutEngine[] {  new TallLayoutEngine(), new FullLayoutEngine() }),
         (MyWorkSpaceNames.Plover, new ILayoutEngine[] { new TallLayoutEngine(), new FullLayoutEngine() }),
         (MyWorkSpaceNames.Docs, defaultLayouts()),
