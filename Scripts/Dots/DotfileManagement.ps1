@@ -117,9 +117,11 @@ function Get-WeztermConfiguration {
 
 function Get-PloverConfigurationDirectory {
     if($IsWindows) {
+        # Windows default is uppercase for Plover, but case does not matter on windows file names
         $cloneTargetPath = Join-Path -Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::LocalApplicationData)) -ChildPath 'Plover'
     } else {
-        $cloneTargetPath = Join-Path -Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::ApplicationData)) -ChildPath 'Plover'
+        # Make sure to use lowercase
+        $cloneTargetPath = Join-Path -Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::ApplicationData)) -ChildPath 'plover'
     }
     return $cloneTargetPath
 }
