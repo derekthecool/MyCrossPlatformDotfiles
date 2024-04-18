@@ -25,12 +25,13 @@ Set-PSReadLineOption -ViModeIndicator Prompt
 Set-PSReadLineOption -PredictionSource History
 Set-PSReadLineOption -PredictionViewStyle ListView
 
+# Custom key mappings
+Set-PSReadLineKeyHandler -Chord Ctrl+u -Function PreviousHistory
+Set-PSReadLineKeyHandler -Chord Ctrl+d -Function NextHistory
+
 # Set editor environment variables
 $env:EDITOR = 'nvim'
 $env:VISUAL = 'nvim'
-
-# # # Load these configuration items now (not lazy loaded)
-# . "$HOME/MyCrossPlatformScripts/Invoke-DotGit.ps1"
 
 # Add my custom powershell modules to the psmodulepath
 # Make sure to use PathSeparator because windows uses ';' and Linux uses ':'
