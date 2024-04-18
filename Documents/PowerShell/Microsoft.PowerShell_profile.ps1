@@ -20,6 +20,10 @@ function Invoke-Starship-PreCommand {
 Invoke-Expression (&starship init powershell)
 
 # Configure PSReadLine. Does not like to be loaded from another script with dot sourcing.
+# For configuration help see these resources
+# https://github.com/PowerShell/PSReadLine
+# https://gist.github.com/rkeithhill/3103994447fd307b68be
+# And run the command Get-PSReadLineKeyHandler
 Set-PSReadLineOption -EditMode vi
 Set-PSReadLineOption -ViModeIndicator Prompt
 Set-PSReadLineOption -PredictionSource History
@@ -28,6 +32,31 @@ Set-PSReadLineOption -PredictionViewStyle ListView
 # Custom key mappings
 Set-PSReadLineKeyHandler -Chord Ctrl+u -Function PreviousHistory
 Set-PSReadLineKeyHandler -Chord Ctrl+d -Function NextHistory
+Set-PSReadLineKeyHandler -Chord × -Function DeleteEndOfBuffer
+
+# Put parentheses around the selection or entire line and move the cursor to after the closing paren
+Set-PSReadLineKeyHandler -Chord Ctrl+y `
+    -BriefDescription ParenthesizeSelection `
+    -LongDescription 'Put parentheses around the selection or entire line and move the cursor to after the closing parenthesis' `
+    -ScriptBlock {
+    param($key, $arg)
+
+    $selectionStart = $null
+    $selectionLength = $null
+    [Microsoft.PowerShell.PSConsoleReadLine]::GetSelectionState([ref]$selectionStart, [ref]$selectionLength)
+
+    $line = $null
+    $cursor = $null
+    [Microsoft.PowerShell.PSConsoleReadLine]::GetBufferState([ref]$line, [ref]$cursor)
+    if ($selectionStart -ne -1) {
+        $replacement = '(' + $line.SubString($selectionStart, $selectionLength) + ')'
+        [Microsoft.PowerShell.PSConsoleReadLine]::Replace($selectionStart, $selectionLength, $replacement)
+        [Microsoft.PowerShell.PSConsoleReadLine]::SetCursorPosition($selectionStart + $selectionLength + 2)
+    } else {
+        [Microsoft.PowerShell.PSConsoleReadLine]::Replace(0, $line.Length, '(' + $line + ')')
+        [Microsoft.PowerShell.PSConsoleReadLine]::EndOfLine()
+    }
+}
 
 # Set editor environment variables
 $env:EDITOR = 'nvim'
