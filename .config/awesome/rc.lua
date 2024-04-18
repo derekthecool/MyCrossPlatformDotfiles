@@ -190,7 +190,7 @@ awful.screen.connect_for_each_screen(function(s)
     set_wallpaper(s)
 
     -- Each screen has its own tag table.
-    awful.tag({ 'Web', 'Terminal', 'Chat', 'Plover', 'Docs', 'Device', '7', '8', '9' }, s, awful.layout.layouts[1])
+    awful.tag({ 'Terminal', 'Web', 'Chat', 'Plover', 'Docs', 'Device', '7', '8', '9' }, s, awful.layout.layouts[1])
 
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
@@ -309,13 +309,9 @@ root.buttons(gears.table.join(
 -- {{{ Key bindings
 Globalkeys = gears.table.join(
     awful.key({ ModKey }, 's', hotkeys_popup.show_help, { description = 'show help', group = 'awesome' }),
-
     awful.key({ ModKey }, 'Left', awful.tag.viewprev, { description = 'view previous', group = 'tag' }),
-
     awful.key({ ModKey }, 'Right', awful.tag.viewnext, { description = 'view next', group = 'tag' }),
-
     awful.key({ ModKey }, 'Escape', awful.tag.history.restore, { description = 'go back', group = 'tag' }),
-
     awful.key({ ModKey }, 'j', function()
         awful.client.focus.byidx(1)
     end, { description = 'focus next by index', group = 'client' }),
@@ -332,11 +328,9 @@ Globalkeys = gears.table.join(
     awful.key({ ModKey, 'Shift' }, 'j', function()
         awful.client.swap.byidx(1)
     end, { description = 'swap with next client by index', group = 'client' }),
-
     awful.key({ ModKey, 'Shift' }, 'k', function()
         awful.client.swap.byidx(-1)
     end, { description = 'swap with previous client by index', group = 'client' }),
-
     awful.key({ ModKey, 'Control' }, 'j', function()
         awful.screen.focus_relative(1)
     end, { description = 'focus the next screen', group = 'screen' }),
@@ -344,9 +338,7 @@ Globalkeys = gears.table.join(
     awful.key({ ModKey, 'Control' }, 'k', function()
         awful.screen.focus_relative(-1)
     end, { description = 'focus the previous screen', group = 'screen' }),
-
     awful.key({ ModKey }, 'u', awful.client.urgent.jumpto, { description = 'jump to urgent client', group = 'client' }),
-
     awful.key({ ModKey }, 'Tab', function()
         awful.client.focus.history.previous()
         if client.focus then
@@ -362,9 +354,7 @@ Globalkeys = gears.table.join(
     -- awful.key({ ModKey, 'Shift' }, 'Return', Terminal .. ' -e man awesome', { description = 'lua man page', group = 'launcher' }),
 
     awful.key({ ModKey }, 'q', awesome.restart, { description = 'reload awesome', group = 'awesome' }),
-
     awful.key({ ModKey, 'Shift' }, 'q', awesome.quit, { description = 'quit awesome', group = 'awesome' }),
-
     awful.key({ ModKey }, 'h', function()
         awful.tag.incmwfact(0.05)
     end, { description = 'increase master width factor', group = 'layout' }),
@@ -372,19 +362,15 @@ Globalkeys = gears.table.join(
     awful.key({ ModKey }, 'l', function()
         awful.tag.incmwfact(-0.05)
     end, { description = 'decrease master width factor', group = 'layout' }),
-
     awful.key({ ModKey, 'Shift' }, 'h', function()
         awful.tag.incnmaster(1, nil, true)
     end, { description = 'increase the number of master clients', group = 'layout' }),
-
     awful.key({ ModKey, 'Shift' }, 'l', function()
         awful.tag.incnmaster(-1, nil, true)
     end, { description = 'decrease the number of master clients', group = 'layout' }),
-
     awful.key({ ModKey, 'Control' }, 'h', function()
         awful.tag.incncol(1, nil, true)
     end, { description = 'increase the number of columns', group = 'layout' }),
-
     awful.key({ ModKey, 'Control' }, 'l', function()
         awful.tag.incncol(-1, nil, true)
     end, { description = 'decrease the number of columns', group = 'layout' }),
