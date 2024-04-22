@@ -70,7 +70,7 @@ function Get-AdbImages {
     }
 
     $DirectoryToSaveFilesTo = './'
-    adb shell 'find /sdcard/DCIM/Camera/ ~/storage/*/DCIM/Camera/ -name $(date +"%Y%m%d")*.jpg'
+    adb shell 'find /sdcard/DCIM/Camera/ ~/storage/*/DCIM/Camera/ -name $(date +"%Y%m%d")*'
     | ForEach-Object { $_.Replace('//','/') -split ' ' }
     | ForEach-Object { adb pull "$_" "$DirectoryToSaveFilesTo" }
 }

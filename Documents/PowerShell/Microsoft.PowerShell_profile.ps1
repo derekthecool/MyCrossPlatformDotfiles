@@ -24,10 +24,45 @@ Invoke-Expression (&starship init powershell)
 # https://github.com/PowerShell/PSReadLine
 # https://gist.github.com/rkeithhill/3103994447fd307b68be
 # And run the command Get-PSReadLineKeyHandler
-Set-PSReadLineOption -EditMode vi
-Set-PSReadLineOption -ViModeIndicator Prompt
-Set-PSReadLineOption -PredictionSource History
-Set-PSReadLineOption -PredictionViewStyle ListView
+# Define PSReadLine options in a hashtable
+$PSReadLineOptions = @{
+    EditMode = 'Vi'
+    ViModeIndicator = [Microsoft.PowerShell.ViModeStyle]::Prompt
+    PredictionSource = 'HistoryAndPlugin'
+    PredictionViewStyle = 'ListView'
+    HistoryNoDuplicates = $true
+    HistorySearchCursorMovesToEnd = $true
+    BellStyle = 'None'
+    # Colors = @{
+    #     Command = 'Magenta'
+    #     ContinuationPrompt = 'DarkGray'
+    #     Emphasis = 'Cyan'
+    #     Error = 'Red'
+    #     String = 'DarkYellow'
+    #     Keyword = 'Cyan'
+    #     Comment = 'DarkGreen'
+    #     Operator = 'DarkRed'
+    #     Variable = 'Green'
+    #     Parameter = 'DarkGray'
+    # }
+}
+
+# Apply PSReadLine options from the hashtable
+Set-PSReadLineOption @PSReadLineOptions
+
+# Apply the configured PSReadLine options
+Set-PSReadLineOption @PSReadLineOptions
+
+function OnViModeChange {
+    if ($args[0] -eq 'Command') {
+        # Set the cursor to a blinking block.
+        Write-Host -NoNewline "`e[1 q"
+    } else {
+        # Set the cursor to a blinking line.
+        Write-Host -NoNewline "`e[5 q"
+    }
+}
+Set-PSReadLineOption -ViModeIndicator Script -ViModeChangeHandler $Function:OnViModeChange
 
 # Custom key mappings
 Set-PSReadLineKeyHandler -Chord Ctrl+u -Function PreviousHistory
@@ -57,6 +92,10 @@ Set-PSReadLineKeyHandler -Chord Ctrl+y `
         [Microsoft.PowerShell.PSConsoleReadLine]::EndOfLine()
     }
 }
+
+# PSFzf mappings
+Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
+Set-PSReadLineKeyHandler -Key Tab -ScriptBlock { Invoke-FzfTabCompletion }
 
 # Set editor environment variables
 $env:EDITOR = 'nvim'
