@@ -52,6 +52,7 @@ jobs:
               sudo -u builduser pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
               export PATH=$PATH:/home/builduser/.local/share/powershell/Modules
               sudo -E pwsh -Command "Get-Module -ListAvailable Pester"
+              sudo -E pwsh -Command "Invoke-Pester -Path './Scripts/Tests' -Passthru -Output Detailed"
               ;;
           esac
 
