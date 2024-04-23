@@ -24,6 +24,11 @@ jobs:
       image: ${{ matrix.container }}
 
     steps:
+      - name: Install Node.js for NixOS
+        if: contains(matrix.container, 'nixos/nix')
+        run: |
+          nix-env -iA nixpkgs.nodejs-16_x
+
       - name: Check out repository code
         uses: actions/checkout@v2
 
@@ -38,14 +43,18 @@ jobs:
               pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
               ;;
             fedora*)
-              dnf install -y wget git compat-openssl10
+              dnf install -y wget git
               rpm --import https://packages.microsoft.com/keys/microsoft.asc
               dnf config-manager --add-repo https://packages.microsoft.com/fedora/$(. /etc/os-release && echo $VERSION_ID)/prod
               dnf install -y powershell
               pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
               ;;
             archlinux*)
-              pacman -Sy --noconfirm wget git powershell
+              pacman -Sy --noconfirm wget git base-devel
+              git clone https://aur.archlinux.org/yay.git
+              cd yay
+              makepkg -si --noconfirm
+              yay -Sy --noconfirm powershell
               pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
               ;;
             nixos/nix*)
