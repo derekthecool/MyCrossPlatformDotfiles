@@ -49,7 +49,9 @@ jobs:
               passwd -d builduser
               echo "builduser ALL=(ALL) NOPASSWD: ALL" | tee -a /etc/sudoers
               sudo -u builduser bash -c "cd; git clone https://aur.archlinux.org/powershell-bin.git; cd powershell-bin; makepkg -si --noconfirm"
-              sudo -u builduser pwsh -Command "& {Install-Module -Name Pester -Force -SkipPublisherCheck; Get-Module -ListAvailable Pester}"
+              sudo -u builduser pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
+              export PATH=$PATH:/home/builduser/.local/share/powershell/Modules
+              sudo -E pwsh -Command "Get-Module -ListAvailable Pester"
               ;;
           esac
 
