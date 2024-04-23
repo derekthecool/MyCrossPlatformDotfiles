@@ -1,11 +1,19 @@
-name: Run Pester Tests
+name: Run Pester Tests Windows
 
 on: [push, pull_request]
 
 jobs:
   test:
-    name: Pester Test Runner
-    runs-on: windows-latest
+    name: Pester Test Runner on ${{ matrix.windows_version }}
+    runs-on: ${{ matrix.windows_version }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        windows_version:
+          - windows-2022  # Equivalent to windows-latest
+          - windows-2019
+          - windows-2016
 
     steps:
       - name: Check out repository code

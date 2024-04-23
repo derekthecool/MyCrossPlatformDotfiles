@@ -1,0 +1,48 @@
+name: Run Pester Tests Linux
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    name: Pester Test Runner on ${{ matrix.container }}
+    runs-on: ubuntu-latest # We use an Ubuntu host to run containers
+
+    strategy:
+      fail-fast: false
+      matrix:
+        container:
+          - ubuntu:22.04
+          - ubuntu:20.04
+          - debian:bullseye
+          - debian:buster
+          - centos:8
+          - centos:7
+          - fedora:latest
+          - alpine:latest
+
+    container:
+      image: ${{ matrix.container }}
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: Setup Environment
+        run: |
+          if [ -f /etc/alpine-release ]; then
+            # Alpine setup
+            apk add --no-cache powershell
+          else
+            # General setup for other distros
+            apt-get update && apt-get install -y wget apt-transport-https software-properties-common
+            wget -q "https://packages.microsoft.com/config/$(. /etc/os-release && echo ID)/$(. /etc/os-release && echo VERSION_ID)/packages-microsoft-prod.deb"
+            dpkg -i packages-microsoft-prod.deb
+            apt-get update
+            apt-get install -y powershell
+          fi
+          pwsh -Command "Install-Module -Name Pester -RequiredVersion 5.3.1 -Force -SkipPublisherCheck"
+
+      - name: Run Pester Tests
+        shell: pwsh
+        run: |
+          Invoke-Pester -Path './Scripts/Tests' -Passthru -Output Detailed
