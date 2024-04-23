@@ -38,8 +38,7 @@ jobs:
               ;;
             fedora*)
               rpm --import https://packages.microsoft.com/keys/microsoft.asc
-              dnf install -y dnf-plugins-core
-              dnf config-manager --add-repo https://packages.microsoft.com/fedora/$(. /etc/os-release && echo $VERSION_ID)/prod.repo
+              rpm -Uvh https://packages.microsoft.com/config/centos/8/packages-microsoft-prod.rpm
               dnf makecache
               dnf install -y powershell
               pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
