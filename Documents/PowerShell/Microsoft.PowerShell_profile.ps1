@@ -94,7 +94,13 @@ Set-PSReadLineKeyHandler -Chord Ctrl+y `
 }
 
 # PSFzf mappings
-Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
+try {
+    Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
+} catch {
+    Write-Host 'PsFzf Is not installed, installing now' -ForegroundColor Red
+    Install-Module -Force PSFzf
+}
+
 Set-PSReadLineKeyHandler -Key Tab -ScriptBlock { Invoke-FzfTabCompletion }
 
 # Set editor environment variables
@@ -104,6 +110,22 @@ $env:VISUAL = 'nvim'
 # Add my custom powershell modules to the psmodulepath
 # Make sure to use PathSeparator because windows uses ';' and Linux uses ':'
 $env:PSModulePath += "$([System.IO.Path]::PathSeparator)$HOME/Scripts/"
+
+function Get-MissingModules {
+    $modules = @(
+        'Catesta',
+        'Microsoft.PowerShell.SecretManagement',
+        'Microsoft.PowerShell.SecretStore',
+        'Pester',
+        'ps2exe',
+        'PSProfiler',
+        'PSScriptAnalyzer'
+    )
+
+    $modules | ForEach-Object {
+        Install-Module -Name $_ -Force
+    }
+}
 
 # Proxy function to load my powershell module when needed
 # This function will delete itself and the proper one will be loaded
