@@ -1,3 +1,7 @@
+name: Run Pester Tests on Linux
+
+on: [push, pull_request]
+
 jobs:
   test:
     name: Pester Test Runner on ${{ matrix.container }}
@@ -36,8 +40,7 @@ jobs:
           elif [ -f /etc/alpine-release ]; then
             apk add --no-cache git
             apk add --no-cache powershell
-            # Configure necessary tools if available
-            # Alternative setup or module installation methods may be required
+            # Note: PowerShell on Alpine may have limited functionality
           fi
 
       - name: Run Pester Tests
