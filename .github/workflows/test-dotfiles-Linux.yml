@@ -5,7 +5,7 @@ on: [push, pull_request]
 jobs:
   test:
     name: Pester Test Runner on ${{ matrix.container }}
-    runs-on: ubuntu-latest # We use an Ubuntu host to run containers
+    runs-on: ubuntu-latest # Using Ubuntu host to run containers
 
     strategy:
       fail-fast: false
@@ -37,23 +37,29 @@ jobs:
             dpkg -i packages-microsoft-prod.deb
             apt-get update
             apt-get install -y powershell
-          elif [ -f /etc/fedora-release ] || [ -f /etc/centos-release ]; then
-            # For Fedora and CentOS
+          elif [ -f /etc/fedora-release ]; then
+            # For Fedora
             dnf install -y wget
+            rpm --import https://packages.microsoft.com/keys/microsoft.asc
+            dnf config-manager --add-repo https://packages.microsoft.com/fedora/$(. /etc/os-release && echo $VERSION_ID)/prod
             dnf install -y powershell
+          elif [ -f /etc/centos-release ]; then
+            # For CentOS
+            yum install -y wget
+            yum install -y powershell
           elif [ -f /etc/alpine-release ]; then
             # For Alpine
             apk add --no-cache powershell
-          fi
 
       - name: Install and Configure PowerShell Environment
         run: |
           pwsh -Command "
-            # Install required modules and configure PowerShell environment
-            if ($IsLinux) {
-              [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+            # Ensure PowerShellGet and Pester are installed
+            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+            if (-not (Get-Module -ListAvailable -Name PowerShellGet)) {
+              Install-PackageProvider -Name NuGet -Force
+              Install-Module -Name PowerShellGet -Force -AllowClobber
             }
-            Install-Module -Name PowerShellGet -Force -AllowClobber
             Install-Module -Name Pester -RequiredVersion 5.3.1 -Force -SkipPublisherCheck
           "
 
