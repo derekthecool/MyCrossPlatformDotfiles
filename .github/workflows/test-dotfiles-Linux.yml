@@ -33,14 +33,14 @@ jobs:
               apt-get update && apt-get install -y wget apt-transport-https git software-properties-common
               wget -q "https://packages.microsoft.com/config/debian/$(. /etc/os-release && echo $VERSION_ID)/packages-microsoft-prod.deb"
               dpkg -i packages-microsoft-prod.deb
-              apt-get update && apt-get install -y powershell
+              apt-get update && apt-get install -y powershell git
               pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
               ;;
             fedora*)
               rpm --import https://packages.microsoft.com/keys/microsoft.asc
               rpm -Uvh https://packages.microsoft.com/config/centos/8/packages-microsoft-prod.rpm
               dnf makecache
-              dnf install -y powershell
+              dnf install -y powershell git
               pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
               ;;
             archlinux*)
@@ -49,7 +49,7 @@ jobs:
               passwd -d builduser
               echo "builduser ALL=(ALL) NOPASSWD: ALL" | tee -a /etc/sudoers
               sudo -u builduser bash -c "cd; git clone https://aur.archlinux.org/powershell-bin.git; cd powershell-bin; makepkg -si --noconfirm"
-              sudo -u builduser pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
+              sudo -u builduser pwsh -Command "& {Install-Module -Name Pester -Force -SkipPublisherCheck; Get-Module -ListAvailable Pester}"
               ;;
           esac
 
