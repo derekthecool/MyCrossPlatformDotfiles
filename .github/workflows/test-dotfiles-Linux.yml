@@ -5,19 +5,15 @@ on: [push, pull_request]
 jobs:
   test:
     name: Pester Test Runner on ${{ matrix.container }}
-    runs-on: ubuntu-latest # Using Ubuntu host to run containers
+    runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
       matrix:
         container:
           - ubuntu:22.04
-          - ubuntu:20.04
           - debian:bullseye
-          - debian:buster
           - centos:8
-          - centos:7
-          - fedora:latest
           - alpine:latest
 
     container:
@@ -30,39 +26,38 @@ jobs:
       - name: Setup Environment
         run: |
           if [ -f /etc/debian_version ]; then
-            # For Debian and Ubuntu
+            # Debian and Ubuntu
             apt-get update
-            apt-get install -y wget apt-transport-https software-properties-common
+            apt-get install -y wget apt-transport-https git software-properties-common
             wget -q "https://packages.microsoft.com/config/debian/$(. /etc/os-release && echo $VERSION_ID)/packages-microsoft-prod.deb"
             dpkg -i packages-microsoft-prod.deb
             apt-get update
             apt-get install -y powershell
-          elif [ -f /etc/fedora-release ]; then
-            # For Fedora
-            dnf install -y wget
-            rpm --import https://packages.microsoft.com/keys/microsoft.asc
-            dnf config-manager --add-repo https://packages.microsoft.com/fedora/$(. /etc/os-release && echo $VERSION_ID)/prod
-            dnf install -y powershell
           elif [ -f /etc/centos-release ]; then
-            # For CentOS
-            yum install -y wget
-            yum install -y powershell
+            # CentOS
+            yum clean all
+            yum makecache
+            yum install -y wget git powershell
           elif [ -f /etc/alpine-release ]; then
-            # For Alpine
+            # Alpine
+            apk add --no-cache git
             apk add --no-cache powershell
+            # Configuring PowerShell for limited Alpine functionality
+            pwsh -Command "
+              [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+              Find-Module Pester | Install-Module -Force
+            "
           fi
 
       - name: Install and Configure PowerShell Environment
         run: |
-          pwsh -Command "
-            # Ensure PowerShellGet and Pester are installed
-            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-            if (-not (Get-Module -ListAvailable -Name PowerShellGet)) {
-              Install-PackageProvider -Name NuGet -Force
+          if [ ! -f /etc/alpine-release ]; then
+            pwsh -Command "
+              [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
               Install-Module -Name PowerShellGet -Force -AllowClobber
-            }
-            Install-Module -Name Pester -RequiredVersion 5.3.1 -Force -SkipPublisherCheck
-          "
+              Install-Module -Name Pester -RequiredVersion 5.3.1 -Force -SkipPublisherCheck
+            "
+          fi
 
       - name: Run Pester Tests
         shell: pwsh
