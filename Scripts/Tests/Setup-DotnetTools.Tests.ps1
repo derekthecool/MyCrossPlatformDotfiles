@@ -20,9 +20,15 @@ BeforeAll {
 
 Describe 'Setup-DotnetShellCompletion Tests' {
 
-    It 'Sets the DOTNET_CLI_TELEMETRY_OPTOUT environment variable' {
-        Setup-DotnetShellCompletion 2> $null
-        $env:DOTNET_CLI_TELEMETRY_OPTOUT | Should -Be $true
+    Describe 'Dotnet configuration' {
+        It 'Sets the DOTNET_CLI_TELEMETRY_OPTOUT environment variable' {
+            if ($env:GITHUB_ACTIONS -eq 'true') {
+                Set-ItResult -Skipped -Because 'This test is not applicable in GitHub Actions'
+            } else {
+                Setup-DotnetShellCompletion 2> $null
+                $env:DOTNET_CLI_TELEMETRY_OPTOUT | Should -Be $true
+            }
+        }
     }
 
     It 'Registers an argument completer for dotnet when dotnet is available' {
