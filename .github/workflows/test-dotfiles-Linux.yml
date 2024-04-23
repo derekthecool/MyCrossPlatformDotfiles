@@ -19,16 +19,10 @@ jobs:
           - debian:bullseye
           - fedora:latest
           - archlinux:latest
-          - nixos/nix:latest
     container:
       image: ${{ matrix.container }}
 
     steps:
-      - name: Install Node.js for NixOS
-        if: contains(matrix.container, 'nixos/nix')
-        run: |
-          nix-env -iA nixpkgs.nodejs-18_x
-
       - name: Check out repository code
         uses: actions/checkout@v2
 
@@ -43,22 +37,19 @@ jobs:
               pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
               ;;
             fedora*)
-              dnf install -y 'dnf-command(config-manager)'
-              dnf config-manager --add-repo https://packages.microsoft.com/fedora/$(. /etc/os-release && echo $VERSION_ID)/prod
+              dnf install -y wget git
+              rpm -Uvh https://packages.microsoft.com/config/fedora/$(. /etc/os-release && echo $VERSION_ID)/packages-microsoft-prod.rpm
               dnf install -y powershell
               pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
               ;;
             archlinux*)
-              pacman -Sy --noconfirm wget git base-devel
-              echo -e "builduser\nbuilduser\n" | adduser builduser
-              printf 'builduser ALL=(ALL) NOPASSWD: ALL\n' | tee -a /etc/sudoers
+              pacman -Sy --noconfirm wget git base-devel sudo
+              useradd -m builduser
+              passwd -d builduser
+              echo "builduser ALL=(ALL) NOPASSWD: ALL" | tee -a /etc/sudoers
               sudo -u builduser sh -c "cd; git clone https://aur.archlinux.org/yay.git; cd yay; makepkg -si --noconfirm"
               sudo -u builduser yay -S --noconfirm powershell
               sudo -u builduser pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
-              ;;
-            nixos/nix*)
-              nix-env -iA nixpkgs.powershell
-              pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
               ;;
           esac
 
