@@ -38,7 +38,8 @@ jobs:
               ;;
             fedora*)
               rpm --import https://packages.microsoft.com/keys/microsoft.asc
-              curl https://packages.microsoft.com/config/fedora/$(. /etc/os-release && echo $VERSION_ID)/prod.repo | tee /etc/yum.repos.d/microsoft.repo
+              dnf install -y dnf-plugins-core
+              dnf config-manager --add-repo https://packages.microsoft.com/fedora/$(. /etc/os-release && echo $VERSION_ID)/prod.repo
               dnf makecache
               dnf install -y powershell
               pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
@@ -48,8 +49,8 @@ jobs:
               useradd -m builduser
               passwd -d builduser
               echo "builduser ALL=(ALL) NOPASSWD: ALL" | tee -a /etc/sudoers
-              sudo -u builduser sh -c "cd; curl -L https://github.com/PowerShell/PowerShell/releases/download/v7.2.0/powershell-7.2.0-linux-x64.tar.gz | tar xz"
-              sudo -u builduser sh -c "cd; ./powershell/./pwsh -Command 'Install-Module -Name Pester -Force -SkipPublisherCheck'"
+              sudo -u builduser bash -c "cd; git clone https://aur.archlinux.org/powershell-bin.git; cd powershell-bin; makepkg -si --noconfirm"
+              sudo -u builduser pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
               ;;
           esac
 
