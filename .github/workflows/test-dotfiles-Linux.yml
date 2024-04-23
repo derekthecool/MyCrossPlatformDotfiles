@@ -50,6 +50,7 @@ jobs:
           elif [ -f /etc/alpine-release ]; then
             # For Alpine
             apk add --no-cache powershell
+          fi
 
       - name: Install and Configure PowerShell Environment
         run: |
