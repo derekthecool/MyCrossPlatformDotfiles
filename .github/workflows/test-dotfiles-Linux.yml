@@ -1,6 +1,12 @@
 name: Run Pester Tests on Linux
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   test:
@@ -21,26 +27,22 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v2
 
-      - name: Setup Environment for Debian
-        if: contains(matrix.container, 'debian')
-        run: |
-          echo "DOTNET_CLI_TELEMETRY_OPTOUT=true" >> $GITHUB_ENV
-
-      - name: Install and Setup Environment
+      - name: Setup Environment
         run: |
           if [ -f /etc/debian_version ]; then
             apt-get update && apt-get install -y wget apt-transport-https git software-properties-common
             wget -q "https://packages.microsoft.com/config/debian/$(. /etc/os-release && echo $VERSION_ID)/packages-microsoft-prod.deb"
             dpkg -i packages-microsoft-prod.deb
             apt-get update && apt-get install -y powershell
+            pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
           elif [ -f /etc/centos-release ]; then
-            yum clean all
-            yum makecache --disablerepo='*' --enablerepo='base,updates'
+            yum install -y epel-release
             yum install -y powershell
+            pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
           elif [ -f /etc/alpine-release ]; then
             apk add --no-cache git
             apk add --no-cache powershell
-            # Note: PowerShell on Alpine may have limited functionality
+            pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
           fi
 
       - name: Run Pester Tests
