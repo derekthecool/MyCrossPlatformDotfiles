@@ -9,10 +9,10 @@ vim.defer_fn(function()
 
     local mapping_options = { 't', 'n', 'i', }
 
-    -- local build = 'Import-Module PowershellTools -Force -Verbose'
-    -- vim.keymap.set(mapping_options, keymap_starter_key .. "u;", function()
-    --     toggleterm.exec(build)
-    -- end, { silent = true, desc = build })
+    local build = 'Import-Module Dots -Force -DisableNameChecking'
+    vim.keymap.set(mapping_options, keymap_starter_key .. "u;", function()
+        toggleterm.exec(build)
+    end, { silent = true, desc = build })
 
     local test = 'Invoke-Pester'
     vim.keymap.set(mapping_options, keymap_starter_key .. "ui", function()
@@ -29,7 +29,7 @@ vim.defer_fn(function()
 
     -- Run initial start up commands in the terminal
     vim.cmd('ToggleTerm direction=vertical')
-    toggleterm.exec('Import-Module Dots -Force -Verbose')
+    toggleterm.exec('Import-Module Dots -Force -Verbose -DisableNameChecking')
 
     vim.notify('Ready to run', vim.log.levels.INFO, { title = '.nvim.lua commands' })
 end, delay_ms)

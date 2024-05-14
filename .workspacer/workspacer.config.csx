@@ -204,6 +204,7 @@ return new Action<IConfigContext>((IConfigContext context) =>
     // My applications do not get tiled when run as admin
     context.WindowRouter.RouteProcessName("Wallaby_Tool", MyWorkSpaceNames.Device);
     context.WindowRouter.RouteProcessName("BelleX_Server", MyWorkSpaceNames.Device);
+    context.WindowRouter.RouteProcessName("Quokka Companion", MyWorkSpaceNames.Device);
     context.WindowRouter.RouteProcessName("BelleX_DealerTool", MyWorkSpaceNames.Device);
     // The title of glow window appears in all of my WPF apps
     context.WindowRouter.RouteTitle("GlowWindow", MyWorkSpaceNames.Device);
