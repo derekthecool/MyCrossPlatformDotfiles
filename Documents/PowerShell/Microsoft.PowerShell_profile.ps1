@@ -113,12 +113,13 @@ $env:PSModulePath += "$([System.IO.Path]::PathSeparator)$HOME/Scripts/"
 
 function Get-MissingModules {
     $modules = @(
-        'Catesta',
-        'Microsoft.PowerShell.SecretManagement',
-        'Microsoft.PowerShell.SecretStore',
-        'Pester',
-        'ps2exe',
-        'PSProfiler',
+        'PSScriptTools'
+        'Catesta'
+        'Microsoft.PowerShell.SecretManagement'
+        'Microsoft.PowerShell.SecretStore'
+        'Pester'
+        'ps2exe'
+        'PSProfiler'
         'PSScriptAnalyzer'
     )
 
