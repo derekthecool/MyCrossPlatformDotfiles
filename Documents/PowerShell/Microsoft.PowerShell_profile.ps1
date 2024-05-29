@@ -4,10 +4,13 @@
 # Set Starship prompt
 # Config file is located: ~/.config/starship.toml
 # Support for OSC7 (CWD detector or wezterm terminal emulator)
+
 $prompt = ''
-function Invoke-Starship-PreCommand {
+function Invoke-Starship-PreCommand
+{
     $current_location = $executionContext.SessionState.Path.CurrentLocation
-    if ($current_location.Provider.Name -eq 'FileSystem') {
+    if ($current_location.Provider.Name -eq 'FileSystem')
+    {
         $ansi_escape = [char]27
         $provider_path = $current_location.ProviderPath -replace '\\', '/'
         $env:r = [IO.Path]::GetPathRoot($provider_path)
@@ -26,13 +29,14 @@ Invoke-Expression (&starship init powershell)
 # And run the command Get-PSReadLineKeyHandler
 # Define PSReadLine options in a hashtable
 $PSReadLineOptions = @{
-    EditMode = 'Vi'
-    ViModeIndicator = [Microsoft.PowerShell.ViModeStyle]::Prompt
-    PredictionSource = 'HistoryAndPlugin'
-    PredictionViewStyle = 'ListView'
-    HistoryNoDuplicates = $true
+    EditMode                      = 'Vi'
+    ViModeIndicator               = [Microsoft.PowerShell.ViModeStyle]::Prompt
+    PredictionSource              = 'HistoryAndPlugin'
+    PredictionViewStyle           = 'ListView'
+    HistoryNoDuplicates           = $true
     HistorySearchCursorMovesToEnd = $true
-    BellStyle = 'None'
+    BellStyle                     = 'None'
+
     # Colors = @{
     #     Command = 'Magenta'
     #     ContinuationPrompt = 'DarkGray'
@@ -47,17 +51,22 @@ $PSReadLineOptions = @{
     # }
 }
 
+$PSStyle.Progress.UseOSCIndicator = $true
+
 # Apply PSReadLine options from the hashtable
 Set-PSReadLineOption @PSReadLineOptions
 
 # Apply the configured PSReadLine options
 Set-PSReadLineOption @PSReadLineOptions
 
-function OnViModeChange {
-    if ($args[0] -eq 'Command') {
+function OnViModeChange
+{
+    if ($args[0] -eq 'Command')
+    {
         # Set the cursor to a blinking block.
         Write-Host -NoNewline "`e[1 q"
-    } else {
+    } else
+    {
         # Set the cursor to a blinking line.
         Write-Host -NoNewline "`e[5 q"
     }
@@ -83,20 +92,24 @@ Set-PSReadLineKeyHandler -Chord Ctrl+y `
     $line = $null
     $cursor = $null
     [Microsoft.PowerShell.PSConsoleReadLine]::GetBufferState([ref]$line, [ref]$cursor)
-    if ($selectionStart -ne -1) {
+    if ($selectionStart -ne -1)
+    {
         $replacement = '(' + $line.SubString($selectionStart, $selectionLength) + ')'
         [Microsoft.PowerShell.PSConsoleReadLine]::Replace($selectionStart, $selectionLength, $replacement)
         [Microsoft.PowerShell.PSConsoleReadLine]::SetCursorPosition($selectionStart + $selectionLength + 2)
-    } else {
+    } else
+    {
         [Microsoft.PowerShell.PSConsoleReadLine]::Replace(0, $line.Length, '(' + $line + ')')
         [Microsoft.PowerShell.PSConsoleReadLine]::EndOfLine()
     }
 }
 
 # PSFzf mappings
-try {
+try
+{
     Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
-} catch {
+} catch
+{
     Write-Host 'PsFzf Is not installed, installing now' -ForegroundColor Red
     Install-Module -Force PSFzf
 }
@@ -111,26 +124,10 @@ $env:VISUAL = 'nvim'
 # Make sure to use PathSeparator because windows uses ';' and Linux uses ':'
 $env:PSModulePath += "$([System.IO.Path]::PathSeparator)$HOME/Scripts/"
 
-function Get-MissingModules {
-    $modules = @(
-        'PSScriptTools'
-        'Catesta'
-        'Microsoft.PowerShell.SecretManagement'
-        'Microsoft.PowerShell.SecretStore'
-        'Pester'
-        'ps2exe'
-        'PSProfiler'
-        'PSScriptAnalyzer'
-    )
-
-    $modules | ForEach-Object {
-        Install-Module -Name $_ -Force
-    }
-}
-
 # Proxy function to load my powershell module when needed
 # This function will delete itself and the proper one will be loaded
-function dot {
+function dot
+{
     # Delete this proxy function
     Remove-Item function:\dot
 
