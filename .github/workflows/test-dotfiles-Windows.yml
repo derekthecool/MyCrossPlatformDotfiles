@@ -13,7 +13,6 @@ jobs:
         windows_version:
           - windows-2022  # Equivalent to windows-latest
           - windows-2019
-          - windows-2016
 
     steps:
       - name: Check out repository code
