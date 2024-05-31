@@ -10,7 +10,19 @@ $scriptblock = {
     Get-FlutterCommandsAndNonGlobalOptions -FlutterCommand $commandAst
     | ForEach-Object {
         $item = $_.CommandOrHelp
-        [System.Management.Automation.CompletionResult]::new($item, $item, 'ParameterValue', $item)
+
+        $CompletionResultValues = @{
+            CompletionText = $item
+            ListItemText = $item
+            ResultType = 'ParameterValue'
+            ToolTip = $item
+        }
+
+        [System.Management.Automation.CompletionResult]::new(
+            $CompletionResultValues['CompletionText'],
+            $CompletionResultValues['ListItemText'],
+            $CompletionResultValues['ResultType'],
+            $CompletionResultValues['ToolTip'])
     }
 
 }

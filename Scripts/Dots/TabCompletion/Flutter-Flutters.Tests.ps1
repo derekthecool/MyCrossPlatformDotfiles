@@ -30,7 +30,7 @@ Describe 'Testing Get-FlutterCommandsAndNonGlobalOptions' -Skip:$skipTests {
     It 'Get-FlutterCommandsAndNonGlobalOptions with input [<InputCommand>] should contain this many <OptionsOrCommands> options or commands' -TestCases @(
         @{
             InputCommand = 'flutter'
-            OptionsOrCommands = 26
+            OptionsOrCommands = 33
         }
         @{
             InputCommand = 'flutter run'
