@@ -77,6 +77,8 @@ Set-PSReadLineOption -ViModeIndicator Script -ViModeChangeHandler $Function:OnVi
 Set-PSReadLineKeyHandler -Chord Ctrl+u -Function PreviousHistory
 Set-PSReadLineKeyHandler -Chord Ctrl+d -Function NextHistory
 Set-PSReadLineKeyHandler -Chord × -Function DeleteEndOfBuffer
+# Somehow Ctrl+Alt+H  == Backspace. Does not seem to work in a neovim terminal
+Set-PSReadLineKeyHandler -Chord Ctrl+Alt+H -Function BackwardDeleteWord
 
 # Put parentheses around the selection or entire line and move the cursor to after the closing paren
 Set-PSReadLineKeyHandler -Chord Ctrl+y `
