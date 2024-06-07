@@ -39,4 +39,5 @@ $scriptblock = {
     }
 }
 
+$env:DOTNET_CLI_TELEMETRY_OPTOUT = $true
 Register-ArgumentCompleter -Native -CommandName dotnet -ScriptBlock $scriptblock

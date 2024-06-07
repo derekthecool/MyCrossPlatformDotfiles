@@ -110,13 +110,12 @@ Set-PSReadLineKeyHandler -Chord Ctrl+y `
 try
 {
     Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
+    Set-PSReadLineKeyHandler -Key Tab -ScriptBlock { Invoke-FzfTabCompletion }
 } catch
 {
     Write-Host 'PsFzf Is not installed, installing now' -ForegroundColor Red
     Install-Module -Force PSFzf
 }
-
-Set-PSReadLineKeyHandler -Key Tab -ScriptBlock { Invoke-FzfTabCompletion }
 
 # Set editor environment variables
 $env:EDITOR = 'nvim'
