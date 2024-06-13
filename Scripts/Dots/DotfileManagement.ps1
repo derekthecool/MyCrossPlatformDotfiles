@@ -41,11 +41,11 @@ function git
         }
 
         # Run git command with modified arguments
-        Write-Host "Using dot git command"
+        Write-Verbose "Using dot git command"
         & $actualGit --git-dir="$HOME/.cfg" --work-tree="$HOME" @arguments
     } else
     {
-        Write-Host "Using normal git command"
+        Write-Verbose "Using normal git command"
         & $actualGit @arguments
     }
 }

@@ -4,7 +4,6 @@
 # Set Starship prompt
 # Config file is located: ~/.config/starship.toml
 # Support for OSC7 (CWD detector or wezterm terminal emulator)
-
 $prompt = ''
 function Invoke-Starship-PreCommand
 {
@@ -120,6 +119,22 @@ try
 # Set editor environment variables
 $env:EDITOR = 'nvim'
 $env:VISUAL = 'nvim'
+
+$PSDefaultParameterValues = @{
+    'Out-Default:OutVariable'           = 'out'         # Save output to $LastResult
+    'Out-File:Encoding'                 = 'utf8'        # PS5.1 defaults to ASCII
+    'Export-Csv:NoTypeInformation'      = $true         # PS5.1 defaults to $false
+    'ConvertTo-Csv:NoTypeInformation'   = $true         # PS5.1 defaults to $false
+    'Receive-Job:Keep'                  = $true         # Prevents accidental loss of output
+    'Install-Module:AllowClobber'       = $true         # Default behavior in Install-PSResource
+    'Install-Module:Force'              = $true         # Default behavior in Install-PSResource
+    'Install-Module:SkipPublisherCheck' = $true         # Default behavior in Install-PSResource
+    #'Group-Object:NoElement'            = $true         # Minimize noise in output
+    'Find-Module:Repository'            = 'PSGallery'   # Useful if you have private test repos
+    'Install-Module:Repository'         = 'PSGallery'   # Useful if you have private test repos
+    'Find-PSResource:Repository'        = 'PSGallery'   # Useful if you have private test repos
+    'Install-PSResource:Repository'     = 'PSGallery'   # Useful if you have private test repos
+}
 
 # Add my custom powershell modules to the psmodulepath
 # Make sure to use PathSeparator because windows uses ';' and Linux uses ':'
