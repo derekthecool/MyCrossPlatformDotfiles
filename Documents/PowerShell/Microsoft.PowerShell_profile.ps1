@@ -125,18 +125,21 @@ $env:VISUAL = 'nvim'
 # Make sure to use PathSeparator because windows uses ';' and Linux uses ':'
 $env:PSModulePath += "$([System.IO.Path]::PathSeparator)$HOME/Scripts/"
 
-# # Proxy function to load my powershell module when needed
-# # This function will delete itself and the proper one will be loaded
-# function dot
-# {
-#     # Delete this proxy function
-#     Remove-Item function:\dot
-#
-#     # Import the module
-#     # -Force helps to always load the latest version
-#     # -DisableNameChecking ignores warnings about unapproved verbs
-#     Import-Module "$HOME/Scripts/Dots/Dots.psd1" -Force -DisableNameChecking
-#
-#     # Call the new function so the first call is not noticeably different
-#     dot $args
-# }
+$actualGit = Get-Command git
+function git
+{
+    $normalizedPWD = $PWD.Path -replace '\\', '/'
+    $normalizedScriptsPath = "$HOME/Scripts" -replace '\\', '/'
+    $insideDotfiles = $normalizedPWD -match $normalizedScriptsPath
+
+    if ($insideDotfiles)
+    {
+        Remove-Item function:git
+        Write-Host "Loading module Dots for better bare repo dotfile git function"
+        Import-Module -DisableNameChecking -Force Dots
+        git $args
+    } else
+    {
+        & $actualGit $args
+    }
+}

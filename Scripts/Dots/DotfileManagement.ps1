@@ -1,42 +1,82 @@
+$actualGit = Get-Command git
+
 # Function to using my git bare repo for my windows config files
-function dot {
+function dot
+{
     # Create a copy of the arguments array to manipulate
     $arguments = $args
 
     # Check if the first argument is 'git' and remove it if so
     # This will help steno speed greatly. Now I can just run commands like 'dot git status --short'
     # And it'll work
-    if ($arguments.Length -gt 0 -and $arguments[0] -eq 'git') {
+    if ($arguments.Length -gt 0 -and $arguments[0] -eq 'git')
+    {
         $arguments = $arguments[1..($arguments.Length - 1)]
     }
 
     # Run git command with modified arguments
-    git --git-dir="$HOME/.cfg" --work-tree="$HOME" @arguments
+    & $actualGit --git-dir="$HOME/.cfg" --work-tree="$HOME" @arguments
+}
+
+# This function allows me to use normal git commands from inside my dot files directory
+# without needing to call the 'dot' function to access the bare repo.
+function git
+{
+    # Create a copy of the arguments array to manipulate
+    $arguments = $args
+
+    $normalizedPWD = $PWD.Path -replace '\\', '/'
+    $normalizedScriptsPath = "$HOME/Scripts" -replace '\\', '/'
+    $insideDotfiles = $normalizedPWD -match $normalizedScriptsPath
+    Write-Verbose "normalizedPWD: $normalizedPWD, insideDotfiles: $insideDotfiles, normalizedScriptsPath: $normalizedScriptsPath"
+
+    if ($insideDotfiles)
+    {
+        # Check if the first argument is 'git' and remove it if so
+        # This will help steno speed greatly. Now I can just run commands like 'dot git status --short'
+        # And it'll work
+        if ($arguments.Length -gt 0 -and $arguments[0] -eq 'git')
+        {
+            $arguments = $arguments[1..($arguments.Length - 1)]
+        }
+
+        # Run git command with modified arguments
+        Write-Host "Using dot git command"
+        & $actualGit --git-dir="$HOME/.cfg" --work-tree="$HOME" @arguments
+    } else
+    {
+        Write-Host "Using normal git command"
+        & $actualGit @arguments
+    }
 }
 
 # Helpful alias for typos like: dotgit status
 New-Alias -Name dotgit -Value dot -ErrorAction SilentlyContinue
 
 # Clone and setup the dotfiles repository with force checkout
-function Initialize-Dotfiles {
+function Initialize-Dotfiles
+{
     param (
         [string]$RepositoryUrl = 'git@github.com:derekthecool/MyCrossPlatformDotfiles.git',
         [string]$ConfigDirectory = "$HOME/.cfg"
     )
 
-    if(-not (Get-Command git -ErrorAction SilentlyContinue)) {
+    if(-not (Get-Command git -ErrorAction SilentlyContinue))
+    {
         Write-Host 'Git is not installed, install that first then try again'
         return 1
     }
 
     # Clone the repository as a bare repository if not already cloned
-    if (-not (Test-Path $ConfigDirectory)) {
+    if (-not (Test-Path $ConfigDirectory))
+    {
         git clone --bare --recurse-submodules $RepositoryUrl $ConfigDirectory
     }
 
     # Create a backup directory
     $backupDir = "$HOME/.config-backup"
-    if (-not (Test-Path $backupDir)) {
+    if (-not (Test-Path $backupDir))
+    {
         New-Item -ItemType Directory -Path $backupDir | Out-Null
     }
 
@@ -49,7 +89,8 @@ function Initialize-Dotfiles {
     Write-Host 'Dotfiles are initialized and ready.'
 }
 
-function Clone-GitRepository {
+function Clone-GitRepository
+{
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]
@@ -60,14 +101,18 @@ function Clone-GitRepository {
         [string]$TargetDirectory
     )
 
-    try {
+    try
+    {
 
         # Ensure the target directory exists, creating any necessary parent directories
-        if (Test-Path -Path $TargetDirectory -ErrorAction SilentlyContinue)  {
-            if($(git rev-parse --is-inside-work-tree) -match 'true') {
+        if (Test-Path -Path $TargetDirectory -ErrorAction SilentlyContinue)
+        {
+            if($(git rev-parse --is-inside-work-tree) -match 'true')
+            {
                 Write-Host "Directory: $TargetDirectory is already a git repository" -ForegroundColor Green
                 return 'complete'
-            } else {
+            } else
+            {
                 Write-Host 'Directory: $Target exists, but is not a git repository, exiting' -ForegroundColor Yellow
                 return 'check on existing files and try again'
             }
@@ -77,23 +122,28 @@ function Clone-GitRepository {
         Write-Host "Cloning repository $RepoURL to $TargetDirectory"
         git clone --recurse-submodules "$RepoURL" "$TargetDirectory"
         return 'complete'
-    } catch {
+    } catch
+    {
         Write-Error "Failed to clone the repository. Error: $_"
         return 'error'
     }
 }
 
-function Get-NeovimConfigurationDirectory {
-    if($IsWindows) {
+function Get-NeovimConfigurationDirectory
+{
+    if($IsWindows)
+    {
         $cloneTargetPath = Join-Path -Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::LocalApplicationData)) -ChildPath 'nvim'
-    } else {
+    } else
+    {
         $cloneTargetPath = Join-Path -Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::ApplicationData)) -ChildPath 'nvim'
     }
     return $cloneTargetPath
 }
 
 # https://github.com/derekthecool/stimpack
-function Get-NeovimConfiguration {
+function Get-NeovimConfiguration
+{
     [Parameter()]
     [string]$RepoURL = 'git@github.com:derekthecool/stimpack.git'
 
@@ -101,13 +151,15 @@ function Get-NeovimConfiguration {
     return Clone-GitRepository -RepoURL "$RepoURL" -TargetDirectory "$cloneTargetPath"
 }
 
-function Get-WeztermConfigurationDirectory {
+function Get-WeztermConfigurationDirectory
+{
     # This path is the same for windows and Linux
     return "$HOME/.config/wezterm"
 }
 
 # https://github.com/derekthecool/WeztermStimpack
-function Get-WeztermConfiguration {
+function Get-WeztermConfiguration
+{
     [Parameter()]
     [string]$RepoURL = 'git@github.com:derekthecool/WeztermStimpack.git'
 
@@ -115,11 +167,14 @@ function Get-WeztermConfiguration {
     return Clone-GitRepository -RepoURL "$RepoURL" -TargetDirectory "$cloneTargetPath"
 }
 
-function Get-PloverConfigurationDirectory {
-    if($IsWindows) {
+function Get-PloverConfigurationDirectory
+{
+    if($IsWindows)
+    {
         # Windows default is uppercase for Plover, but case does not matter on windows file names
         $cloneTargetPath = Join-Path -Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::LocalApplicationData)) -ChildPath 'Plover'
-    } else {
+    } else
+    {
         # Make sure to use lowercase
         $cloneTargetPath = Join-Path -Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::ApplicationData)) -ChildPath 'plover'
     }
@@ -127,7 +182,8 @@ function Get-PloverConfigurationDirectory {
 }
 
 # https://github.com/derekthecool/PloverStenoDictionaries
-function Get-PloverConfiguration {
+function Get-PloverConfiguration
+{
     [Parameter()]
     [string]$RepoURL = 'git@github.com:derekthecool/PloverStenoDictionaries.git'
 
@@ -135,12 +191,14 @@ function Get-PloverConfiguration {
     return Clone-GitRepository -RepoURL "$RepoURL" -TargetDirectory "$cloneTargetPath"
 }
 
-function Get-ExercismConfigurationDirectory {
+function Get-ExercismConfigurationDirectory
+{
     return "$HOME/Exercism"
 }
 
 # https://github.com/derekthecoolther/ExercismProgramming
-function Get-ExercismConfiguration {
+function Get-ExercismConfiguration
+{
     [Parameter()]
     [string]$RepoURL = 'git@github.com:derekthecool/ExercismProgramming.git'
 
@@ -149,14 +207,16 @@ function Get-ExercismConfiguration {
     return Clone-GitRepository -RepoURL "$RepoURL" -TargetDirectory "$cloneTargetPath"
 }
 
-function Get-AllConfigurations {
+function Get-AllConfigurations
+{
     Get-NeovimConfiguration
     Get-WeztermConfiguration
     Get-PloverConfiguration
     Get-ExercismConfiguration
 }
 
-function dots {
+function dots
+{
     $repositories = @(
         Get-NeovimConfigurationDirectory
         Get-WeztermConfigurationDirectory
@@ -170,7 +230,8 @@ function dots {
     Push-Location
 
     $repositories | ForEach-Object {
-        if(-not $(Test-Path "$_")) {
+        if(-not $(Test-Path "$_"))
+        {
             Write-Error "Git repository path $_ does not exist"
             continue
         }

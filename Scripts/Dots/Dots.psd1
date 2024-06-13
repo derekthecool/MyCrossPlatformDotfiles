@@ -59,8 +59,11 @@
         # Functions from ./DotfileManagement.ps1
         'dot'
         'dots'
+        'git'
         'Initialize-Dotfiles'
         'Clone-GitRepository'
+
+        'Add-MasonToolsToPath'
 
         # Lastly, load everything else so every function is available after the first Import-Module
         '*'
@@ -75,7 +78,9 @@
 
     # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry,
     # use an empty array if there are no aliases to export.
-    AliasesToExport = '*'
+    AliasesToExport = @(
+        '*'
+    )
 
     # Processor architecture (None, X86, Amd64) required by this module
     # ProcessorArchitecture = ''
