@@ -1,5 +1,5 @@
 BeforeAll {
-    . ./Flutter-Functions.ps1
+    . $PSScriptRoot/Flutter-Functions.ps1
 }
 
 # Check if the dotnet command is available
