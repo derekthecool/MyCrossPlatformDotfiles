@@ -158,3 +158,8 @@ function git
         & $actualGit $args
     }
 }
+
+Import-Module Posh
+# Start the shell with a powershell tip
+# Seems to not work right now
+# $Posh.Tips
