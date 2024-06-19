@@ -147,6 +147,11 @@ return new Action<IConfigContext>((IConfigContext context) =>
     // Web browsers
     context.WindowRouter.RouteProcessName("Vieb", MyWorkSpaceNames.Web);
     context.WindowRouter.RouteProcessName("firefox", MyWorkSpaceNames.Web);
+    // I do not like chrome but often use it for development purposes, it has a
+    // class of "Chrome_WidgetWin_1". But this is not too good to use because so
+    // many electron applications use this as well.
+    // Send this to the last tab
+    context.WindowRouter.RouteProcessName("chrome", MyWorkSpaceNames.PlusThree);
 
     // Chat apps
     // Old teams
@@ -163,7 +168,6 @@ return new Action<IConfigContext>((IConfigContext context) =>
     context.WindowRouter.RouteProcessName("love", MyWorkSpaceNames.Docs);
 
     // Documents
-    // If obsidian needs a class use "Chrome_WidgetWin_1"
     context.WindowRouter.RouteProcessName("Obsidian", MyWorkSpaceNames.Docs);
     context.WindowRouter.RouteProcessName("WINWORD", MyWorkSpaceNames.Docs);
     context.WindowRouter.RouteProcessName("EXCEL", MyWorkSpaceNames.Docs);
