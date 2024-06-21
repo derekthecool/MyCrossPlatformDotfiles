@@ -31,7 +31,7 @@
     RequiredModules = @(
         @{
             ModuleName    = 'PSScriptTools'
-            ModuleVersion = '2.*.*.*'
+            ModuleVersion = '2.48.0'
         },
         @{
             ModuleName    = 'PSFzf'
