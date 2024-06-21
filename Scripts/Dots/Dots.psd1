@@ -31,7 +31,7 @@
     RequiredModules = @(
         @{
             ModuleName    = 'PSScriptTools'
-            ModuleVersion = '2.48.0'
+            ModuleVersion = '2.*.*.*'
         },
         @{
             ModuleName    = 'PSFzf'
@@ -95,7 +95,9 @@
     # TypesToProcess = @()
 
     # Format files (.ps1xml) to be loaded when importing this module
-    # FormatsToProcess = @()
+    FormatsToProcess = @(
+        './Dots.format.ps1xml'
+    )
 
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
     # NestedModules = @()
