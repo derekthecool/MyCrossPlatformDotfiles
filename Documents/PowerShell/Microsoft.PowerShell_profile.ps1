@@ -134,6 +134,7 @@ $PSDefaultParameterValues = @{
     'Install-Module:Repository'         = 'PSGallery'   # Useful if you have private test repos
     'Find-PSResource:Repository'        = 'PSGallery'   # Useful if you have private test repos
     'Install-PSResource:Repository'     = 'PSGallery'   # Useful if you have private test repos
+    'Import-Module:DisableNameChecking' = $true         # To not warning me of functions or scripts not using verb-noun names
 }
 
 # Add my custom powershell modules to the psmodulepath
