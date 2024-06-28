@@ -4,17 +4,14 @@
 # Set Starship prompt
 # Config file is located: ~/.config/starship.toml
 # Support for OSC7 (CWD detector or wezterm terminal emulator)
-$prompt = ''
+$prompt = ""
 function Invoke-Starship-PreCommand
 {
     $current_location = $executionContext.SessionState.Path.CurrentLocation
-    if ($current_location.Provider.Name -eq 'FileSystem')
+    if ($current_location.Provider.Name -eq "FileSystem")
     {
         $ansi_escape = [char]27
-        $provider_path = $current_location.ProviderPath -replace '\\', '/'
-        $env:r = [IO.Path]::GetPathRoot($provider_path)
-
-        # OSC 7
+        $provider_path = $current_location.ProviderPath -replace "\\", "/"
         $prompt = "$ansi_escape]7;file://${env:COMPUTERNAME}/${provider_path}$ansi_escape\"
     }
     $host.ui.Write($prompt)
@@ -115,6 +112,15 @@ try
     Write-Host 'PsFzf Is not installed, installing now' -ForegroundColor Red
     Install-Module -Force PSFzf
 }
+
+# Init Zoxide
+if(Get-Command zoxide -ErrorAction SilentlyContinue)
+{
+    Invoke-Expression (& { (zoxide init powershell | Out-String) })
+    Remove-Alias cd
+    New-Alias -Name cd -Value z
+}
+
 
 # Set editor environment variables
 $env:EDITOR = 'nvim'
