@@ -35,7 +35,7 @@ behind = '⇣${count}'
 
 [shell]
 fish_indicator = '󰈺 '
-powershell_indicator = '_'
+powershell_indicator = ''
 bash_indicator = '🙏'
 zsh_indicator = '🦓'
 cmd_indicator = '󰇷'
@@ -43,3 +43,75 @@ nu_indicator = 'nu>'
 unknown_indicator = ''
 style = 'cyan bold'
 disabled = false
+
+[directory]
+truncation_length = 3
+truncation_symbol = "…/"
+
+[directory.substitutions]
+'\\\\' = '/'
+'finance' = '💰'
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+
+# Way too slow! Use a environment variable instead some day
+# [custom.ps_version]
+# when = true
+# command = '$PSVersionTable.PSVersion.ToString()'
+# shell = ['pwsh.exe', '-NoProfile', '-Command', '-']
+
+[os]
+disabled = false
+format = "$symbol"
+
+# This is the default symbols table.
+[os.symbols]
+AIX = "➿ "
+Alpaquita = "🔔 "
+AlmaLinux = "💠 "
+Alpine = "🏔️ "
+Amazon = "🙂 "
+Android = "🤖 "
+Arch = "🎗️ "
+Artix = "🎗️ "
+CentOS = "💠 "
+Debian = "🌀 "
+DragonFly = "🐉 "
+Emscripten = "🔗 "
+EndeavourOS = "🚀 "
+Fedora = "🎩 "
+FreeBSD = "😈 "
+Garuda = "🦅 "
+Gentoo = "🗜️ "
+HardenedBSD = "🛡️ "
+Illumos = "🐦 "
+Kali = "🐉 "
+Linux = "🐧 "
+Mabox = "📦 "
+Macos = "🍎 "
+Manjaro = "🥭 "
+Mariner = "🌊 "
+MidnightBSD = "🌘 "
+Mint = "🌿 "
+NetBSD = "🚩 "
+NixOS = "❄️ "
+OpenBSD = "🐡 "
+OpenCloudOS = "☁️ "
+openEuler = "🦉 "
+openSUSE = "🦎 "
+OracleLinux = "🦴 "
+Pop = "🍭 "
+Raspbian = "🍓 "
+Redhat = "🎩 "
+RedHatEnterprise = "🎩 "
+RockyLinux = "💠 "
+Redox = "🧪 "
+Solus = "⛵ "
+SUSE = "🦎 "
+Ubuntu = "🎯 "
+Ultramarine = "🔷 "
+Unknown = "❓ "
+Void = "  "
+Windows = " "
