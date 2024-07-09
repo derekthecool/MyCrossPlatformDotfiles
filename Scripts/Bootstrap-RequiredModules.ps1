@@ -13,5 +13,5 @@ Write-Host "Modules found"
 $modules
 
 $modules | ForEach-Object {
-    Install-Module -Name $_.Name -MaximumVersion $_.Version
+    Install-Module -Name $_.Name -MaximumVersion $_.Version -Force -SkipPublisherCheck
 }
