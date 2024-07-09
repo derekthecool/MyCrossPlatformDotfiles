@@ -1,6 +1,6 @@
 Write-Output "Current location is: $PSScriptRoot"
 
-$modules = Get-ChildItem "$PSScriptRoot/Dots.psd1"
+$modules = Get-ChildItem "./Dots.psd1"
 | Select-String -AllMatches -Pattern "ModuleName\s*=\s*'(?<Name>[a-zA-Z0-9.-]+)';\s*ModuleVersion\s*=\s*'(?<Version>.*?)'"
 | Select-Object -ExpandProperty Matches
 | ForEach-Object {
