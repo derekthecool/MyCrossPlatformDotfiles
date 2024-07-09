@@ -35,6 +35,7 @@ jobs:
               dpkg -i packages-microsoft-prod.deb
               apt-get update && apt-get install -y powershell git
               pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
+              pwsh -File './Scripts/Bootstrap-RequiredModules.ps1'
               ;;
             fedora*)
               rpm --import https://packages.microsoft.com/keys/microsoft.asc
@@ -42,8 +43,7 @@ jobs:
               dnf makecache
               dnf install -y powershell git
               pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
-              pwsh -Command "Install-Module -Name Profiler -Force -SkipPublisherCheck"
-              pwsh -Command "Install-Module -Name PSScriptTools -Force -SkipPublisherCheck"
+              pwsh -File './Scripts/Bootstrap-RequiredModules.ps1'
               ;;
             archlinux*)
               pacman -Sy --noconfirm wget git base-devel sudo
@@ -52,12 +52,9 @@ jobs:
               echo "builduser ALL=(ALL) NOPASSWD: ALL" | tee -a /etc/sudoers
               sudo -u builduser bash -c "cd; git clone https://aur.archlinux.org/powershell-bin.git; cd powershell-bin; makepkg -si --noconfirm"
               sudo -u builduser pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
-              sudo -u builduser pwsh -Command "Install-Module -Name Profiler -Force -SkipPublisherCheck"
-              sudo -u builduser pwsh -Command "Install-Module -Name PSScriptTools -Force -SkipPublisherCheck"
+              sudo -u builduser pwsh -File './Scripts/Bootstrap-RequiredModules.ps1'
               echo "PSModulePath=$PSModulePath:/home/builduser/.local/share/powershell/Modules" | sudo tee -a /etc/environment
               sudo -E pwsh -Command "Import-Module Pester; Get-Module -ListAvailable Pester"
-              sudo -E pwsh -Command "Import-Module Profiler; Get-Module -ListAvailable Pester"
-              sudo -E pwsh -Command "Import-Module Profiler; Get-Module -ListAvailable PSScriptTools"
               ;;
           esac
 

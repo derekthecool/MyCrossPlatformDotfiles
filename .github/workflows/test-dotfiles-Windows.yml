@@ -18,12 +18,11 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v2
 
-      - name: Install Pester
+      - name: Install Pester and Other Required Modules
         shell: pwsh
         run: |
           Install-Module -Name Pester -RequiredVersion 5.3.1 -Force -SkipPublisherCheck
-          Install-Module -Name Profiler -Force -SkipPublisherCheck
-          Install-Module -Name PSScriptTools -Force -SkipPublisherCheck
+          pwsh -File './Scripts/Bootstrap-RequiredModules.ps1'
 
       - name: Run Pester Tests
         shell: pwsh
