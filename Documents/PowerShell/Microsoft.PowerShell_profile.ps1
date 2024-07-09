@@ -117,7 +117,7 @@ try
 if(Get-Command zoxide -ErrorAction SilentlyContinue)
 {
     Invoke-Expression (& { (zoxide init powershell | Out-String) })
-    Remove-Alias cd
+    Remove-Alias cd -ErrorAction SilentlyContinue
     New-Alias -Name cd -Value z
 }
 
