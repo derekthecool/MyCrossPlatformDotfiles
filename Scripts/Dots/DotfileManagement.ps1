@@ -18,37 +18,37 @@ function dot
     & $actualGit --git-dir="$HOME/.cfg" --work-tree="$HOME" @arguments
 }
 
-# This function allows me to use normal git commands from inside my dot files directory
-# without needing to call the 'dot' function to access the bare repo.
-function git
-{
-    # Create a copy of the arguments array to manipulate
-    $arguments = $args
-
-    $normalizedPWD = $PWD.Path -replace '\\', '/'
-    $normalizedScriptsPath = "$HOME/Scripts" -replace '\\', '/'
-    $insideDotfiles = $normalizedPWD -match $normalizedScriptsPath
-    Write-Verbose "normalizedPWD: $normalizedPWD, insideDotfiles: $insideDotfiles, normalizedScriptsPath: $normalizedScriptsPath"
-
-    if ($insideDotfiles)
-    {
-        # Check if the first argument is 'git' and remove it if so
-        # This will help steno speed greatly. Now I can just run commands like 'dot git status --short'
-        # And it'll work
-        if ($arguments.Length -gt 0 -and $arguments[0] -eq 'git')
-        {
-            $arguments = $arguments[1..($arguments.Length - 1)]
-        }
-
-        # Run git command with modified arguments
-        Write-Verbose "Using dot git command"
-        & $actualGit --git-dir="$HOME/.cfg" --work-tree="$HOME" @arguments
-    } else
-    {
-        Write-Verbose "Using normal git command"
-        & $actualGit @arguments
-    }
-}
+# # This function allows me to use normal git commands from inside my dot files directory
+# # without needing to call the 'dot' function to access the bare repo.
+# function git
+# {
+#     # Create a copy of the arguments array to manipulate
+#     $arguments = $args
+#
+#     $normalizedPWD = $PWD.Path -replace '\\', '/'
+#     $normalizedScriptsPath = "$HOME/Scripts" -replace '\\', '/'
+#     $insideDotfiles = $normalizedPWD -match $normalizedScriptsPath
+#     Write-Verbose "normalizedPWD: $normalizedPWD, insideDotfiles: $insideDotfiles, normalizedScriptsPath: $normalizedScriptsPath"
+#
+#     if ($insideDotfiles)
+#     {
+#         # Check if the first argument is 'git' and remove it if so
+#         # This will help steno speed greatly. Now I can just run commands like 'dot git status --short'
+#         # And it'll work
+#         if ($arguments.Length -gt 0 -and $arguments[0] -eq 'git')
+#         {
+#             $arguments = $arguments[1..($arguments.Length - 1)]
+#         }
+#
+#         # Run git command with modified arguments
+#         Write-Verbose "Using dot git command"
+#         & $actualGit --git-dir="$HOME/.cfg" --work-tree="$HOME" @arguments
+#     } else
+#     {
+#         Write-Verbose "Using normal git command"
+#         & $actualGit @arguments
+#     }
+# }
 
 # Helpful alias for typos like: dotgit status
 New-Alias -Name dotgit -Value dot -ErrorAction SilentlyContinue

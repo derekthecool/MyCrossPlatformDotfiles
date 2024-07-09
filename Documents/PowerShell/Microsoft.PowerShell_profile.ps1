@@ -147,24 +147,24 @@ $PSDefaultParameterValues = @{
 # Make sure to use PathSeparator because windows uses ';' and Linux uses ':'
 $env:PSModulePath += "$([System.IO.Path]::PathSeparator)$HOME/Scripts/"
 
-$actualGit = Get-Command git
-function git
-{
-    $normalizedPWD = $PWD.Path -replace '\\', '/'
-    $normalizedScriptsPath = "$HOME/Scripts" -replace '\\', '/'
-    $insideDotfiles = $normalizedPWD -match $normalizedScriptsPath
-
-    if ($insideDotfiles)
-    {
-        Remove-Item function:git
-        Write-Host "Loading module Dots for better bare repo dotfile git function"
-        Import-Module -DisableNameChecking -Force Dots
-        git $args
-    } else
-    {
-        & $actualGit $args
-    }
-}
+# $actualGit = Get-Command git
+# function git
+# {
+#     $normalizedPWD = $PWD.Path -replace '\\', '/'
+#     $normalizedScriptsPath = "$HOME/Scripts" -replace '\\', '/'
+#     $insideDotfiles = $normalizedPWD -match $normalizedScriptsPath
+#
+#     if ($insideDotfiles)
+#     {
+#         Remove-Item function:git
+#         Write-Host "Loading module Dots for better bare repo dotfile git function"
+#         Import-Module -DisableNameChecking -Force Dots
+#         git $args
+#     } else
+#     {
+#         & $actualGit $args
+#     }
+# }
 
 Import-Module Posh
 # Start the shell with a powershell tip
