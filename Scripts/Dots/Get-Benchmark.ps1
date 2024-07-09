@@ -8,7 +8,8 @@ function Get-Benchmark
   )
 
   # Run the Profiler module function Trace-Script and send all verbose printing to null
-  Trace-Script -ScriptBlock $ScriptBlock 6>$null
+  $trace = Trace-Script -ScriptBlock $ScriptBlock 6>$null
+  return $trace
 }
 
 function Get-BenchmarkTotalMilliseconds {
