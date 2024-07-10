@@ -13,5 +13,10 @@ Write-Host "Modules found"
 $modules
 
 $modules | ForEach-Object {
+    Write-Host "Installing $($_.Name)"
     Install-Module -Name $_.Name -MaximumVersion $_.Version -Force -SkipPublisherCheck
+    Write-Host "Importing $($_.Name)"
+    Import-Module -Name $_.Name
 }
+
+Get-Module -All
