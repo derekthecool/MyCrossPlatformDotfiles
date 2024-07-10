@@ -55,19 +55,20 @@ Set-PSReadLineOption @PSReadLineOptions
 # Apply the configured PSReadLine options
 Set-PSReadLineOption @PSReadLineOptions
 
-function OnViModeChange
-{
-    if ($args[0] -eq 'Command')
-    {
-        # Set the cursor to a blinking block.
-        Write-Host -NoNewline "`e[1 q"
-    } else
-    {
-        # Set the cursor to a blinking line.
-        Write-Host -NoNewline "`e[5 q"
-    }
-}
-Set-PSReadLineOption -ViModeIndicator Script -ViModeChangeHandler $Function:OnViModeChange
+# function OnViModeChange
+# {
+#     if ($args[0] -eq 'Command')
+#     {
+#         # Set the cursor to a blinking block.
+#         #Write-Host -NoNewline "test test`e[1 q"
+#         Write-Host -NoNewline $PSStyle.Bold + "🐮" + $PSStyle.BoldOf
+#     } else
+#     {
+#         # Set the cursor to a blinking line.
+#         Write-Host -NoNewline $PSStyle.Bold + "✌🏼" + $PSStyle.BoldOf
+#     }
+# }
+# Set-PSReadLineOption -ViModeIndicator Script -ViModeChangeHandler $Function:OnViModeChange
 
 # Custom key mappings
 Set-PSReadLineKeyHandler -Chord Ctrl+u -Function PreviousHistory
@@ -127,7 +128,7 @@ $env:EDITOR = 'nvim'
 $env:VISUAL = 'nvim'
 
 $PSDefaultParameterValues = @{
-    'Out-Default:OutVariable'           = 'out'         # Save output to $LastResult
+    'Out-Default:OutVariable'           = 'LastResult'         # Save output to $LastResult
     'Out-File:Encoding'                 = 'utf8'        # PS5.1 defaults to ASCII
     'Export-Csv:NoTypeInformation'      = $true         # PS5.1 defaults to $false
     'ConvertTo-Csv:NoTypeInformation'   = $true         # PS5.1 defaults to $false
