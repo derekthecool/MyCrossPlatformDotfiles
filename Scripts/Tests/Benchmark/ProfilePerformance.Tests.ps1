@@ -1,12 +1,9 @@
 BeforeAll {
-  Import-Module $PSScriptRoot/../../Dots/Dots.psd1
+  Import-Module $PSScriptRoot/../../Dots/Dots.psd1 -Verbose -Force
+  Import-Module Selenium -Verbose -Force
 }
 
 Describe 'Profile benchmarks' {
-  # BeforeEach {
-  #   Remove-Module -Name Dots
-  #   Import-Module $PSScriptRoot/../../Dots/Dots.psd1
-  # }
   It 'Profile should run' {
     { . $PROFILE | Should -Not -Throw }
   }
