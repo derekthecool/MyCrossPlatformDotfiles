@@ -1,6 +1,6 @@
 BeforeAll {
-  Import-Module $PSScriptRoot/../../Dots/Dots.psd1 -Verbose -Force
   Import-Module Selenium -Verbose -Force
+  Import-Module $PSScriptRoot/../../Dots/Dots.psd1 -Verbose -Force
 }
 
 Describe 'Profile benchmarks' {
