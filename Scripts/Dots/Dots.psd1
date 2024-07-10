@@ -32,9 +32,11 @@
     @{
       ModuleName    = 'PSScriptTools'; ModuleVersion = '2.48.0'
     },
-    @{
-      ModuleName    = 'PSFzf'; ModuleVersion = '2.5.22'
-    },
+    # Throws errors when import my module if fzf is not installed
+    # @{
+    #   ModuleName    = 'PSFzf'
+    #   ModuleVersion = '2.5.22'
+    # },
     @{
       ModuleName    = 'Selenium'; ModuleVersion = '4.0.0'
     },
