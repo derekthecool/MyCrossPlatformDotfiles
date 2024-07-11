@@ -21,6 +21,14 @@ local naughty = require('naughty')
 local menubar = require('menubar')
 local hotkeys_popup = require('awful.hotkeys_popup')
 
+
+local photos = '/home/derek/MyDesktopBackgrounds'
+if not gears.filesystem.is_dir(photos) then
+    -- use images from Derek Taylor (DT) : git clone https://gitlab.com/dwt1/wallpapers.git ~/MyDesktopBackgrounds
+    awful.spawn.with_shell('git clone https://gitlab.com/dwt1/wallpapers.git ~/MyDesktopBackgrounds')
+end
+
+
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 -- require('awful.hotkeys_popup.keys')
