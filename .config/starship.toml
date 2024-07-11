@@ -10,11 +10,9 @@ command_timeout = 3000
 add_newline = true
 
 [character]
-success_symbol = '[➜](bold green) '
-error_symbol = '[✗](bold red) '
-vimcmd_symbol = '[V](bold green) '
-vimcmd_replace_symbol = '[V](bold blue) '
-vimcmd_visual_symbol = '[❮](bold purple)'
+success_symbol = '[➜](bold green)'
+error_symbol = '[✗](bold red)'
+vimcmd_symbol = '[](bold yellow)'
 
 [git_commit]
 commit_hash_length = 7
