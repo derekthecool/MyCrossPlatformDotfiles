@@ -3,13 +3,23 @@
 # $params = ($list | ForEach-Object { [uri]::EscapeDataString($_) }) -join ","
 function Get-GitIgnore
 {
-    $AllTemplates = Invoke-WebRequest 'https://www.toptal.com/developers/gitignore/api/list?format=json' | ConvertFrom-Json
+    param (
+        [Parameter()]
+        [switch]$Write
+    )
 
-    # Loop through each property
-    foreach ($property in $AllTemplates.PSObject.Properties)
+    $AllTemplates = (Invoke-RestMethod https://www.toptal.com/developers/gitignore/api/list) -split ','
+    $selected = $AllTemplates | Invoke-Fzf -Prompt 'Choose gitignore file'
+
+    Write-Host "Selected gitignore: $selected"
+    $gitignoreContent = Invoke-RestMethod -Uri "https://www.toptal.com/developers/gitignore/api/$selected"
+
+    if($Write)
     {
-        $propertyName = $property.Name
-        $propertyValue = $property.Value
-        Write-Output "$propertyName : $propertyValue"
+        Write-Host ".gitignore written"
+        $gitignoreContent | Out-File -FilePath $(Join-Path -path $pwd -ChildPath ".gitignore") -Encoding ascii
+    } else
+    {
+        $gitignoreContent
     }
 }
