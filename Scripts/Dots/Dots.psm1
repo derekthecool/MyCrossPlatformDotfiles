@@ -1,6 +1,20 @@
 # Dot source all local scripts
 Write-Verbose "Getting ready to dot source files from $PSScriptRoot"
-Get-ChildItem "$PSScriptRoot/*.ps1" -Exclude '*Tests*', '*Dots.EzFormat.ps1*', '*Demos*', '*.demo.ps1' -Recurse
+
+$ExcludeItems =  @(
+    # Pester tests
+    '*Tests*'
+
+    # EZOut items
+    '*.format.ps1'
+    '*Dots.EzFormat.ps1*'
+
+    # ShowDemo items
+    '*Demos*'
+    '*.demo.ps1'
+)
+
+Get-ChildItem "$PSScriptRoot/*.ps1" -Exclude $ExcludeItems -Recurse
 | ForEach-Object {
     Write-Verbose "Sourcing: $($_.FullName)"
     . $_.FullName
