@@ -26,14 +26,14 @@ tag_disabled = false
 # git branch --format "%(refname:short) %(upstream)"
 [git_status]
 style = 'blink green'
-conflicted = '🏳'
+conflicted = ''
 up_to_date = '✓'
-untracked = '🤷'
-stashed = '📦'
-modified = '📝'
+untracked = ''
+stashed = 'S'
+modified = 'M'
 staged = '[++\($count\)](green)'
-renamed = '👅'
-deleted = '🗑'
+renamed = 'R'
+deleted = 'D'
 ahead = '⇡${count}'
 diverged = '⇕⇡${ahead_count}⇣${behind_count}'
 behind = '⇣${count}'
@@ -41,8 +41,8 @@ behind = '⇣${count}'
 [shell]
 fish_indicator = '󰈺 '
 powershell_indicator = ''
-bash_indicator = '🙏'
-zsh_indicator = '🦓'
+bash_indicator = ''
+zsh_indicator = 'Z'
 cmd_indicator = '󰇷'
 nu_indicator = 'nu>'
 unknown_indicator = ''
@@ -80,7 +80,7 @@ AlmaLinux = "💠 "
 Alpine = "🏔️ "
 Amazon = "🙂 "
 Android = "🤖 "
-Arch = "🎗️ "
+Arch = "󰣇 "
 Artix = "🎗️ "
 CentOS = "💠 "
 Debian = "🌀 "
@@ -121,16 +121,3 @@ Ultramarine = "🔷 "
 Unknown = "❓ "
 Void = "  "
 Windows = " "
-
-# [localip]
-# ssh_only = false
-# format = '@[$localipv4](bold red) '
-# disabled = false
-
-# [shlvl]
-# disabled = false
-# format = '[$symbol$shlvl]($style)'
-# repeat = true
-# symbol = '❯'
-# repeat_offset = 1
-# threshold = 0
