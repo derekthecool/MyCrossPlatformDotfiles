@@ -16,3 +16,5 @@
 	format = man
 [credential "helperselector"]
 	selected = manager
+[includeIf "gitdir:~/repos/"]
+	path = "~/repos/.gitconfig"
