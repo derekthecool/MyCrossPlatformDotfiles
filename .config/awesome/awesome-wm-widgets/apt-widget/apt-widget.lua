@@ -63,14 +63,6 @@ local apt_widget = wibox.widget({
 	end,
 })
 
-local apt_widget_button = wibox.widget({
-	{
-		apt_widget,
-		widget = wibox.container.margin,
-	},
-	widget = clickable_container, -- luacheck: ignore  (todo fix)
-})
-
 --- Parses the line and creates the package table out of it
 --- yaru-theme-sound/focal-updates,focal-updates 20.04.10.1 all [upgradable from: 20.04.8]
 local parse_package = function(line)
@@ -99,6 +91,7 @@ local function worker(user_args)
 	local pointer = 0
 	local min_widgets = 5
 	local carousel = false
+    local icon_control = args.icon_control
 
 	local function rebuild_widget(containers, errors, _, _)
 		local to_update = {}
@@ -353,7 +346,7 @@ local function worker(user_args)
 	end)))
 
 	wibox_popup:connect_signal("mouse::leave", function()
-		if wibox_popup.visible then
+		if wibox_popup.visible and not icon_control then
 			wibox_popup.visible = false
 		end
 	end)
