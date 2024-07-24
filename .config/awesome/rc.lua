@@ -691,4 +691,4 @@ beautiful.useless_gap = 3
 -- use images from Derek Taylor (DT) : git clone https://gitlab.com/dwt1/wallpapers.git ~/MyDesktopBackgrounds
 awful.spawn.with_shell('nitrogen --set-zoom-fill --random ~/MyDesktopBackgrounds/')
 awful.spawn.with_shell('picom -b')
-awful.spawn.with_shell('wezterm')
+awful.spawn.once('wezterm')
