@@ -21,13 +21,11 @@ local naughty = require('naughty')
 local menubar = require('menubar')
 local hotkeys_popup = require('awful.hotkeys_popup')
 
-
 local photos = '/home/derek/MyDesktopBackgrounds'
 if not gears.filesystem.is_dir(photos) then
     -- use images from Derek Taylor (DT) : git clone https://gitlab.com/dwt1/wallpapers.git ~/MyDesktopBackgrounds
     awful.spawn.with_shell('git clone https://gitlab.com/dwt1/wallpapers.git ~/MyDesktopBackgrounds')
 end
-
 
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
@@ -295,7 +293,15 @@ awful.screen.connect_for_each_screen(function(s)
             MyKeyboardLayout,
             wibox.widget.systray(),
             batteryarc_widget(),
-            volume_widget(),
+            volume_widget({
+                -- TODO: (Derek Lomax) Thu 25 Jul 2024 08:27:59 AM MDT, Fix my
+                -- arch install script to better install audio. Manjaro worked
+                -- with this volume widget without these custom config items.
+                card = 0,
+                device = 'default',
+
+                widget_type = 'arc',
+            }),
             docker_widget(),
             mytextclock,
             s.mylayoutbox,
