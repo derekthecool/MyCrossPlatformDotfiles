@@ -233,8 +233,11 @@ awful.screen.connect_for_each_screen(function(s)
 
     local docker_widget = require('awesome-wm-widgets.docker-widget.docker')
 
+    local pacman_widget = require('awesome-wm-widgets.pacman-widget.pacman')
+
     -- Battery widget
     local batteryarc_widget = require('awesome-wm-widgets.batteryarc-widget.batteryarc')
+    local battery_widget = require('awesome-wm-widgets.battery-widget.battery')
     volume_widget = require('awesome-wm-widgets.volume-widget.volume')
     local calendar_widget = require('awesome-wm-widgets.calendar-widget.calendar')
     -- ...
@@ -251,25 +254,25 @@ awful.screen.connect_for_each_screen(function(s)
     -- vicious.register(datewidget, vicious.widgets.date, '%I:%M:%S %p')
 
     -- Pacman Widget
-    local pacwidget = wibox.widget.textbox()
-
-    local pacwidget_t = awful.tooltip({ objects = { pacwidget } })
-
-    vicious.register(pacwidget, vicious.widgets.pkg, function(widget, args)
-        local io = { popen = io.popen }
-        local output = io.popen('pacman -Qu')
-        local str = ''
-
-        local count = 0
-        for line in output:lines() do
-            -- str = str .. line .. '\n'
-            count = count + 1
-            print(line)
-        end
-        pacwidget_t:set_text(str)
-        output:close()
-        return '|UPDATES: ' .. count .. '|'
-    end, 1, 'Arch')
+    -- local pacwidget = wibox.widget.textbox()
+    --
+    -- local pacwidget_t = awful.tooltip({ objects = { pacwidget } })
+    --
+    -- vicious.register(pacwidget, vicious.widgets.pkg, function(widget, args)
+    --     local io = { popen = io.popen }
+    --     local output = io.popen('pacman -Qu')
+    --     local str = ''
+    --
+    --     local count = 0
+    --     for line in output:lines() do
+    --         -- str = str .. line .. '\n'
+    --         count = count + 1
+    --         print(line)
+    --     end
+    --     pacwidget_t:set_text(str)
+    --     output:close()
+    --     return '|UPDATES: ' .. count .. '|'
+    -- end, 1, 'Arch')
 
     --'1800' means check every 30 minutes
 
@@ -292,7 +295,14 @@ awful.screen.connect_for_each_screen(function(s)
             layout = wibox.layout.fixed.horizontal,
             MyKeyboardLayout,
             wibox.widget.systray(),
-            batteryarc_widget(),
+            -- Requires acpi CLI tool: pacman -S acpi
+            -- Requires arc arc-icon-theme: pacman -S arc-icon-theme
+            pacman_widget(),
+            battery_widget(),
+            -- batteryarc_widget({
+            --     font = 'NotoSansNerdFontPropo-ExtraCondensedThin',
+            --     show_current_level = true,
+            -- }),
             volume_widget({
                 -- TODO: (Derek Lomax) Thu 25 Jul 2024 08:27:59 AM MDT, Fix my
                 -- arch install script to better install audio. Manjaro worked
@@ -302,7 +312,7 @@ awful.screen.connect_for_each_screen(function(s)
 
                 widget_type = 'arc',
             }),
-            docker_widget(),
+            -- docker_widget(),
             mytextclock,
             s.mylayoutbox,
         },
