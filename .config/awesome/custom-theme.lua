@@ -1,6 +1,7 @@
 local theme_assets = require('beautiful.theme_assets')
 local xresources = require('beautiful.xresources')
 local dpi = xresources.apply_dpi
+local gears = require('gears')
 
 local gfs = require('gears.filesystem')
 local themes_path = gfs.get_themes_dir()
@@ -39,13 +40,18 @@ theme.border_marked = '#91231c'
 -- prompt_[fg|bg|fg_cursor|bg_cursor|font]
 -- hotkeys_[bg|fg|border_width|border_color|shape|opacity|modifiers_fg|label_bg|label_fg|group_margin|font|description_font]
 -- Example:
---theme.taglist_bg_focus = "#ff0000"
-theme.titlebar_bg_normal = '#ff0000'
+theme.taglist_bg_focus = color_scheme.selection_bg
+theme.titlebar_bg_focus = color_scheme.background
+theme.titlebar_bg_normal = color_scheme.selection_bg
 
 -- Generate taglist squares:
 local taglist_square_size = dpi(4)
 theme.taglist_squares_sel = theme_assets.taglist_squares_sel(taglist_square_size, theme.fg_normal)
 theme.taglist_squares_unsel = theme_assets.taglist_squares_unsel(taglist_square_size, theme.fg_normal)
+theme.taglist_shape = gears.shape.rounded_bar
+theme.taglist_shape_focus = gears.shape.rounded_rect
+theme.taglist_shape_border_width = 1
+theme.taglist_spacing = 6
 
 -- Variables set for theming notifications:
 -- notification_font

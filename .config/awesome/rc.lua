@@ -283,8 +283,7 @@ awful.screen.connect_for_each_screen(function(s)
     s.mywibox = awful.wibar({
         position = 'top',
         screen = s,
-        -- bg = color_schemes.AtelierSulphurpool.background,
-        -- fg = COLORS.AtelierSulphurpool.foreground,
+        shape = gears.shape.rounded_rect,
     })
 
     -- Add widgets to the wibox
@@ -621,8 +620,8 @@ awful.rules.rules = {
         properties = { floating = true },
     },
 
-    -- Add titlebars to normal clients and dialogs
-    { rule_any = { type = { 'normal', 'dialog' } }, properties = { titlebars_enabled = true } },
+    -- Disable titlebars
+    { rule_any = { type = { 'normal', 'dialog' } }, properties = { titlebars_enabled = false } },
 
     -- First tag: terminal
     { rule = { class = 'Alacritty' }, properties = { screen = 1, tag = 'Terminal' } },
