@@ -66,7 +66,7 @@ end
 -- Themes define colours, icons, font and wallpapers.
 -- beautiful.init(gears.filesystem.get_themes_dir() .. 'custom-theme.lua')
 -- beautiful.init('custom-theme.lua''wezterm'
-beautiful.init(gears.filesystem.get_configuration_dir() .. "custom-theme.lua")
+beautiful.init(gears.filesystem.get_configuration_dir() .. 'custom-theme.lua')
 
 Terminal = 'wezterm'
 Editor = os.getenv('EDITOR') or 'nvim'
@@ -621,15 +621,31 @@ awful.rules.rules = {
     },
 
     -- Disable titlebars
-    { rule_any = { type = { 'normal', 'dialog' } }, properties = { titlebars_enabled = false } },
+    {
+        rule_any = { type = { 'normal', 'dialog' } },
+        properties = { titlebars_enabled = false },
+    },
 
     -- First tag: terminal
-    { rule = { class = 'Alacritty' }, properties = { screen = 1, tag = 'Terminal' } },
-    { rule = { class = 'Wezterm' }, properties = { screen = 1, tag = 'Terminal' } },
+    {
+        rule = { class = 'Alacritty' },
+        properties = { tag = 'Terminal' },
+    },
+    {
+        rule = { class = 'Wezterm' },
+        properties = { tag = 'Terminal' },
+    },
 
     -- Second tag: web
-    { rule = { class = 'Firefox' }, properties = { screen = 1, tag = 'Web' } },
-    { rule = { class = 'Vieb' }, properties = { screen = 1, tag = 'Web' } },
+
+    {
+        rule_any = { class = { 'Firefox', 'firefox', 'Navigator' } },
+        properties = { tag = 'Web' },
+    },
+    {
+        rule = { class = 'Vieb' },
+        properties = { tag = 'Web' },
+    },
 
     -- Third tag: chat
 
@@ -637,7 +653,7 @@ awful.rules.rules = {
     {
         rule_any = { class = { 'Plover' } },
         except_any = { name = { 'Plover: Lookup', 'Plover: Add Translation' } },
-        properties = { screen = 1, tag = 'Plover' },
+        properties = { tag = 'Plover' },
     },
 }
 -- }}}
