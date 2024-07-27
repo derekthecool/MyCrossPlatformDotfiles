@@ -52,6 +52,9 @@ theme.taglist_shape = gears.shape.rounded_bar
 theme.taglist_shape_focus = gears.shape.rounded_rect
 theme.taglist_shape_border_width = 1
 theme.taglist_spacing = 6
+-- taglist_[bg|fg]_[focus|urgent|occupied|empty|volatile]
+theme.taglist_bg_empty = color_scheme.background_dim
+theme.taglist_fg_empty = color_scheme.foreground_dim
 
 -- Variables set for theming notifications:
 -- notification_font
