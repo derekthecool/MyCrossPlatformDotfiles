@@ -626,6 +626,9 @@ awful.rules.rules = {
         properties = { titlebars_enabled = false },
     },
 
+    -- Use xprop terminal command and then click on the window you are interested in finding
+    -- class and program information on. Results will be printed in the terminal you ran the command from.
+
     -- First tag: terminal
     {
         rule = { class = 'Alacritty' },
