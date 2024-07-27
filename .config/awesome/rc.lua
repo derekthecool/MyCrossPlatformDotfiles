@@ -128,8 +128,6 @@ menubar.utils.terminal = Terminal -- Set the terminal for applications that requ
 -- }}}
 
 -- {{{ Wibar
--- Create a textclock widget
-MyTextClock = wibox.widget.textclock()
 
 -- Create a wibox for each screen and add it
 local taglist_buttons = gears.table.join(
@@ -274,43 +272,14 @@ awful.screen.connect_for_each_screen(function(s)
     local batteryarc_widget = require('awesome-wm-widgets.batteryarc-widget.batteryarc')
     local battery_widget = require('awesome-wm-widgets.battery-widget.battery')
     volume_widget = require('awesome-wm-widgets.volume-widget.volume')
-    local calendar_widget = require('awesome-wm-widgets.calendar-widget.calendar')
-    -- ...
+
     -- Create a textclock widget
-    mytextclock = wibox.widget.textclock()
-    local cw = calendar_widget()
+    mytextclock = wibox.widget.textclock('%Y-%m-%d')
     mytextclock:connect_signal('button::press', function(_, _, _, button)
         if button == 1 then
-            cw.toggle()
+            require('awesome-wm-widgets.calendar-widget.calendar').toggle()
         end
     end)
-
-    -- local datewidget = wibox.widget.textbox()
-    -- vicious.register(datewidget, vicious.widgets.date, '%I:%M:%S %p')
-
-    -- Pacman Widget
-    -- local pacwidget = wibox.widget.textbox()
-    --
-    -- local pacwidget_t = awful.tooltip({ objects = { pacwidget } })
-    --
-    -- vicious.register(pacwidget, vicious.widgets.pkg, function(widget, args)
-    --     local io = { popen = io.popen }
-    --     local output = io.popen('pacman -Qu')
-    --     local str = ''
-    --
-    --     local count = 0
-    --     for line in output:lines() do
-    --         -- str = str .. line .. '\n'
-    --         count = count + 1
-    --         print(line)
-    --     end
-    --     pacwidget_t:set_text(str)
-    --     output:close()
-    --     return '|UPDATES: ' .. count .. '|'
-    -- end, 1, 'Arch')
-
-    --'1800' means check every 30 minutes
-
     -- End custom widgets
 
     -- Create the wibox
@@ -318,8 +287,17 @@ awful.screen.connect_for_each_screen(function(s)
         position = 'top',
         screen = s,
         shape = gears.shape.rounded_rect,
+
+        -- Set bar opacity via explicit opacity and also through the bg color
         opacity = 0.90,
         bg = '#00000060',
+    })
+
+    local vert_sep = wibox.widget({
+        widget = wibox.widget.separator,
+        orientation = 'vertical',
+        forced_width = 2,
+        color = beautiful.bg_focus,
     })
 
     -- Add widgets to the wibox
@@ -341,6 +319,8 @@ awful.screen.connect_for_each_screen(function(s)
             layout = wibox.layout.fixed.horizontal,
             wibox.widget.systray(),
             battery_widget(),
+            vert_sep,
+            -- wibox.widget.separator,
             volume_widget({
                 -- TODO: (Derek Lomax) Thu 25 Jul 2024 08:27:59 AM MDT, Fix my
                 -- arch install script to better install audio. Manjaro worked
@@ -350,6 +330,7 @@ awful.screen.connect_for_each_screen(function(s)
 
                 widget_type = 'arc',
             }),
+            vert_sep,
             mytextclock,
             s.mylayoutbox,
         },
