@@ -46,15 +46,24 @@ theme.titlebar_bg_normal = color_scheme.selection_bg
 
 -- Generate taglist squares:
 local taglist_square_size = dpi(4)
-theme.taglist_squares_sel = theme_assets.taglist_squares_sel(taglist_square_size, theme.fg_normal)
-theme.taglist_squares_unsel = theme_assets.taglist_squares_unsel(taglist_square_size, theme.fg_normal)
+theme.taglist_squares_sel = theme_assets.taglist_squares_sel(taglist_square_size, theme.bg_normal)
+theme.taglist_squares_unsel = theme_assets.taglist_squares_unsel(taglist_square_size, theme.bg_normal)
+
 theme.taglist_shape = gears.shape.rounded_bar
 theme.taglist_shape_focus = gears.shape.rounded_rect
-theme.taglist_shape_border_width = 1
+theme.taglist_shape_border_width = 2
+theme.taglist_shape_border_color = '#3c005a'
 theme.taglist_spacing = 6
--- taglist_[bg|fg]_[focus|urgent|occupied|empty|volatile]
-theme.taglist_bg_empty = color_scheme.background_dim
-theme.taglist_fg_empty = color_scheme.foreground_dim
+-- -- taglist_[bg|fg]_[focus|urgent|occupied|empty|volatile]
+
+-- theme.taglist_bg_empty = color_scheme.background_dim
+-- theme.taglist_fg_empty = color_scheme.foreground_dim
+
+theme.taglist_bg_occupied = color_scheme.background_dim
+-- theme.taglist_fg_empty = color_scheme.foreground_dim
+
+-- Do not show application titles, just the icon
+-- theme.tasklist_disable_task_name = true
 
 -- Variables set for theming notifications:
 -- notification_font

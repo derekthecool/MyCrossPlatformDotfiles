@@ -225,11 +225,52 @@ awful.screen.connect_for_each_screen(function(s)
         buttons = taglist_buttons,
     })
 
-    -- Create a tasklist widget
+    -- After tons of hacking on the tasklist trying to get a nice app icon only view...
+    -- I found this wonderful example that implements the basic Windows 10 style taskbar
+    -- I love it! Most apps have really stupid title bars anyway, so I am not missing anything.
     s.mytasklist = awful.widget.tasklist({
         screen = s,
         filter = awful.widget.tasklist.filter.currenttags,
         buttons = tasklist_buttons,
+        layout = {
+            spacing_widget = {
+                {
+                    forced_width = 5,
+                    forced_height = 24,
+                    thickness = 1,
+                    color = beautiful.bg_focus,
+                    widget = wibox.widget.separator,
+                },
+                valign = 'center',
+                halign = 'center',
+                widget = wibox.container.place,
+            },
+            spacing = 1,
+            layout = wibox.layout.fixed.horizontal,
+        },
+        -- Notice that there is *NO* wibox.wibox prefix, it is a template,
+        -- not a widget instance.
+        widget_template = {
+            {
+                wibox.widget.base.make_widget(),
+                forced_height = 5,
+                id = 'background_role',
+                widget = wibox.container.background,
+            },
+            {
+                {
+                    id = 'clienticon',
+                    widget = awful.widget.clienticon,
+                },
+                margins = 5,
+                widget = wibox.container.margin,
+            },
+            nil,
+            create_callback = function(self, c, index, objects) --luacheck: no unused args
+                self:get_children_by_id('clienticon')[1].client = c
+            end,
+            layout = wibox.layout.align.vertical,
+        },
     })
 
     local docker_widget = require('awesome-wm-widgets.docker-widget.docker')
@@ -284,6 +325,8 @@ awful.screen.connect_for_each_screen(function(s)
         position = 'top',
         screen = s,
         shape = gears.shape.rounded_rect,
+        opacity = 0.90,
+        bg = '#00000060',
     })
 
     -- Add widgets to the wibox
