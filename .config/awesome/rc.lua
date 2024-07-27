@@ -64,9 +64,10 @@ end
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
-beautiful.init(gears.filesystem.get_themes_dir() .. 'default/theme.lua')
+-- beautiful.init(gears.filesystem.get_themes_dir() .. 'custom-theme.lua')
+-- beautiful.init('custom-theme.lua''wezterm'
+beautiful.init(gears.filesystem.get_configuration_dir() .. "custom-theme.lua")
 
--- This is used later as the default terminal and editor to run.
 Terminal = 'wezterm'
 Editor = os.getenv('EDITOR') or 'nvim'
 EditorCommand = Terminal .. ' -e ' .. Editor
@@ -279,7 +280,12 @@ awful.screen.connect_for_each_screen(function(s)
     -- End custom widgets
 
     -- Create the wibox
-    s.mywibox = awful.wibar({ position = 'top', screen = s })
+    s.mywibox = awful.wibar({
+        position = 'top',
+        screen = s,
+        -- bg = color_schemes.AtelierSulphurpool.background,
+        -- fg = COLORS.AtelierSulphurpool.foreground,
+    })
 
     -- Add widgets to the wibox
     s.mywibox:setup({
@@ -693,15 +699,12 @@ client.connect_signal('request::titlebars', function(c)
 end)
 
 client.connect_signal('focus', function(c)
-    c.border_color = beautiful.border_focus
+    c.border_color = (beautiful.border_focus or '#FF0000')
 end)
 client.connect_signal('unfocus', function(c)
-    c.border_color = beautiful.border_normal
+    c.border_color = (beautiful.border_normal or '#FF0000')
 end)
 -- }}}
-
--- Gaps
-beautiful.useless_gap = 3
 
 -- Startup
 -- use images from Derek Taylor (DT) : git clone https://gitlab.com/dwt1/wallpapers.git ~/MyDesktopBackgrounds
