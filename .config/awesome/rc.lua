@@ -127,9 +127,6 @@ MyLauncher = awful.widget.launcher({ image = beautiful.awesome_icon, menu = MyMa
 menubar.utils.terminal = Terminal -- Set the terminal for applications that require it
 -- }}}
 
--- Keyboard map indicator and switcher
-MyKeyboardLayout = awful.widget.keyboardlayout()
-
 -- {{{ Wibar
 -- Create a textclock widget
 MyTextClock = wibox.widget.textclock()
@@ -273,10 +270,6 @@ awful.screen.connect_for_each_screen(function(s)
         },
     })
 
-    local docker_widget = require('awesome-wm-widgets.docker-widget.docker')
-
-    local pacman_widget = require('awesome-wm-widgets.pacman-widget.pacman')
-
     -- Battery widget
     local batteryarc_widget = require('awesome-wm-widgets.batteryarc-widget.batteryarc')
     local battery_widget = require('awesome-wm-widgets.battery-widget.battery')
@@ -332,25 +325,22 @@ awful.screen.connect_for_each_screen(function(s)
     -- Add widgets to the wibox
     s.mywibox:setup({
         layout = wibox.layout.align.horizontal,
-        { -- Left widgets
+        -- Left widgets
+        {
             layout = wibox.layout.fixed.horizontal,
             MyLauncher,
             s.mytaglist,
             s.mypromptbox,
         },
-        s.mytasklist, -- Middle widget
-        { -- Right widgets
+
+        -- Middle widget
+        s.mytasklist,
+
+        -- Right widgets
+        {
             layout = wibox.layout.fixed.horizontal,
-            MyKeyboardLayout,
             wibox.widget.systray(),
-            -- Requires acpi CLI tool: pacman -S acpi
-            -- Requires arc arc-icon-theme: pacman -S arc-icon-theme
-            pacman_widget(),
             battery_widget(),
-            -- batteryarc_widget({
-            --     font = 'NotoSansNerdFontPropo-ExtraCondensedThin',
-            --     show_current_level = true,
-            -- }),
             volume_widget({
                 -- TODO: (Derek Lomax) Thu 25 Jul 2024 08:27:59 AM MDT, Fix my
                 -- arch install script to better install audio. Manjaro worked
@@ -360,7 +350,6 @@ awful.screen.connect_for_each_screen(function(s)
 
                 widget_type = 'arc',
             }),
-            -- docker_widget(),
             mytextclock,
             s.mylayoutbox,
         },
