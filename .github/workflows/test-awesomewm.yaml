@@ -1,9 +1,10 @@
 name: Test my awesome window manager lua configuration
 
 # Only run workflow if awesomewm files have been changed
-push:
-  paths:
-    - .config/awesome/**
+on:
+  push:
+    paths:
+      - .config/awesome/**
 
 jobs:
   test:
