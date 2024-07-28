@@ -9,10 +9,10 @@ configuration 💖!**
 
 Prerequisites before installing:
 
--  git
--  Powershell 7 or higher
+- `` git
+- `` Powershell 7 or higher
 
-```sh
+```powershell
 Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/derekthecool/MyCrossPlatformDotfiles/master/MyCrossPlatformScripts/Invoke-DotGit.ps1' -OutFile ~/dot.ps1
 ~/dot.ps1
 rm ~/dot.ps1
@@ -69,7 +69,13 @@ Now the module can be loaded in two different ways.
 2. Calling any of the **lazy loaded** functions from [Dots.psd1](./Scripts/Dots/Dots.psd1)
    As of July 2024, this list is pretty short containing only these functions: - `dot`: function for running any git commands but for the bare repo
    setup that I use for this repository. - `dots`: similar to dot but runs on all of my most important other
-   mission critical repositories including: - - `Initialize-Dotfiles` - `Clone-GitRepository` - `Add-MasonToolsToPath`
+   mission critical repositories including:
+
+   - `dot`
+   - `dots`
+   - `Initialize-Dotfiles`
+   - `Clone-GitRepository`
+   - `Add-MasonToolsToPath`
 
 ### Powershell Profile
 
@@ -117,4 +123,6 @@ Files located `./.config/awesome/` and the config root file is
 [asciinema]: https://asciinema.org/
 [neomutt]: https://neomutt.org/
 [vifm]: https://vifm.info/
+[starship]: https://starship.rs/
+[zathura]: https://pwmt.org/projects/zathura/
 [rofi]: https://davatorium.github.io/rofi/
