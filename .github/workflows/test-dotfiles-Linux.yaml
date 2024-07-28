@@ -1,12 +1,10 @@
 name: Run Pester Tests on Linux
 
+# Only run workflow if dots powershell module has changed
 on:
   push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+    paths:
+      - Scripts/**
 
 jobs:
   test:

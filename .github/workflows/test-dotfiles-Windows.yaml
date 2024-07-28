@@ -1,6 +1,10 @@
 name: Run Pester Tests Windows
 
-on: [push, pull_request]
+# Only run workflow if dots powershell module has changed
+on:
+  push:
+    paths:
+      - Scripts/**
 
 jobs:
   test:
