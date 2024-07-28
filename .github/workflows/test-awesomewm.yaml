@@ -23,14 +23,6 @@ jobs:
           case ${{ matrix.container }} in
             archlinux*)
               pacman -Sy --noconfirm wget git base-devel sudo awesome
-              useradd -m builduser
-              passwd -d builduser
-              echo "builduser ALL=(ALL) NOPASSWD: ALL" | tee -a /etc/sudoers
-              sudo -u builduser bash -c "cd; git clone https://aur.archlinux.org/powershell-bin.git; cd powershell-bin; makepkg -si --noconfirm"
-              sudo -u builduser pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
-              sudo -u builduser pwsh -File './Scripts/Bootstrap-RequiredModules.ps1'
-              echo "PSModulePath=$PSModulePath:/home/builduser/.local/share/powershell/Modules" | sudo tee -a /etc/environment
-              sudo -E pwsh -Command "Import-Module Pester; Get-Module -ListAvailable Pester"
               ;;
           esac
 
@@ -38,3 +30,8 @@ jobs:
         shell: pwsh
         run: |
           awesome --check ./.config/awesome/rc.lua
+
+      - name: Try running awesome window manager to better test configuration
+        shell: pwsh
+        run: |
+          awesome --config ./.config/awesome/rc.lua
