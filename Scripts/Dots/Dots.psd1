@@ -65,10 +65,8 @@
         # Functions from ./DotfileManagement.ps1
         'dot'
         'dots'
-        'git'
         'Initialize-Dotfiles'
         'Clone-GitRepository'
-
         'Add-MasonToolsToPath'
 
         # Lastly, load everything else so every function is available after the first Import-Module

@@ -1,15 +1,16 @@
 # Dereks Cross-Platform Configuration Files
 
-I primarily live in the terminal for everything. Coding, journaling, email, web browsing... the list goes on.
-**To be comfortable on your computer you need to cherish your dot file configuration 💖!**
+I primarily live in the terminal for everything. Coding, journaling, email, web
+browsing... the list goes on.
+**To be comfortable on your computer you need to cherish your dot file
+configuration 💖!**
 
 ## Quick Installation Guide
 
 Prerequisites before installing:
 
-- git
-- powershell 7 or higher
-- internet connection
+-  git
+-  Powershell 7 or higher
 
 ```sh
 Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/derekthecool/MyCrossPlatformDotfiles/master/MyCrossPlatformScripts/Invoke-DotGit.ps1' -OutFile ~/dot.ps1
@@ -26,12 +27,9 @@ management and configuration setup of this repo is cross platform.
 I'm using pwsh - the cross platform powershell for all of the repo management
 scripts. Fresh installs, bare repo commit helpers, etc.
 
-## Powershell
-
 ### Why Powershell?
 
-Powershell is often seen as a Windows only tool. It is favored among IT
-professionals.
+Powershell is often seen as a Windows only tool.
 
 My experience with it started with just trying to use the terminal for
 everything. Using a Windows computer for work I've had to choose between legacy
@@ -46,66 +44,77 @@ choice for a cross platform setup. Starting with powershell version 6 it is
 cross platform. At the time of creating this configuration I'm using powershell
 version 7.4.2.
 
-### Powershell Modules
+Also Powershell is amazing because it uses an object pipeline and not just a
+text pipeline. This provides so much power and makes basic tasks easier.
 
-In order to keep the profile loading time as short as possible this
-configuration uses powershell modules. Modules by default are lazy loaded.
-Getting a profile to lazy load is nearly impossible, so moving functions out of
-the profile is best.
+### Powershell Module [Dots](./Scripts/Dots/Dots.psd1]
 
-#### Creating A Powershell Module
+[![Run Pester Tests on Linux](https://github.com/derekthecool/MyCrossPlatformDotfiles/actions/workflows/test-dotfiles-Linux.yaml/badge.svg)](https://github.com/derekthecool/MyCrossPlatformDotfiles/actions/workflows/test-dotfiles-Linux.yaml)
+[![Run Pester Tests Windows](https://github.com/derekthecool/MyCrossPlatformDotfiles/actions/workflows/test-dotfiles-Windows.yaml/badge.svg)](https://github.com/derekthecool/MyCrossPlatformDotfiles/actions/workflows/test-dotfiles-Windows.yaml)
 
-Following the Microsoft guide titled [How To Write A Powershell Script Module](https://learn.microsoft.com/en-us/powershell/scripting/developer/module/how-to-write-a-powershell-script-module?view=powershell-7.4)
-shows these steps:
+This repo comes with a powershell module included. This module is loaded with
+functions to help with managing this repo as a git bare repo.
+Many more functions are included as well.
 
-1. Create a `psm1` file in a directory in your `$PSMODULEPATH`
-   `PowershellTools/PowershellTools.psm1`.
-2. Use the `Export-ModuleMember` if you want to only export some of your
-   functions. For my dotfile approach I want everything available.
-   Here is how you can load every single script and export everything:
+For a fresh install run the script to get dependency modules installed
 
 ```powershell
-Get-ChildItem "$PSScriptRoot/*.ps1" -Recurse | ForEach-Object {
-    Write-Verbose "Sourcing: $($_.FullName)" -Verbose
-    . $_.FullName
-}
+./Scripts/Bootstrap-RequiredModules.ps1
 ```
 
-3. Create a module manifest `.psd1` file with this command
+Now the module can be loaded in two different ways.
 
-```powershell
-New-ModuleManifest -Path ./PowershellTools.psd1 -ModuleVersion "1.0.0" -Author "Derek Lomax"
-```
-
-Now you can load your module by running this command
-
-```powershell
-# If making changes the -Force option is very important
-Import-Module PowershellTools -Force -Verbose
-```
+1. Explicit load with `Import-Module -Force Dots`. After running this every
+   function from the module will be availble for use.
+2. Calling any of the **lazy loaded** functions from [Dots.psd1](./Scripts/Dots/Dots.psd1)
+   As of July 2024, this list is pretty short containing only these functions: - `dot`: function for running any git commands but for the bare repo
+   setup that I use for this repository. - `dots`: similar to dot but runs on all of my most important other
+   mission critical repositories including: - - `Initialize-Dotfiles` - `Clone-GitRepository` - `Add-MasonToolsToPath`
 
 ### Powershell Profile
 
 You can find where your profile is from the built in variable `$PROFILE`.
 It is important to not load more than necessary in your powershell profile.
-Only important items such as [PSReadLine](https://learn.microsoft.com/en-us/powershell/module/psreadline/about/about_psreadline?view=powershell-7.4)
-and [Starship prompt](https://starship.rs/) should stay in the
-actual profile.
+
+Functions that are not essential to be in the profile, should be moved into the
+powershell module `./Scripts/Dots/`
 
 ## Included Programs
 
-### Text Editors
+### Window Managers
 
-- tmux
-- Vieb
-- Alacritty
-- asciinema
-- awesome WM
-- neomutt
-- vifm
-- zathura
-- starship prompt
+#### [awesomewm](https://awesomewm.org/)
 
-## Separate Projects Referenced
+[![Test my awesome window manager lua configuration](https://github.com/derekthecool/MyCrossPlatformDotfiles/actions/workflows/test-awesomewm.yaml/badge.svg)](https://github.com/derekthecool/MyCrossPlatformDotfiles/actions/workflows/test-awesomewm.yaml)
 
-- Neovim config [Stim Pack](https://github.com/derekthecool/stimpack)
+AwesomeWM is a dynamic widow manager for Linux systems.
+Files located `./.config/awesome/` and the config root file is
+`./.config/awesome/rc.lua`.
+
+### General Purpose Tools
+
+| Application            | Configured With | My Config                                                  | Emoji Rating | Description                                                    |
+| ---------------------- | --------------- | ---------------------------------------------------------- | ------------ | -------------------------------------------------------------- |
+| [asciinema][asciinema] | conf            | [./.config/asciinema/config](./.config/asciinema/config)   |             | Awesome tool to record and play back terminal sessions         |
+| [neomutt][neomutt]     | conf            | [./.config/neomutt/neomuttrc](.config/neomutt/neomuttrc)   |              | Terminal email clinet                                          |
+| [vifm][vifm]           | vimscript like  | [./.config/vifm/vifmrc](./.config/vifm/vifmrc)             |              | Terminal file manager with vim like mappings                   |
+| [starship][starship]   | toml            | [./.config/starship.toml](./.config/starship.toml)         | 󰱫            | Beautiful and functional terminal prompt. Highly configurable. |
+| [zathura][zathura]     | vimscript like  | [./.config/zathura/zathurarc](./.config/zathura/zathurarc) |              | Vim-like PDF viewer (NOTE this is a graphical application)     |
+| [rofi][rofi]           |                 | [./.config/rofi/config.rasi](./.config/rofi/config.rasi)   |              | Linux application launcher                                     |
+
+## Separate Repositories Referenced
+
+- My [Neovim](Neovim) configuration: [Stimpack][my-neovim-repo]
+- My [Wezterm](Wezterm) configuration: [WeztermStimpack][my-wezterm-repo]
+- My [Plover][Plover] configuration: [PloverStenoDictionaries][my-plover-repo]
+
+[Neovim]: https://neovim.io/
+[my-neovim-repo]: https://github.com/derekthecool/stimpack
+[Wezterm]: https://wezfurlong.org/wezterm/
+[my-wezterm-repo]: https://github.com/derekthecool/WeztermStimpack
+[Plover]: https://www.openstenoproject.org/plover/
+[my-plover-repo]: https://github.com/derekthecool/PloverStenoDictionaries
+[asciinema]: https://asciinema.org/
+[neomutt]: https://neomutt.org/
+[vifm]: https://vifm.info/
+[rofi]: https://davatorium.github.io/rofi/
