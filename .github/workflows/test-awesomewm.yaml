@@ -27,11 +27,9 @@ jobs:
           esac
 
       - name: Test awesomewm lua configuration
-        shell: pwsh
         run: |
           awesome --check ./.config/awesome/rc.lua
 
       - name: Try running awesome window manager to better test configuration
-        shell: pwsh
         run: |
           awesome --config ./.config/awesome/rc.lua
