@@ -67,15 +67,14 @@ Now the module can be loaded in two different ways.
 1. Explicit load with `Import-Module -Force Dots`. After running this every
    function from the module will be availble for use.
 2. Calling any of the **lazy loaded** functions from [Dots.psd1](./Scripts/Dots/Dots.psd1)
-   As of July 2024, this list is pretty short containing only these functions: - `dot`: function for running any git commands but for the bare repo
-   setup that I use for this repository. - `dots`: similar to dot but runs on all of my most important other
-   mission critical repositories including:
+   As of July 2024, this list is pretty short containing only these functions:
 
-   - `dot`
-   - `dots`
-   - `Initialize-Dotfiles`
-   - `Clone-GitRepository`
-   - `Add-MasonToolsToPath`
+   - `dot`: function for running any git commands but for the bare repo setup
+     that I use for this repository.
+   - `dots`: similar to dot but runs on all of my most important other missio
+     critical repositories including:
+   - `Initialize-Dotfiles`: clone any missing repos of mine such as
+     [my-wezterm-repo][my-wezterm-repo], or [my-neovim-repo][my-neovim-repo]
 
 ### Powershell Profile
 
