@@ -13,7 +13,7 @@ Prerequisites before installing:
 - `` Powershell 7 or higher
 
 ```powershell
-Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/derekthecool/MyCrossPlatformDotfiles/master/MyCrossPlatformScripts/Invoke-DotGit.ps1' -OutFile ~/dot.ps1
+Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/derekthecool/MyCrossPlatformDotfiles/master/Scripts/Dots/DotfileManagement.ps1' -OutFile ~/dot.ps1
 ~/dot.ps1
 rm ~/dot.ps1
 ```
