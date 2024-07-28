@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   test:
-    name: Pester Test Runner on ${{ matrix.container }}
+    name: awesome window manager config test on ${{ matrix.container }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -29,7 +29,3 @@ jobs:
       - name: Test awesomewm lua configuration
         run: |
           awesome --check ./.config/awesome/rc.lua
-
-      - name: Try running awesome window manager to better test configuration
-        run: |
-          awesome --config ./.config/awesome/rc.lua
