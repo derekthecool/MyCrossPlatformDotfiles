@@ -55,21 +55,6 @@ Set-PSReadLineOption @PSReadLineOptions
 # Apply the configured PSReadLine options
 Set-PSReadLineOption @PSReadLineOptions
 
-# function OnViModeChange
-# {
-#     if ($args[0] -eq 'Command')
-#     {
-#         # Set the cursor to a blinking block.
-#         #Write-Host -NoNewline "test test`e[1 q"
-#         Write-Host -NoNewline $PSStyle.Bold + "🐮" + $PSStyle.BoldOf
-#     } else
-#     {
-#         # Set the cursor to a blinking line.
-#         Write-Host -NoNewline $PSStyle.Bold + "✌🏼" + $PSStyle.BoldOf
-#     }
-# }
-# Set-PSReadLineOption -ViModeIndicator Script -ViModeChangeHandler $Function:OnViModeChange
-
 # Custom key mappings
 Set-PSReadLineKeyHandler -Chord Ctrl+u -Function PreviousHistory
 Set-PSReadLineKeyHandler -Chord Ctrl+d -Function NextHistory
@@ -148,24 +133,23 @@ $PSDefaultParameterValues = @{
 # Make sure to use PathSeparator because windows uses ';' and Linux uses ':'
 $env:PSModulePath += "$([System.IO.Path]::PathSeparator)$HOME/Scripts/"
 
-# $actualGit = Get-Command git
-# function git
-# {
-#     $normalizedPWD = $PWD.Path -replace '\\', '/'
-#     $normalizedScriptsPath = "$HOME/Scripts" -replace '\\', '/'
-#     $insideDotfiles = $normalizedPWD -match $normalizedScriptsPath
-#
-#     if ($insideDotfiles)
-#     {
-#         Remove-Item function:git
-#         Write-Host "Loading module Dots for better bare repo dotfile git function"
-#         Import-Module -DisableNameChecking -Force Dots
-#         git $args
-#     } else
-#     {
-#         & $actualGit $args
-#     }
-# }
+if($IsLinux)
+{
+    function Add-ToPath
+    {
+        param(
+            [Parameter(Mandatory,ValueFromPipeline)]
+            [string]$NewPathItem
+        )
+        Process
+        {
+            $env:PATH += [IO.Path]::PathSeparator + $NewPathItem
+        }
+    }
+
+    Get-Content $PSScriptRoot/AdditionalPathItems_Linux.txt
+    | Add-ToPath
+}
 
 Import-Module Posh
 # Start the shell with a powershell tip
