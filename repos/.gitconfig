@@ -2,3 +2,9 @@
 [user]
 	name = Derek Lomax
 	email = dlomax@freeus.com
+
+# Useful URL shortcuts for easier cloning
+[url "git@ssh.dev.azure.com:v3/freeus/FreeusDevice/"]
+    insteadOf = Freeus:
+[url "git@ssh.dev.azure.com:v3/freeus/Freeus/"]
+    insteadOf = Freeus2:

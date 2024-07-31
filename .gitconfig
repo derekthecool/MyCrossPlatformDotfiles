@@ -16,5 +16,17 @@
 	format = man
 [credential "helperselector"]
 	selected = manager
+
+# Awesome URL shortcuts
+# More easily clone like this: git clone gh:echasnovski/mini.nvim
+[url "https://github.com/"]
+    insteadOf = gh:
+[url "https://github.com/"]
+    insteadOf = GitHub:
+[url "git@github.com:derekthecool/"]
+    insteadOf = myGitHub:
+[url "https://github.com/derekthecool/"]
+    insteadOf = myGitHubHTTPS:
+
 [includeIf "gitdir:~/repos/"]
 	path = "~/repos/.gitconfig"
