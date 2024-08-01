@@ -1,4 +1,5 @@
 # This is Git's per-user configuration file.
+# Inspiration: https://gist.github.com/tdd/470582
 [user]
 	name = Derek Lomax
 	email = derekthecool@gmail.com
@@ -15,6 +16,15 @@
 	colorMoved = zebra
 [help]
 	format = man
+[status]
+  # Display submodule rev change summaries in status
+  submoduleSummary = true
+  # Recursively traverse untracked directories to display all contents
+  # better than showing a single directory as an untracted item
+  showUntrackedFiles = all
+[tag]
+  # Sort tags as version numbers whenever applicable, so 1.10.2 is AFTER 1.2.0.
+  sort = version:refname
 [credential "helperselector"]
 	selected = manager
 
