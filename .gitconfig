@@ -6,6 +6,7 @@
 	editor = nvim
 	eol = lf
 	autocrlf = input
+    excludesfile = ~/.gitignore_global
 [pull]
 	rebase = true
 [fetch]

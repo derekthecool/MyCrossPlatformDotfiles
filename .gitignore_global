@@ -1,0 +1,4 @@
+# This file is my global gitignore file
+
+# Neovim local configuration
+**/.nvim.lua
