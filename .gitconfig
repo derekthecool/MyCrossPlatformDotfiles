@@ -1,32 +1,41 @@
 # This is Git's per-user configuration file.
 # Inspiration: https://gist.github.com/tdd/470582
+
 [user]
-	name = Derek Lomax
-	email = derekthecool@gmail.com
+    name = Derek Lomax
+    email = derekthecool@gmail.com
+
 [core]
-	editor = nvim
-	eol = lf
-	autocrlf = input
+    editor = nvim
+    eol = lf
+    autocrlf = input
     excludesfile = ~/.gitignore_global
+
 [pull]
-	rebase = true
+    rebase = true
+
 [fetch]
-	prune = true
+    prune = true
+
 [diff]
-	colorMoved = zebra
+    colorMoved = zebra
+
 [help]
-	format = man
+    format = man
+
 [status]
-  # Display submodule rev change summaries in status
-  submoduleSummary = true
-  # Recursively traverse untracked directories to display all contents
-  # better than showing a single directory as an untracted item
-  showUntrackedFiles = all
+    # Display submodule rev change summaries in status
+    submoduleSummary = true
+    # Recursively traverse untracked directories to display all contents
+    # better than showing a single directory as an untracked item
+    showUntrackedFiles = all
+
 [tag]
-  # Sort tags as version numbers whenever applicable, so 1.10.2 is AFTER 1.2.0.
-  sort = version:refname
+    # Sort tags as version numbers whenever applicable, so 1.10.2 is AFTER 1.2.0.
+    sort = version:refname
+
 [credential "helperselector"]
-	selected = manager
+    selected = manager
 
 # Awesome URL shortcuts
 # More easily clone like this: git clone gh:echasnovski/mini.nvim
@@ -40,4 +49,4 @@
     insteadOf = myGitHubHTTPS:
 
 [includeIf "gitdir:~/repos/"]
-	path = "~/repos/.gitconfig"
+    path = "~/repos/.gitconfig"
