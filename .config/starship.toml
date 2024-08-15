@@ -6,7 +6,7 @@
 right_format = ""
 continuation_prompt = '[▶▶ ](purple)'
 scan_timeout = 30
-command_timeout = 3000
+command_timeout = 300
 add_newline = true
 
 [character]
@@ -25,18 +25,21 @@ tag_disabled = false
 # Find all untracked branches
 # git branch --format "%(refname:short) %(upstream)"
 [git_status]
-style = 'blink green'
-conflicted = ''
-up_to_date = '✓'
-untracked = ''
-stashed = 'S'
-modified = 'M'
-staged = '[++\($count\)](green)'
-renamed = 'R'
-deleted = 'D'
-ahead = '⇡${count}'
-diverged = '⇕⇡${ahead_count}⇣${behind_count}'
-behind = '⇣${count}'
+# For mega repos such as esp-adf this will kill performance if enabled
+ignore_submodules = true
+format = '([⎨$all_status$ahead_behind⎬]($style) )'
+style = 'bold #9090FF'
+conflicted = '[X](red)'
+up_to_date = '[✓](#AA0FCC)'
+untracked = '[](#666666)'
+stashed = '[S](white)'
+modified = '[M](#77CCFF)'
+staged = '[++\($count\)](blue)'
+renamed = '[R](cyan)'
+deleted = '[D](#6E260E)'
+ahead = '+${count}'
+diverged = '~~${ahead_count}⇣${behind_count}'
+behind = '-${count}'
 
 [shell]
 fish_indicator = '󰈺 '
