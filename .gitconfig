@@ -25,7 +25,8 @@
 
 [status]
     # Display submodule rev change summaries in status
-    submoduleSummary = true
+    # adds significant delay to git status
+    # submoduleSummary = true
     # Recursively traverse untracked directories to display all contents
     # better than showing a single directory as an untracked item
     showUntrackedFiles = all
