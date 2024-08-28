@@ -13,9 +13,14 @@ Prerequisites before installing:
 - `` Powershell 7 or higher
 
 ```powershell
+# Download the script
 Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/derekthecool/MyCrossPlatformDotfiles/master/Scripts/Dots/DotfileManagement.ps1' -OutFile ~/dot.ps1
-~/dot.ps1
-rm ~/dot.ps1
+
+# Dot source the script
+. ~/dot.ps1
+
+# Run the function to setup dotfiles
+Initialize-Dotfiles && rm ~/dot.ps1
 ```
 
 ## Cross Platform Support
