@@ -33,3 +33,27 @@ function Use-MermaidCli
     $DiagramPath = $PWD
     Use-Container run --rm -it -v "${DiagramPath}:/data:z" ghcr.io/mermaid-js/mermaid-cli/mermaid-cli @args
 }
+
+function Use-PandocLatexMdToPdf
+{
+
+    param (
+        [Parameter()]
+        [string]$InputMarkdown,
+        [string]$OutputPDF,
+        [string[]]$AdditionalContainerArgs,
+        [string[]]$AdditionalPandocArgs
+    )
+
+    Use-Container run --rm `
+        -v .:/data `
+        -w /data `
+        "$AdditionalContainerArgs" `
+        rstropek/pandoc-latex `
+        -f markdown `
+        --template https://raw.githubusercontent.com/Wandmalfarbe/pandoc-latex-template/v2.4.0/eisvogel.tex `
+        -t latex `
+        -o $OutputPDF `
+        "$AdditionalPandocArgs" `
+        $InputMarkdown
+}
