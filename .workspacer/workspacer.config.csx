@@ -172,6 +172,7 @@ return new Action<IConfigContext>((IConfigContext context) =>
     context.WindowRouter.RouteProcessName("WINWORD", MyWorkSpaceNames.Docs);
     context.WindowRouter.RouteProcessName("EXCEL", MyWorkSpaceNames.Docs);
     context.WindowRouter.RouteProcessName("POWERPNT", MyWorkSpaceNames.Docs);
+    context.WindowRouter.RouteProcessName("explorer", MyWorkSpaceNames.Docs);
 
     // QXDM
     context.WindowRouter.RouteProcessName("QXDM", MyWorkSpaceNames.PlusOne);
