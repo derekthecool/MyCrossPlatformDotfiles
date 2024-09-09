@@ -151,7 +151,14 @@ if($IsLinux)
     | Add-ToPath
 }
 
+# Load git related powershell modules upon first call to git, then remove this function
+function git
+{
+    Remove-Item -Path Function:\git -ErrorAction SilentlyContinue
+    # Import-Module ugit
+    Import-Module posh-git
+
+    Invoke-Expression "git $args"
+}
+
 Import-Module Posh
-# Start the shell with a powershell tip
-# Seems to not work right now
-# $Posh.Tips
