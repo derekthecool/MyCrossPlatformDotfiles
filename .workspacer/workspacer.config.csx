@@ -228,7 +228,13 @@ return new Action<IConfigContext>((IConfigContext context) =>
     context.WindowRouter.AddFilter((window) => !window.Title.Contains("Screen Snipping"));
 
     // Any connect client cisco
-    context.WindowRouter.AddFilter((window) => !window.Title.Contains("Cisco AnyConnect Secure Mobility Client"));
+    context.WindowRouter.AddFilter((window) => !window.Title.Contains("Cisco AnyConnect"));
+    // context.WindowRouter.AddFilter((window) => !window.Title.Contains("Cisco AnyConnect Secure Mobility Client"));
+    // context.WindowRouter.AddFilter((window) => !window.Title.Contains("Cisco AnyConnect Login"));
+
+    // Odd items that have exe of explorer but are actually web applications
+    // These are items like teams authentication sign in, azure cli sign in etc.
+    context.WindowRouter.AddFilter((window) => !window.Class.Contains("ApplicationFrameWindow"));
 
     // Action menu
     var actionMenu = context.AddActionMenu(new ActionMenuPluginConfig()
