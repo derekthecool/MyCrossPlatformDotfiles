@@ -1,4 +1,4 @@
-$actualGit = Get-Command git
+# $actualGit = Get-Command git
 
 # Function to using my git bare repo for my windows config files
 function dot
@@ -14,8 +14,11 @@ function dot
         $arguments = $arguments[1..($arguments.Length - 1)]
     }
 
-    # Run git command with modified arguments
-    & $actualGit --git-dir="$HOME/.cfg" --work-tree="$HOME" @arguments
+    Invoke-Expression "git --git-dir=$HOME/.cfg --work-tree=$HOME @arguments"
+    # $gitCommand = "git --git-dir=$HOME/.cfg --work-tree=$HOME @arguments
+    # Write-Host "Sending git command"
+    # Write-Host "$gitCommand"
+    # Invoke-Expression "$gitCommand"
 }
 
 # Helpful alias for typos like: dotgit status
