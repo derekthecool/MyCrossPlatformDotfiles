@@ -4,5 +4,8 @@
 Write-FormatView `
     -TypeName 'System.Text.RegularExpressions.Match' `
     -Name DotsRegexView `
-    -Property Groups, Value, Index `
+    -Property Value, Index, Success, Groups `
+    -StyleRow {
+    $_.Success ? 'Foreground.Green' : 'Foreground.Red'
+} `
     -AutoSize

@@ -98,10 +98,12 @@
     # Type files (.ps1xml) to be loaded when importing this module
     # TypesToProcess = @()
 
-    # Format files (.ps1xml) to be loaded when importing this module
-    FormatsToProcess = @(
-        './Dots.format.ps1xml'
-    )
+    # # Process this in ./Dots.psm1 instead because I want the items I set to be the default formatviews
+    # # Getting my items to become the default views requires running Update-FormatData -PrependPath ./Dots.format.ps1xml
+    # # Format files (.ps1xml) to be loaded when importing this module
+    # FormatsToProcess = @(
+    #     './Dots.format.ps1xml'
+    # )
 
     # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
     # NestedModules = @()
