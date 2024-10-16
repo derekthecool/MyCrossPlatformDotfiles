@@ -6,7 +6,7 @@
 right_format = ""
 continuation_prompt = '[▶▶ ](purple)'
 scan_timeout = 30
-command_timeout = 300
+command_timeout = 400
 add_newline = true
 
 [character]
@@ -124,3 +124,7 @@ Ultramarine = "🔷 "
 Unknown = "❓ "
 Void = "  "
 Windows = " "
+
+# Slow things I don't want
+[java]
+disabled = true
