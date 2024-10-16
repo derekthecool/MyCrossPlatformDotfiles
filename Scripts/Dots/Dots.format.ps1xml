@@ -170,6 +170,52 @@
     <View>
       <Name>DotsRegexView</Name>
       <ViewSelectedBy>
+        <TypeName>System.Management.Automation.PSDriveInfo</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <AutoSize />
+        <TableHeaders>
+          <TableColumnHeader>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Used</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+          </TableColumnHeader>
+          <TableColumnHeader>
+          </TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>Name</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <ScriptBlock>
+        if($_.Used -ne 0)
+        {
+            "{0}%" -f [Math]::Round(($_.Used / ($_.Used + $_.Free)) * 100, 0)
+        } else
+        {
+            0
+        }
+    </ScriptBlock>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Root</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Description</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+    <View>
+      <Name>DotsRegexView</Name>
+      <ViewSelectedBy>
         <TypeName>System.Text.RegularExpressions.Match</TypeName>
       </ViewSelectedBy>
       <TableControl>
@@ -195,7 +241,7 @@
                 <ScriptBlock>                        
                         $CellColorValue = $($Script:_LastCellStyle = $($__ = $_;. {
     $_.Success ? 'Foreground.Green' : 'Foreground.Red'
-    };$_ = $__);$Script:_LastCellStyle)
+};$_ = $__);$Script:_LastCellStyle)
                         
                             $CellColorValue = if ($psStyle) {
                                 @(foreach ($styleProp in $CellColorValue) {
