@@ -10,6 +10,8 @@
     eol = lf
     autocrlf = input
     excludesfile = ~/.gitignore_global
+    # Windows trouble with long paths https://stackoverflow.com/a/25287498
+    longpaths = true
 
 [pull]
     rebase = true
