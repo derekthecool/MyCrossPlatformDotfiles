@@ -30,7 +30,7 @@ ignore_submodules = true
 format = '([⎨$all_status$ahead_behind⎬]($style) )'
 style = 'bold #9090FF'
 conflicted = '[X](red)'
-up_to_date = '[✓](#AA0FCC)'
+up_to_date = '[✓](#00FF00)'
 untracked = '[](#666666)'
 stashed = '[S](white)'
 modified = '[M](#77CCFF)'
@@ -38,7 +38,7 @@ staged = '[++\($count\)](blue)'
 renamed = '[R](cyan)'
 deleted = '[D](#6E260E)'
 ahead = '+${count}'
-diverged = '~~${ahead_count}⇣${behind_count}'
+diverged = 'me+${ahead_count},rmt+${behind_count}'
 behind = '-${count}'
 
 [shell]
