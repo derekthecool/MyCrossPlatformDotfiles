@@ -274,6 +274,8 @@ awful.screen.connect_for_each_screen(function(s)
     -- Battery widget
     local batteryarc_widget = require('awesome-wm-widgets.batteryarc-widget.batteryarc')
     local battery_widget = require('awesome-wm-widgets.battery-widget.battery')
+
+    -- Volume widget, requires amixer from alsa-utils package
     volume_widget = require('awesome-wm-widgets.volume-widget.volume')
 
     -- Create a textclock widget
@@ -332,6 +334,8 @@ awful.screen.connect_for_each_screen(function(s)
                 device = 'default',
 
                 widget_type = 'arc',
+                mute_color = beautiful.fg_urgent,
+                bg_color = 0xFFFFFF,
             }),
             vert_sep,
             mytextclock,
@@ -443,6 +447,9 @@ Globalkeys = gears.table.join(
 
     -- TODO: find why Plover key SKWHUFRB and SKWHEFRB are not working
     awful.key({}, 'XF86AudioRaiseVolume', function()
+        volume_widget:inc(5)
+    end),
+    awful.key({ModKey}, 'y', function()
         volume_widget:inc(5)
     end),
     awful.key({}, 'XF86AudioLowerVolume', function()
