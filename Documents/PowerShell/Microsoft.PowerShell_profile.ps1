@@ -41,19 +41,16 @@ $PSReadLineOptions = @{
     #     String = 'DarkYellow'
     #     Keyword = 'Cyan'
     #     Comment = 'DarkGreen'
-    #     Operator = 'DarkRed'
-    #     Variable = 'Green'
-    #     Parameter = 'DarkGray'
+    #     Operator = 'DarkRed' 
+  
+
     # }
 }
 
 $PSStyle.Progress.UseOSCIndicator = $true
 
 # Apply PSReadLine options from the hashtable
-Set-PSReadLineOption @PSReadLineOptions
-
-# Apply the configured PSReadLine options
-Set-PSReadLineOption @PSReadLineOptions
+# Set-PSReadLineOption @PSReadLineOptions
 
 # Custom key mappings
 Set-PSReadLineKeyHandler -Chord Ctrl+u -Function PreviousHistory
