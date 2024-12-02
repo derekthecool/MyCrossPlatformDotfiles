@@ -51,5 +51,11 @@
 [url "https://github.com/derekthecool/"]
     insteadOf = myGitHubHTTPS:
 
+# Work git config
 [includeIf "gitdir:~/repos/"]
     path = "~/repos/.gitconfig"
+
+# Ignore all dubious git ownership warnings
+# https://stackoverflow.com/questions/72978485/git-submodule-update-failed-with-fatal-detected-dubious-ownership-in-reposit
+[safe]
+	directory = *
