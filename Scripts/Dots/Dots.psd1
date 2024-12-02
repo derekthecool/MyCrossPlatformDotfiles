@@ -74,6 +74,8 @@
         'Select-ConventionalCommitValue'
         'Select-ConventionalCommitFileScope'
 
+        'Get-AdventOfCodeData'
+
         # Lastly, load everything else so every function is available after the first Import-Module
         '*'
     )
