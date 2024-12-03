@@ -73,7 +73,8 @@ disabled = false
 
 [os]
 disabled = false
-format = "$symbol"
+style = "bold #C75E16"
+#FF00FF= "[$symbol]($style)" # Format for displaying OS symbol and name
 
 # This is the default symbols table.
 [os.symbols]
@@ -119,7 +120,7 @@ RockyLinux = "💠 "
 Redox = "🧪 "
 Solus = "⛵ "
 SUSE = "🦎 "
-Ubuntu = "🎯 "
+Ubuntu = " "
 Ultramarine = "🔷 "
 Unknown = "❓ "
 Void = "  "
