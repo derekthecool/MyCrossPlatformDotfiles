@@ -89,6 +89,33 @@ It is important to not load more than necessary in your powershell profile.
 Functions that are not essential to be in the profile, should be moved into the
 powershell module `./Scripts/Dots/`
 
+## A Note About Shell Profile Precedence
+
+### **PowerShell**
+
+1. **Machine-Wide, All Hosts**: `$profile.AllUsersAllHosts`
+2. **Machine-Wide, Host-Specific**: `$profile.AllUsersCurrentHost`
+3. **User-Specific, All Hosts**: `$profile.CurrentUserAllHosts`
+4. **User-Specific, Host-Specific**: `$profile.CurrentUserCurrentHost`
+
+### **Bash**
+
+- **Login Shells**:
+  1. `/etc/profile`
+  2. `~/.bash_profile`
+  3. `~/.bash_login`
+  4. `~/.profile`
+- **Interactive Non-Login Shells**:
+  1. `/etc/bash.bashrc`
+  2. `~/.bashrc`
+
+### **Zsh**
+
+1. **Always Loaded**: `/etc/zshenv` → `~/.zshenv`
+2. **Login Shells**: `/etc/zprofile` → `~/.zprofile`
+3. **Interactive Shells**: `/etc/zshrc` → `~/.zshrc`
+4. **Logout**: `/etc/zlogout` → `~/.zlogout`
+
 ## Included Programs
 
 ### Window Managers
