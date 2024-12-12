@@ -47,8 +47,13 @@ $PSReadLineOptions = @{
 
 $PSStyle.Progress.UseOSCIndicator = $true
 
-# Apply PSReadLine options from the hashtable
-Set-PSReadLineOption @PSReadLineOptions
+# Some of these PSReadLineOptions cause trouble with Plover stenography on WSL
+# so do not load them if running WSL
+if(-not $IsLinux -and $((uname -r) -Match 'WSL'))
+{
+    # Apply PSReadLine options from the hashtable
+    Set-PSReadLineOption @PSReadLineOptions
+}
 
 # Custom key mappings
 Set-PSReadLineKeyHandler -Chord Ctrl+u -Function PreviousHistory
@@ -130,6 +135,16 @@ $env:PSModulePath += "$([System.IO.Path]::PathSeparator)$HOME/Scripts/"
 
 if($IsLinux)
 {
+    # Set aliases to match windows default Linux friendly aliases
+    # Get-ChildItem is far better than /usr/bin/ls
+    Set-Alias -Name ls -Value Get-ChildItem
+    Set-Alias -Name cp -Value Copy-Item
+    Set-Alias -Name sort -Value Sort-Object
+    Set-Alias -Name sleep -Value Start-Sleep
+    Set-Alias -Name ps -Value Get-Process
+    Set-Alias -Name rmdir -Value Remove-Item
+    Set-Alias -Name kill -Value Stop-Process
+
     function Add-ToPath
     {
         param(
