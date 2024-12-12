@@ -49,7 +49,7 @@ $PSStyle.Progress.UseOSCIndicator = $true
 
 # Some of these PSReadLineOptions cause trouble with Plover stenography on WSL
 # so do not load them if running WSL
-if(-not $IsLinux -and $((uname -r) -Match 'WSL'))
+if(-not $IsLinux -and $((Get-Content '/proc/version' -ErrorAction SilentlyContinue) -match 'WSL'))
 {
     # Apply PSReadLine options from the hashtable
     Set-PSReadLineOption @PSReadLineOptions
