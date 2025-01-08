@@ -25,14 +25,13 @@ Invoke-Expression (&starship init powershell)
 # And run the command Get-PSReadLineKeyHandler
 # Define PSReadLine options in a hashtable
 $PSReadLineOptions = @{
-    EditMode                      = 'Vi'
-    ViModeIndicator               = [Microsoft.PowerShell.ViModeStyle]::Prompt
     PredictionSource              = 'HistoryAndPlugin'
     PredictionViewStyle           = 'ListView'
     HistoryNoDuplicates           = $true
     HistorySearchCursorMovesToEnd = $true
     BellStyle                     = 'None'
 }
+Set-PSReadLineOption @PSReadLineOptions
 
 $PSStyle.Progress.UseOSCIndicator = $true
 
@@ -40,8 +39,8 @@ $PSStyle.Progress.UseOSCIndicator = $true
 # so do not load them if running WSL
 if(-not $((Get-Content '/proc/version' -ErrorAction SilentlyContinue) -match 'WSL'))
 {
-    # Apply PSReadLine options from the hashtable
-    Set-PSReadLineOption @PSReadLineOptions
+    Set-PSReadLineOption -EditMode Vi
+    Set-PSReadLineOption -ViModeIndicator Prompt
 }
 
 # Custom key mappings
