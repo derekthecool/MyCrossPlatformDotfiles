@@ -32,24 +32,13 @@ $PSReadLineOptions = @{
     HistoryNoDuplicates           = $true
     HistorySearchCursorMovesToEnd = $true
     BellStyle                     = 'None'
-
-    # Colors = @{
-    #     Command = 'Magenta'
-    #     ContinuationPrompt = 'DarkGray'
-    #     Emphasis = 'Cyan'
-    #     Error = 'Red'
-    #     String = 'DarkYellow'
-    #     Keyword = 'Cyan'
-    #     Comment = 'DarkGreen'
-    #     Operator = 'DarkRed' 
-    # }
 }
 
 $PSStyle.Progress.UseOSCIndicator = $true
 
 # Some of these PSReadLineOptions cause trouble with Plover stenography on WSL
 # so do not load them if running WSL
-if(-not $IsLinux -and $((Get-Content '/proc/version' -ErrorAction SilentlyContinue) -match 'WSL'))
+if(-not $((Get-Content '/proc/version' -ErrorAction SilentlyContinue) -match 'WSL'))
 {
     # Apply PSReadLine options from the hashtable
     Set-PSReadLineOption @PSReadLineOptions
@@ -106,7 +95,6 @@ if(Get-Command zoxide -ErrorAction SilentlyContinue)
     Remove-Alias cd -ErrorAction SilentlyContinue
     New-Alias -Name cd -Value z
 }
-
 
 # Set editor environment variables
 $env:EDITOR = 'nvim'
