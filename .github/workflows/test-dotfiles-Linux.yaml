@@ -36,10 +36,8 @@ jobs:
               pwsh -File './Scripts/Bootstrap-RequiredModules.ps1'
               ;;
             fedora*)
-              rpm --import https://packages.microsoft.com/keys/microsoft.asc
-              rpm -Uvh https://packages.microsoft.com/config/centos/8/packages-microsoft-prod.rpm
-              dnf makecache
-              dnf install -y powershell git
+              dnf install -y git snapd
+              snap install powershell --classic
               pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
               pwsh -File './Scripts/Bootstrap-RequiredModules.ps1'
               ;;
