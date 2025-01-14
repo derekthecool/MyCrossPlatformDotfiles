@@ -2,6 +2,7 @@ name: Run Pester Tests on Linux
 
 # Only run workflow if dots powershell module has changed
 on:
+  workflow_dispatch:
   push:
     paths:
       - Scripts/**
