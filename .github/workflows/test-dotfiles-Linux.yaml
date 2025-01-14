@@ -39,6 +39,7 @@ jobs:
             fedora*)
               dnf install -y git snapd
               snap install powershell --classic
+              systemctl enable --now snapd.socket
               pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
               pwsh -File './Scripts/Bootstrap-RequiredModules.ps1'
               ;;
