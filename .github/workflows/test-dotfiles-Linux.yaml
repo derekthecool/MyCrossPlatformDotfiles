@@ -38,6 +38,7 @@ jobs:
               ;;
             fedora*)
               dnf install -y git snapd
+              sudo systemctl enable --now snapd.socket
               snap install powershell --classic
               systemctl enable --now snapd.socket
               pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
