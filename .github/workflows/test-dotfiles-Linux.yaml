@@ -37,17 +37,9 @@ jobs:
               pwsh -File './Scripts/Bootstrap-RequiredModules.ps1'
               ;;
             fedora*)
-              # dnf install -y git snapd
-              # sudo systemctl enable --now snapd.socket
-              # snap install powershell --classic
-              #
-
-              # rpm --import https://packages.microsoft.com/keys/microsoft.asc
-              # rpm -Uvh https://packages.microsoft.com/config/centos/8/packages-microsoft-prod.rpm
-              # systemctl enable --now snapd.socket
-              dnf makecache
-              dnf install -y https://packages.microsoft.com/config/fedora/$(rpm -E %fedora)/packages-microsoft-prod.rpm
-              dnf install -y powershell git
+              dnf update
+              # Download and install directly from GitHub releases
+              dnf install https://github.com/PowerShell/PowerShell/releases/download/v7.4.6/powershell-7.4.6-1.rh.x86_64.rpm
               pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
               pwsh -File './Scripts/Bootstrap-RequiredModules.ps1'
               ;;
