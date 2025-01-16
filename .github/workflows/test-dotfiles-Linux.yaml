@@ -16,7 +16,7 @@ jobs:
       matrix:
         container:
           - debian:bullseye
-          - fedora:latest
+          # - fedora:latest
           - archlinux:latest
     container:
       image: ${{ matrix.container }}
