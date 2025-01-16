@@ -36,12 +36,12 @@ jobs:
               pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
               pwsh -File './Scripts/Bootstrap-RequiredModules.ps1'
               ;;
-            fedora*)
-              # Download and install directly from GitHub releases
-              dnf install https://github.com/PowerShell/PowerShell/releases/download/v7.4.6/powershell-7.4.6-1.rh.x86_64.rpm
-              pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
-              pwsh -File './Scripts/Bootstrap-RequiredModules.ps1'
-              ;;
+            #fedora*)
+            #  # Download and install directly from GitHub releases
+            #  dnf install https://github.com/PowerShell/PowerShell/releases/download/v7.4.6/powershell-7.4.6-1.rh.x86_64.rpm
+            #  pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
+            #  pwsh -File './Scripts/Bootstrap-RequiredModules.ps1'
+            #  ;;
             archlinux*)
               pacman -Sy --noconfirm wget git base-devel sudo
               useradd -m builduser
