@@ -1,0 +1,78 @@
+{
+  "filterLinkHints": true,
+  "waitForEnterForFilteredHints": false,
+  "keyMappings": "# Insert your preferred key mappings here.\n# Insert your preferred key mappings here.\nmap s firstTab count=4\nmap cr closeTabsOnRight\nunmap <c-e>\n\nmap : LinkHints.activateMode action=hover\nmap ; LinkHints.activateMode action=focus\nmap \" LinkHints.activateMode action=copy-text\n\nmap / enterFindMode\n\nunmap <C-d>\nmap <C-d> scrollPageDown\nunmap <C-u>\nmap <C-u> scrollPageUp",
+  "linkHintCharacters": "12346789",
+  "regexFindMode": true,
+  "scrollStepSize": 110,
+  "grabBackFocus": true,
+  "searchEngines": "#Dereks preference\nsi: https://suche.uferwerk.org/?q=%s&categories=it&language=en-US\nso: https://stackoverflow.com/search?q=%s StackOverflow\nw: https://www.wikipedia.org/w/index.php?title=Special:Search&search=%s Wikipedia\ns: https://searx.bar?preferences=eJx1Vcuu2zYQ_ZpqIzjAbRZdaVG0KBKgwA16nW6FETmSpyI5ypCyr_L1HdqWTLnpQgQ4mtc586CBhAMLYWwGDCjgfvr5N0qVgzDMMGCD4fD1rXJswOVLBXNiw35ymLCxsxnzN3BFXrXbSfh9aY4yY-Uxndg2X17fjlWEHiOCmFPzUqUTemw4GpBKMM4uxZZDG_DSJuiaP8BFrCxTqz_ZnVEaBr1-YBmqq9UhpkWTcTyQYYvngwUZK7BnCAZtew90TcJShM6pEMNAQUEmHhdOHE88QmjbnhxGRfwk9nMko-KwADxuL-9te4WZLTQ1solFMGj-m6Nb8JxWnQ81SNkPKIy2fTC8DMPdtm3PZJGzbbakM9YUS9ULjfRt5oSl0NqhtthToEQcdvoofCFbSihoCOI5PqB0lDqtG6Z7gsaYQzoXufRCYSQwBeKBeXBYTw6WGqapAH2jab29fPz4y3vhStBa0kCRDYGrPVqCO66Oedwl7xePnmWpk0CITptzh-SpTFuIbxfITBb8zBZDKViTeEh6K5x5WtPuBTw46mQtWi-IdeQ-XUCwtiRotGbL_e-FuqV0F9FrDmTqaE7sQKsdDaE2ZEbF_yCOpXbJpeezjl-BZqDkoNvijGQhwXNL6LioTT6vcNc5rG_lKsoWJn93hWnxHJyals5GMiPEsoUTSJryND-F1B6OlJZnceRZzE55ULSJ_DWNHHgOUZHGU5FVJhq0ztko7hteZq8ju-Nj0CGGmH6Y9trSedw6lGEduWtPbj4WODH_z1BsSifQpPJx9-G4iwk_yIpjbaI76-UQr-RZMuk77xnmCYPgxAXHE6KkuStRRvwewO-J6JYB_RqdQgnIzDmy2VUDE7OLP2Rps7vxstWhxLAyqUXNWwXkP6U-8_LUFzCNtScRlge4laYtyKM9N9MKw34xP1b15GYVxeZv8gdHI7YnTiMu2dGrMtn-agwqpN9fP-sLcRFKuDlbTT_lZrtd1OrT8fjlbdXV--dwXZyoEyrsMoqjgC5Dab_-9afq6UCiqPQNXd-qMouH65q9yvKWzu-Vub2ci743TjdDpbsJNfS_UL3DUQ==&q=%s\nsp: https://www.startpage.com/do/dsearch?query=%s\ng: https://www.google.com/search?q=%s Google\nsc: https://swisscows.com/web?query=%s&region=en-US SwissCows\nl: https://www.google.com/search?q=%s&btnI I'm feeling lucky...\nyt: https://www.youtube.com/results?search_query=%s Youtube\ngm: https://www.google.com/maps?q=%s Google maps\naz: https://www.amazon.com/s/?field-keywords=%s Amazon\n\n# GitHub advanced search\nGitHub: https://github.com/search?q=%s&type=code",
+  "searchUrl": "https://search.brave.com/search?q=%s",
+  "settingsVersion": "2.1.2",
+  "exclusionRules": [
+    {
+      "passKeys": "",
+      "pattern": "https?://www.nitrotype.com/*"
+    },
+    {
+      "passKeys": "hjklpog/.n",
+      "pattern": "https?://drive.google.com/*"
+    },
+    {
+      "passKeys": "",
+      "pattern": "https?://mail.google.com/*"
+    },
+    {
+      "passKeys": "N",
+      "pattern": "https?://www.youtube.com/*"
+    },
+    {
+      "passKeys": "",
+      "pattern": "https?://www.typing.com/*"
+    },
+    {
+      "passKeys": "",
+      "pattern": "https?://thetypingcat.com/*"
+    },
+    {
+      "passKeys": "",
+      "pattern": "https?://docs.google.com/*"
+    },
+    {
+      "passKeys": "",
+      "pattern": "https?://onedrive.live.com/*"
+    },
+    {
+      "passKeys": "",
+      "pattern": "https?://outlook.office.com/*"
+    },
+    {
+      "passKeys": "",
+      "pattern": "https?://biffbish.github.io/*"
+    },
+    {
+      "passKeys": "",
+      "pattern": "https?://leetcode.com/*"
+    },
+    {
+      "passKeys": "",
+      "pattern": "https?://exam.devskiller.com/*"
+    },
+    {
+      "passKeys": "",
+      "pattern": "https?://192.168.1.60:8006/*"
+    },
+    {
+      "passKeys": "",
+      "pattern": "https?://ccm.wistron.com/UTS/FormModules/Addnotes*"
+    },
+    {
+      "passKeys": "",
+      "pattern": "https?://ccm.wistron.com/*EditTR*"
+    },
+    {
+      "passKeys": "",
+      "pattern": "https?://www.codingame.com/ide/*"
+    }
+  ]
+}
