@@ -1,3 +1,7 @@
+<#
+https://gist.github.com/Pulimet/5013acf2cd5b28e55036c82c91bd56d8#file-adbcommands
+#>
+
 enum AdbState {
     Normal
     Unauthorized
@@ -73,4 +77,13 @@ function Get-AdbImages {
     adb shell 'find /sdcard/DCIM/Camera/ ~/storage/*/DCIM/Camera/ -name $(date +"%Y%m%d")*'
     | ForEach-Object { $_.Replace('//','/') -split ' ' }
     | ForEach-Object { adb pull "$_" "$DirectoryToSaveFilesTo" }
+}
+
+function New-AdbScreenshot {
+    param (
+        [Parameter()]
+        [string]$OutputPathNameWithoutFileEnding
+    )
+
+    adb exec-out screencap -p > "$OutputPathNameWithoutFileEnding.png"
 }
