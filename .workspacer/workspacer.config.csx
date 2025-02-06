@@ -1,9 +1,16 @@
-#r "C:\Users\dlomax\scoop\apps\workspacer\current\workspacer.Shared.dll"
-#r "C:\Users\dlomax\scoop\apps\workspacer\current\plugins\workspacer.Bar\workspacer.Bar.dll"
-#r "C:\Users\dlomax\scoop\apps\workspacer\current\plugins\workspacer.Gap\workspacer.Gap.dll"
-#r "C:\Users\dlomax\scoop\apps\workspacer\current\plugins\workspacer.TitleBar\workspacer.TitleBar.dll"
-#r "C:\Users\dlomax\scoop\apps\workspacer\current\plugins\workspacer.ActionMenu\workspacer.ActionMenu.dll"
-#r "C:\Users\dlomax\scoop\apps\workspacer\current\plugins\workspacer.FocusIndicator\workspacer.FocusIndicator.dll"
+// #r "C:\Users\dlomax\scoop\apps\workspacer\current\workspacer.Shared.dll"
+// #r "C:\Users\dlomax\scoop\apps\workspacer\current\plugins\workspacer.Bar\workspacer.Bar.dll"
+// #r "C:\Users\dlomax\scoop\apps\workspacer\current\plugins\workspacer.Gap\workspacer.Gap.dll"
+// #r "C:\Users\dlomax\scoop\apps\workspacer\current\plugins\workspacer.TitleBar\workspacer.TitleBar.dll"
+// #r "C:\Users\dlomax\scoop\apps\workspacer\current\plugins\workspacer.ActionMenu\workspacer.ActionMenu.dll"
+// #r "C:\Users\dlomax\scoop\apps\workspacer\current\plugins\workspacer.FocusIndicator\workspacer.FocusIndicator.dll"
+
+#r "C:\Program Files\workspacer\workspacer.Shared.dll"
+#r "C:\Program Files\workspacer\plugins\workspacer.Bar\workspacer.Bar.dll"
+#r "C:\Program Files\workspacer\plugins\workspacer.Gap\workspacer.Gap.dll"
+#r "C:\Program Files\workspacer\plugins\workspacer.TitleBar\workspacer.TitleBar.dll"
+#r "C:\Program Files\workspacer\plugins\workspacer.ActionMenu\workspacer.ActionMenu.dll"
+#r "C:\Program Files\workspacer\plugins\workspacer.FocusIndicator\workspacer.FocusIndicator.dll"
 
 using System;
 using System.Collections.Generic;
