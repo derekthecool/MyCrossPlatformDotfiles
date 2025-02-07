@@ -1,10 +1,16 @@
 # yaml-language-server: $schema=C:\Users\dlomax\AppData\Local\Programs\Whim\plugins\Whim.Yaml\schema.json
 workspaces:
-  entries:
-    - name: Workspace 1
-    - name: Workspace 2
-    - name: Workspace 3
-    - name: Workspace 4
+  # workspaces are defined in ./whim.config.csx
+  entries: []
+    # - name: "🛠️"
+    # - name: "🏄"
+    # - name: "💬"
+    # - name: "⌨️"
+    # - name: "📄"
+    # - name: "📞"
+    # - name: "1"
+    # - name: "2"
+    # - name: "3"
 
 layout_engines:
   entries:
@@ -46,10 +52,31 @@ layout_engines:
 keybinds:
   entries:
     - command: whim.core.focus_next_monitor
-      keybind: LCtrl+LShift+LAlt+K
-
+      keybind: Alt+a
     - command: whim.core.focus_previous_monitor
-      keybind: LCtrl+LShift+LAlt+J
+      keybind: Alt+o
+
+    - command: whim.core.activate_workspace_1
+      keybind: Alt+1
+    - command: whim.core.activate_workspace_2
+      keybind: Alt+2
+    - command: whim.core.activate_workspace_3
+      keybind: Alt+3
+    - command: whim.core.activate_workspace_4
+      keybind: Alt+4
+    - command: whim.core.activate_workspace_5
+      keybind: Alt+5
+    - command: whim.core.activate_workspace_6
+      keybind: Alt+6
+    - command: whim.core.activate_workspace_7
+      keybind: Alt+7
+    - command: whim.core.activate_workspace_8
+      keybind: Alt+8
+    - command: whim.core.activate_workspace_9
+      keybind: Alt+9
+
+    - command: whim.core.restart_whim
+      keybind: Alt+q
 
   unify_key_modifiers: true
 
@@ -58,6 +85,13 @@ filters:
 
 routers:
   routing_behavior: route_to_launched_workspace
+  entries:
+    - type: process_file_name
+      value: explorer.exe
+      workspace_name: Docs
+    - type: process_file_name
+      value: teams.exe
+      workspace_name: Chat
 
 plugins:
   bar:
@@ -99,7 +133,7 @@ plugins:
     border_size: 2
     is_fade_enabled: true
     fade_timeout: 2
-    color: red
+    color: blue_violet
 
   layout_preview:
     is_enabled: true
@@ -107,4 +141,4 @@ plugins:
   updater:
     is_enabled: true
     release_channel: alpha
-    update_frequency: monthly
+    update_frequency: daily
