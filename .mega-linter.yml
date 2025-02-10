@@ -22,5 +22,10 @@ SHOW_ELAPSED_TIME: true
 
 FILEIO_REPORTER: false
 
+# Powershell configuration
+# My PSScriptAnalyzerSettings.psd1 contains the rules for formatting and linting
+POWERSHELL_POWERSHELL_FORMATTER_CONFIG_FILE: ./Scripts/PSScriptAnalyzerSettings.psd1
+POWERSHELL_POWERSHELL_CONFIG_FILE: ./Scripts/PSScriptAnalyzerSettings.psd1
+
 # Uncomment if you want MegaLinter to detect errors but not block CI to pass
 # DISABLE_ERRORS: true
