@@ -42,7 +42,7 @@ s.mytasklist, -- Middle widget
 		-- default
         gitlab_widget{
             host = 'https://gitlab.yourcompany.com',
-            access_token = 'h2v531iYASDz6McxYk4A'
+            access_token = '....'
         },
 		...
 ```

@@ -3,6 +3,7 @@
     ExcludeRules = @(
         'PSAvoidUsingInvokeExpression'
         'PSAlignAssignmentStatement'
+        'PSAvoidUsingWriteHost'
     )
     IncludeRules = @(
         '*'
@@ -25,7 +26,6 @@
         # 'PSAvoidUsingUserNameAndPassWordParams',
         # 'PSAvoidUsingUserNameAndPasswordParams',
         # 'PSAvoidUsingWMICmdlet',
-        # 'PSAvoidUsingWriteHost',
         # 'PSDSC*',
         # 'PSMisleadingBacktick',
         # 'PSMissingModuleManifestField',
