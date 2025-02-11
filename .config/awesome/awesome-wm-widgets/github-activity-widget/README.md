@@ -12,11 +12,11 @@ Mouse click on the item opens repo/issue/pr depending on the type of the activit
 
 It is possible to customize widget by providing a table with all or some of the following config parameters:
 
-| Name | Default | Description |
-|---|---|---|
-| `icon` | `github.png` from the widget sources | Widget icon displayed on the wibar |
-| `username` | Required | GitHub username |
-| `number_of_events` | 10 | Number of events to display in the list |
+| Name               | Default                              | Description                             |
+|--------------------|--------------------------------------|-----------------------------------------|
+| `icon`             | `github.png` from the widget sources | Widget icon displayed on the wibar      |
+| `username`         | Required                             | GitHub username                         |
+| `number_of_events` | 10                                   | Number of events to display in the list |
 
 ## Installation
 

@@ -3,7 +3,7 @@ function Convert-FileToHexString
 {
     param (
         [Parameter(Mandatory = $true)]
-        [string]$FilePath,  # The file path as a named parameter
+        [string]$FilePath, # The file path as a named parameter
 
         [switch]$WithSpaces  # Optional switch to add spaces between hex bytes
     )

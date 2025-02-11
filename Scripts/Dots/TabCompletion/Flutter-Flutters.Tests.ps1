@@ -29,14 +29,14 @@ Describe 'Test flutter help global options' -Skip:$skipTests {
 Describe 'Testing Get-FlutterCommandsAndNonGlobalOptions' -Skip:$skipTests {
     It 'Get-FlutterCommandsAndNonGlobalOptions with input [<InputCommand>] should contain this many <OptionsOrCommands> options or commands' -TestCases @(
         @{
-            InputCommand = 'flutter'
+            InputCommand      = 'flutter'
             OptionsOrCommands = 33
         }
         @{
-            InputCommand = 'flutter run'
+            InputCommand      = 'flutter run'
             OptionsOrCommands = 41
         }
-    ){
+    ) {
         Get-FlutterCommandsAndNonGlobalOptions -FlutterCommand $InputCommand | Should -HaveCount $OptionsOrCommands
     }
 }

@@ -7,7 +7,7 @@ Write-FormatView `
     -Property Name, Used, Root, Description `
     -VirtualProperty @{
     Used = {
-        if($_.Used -ne 0)
+        if ($_.Used -ne 0)
         {
             "{0}%" -f [Math]::Round(($_.Used / ($_.Used + $_.Free)) * 100, 0)
         } else

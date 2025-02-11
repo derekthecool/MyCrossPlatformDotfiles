@@ -58,61 +58,61 @@
         # 'PsUseBOMForUnicodeEncodedFile'
     )
     Rules        = @{
-        PSPlaceOpenBrace           = @{
+        PSPlaceOpenBrace                   = @{
             Enable             = $true
             OnSameLine         = $false
             NewLineAfter       = $true
             IgnoreOneLineBlock = $true
         }
 
-        PSPlaceCloseBrace          = @{
+        PSPlaceCloseBrace                  = @{
             Enable             = $true
             NewLineAfter       = $false
             IgnoreOneLineBlock = $true
             NoEmptyLineBefore  = $false
         }
 
-        PSUseConsistentIndentation = @{
+        PSUseConsistentIndentation         = @{
             Enable              = $false
             Kind                = 'space'
             PipelineIndentation = 'IncreaseIndentationForFirstPipeline'
             IndentationSize     = 4
         }
 
-        PSAlignAssignmentStatement = @{
+        PSAlignAssignmentStatement         = @{
             Enable         = $true
             CheckHashtable = $true
         }
 
-        PSUseCorrectCasing         = @{
+        PSUseCorrectCasing                 = @{
             Enable = $true
         }
 
-        PSUseConsistentWhitespace  = @{
-            Enable                          = $true
-            CheckInnerBrace                 = $true
-            CheckOpenBrace                  = $true
-            CheckOpenParen                  = $true
-            CheckOperator                   = $true
-            CheckPipe                       = $true
-            CheckPipeForRedundantWhitespace = $true
-            CheckSeparator                  = $true
-            CheckParameter                  = $false
+        PSUseConsistentWhitespace          = @{
+            Enable                                  = $true
+            CheckInnerBrace                         = $true
+            CheckOpenBrace                          = $true
+            CheckOpenParen                          = $true
+            CheckOperator                           = $true
+            CheckPipe                               = $true
+            CheckPipeForRedundantWhitespace         = $true
+            CheckSeparator                          = $true
+            CheckParameter                          = $false
             IgnoreAssignmentOperatorInsideHashTable = $true
         }
 
         # Additionnal rules: see https://github.com/PowerShell/PSScriptAnalyzer/tree/master/docs/Rules
 
-        PSAvoidUsingCmdletAliases = @{
-            Enable             = $true
+        PSAvoidUsingCmdletAliases          = @{
+            Enable = $true
         }
 
         PSAvoidSemicolonsAsLineTerminators = @{
-            Enable             = $true
+            Enable = $true
         }
 
-        PSAvoidLongLines = @{
-            Enable = $true
+        PSAvoidLongLines                   = @{
+            Enable            = $true
             MaximumLineLength = 120
         }
 

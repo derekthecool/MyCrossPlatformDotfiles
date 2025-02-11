@@ -24,40 +24,47 @@
             <TableColumnItems>
               <TableColumnItem>
                 <ScriptBlock>                        
-                        $CellColorValue = $($Script:_LastCellStyle = $($__ = $_;. {
+                        $CellColorValue = $($Script:_LastCellStyle = $($__ = $_; . {
     'Foreground.Green'
-};$_ = $__);$Script:_LastCellStyle)
+}; $_ = $__); $Script:_LastCellStyle)
                         
-                            $CellColorValue = if ($psStyle) {
-                                @(foreach ($styleProp in $CellColorValue) {
-                                    if ($styleProp -match '^\$') {
+                            $CellColorValue = if ($psStyle)
+                        {
+                                @(foreach ($styleProp in $CellColorValue)
+                                                             {
+                                    if ($styleProp -match '^\$')
+                                                                           {
                                         $ExecutionContext.SessionState.InvokeCommand.InvokeScript($styleProp)
-                                    }
-                                    elseif ($styleProp -match '\.') {
+                                    } elseif ($styleProp -match '\.')
+                                                                                                             {
                                         $targetObject = $psStyle
-                                        foreach ($dotProperty in $styleProp -split '(?&lt;!\.)\.') {
+                                        foreach ($dotProperty in $styleProp -split '(?&lt;!\.)\.')
+                                                                {
                                             if (
                                                 ($targetObject.psobject.Members['Item'] -and 
                                                     ($targetObject.Item -is [Management.Automation.PSMethodInfo])
                                                 ) -or 
                                                 $targetObject -is [Collections.IDictionary]
-                                            ) {
+                                            )
+                                                                                           {
                                                 $targetObject = $targetObject[$dotProperty]
-                                            } else {
+                                            } else
+                                                                                           {
                                                 $targetObject = $targetObject.$dotProperty
                                             }
                                         }
-                                        if ($targetObject) {
+                                        if ($targetObject)
+                                         {
                                             $targetObject
                                         }
-                                    }
-                                    else {
+                                    } else
+                                         {
                                         $psStyle.$styleProp
                                     }
                                 }) -join ''
                             }
                                                     
-                        $output = . {$_.'Name'}
+                        $output = . { $_.'Name' }
                         @($CellColorValue; $output; $psStyle.Reset) -join ''
                         </ScriptBlock>
               </TableColumnItem>
@@ -65,36 +72,43 @@
                 <ScriptBlock>                        
                         $CellColorValue = $Script:_LastCellStyle
                         
-                            $CellColorValue = if ($psStyle) {
-                                @(foreach ($styleProp in $CellColorValue) {
-                                    if ($styleProp -match '^\$') {
+                            $CellColorValue = if ($psStyle)
+                        {
+                                @(foreach ($styleProp in $CellColorValue)
+                                                             {
+                                    if ($styleProp -match '^\$')
+                                                                           {
                                         $ExecutionContext.SessionState.InvokeCommand.InvokeScript($styleProp)
-                                    }
-                                    elseif ($styleProp -match '\.') {
+                                    } elseif ($styleProp -match '\.')
+                                                                                                             {
                                         $targetObject = $psStyle
-                                        foreach ($dotProperty in $styleProp -split '(?&lt;!\.)\.') {
+                                        foreach ($dotProperty in $styleProp -split '(?&lt;!\.)\.')
+                                                                {
                                             if (
                                                 ($targetObject.psobject.Members['Item'] -and 
                                                     ($targetObject.Item -is [Management.Automation.PSMethodInfo])
                                                 ) -or 
                                                 $targetObject -is [Collections.IDictionary]
-                                            ) {
+                                            )
+                                                                                           {
                                                 $targetObject = $targetObject[$dotProperty]
-                                            } else {
+                                            } else
+                                                                                           {
                                                 $targetObject = $targetObject.$dotProperty
                                             }
                                         }
-                                        if ($targetObject) {
+                                        if ($targetObject)
+                                         {
                                             $targetObject
                                         }
-                                    }
-                                    else {
+                                    } else
+                                         {
                                         $psStyle.$styleProp
                                     }
                                 }) -join ''
                             }
                                                     
-                        $output = . {$_.'Definition'}
+                        $output = . { $_.'Definition' }
                         @($CellColorValue; $output; $psStyle.Reset) -join ''
                         </ScriptBlock>
               </TableColumnItem>
@@ -102,36 +116,43 @@
                 <ScriptBlock>                        
                         $CellColorValue = $Script:_LastCellStyle
                         
-                            $CellColorValue = if ($psStyle) {
-                                @(foreach ($styleProp in $CellColorValue) {
-                                    if ($styleProp -match '^\$') {
+                            $CellColorValue = if ($psStyle)
+                        {
+                                @(foreach ($styleProp in $CellColorValue)
+                                                             {
+                                    if ($styleProp -match '^\$')
+                                                                           {
                                         $ExecutionContext.SessionState.InvokeCommand.InvokeScript($styleProp)
-                                    }
-                                    elseif ($styleProp -match '\.') {
+                                    } elseif ($styleProp -match '\.')
+                                                                                                             {
                                         $targetObject = $psStyle
-                                        foreach ($dotProperty in $styleProp -split '(?&lt;!\.)\.') {
+                                        foreach ($dotProperty in $styleProp -split '(?&lt;!\.)\.')
+                                                                {
                                             if (
                                                 ($targetObject.psobject.Members['Item'] -and 
                                                     ($targetObject.Item -is [Management.Automation.PSMethodInfo])
                                                 ) -or 
                                                 $targetObject -is [Collections.IDictionary]
-                                            ) {
+                                            )
+                                                                                           {
                                                 $targetObject = $targetObject[$dotProperty]
-                                            } else {
+                                            } else
+                                                                                           {
                                                 $targetObject = $targetObject.$dotProperty
                                             }
                                         }
-                                        if ($targetObject) {
+                                        if ($targetObject)
+                                         {
                                             $targetObject
                                         }
-                                    }
-                                    else {
+                                    } else
+                                         {
                                         $psStyle.$styleProp
                                     }
                                 }) -join ''
                             }
                                                     
-                        $output = . {$_.'CommandType'}
+                        $output = . { $_.'CommandType' }
                         @($CellColorValue; $output; $psStyle.Reset) -join ''
                         </ScriptBlock>
               </TableColumnItem>
@@ -163,40 +184,47 @@
             <TableColumnItems>
               <TableColumnItem>
                 <ScriptBlock>                        
-                        $CellColorValue = $($Script:_LastCellStyle = $($__ = $_;. {
+                        $CellColorValue = $($Script:_LastCellStyle = $($__ = $_; . {
     'Foreground.Yellow'
-};$_ = $__);$Script:_LastCellStyle)
+}; $_ = $__); $Script:_LastCellStyle)
                         
-                            $CellColorValue = if ($psStyle) {
-                                @(foreach ($styleProp in $CellColorValue) {
-                                    if ($styleProp -match '^\$') {
+                            $CellColorValue = if ($psStyle)
+                        {
+                                @(foreach ($styleProp in $CellColorValue)
+                                                             {
+                                    if ($styleProp -match '^\$')
+                                                                           {
                                         $ExecutionContext.SessionState.InvokeCommand.InvokeScript($styleProp)
-                                    }
-                                    elseif ($styleProp -match '\.') {
+                                    } elseif ($styleProp -match '\.')
+                                                                                                             {
                                         $targetObject = $psStyle
-                                        foreach ($dotProperty in $styleProp -split '(?&lt;!\.)\.') {
+                                        foreach ($dotProperty in $styleProp -split '(?&lt;!\.)\.')
+                                                                {
                                             if (
                                                 ($targetObject.psobject.Members['Item'] -and 
                                                     ($targetObject.Item -is [Management.Automation.PSMethodInfo])
                                                 ) -or 
                                                 $targetObject -is [Collections.IDictionary]
-                                            ) {
+                                            )
+                                                                                           {
                                                 $targetObject = $targetObject[$dotProperty]
-                                            } else {
+                                            } else
+                                                                                           {
                                                 $targetObject = $targetObject.$dotProperty
                                             }
                                         }
-                                        if ($targetObject) {
+                                        if ($targetObject)
+                                         {
                                             $targetObject
                                         }
-                                    }
-                                    else {
+                                    } else
+                                         {
                                         $psStyle.$styleProp
                                     }
                                 }) -join ''
                             }
                                                     
-                        $output = . {$_.'Name'}
+                        $output = . { $_.'Name' }
                         @($CellColorValue; $output; $psStyle.Reset) -join ''
                         </ScriptBlock>
               </TableColumnItem>
@@ -204,36 +232,43 @@
                 <ScriptBlock>                        
                         $CellColorValue = $Script:_LastCellStyle
                         
-                            $CellColorValue = if ($psStyle) {
-                                @(foreach ($styleProp in $CellColorValue) {
-                                    if ($styleProp -match '^\$') {
+                            $CellColorValue = if ($psStyle)
+                        {
+                                @(foreach ($styleProp in $CellColorValue)
+                                                             {
+                                    if ($styleProp -match '^\$')
+                                                                           {
                                         $ExecutionContext.SessionState.InvokeCommand.InvokeScript($styleProp)
-                                    }
-                                    elseif ($styleProp -match '\.') {
+                                    } elseif ($styleProp -match '\.')
+                                                                                                             {
                                         $targetObject = $psStyle
-                                        foreach ($dotProperty in $styleProp -split '(?&lt;!\.)\.') {
+                                        foreach ($dotProperty in $styleProp -split '(?&lt;!\.)\.')
+                                                                {
                                             if (
                                                 ($targetObject.psobject.Members['Item'] -and 
                                                     ($targetObject.Item -is [Management.Automation.PSMethodInfo])
                                                 ) -or 
                                                 $targetObject -is [Collections.IDictionary]
-                                            ) {
+                                            )
+                                                                                           {
                                                 $targetObject = $targetObject[$dotProperty]
-                                            } else {
+                                            } else
+                                                                                           {
                                                 $targetObject = $targetObject.$dotProperty
                                             }
                                         }
-                                        if ($targetObject) {
+                                        if ($targetObject)
+                                         {
                                             $targetObject
                                         }
-                                    }
-                                    else {
+                                    } else
+                                         {
                                         $psStyle.$styleProp
                                     }
                                 }) -join ''
                             }
                                                     
-                        $output = . {$_.'Definition'}
+                        $output = . { $_.'Definition' }
                         @($CellColorValue; $output; $psStyle.Reset) -join ''
                         </ScriptBlock>
               </TableColumnItem>
@@ -241,36 +276,43 @@
                 <ScriptBlock>                        
                         $CellColorValue = $Script:_LastCellStyle
                         
-                            $CellColorValue = if ($psStyle) {
-                                @(foreach ($styleProp in $CellColorValue) {
-                                    if ($styleProp -match '^\$') {
+                            $CellColorValue = if ($psStyle)
+                        {
+                                @(foreach ($styleProp in $CellColorValue)
+                                                             {
+                                    if ($styleProp -match '^\$')
+                                                                           {
                                         $ExecutionContext.SessionState.InvokeCommand.InvokeScript($styleProp)
-                                    }
-                                    elseif ($styleProp -match '\.') {
+                                    } elseif ($styleProp -match '\.')
+                                                                                                             {
                                         $targetObject = $psStyle
-                                        foreach ($dotProperty in $styleProp -split '(?&lt;!\.)\.') {
+                                        foreach ($dotProperty in $styleProp -split '(?&lt;!\.)\.')
+                                                                {
                                             if (
                                                 ($targetObject.psobject.Members['Item'] -and 
                                                     ($targetObject.Item -is [Management.Automation.PSMethodInfo])
                                                 ) -or 
                                                 $targetObject -is [Collections.IDictionary]
-                                            ) {
+                                            )
+                                                                                           {
                                                 $targetObject = $targetObject[$dotProperty]
-                                            } else {
+                                            } else
+                                                                                           {
                                                 $targetObject = $targetObject.$dotProperty
                                             }
                                         }
-                                        if ($targetObject) {
+                                        if ($targetObject)
+                                         {
                                             $targetObject
                                         }
-                                    }
-                                    else {
+                                    } else
+                                         {
                                         $psStyle.$styleProp
                                     }
                                 }) -join ''
                             }
                                                     
-                        $output = . {$_.'CommandType'}
+                        $output = . { $_.'CommandType' }
                         @($CellColorValue; $output; $psStyle.Reset) -join ''
                         </ScriptBlock>
               </TableColumnItem>
@@ -353,40 +395,47 @@
             <TableColumnItems>
               <TableColumnItem>
                 <ScriptBlock>                        
-                        $CellColorValue = $($Script:_LastCellStyle = $($__ = $_;. {
+                        $CellColorValue = $($Script:_LastCellStyle = $($__ = $_; . {
     $_.Status -eq 'OK' ? 'Foreground.Green' : 'Foreground.Red'
-};$_ = $__);$Script:_LastCellStyle)
+}; $_ = $__); $Script:_LastCellStyle)
                         
-                            $CellColorValue = if ($psStyle) {
-                                @(foreach ($styleProp in $CellColorValue) {
-                                    if ($styleProp -match '^\$') {
+                            $CellColorValue = if ($psStyle)
+                        {
+                                @(foreach ($styleProp in $CellColorValue)
+                                                             {
+                                    if ($styleProp -match '^\$')
+                                                                           {
                                         $ExecutionContext.SessionState.InvokeCommand.InvokeScript($styleProp)
-                                    }
-                                    elseif ($styleProp -match '\.') {
+                                    } elseif ($styleProp -match '\.')
+                                                                                                             {
                                         $targetObject = $psStyle
-                                        foreach ($dotProperty in $styleProp -split '(?&lt;!\.)\.') {
+                                        foreach ($dotProperty in $styleProp -split '(?&lt;!\.)\.')
+                                                                {
                                             if (
                                                 ($targetObject.psobject.Members['Item'] -and 
                                                     ($targetObject.Item -is [Management.Automation.PSMethodInfo])
                                                 ) -or 
                                                 $targetObject -is [Collections.IDictionary]
-                                            ) {
+                                            )
+                                                                                           {
                                                 $targetObject = $targetObject[$dotProperty]
-                                            } else {
+                                            } else
+                                                                                           {
                                                 $targetObject = $targetObject.$dotProperty
                                             }
                                         }
-                                        if ($targetObject) {
+                                        if ($targetObject)
+                                         {
                                             $targetObject
                                         }
-                                    }
-                                    else {
+                                    } else
+                                         {
                                         $psStyle.$styleProp
                                     }
                                 }) -join ''
                             }
                                                     
-                        $output = . {$_.'Name'}
+                        $output = . { $_.'Name' }
                         @($CellColorValue; $output; $psStyle.Reset) -join ''
                         </ScriptBlock>
               </TableColumnItem>
@@ -394,36 +443,43 @@
                 <ScriptBlock>                        
                         $CellColorValue = $Script:_LastCellStyle
                         
-                            $CellColorValue = if ($psStyle) {
-                                @(foreach ($styleProp in $CellColorValue) {
-                                    if ($styleProp -match '^\$') {
+                            $CellColorValue = if ($psStyle)
+                        {
+                                @(foreach ($styleProp in $CellColorValue)
+                                                             {
+                                    if ($styleProp -match '^\$')
+                                                                           {
                                         $ExecutionContext.SessionState.InvokeCommand.InvokeScript($styleProp)
-                                    }
-                                    elseif ($styleProp -match '\.') {
+                                    } elseif ($styleProp -match '\.')
+                                                                                                             {
                                         $targetObject = $psStyle
-                                        foreach ($dotProperty in $styleProp -split '(?&lt;!\.)\.') {
+                                        foreach ($dotProperty in $styleProp -split '(?&lt;!\.)\.')
+                                                                {
                                             if (
                                                 ($targetObject.psobject.Members['Item'] -and 
                                                     ($targetObject.Item -is [Management.Automation.PSMethodInfo])
                                                 ) -or 
                                                 $targetObject -is [Collections.IDictionary]
-                                            ) {
+                                            )
+                                                                                           {
                                                 $targetObject = $targetObject[$dotProperty]
-                                            } else {
+                                            } else
+                                                                                           {
                                                 $targetObject = $targetObject.$dotProperty
                                             }
                                         }
-                                        if ($targetObject) {
+                                        if ($targetObject)
+                                         {
                                             $targetObject
                                         }
-                                    }
-                                    else {
+                                    } else
+                                         {
                                         $psStyle.$styleProp
                                     }
                                 }) -join ''
                             }
                                                     
-                        $output = . {$_.'DeviceId'}
+                        $output = . { $_.'DeviceId' }
                         @($CellColorValue; $output; $psStyle.Reset) -join ''
                         </ScriptBlock>
               </TableColumnItem>
@@ -431,36 +487,43 @@
                 <ScriptBlock>                        
                         $CellColorValue = $Script:_LastCellStyle
                         
-                            $CellColorValue = if ($psStyle) {
-                                @(foreach ($styleProp in $CellColorValue) {
-                                    if ($styleProp -match '^\$') {
+                            $CellColorValue = if ($psStyle)
+                        {
+                                @(foreach ($styleProp in $CellColorValue)
+                                                             {
+                                    if ($styleProp -match '^\$')
+                                                                           {
                                         $ExecutionContext.SessionState.InvokeCommand.InvokeScript($styleProp)
-                                    }
-                                    elseif ($styleProp -match '\.') {
+                                    } elseif ($styleProp -match '\.')
+                                                                                                             {
                                         $targetObject = $psStyle
-                                        foreach ($dotProperty in $styleProp -split '(?&lt;!\.)\.') {
+                                        foreach ($dotProperty in $styleProp -split '(?&lt;!\.)\.')
+                                                                {
                                             if (
                                                 ($targetObject.psobject.Members['Item'] -and 
                                                     ($targetObject.Item -is [Management.Automation.PSMethodInfo])
                                                 ) -or 
                                                 $targetObject -is [Collections.IDictionary]
-                                            ) {
+                                            )
+                                                                                           {
                                                 $targetObject = $targetObject[$dotProperty]
-                                            } else {
+                                            } else
+                                                                                           {
                                                 $targetObject = $targetObject.$dotProperty
                                             }
                                         }
-                                        if ($targetObject) {
+                                        if ($targetObject)
+                                         {
                                             $targetObject
                                         }
-                                    }
-                                    else {
+                                    } else
+                                         {
                                         $psStyle.$styleProp
                                     }
                                 }) -join ''
                             }
                                                     
-                        $output = . {$_.'Status'}
+                        $output = . { $_.'Status' }
                         @($CellColorValue; $output; $psStyle.Reset) -join ''
                         </ScriptBlock>
               </TableColumnItem>
@@ -495,7 +558,7 @@
               </TableColumnItem>
               <TableColumnItem>
                 <ScriptBlock>
-        if($_.Used -ne 0)
+        if ($_.Used -ne 0)
         {
             "{0}%" -f [Math]::Round(($_.Used / ($_.Used + $_.Free)) * 100, 0)
         } else
@@ -541,40 +604,47 @@
             <TableColumnItems>
               <TableColumnItem>
                 <ScriptBlock>                        
-                        $CellColorValue = $($Script:_LastCellStyle = $($__ = $_;. {
+                        $CellColorValue = $($Script:_LastCellStyle = $($__ = $_; . {
     $_.Success ? 'Foreground.Green' : 'Foreground.Red'
-};$_ = $__);$Script:_LastCellStyle)
+}; $_ = $__); $Script:_LastCellStyle)
                         
-                            $CellColorValue = if ($psStyle) {
-                                @(foreach ($styleProp in $CellColorValue) {
-                                    if ($styleProp -match '^\$') {
+                            $CellColorValue = if ($psStyle)
+                        {
+                                @(foreach ($styleProp in $CellColorValue)
+                                                             {
+                                    if ($styleProp -match '^\$')
+                                                                           {
                                         $ExecutionContext.SessionState.InvokeCommand.InvokeScript($styleProp)
-                                    }
-                                    elseif ($styleProp -match '\.') {
+                                    } elseif ($styleProp -match '\.')
+                                                                                                             {
                                         $targetObject = $psStyle
-                                        foreach ($dotProperty in $styleProp -split '(?&lt;!\.)\.') {
+                                        foreach ($dotProperty in $styleProp -split '(?&lt;!\.)\.')
+                                                                {
                                             if (
                                                 ($targetObject.psobject.Members['Item'] -and 
                                                     ($targetObject.Item -is [Management.Automation.PSMethodInfo])
                                                 ) -or 
                                                 $targetObject -is [Collections.IDictionary]
-                                            ) {
+                                            )
+                                                                                           {
                                                 $targetObject = $targetObject[$dotProperty]
-                                            } else {
+                                            } else
+                                                                                           {
                                                 $targetObject = $targetObject.$dotProperty
                                             }
                                         }
-                                        if ($targetObject) {
+                                        if ($targetObject)
+                                         {
                                             $targetObject
                                         }
-                                    }
-                                    else {
+                                    } else
+                                         {
                                         $psStyle.$styleProp
                                     }
                                 }) -join ''
                             }
                                                     
-                        $output = . {$_.'Value'}
+                        $output = . { $_.'Value' }
                         @($CellColorValue; $output; $psStyle.Reset) -join ''
                         </ScriptBlock>
               </TableColumnItem>
@@ -582,36 +652,43 @@
                 <ScriptBlock>                        
                         $CellColorValue = $Script:_LastCellStyle
                         
-                            $CellColorValue = if ($psStyle) {
-                                @(foreach ($styleProp in $CellColorValue) {
-                                    if ($styleProp -match '^\$') {
+                            $CellColorValue = if ($psStyle)
+                        {
+                                @(foreach ($styleProp in $CellColorValue)
+                                                             {
+                                    if ($styleProp -match '^\$')
+                                                                           {
                                         $ExecutionContext.SessionState.InvokeCommand.InvokeScript($styleProp)
-                                    }
-                                    elseif ($styleProp -match '\.') {
+                                    } elseif ($styleProp -match '\.')
+                                                                                                             {
                                         $targetObject = $psStyle
-                                        foreach ($dotProperty in $styleProp -split '(?&lt;!\.)\.') {
+                                        foreach ($dotProperty in $styleProp -split '(?&lt;!\.)\.')
+                                                                {
                                             if (
                                                 ($targetObject.psobject.Members['Item'] -and 
                                                     ($targetObject.Item -is [Management.Automation.PSMethodInfo])
                                                 ) -or 
                                                 $targetObject -is [Collections.IDictionary]
-                                            ) {
+                                            )
+                                                                                           {
                                                 $targetObject = $targetObject[$dotProperty]
-                                            } else {
+                                            } else
+                                                                                           {
                                                 $targetObject = $targetObject.$dotProperty
                                             }
                                         }
-                                        if ($targetObject) {
+                                        if ($targetObject)
+                                         {
                                             $targetObject
                                         }
-                                    }
-                                    else {
+                                    } else
+                                         {
                                         $psStyle.$styleProp
                                     }
                                 }) -join ''
                             }
                                                     
-                        $output = . {$_.'Index'}
+                        $output = . { $_.'Index' }
                         @($CellColorValue; $output; $psStyle.Reset) -join ''
                         </ScriptBlock>
               </TableColumnItem>
@@ -619,36 +696,43 @@
                 <ScriptBlock>                        
                         $CellColorValue = $Script:_LastCellStyle
                         
-                            $CellColorValue = if ($psStyle) {
-                                @(foreach ($styleProp in $CellColorValue) {
-                                    if ($styleProp -match '^\$') {
+                            $CellColorValue = if ($psStyle)
+                        {
+                                @(foreach ($styleProp in $CellColorValue)
+                                                             {
+                                    if ($styleProp -match '^\$')
+                                                                           {
                                         $ExecutionContext.SessionState.InvokeCommand.InvokeScript($styleProp)
-                                    }
-                                    elseif ($styleProp -match '\.') {
+                                    } elseif ($styleProp -match '\.')
+                                                                                                             {
                                         $targetObject = $psStyle
-                                        foreach ($dotProperty in $styleProp -split '(?&lt;!\.)\.') {
+                                        foreach ($dotProperty in $styleProp -split '(?&lt;!\.)\.')
+                                                                {
                                             if (
                                                 ($targetObject.psobject.Members['Item'] -and 
                                                     ($targetObject.Item -is [Management.Automation.PSMethodInfo])
                                                 ) -or 
                                                 $targetObject -is [Collections.IDictionary]
-                                            ) {
+                                            )
+                                                                                           {
                                                 $targetObject = $targetObject[$dotProperty]
-                                            } else {
+                                            } else
+                                                                                           {
                                                 $targetObject = $targetObject.$dotProperty
                                             }
                                         }
-                                        if ($targetObject) {
+                                        if ($targetObject)
+                                         {
                                             $targetObject
                                         }
-                                    }
-                                    else {
+                                    } else
+                                         {
                                         $psStyle.$styleProp
                                     }
                                 }) -join ''
                             }
                                                     
-                        $output = . {$_.'Success'}
+                        $output = . { $_.'Success' }
                         @($CellColorValue; $output; $psStyle.Reset) -join ''
                         </ScriptBlock>
               </TableColumnItem>
@@ -656,36 +740,43 @@
                 <ScriptBlock>                        
                         $CellColorValue = $Script:_LastCellStyle
                         
-                            $CellColorValue = if ($psStyle) {
-                                @(foreach ($styleProp in $CellColorValue) {
-                                    if ($styleProp -match '^\$') {
+                            $CellColorValue = if ($psStyle)
+                        {
+                                @(foreach ($styleProp in $CellColorValue)
+                                                             {
+                                    if ($styleProp -match '^\$')
+                                                                           {
                                         $ExecutionContext.SessionState.InvokeCommand.InvokeScript($styleProp)
-                                    }
-                                    elseif ($styleProp -match '\.') {
+                                    } elseif ($styleProp -match '\.')
+                                                                                                             {
                                         $targetObject = $psStyle
-                                        foreach ($dotProperty in $styleProp -split '(?&lt;!\.)\.') {
+                                        foreach ($dotProperty in $styleProp -split '(?&lt;!\.)\.')
+                                                                {
                                             if (
                                                 ($targetObject.psobject.Members['Item'] -and 
                                                     ($targetObject.Item -is [Management.Automation.PSMethodInfo])
                                                 ) -or 
                                                 $targetObject -is [Collections.IDictionary]
-                                            ) {
+                                            )
+                                                                                           {
                                                 $targetObject = $targetObject[$dotProperty]
-                                            } else {
+                                            } else
+                                                                                           {
                                                 $targetObject = $targetObject.$dotProperty
                                             }
                                         }
-                                        if ($targetObject) {
+                                        if ($targetObject)
+                                         {
                                             $targetObject
                                         }
-                                    }
-                                    else {
+                                    } else
+                                         {
                                         $psStyle.$styleProp
                                     }
                                 }) -join ''
                             }
                                                     
-                        $output = . {$_.'Groups'}
+                        $output = . { $_.'Groups' }
                         @($CellColorValue; $output; $psStyle.Reset) -join ''
                         </ScriptBlock>
               </TableColumnItem>

@@ -45,10 +45,10 @@ It is possible to customize the widget by providing a table with all or some of 
 
 ### Generic parameter
 
-| Name | Default | Description |
-|---|---|---|
-| `font` | `beautiful.font` | Font name and size, like `Play 12` |
-| `path_to_icons` | `/usr/share/icons/Arc/actions/symbolic/` | Alternative path for the icons |
-| `timeout`| 10 | Refresh cooldown |
-| `max_length` | 30 | Maximum lentgh of title. Text will be ellipsized if longer. |
-| `space` | 3 | Space between icon and track title |
+| Name            | Default                                  | Description                                                 |
+|-----------------|------------------------------------------|-------------------------------------------------------------|
+| `font`          | `beautiful.font`                         | Font name and size, like `Play 12`                          |
+| `path_to_icons` | `/usr/share/icons/Arc/actions/symbolic/` | Alternative path for the icons                              |
+| `timeout`       | 10                                       | Refresh cooldown                                            |
+| `max_length`    | 30                                       | Maximum lentgh of title. Text will be ellipsized if longer. |
+| `space`         | 3                                        | Space between icon and track title                          |

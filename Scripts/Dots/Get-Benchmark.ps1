@@ -12,9 +12,10 @@ function Get-Benchmark
   return $trace
 }
 
-function Get-BenchmarkTotalMilliseconds {
+function Get-BenchmarkTotalMilliseconds
+{
     param (
-        [Parameter(Mandatory,ValueFromPipeline)]
+        [Parameter(Mandatory, ValueFromPipeline)]
         [Profiler.Trace]$Benchmark
     )
 

@@ -1,5 +1,6 @@
 # Function designed to basically be like dotnet watch
-function Watch-FileChange {
+function Watch-FileChange
+                                                     {
     param(
         [string]$Path,
         [string]$Filter = '*',

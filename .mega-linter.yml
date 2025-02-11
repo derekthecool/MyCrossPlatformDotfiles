@@ -39,11 +39,11 @@ POWERSHELL_POWERSHELL_CONFIG_FILE: ./Scripts/PSScriptAnalyzerSettings.psd1
 # Configuration needed to ignore items from ./.config/awesome/awesome-wm-widgets/
 # TODO: (Derek Lomax) 2/10/2025 1:32:23 PM, maybe remove awesome-wm-widgets from the repository (I've made no changes, it could be ignored)
 # This is my raw git clone of the repository https://github.com/streetturtle/awesome-wm-widgets
-MARKDOWN_MARKDOWNLINT_FILTER_REGEX_EXCLUDE: '.*awesome-wm-widgets.*'
-LUA_LUACHECK_FILTER_REGEX_EXCLUDE: '.*awesome-wm-widgets.*'
-LUA_SELENE_FILTER_REGEX_EXCLUDE: '.*awesome-wm-widgets.*'
+MARKDOWN_MARKDOWNLINT_FILTER_REGEX_EXCLUDE: ".*awesome-wm-widgets.*"
+LUA_LUACHECK_FILTER_REGEX_EXCLUDE: ".*awesome-wm-widgets.*"
+LUA_SELENE_FILTER_REGEX_EXCLUDE: ".*awesome-wm-widgets.*"
 
-LUA_STYLUA_CONFIG_FILE: '.stylua.toml'
+LUA_STYLUA_CONFIG_FILE: ".stylua.toml"
 
 # Uncomment if you want MegaLinter to detect errors but not block CI to pass
 DISABLE_ERRORS: true

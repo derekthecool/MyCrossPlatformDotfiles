@@ -119,41 +119,41 @@ _Note:_ if you are changing icons, the folder should contain following .svg imag
 
 | Name       | Default              | Description                                   |
 |------------|----------------------|-----------------------------------------------|
-| `icon_dir` | `[widget_dir]/icons` | Path to the folder with icons (absolute path) | 
+| `icon_dir` | `[widget_dir]/icons` | Path to the folder with icons (absolute path) |
 | `font`     | `beautiful.font`     | Font name and size, like `Play 12`            |
 
 #### `arc` parameters
 
-| Name | Default | Description |
-|---|---|---|
-| `thickness` | 2 | Thickness of the arc |
-| `main_color` | `beautiful.fg_color` | Color of the arc |
-| `bg_color` | `#ffffff11` | Color of the arc's background |
-| `mute_color` | `beautiful.fg_urgent` | Color of the arc when mute |
-| `size` | 18 | Size of the widget |
+| Name         | Default               | Description                   |
+|--------------|-----------------------|-------------------------------|
+| `thickness`  | 2                     | Thickness of the arc          |
+| `main_color` | `beautiful.fg_color`  | Color of the arc              |
+| `bg_color`   | `#ffffff11`           | Color of the arc's background |
+| `mute_color` | `beautiful.fg_urgent` | Color of the arc when mute    |
+| `size`       | 18                    | Size of the widget            |
 
 #### `horizontal_bar` parameters
 
-| Name | Default | Description |
-|---|---|---|
-| `main_color` | `beautiful.fg_normal` | Color of the bar |
-| `mute_color` | `beautiful.fg_urgent` | Color of the bar when mute |
-| `bg_color` | `#ffffff11` | Color of the bar's background |
-| `width` | 50 | The bar width |
-| `margins` | 10 | Top and bottom margins (if your wibar is 22 px high, bar will be 2 px = 22 - 2*10) |
-| `shape` | `bar` | [gears.shape](https://awesomewm.org/doc/api/libraries/gears.shape.html), could be `octogon`, `hexagon`, `powerline`, etc |
-| `with_icon` | true | Show volume icon|
+| Name         | Default               | Description                                                                                                              |
+|--------------|-----------------------|--------------------------------------------------------------------------------------------------------------------------|
+| `main_color` | `beautiful.fg_normal` | Color of the bar                                                                                                         |
+| `mute_color` | `beautiful.fg_urgent` | Color of the bar when mute                                                                                               |
+| `bg_color`   | `#ffffff11`           | Color of the bar's background                                                                                            |
+| `width`      | 50                    | The bar width                                                                                                            |
+| `margins`    | 10                    | Top and bottom margins (if your wibar is 22 px high, bar will be 2 px = 22 - 2*10)                                       |
+| `shape`      | `bar`                 | [gears.shape](https://awesomewm.org/doc/api/libraries/gears.shape.html), could be `octogon`, `hexagon`, `powerline`, etc |
+| `with_icon`  | true                  | Show volume icon                                                                                                         |
 
 _Note:_ I didn't figure out how does the `forced_height` property of progressbar widget work (maybe it doesn't work at all), thus there is a workaround with margins.
 
 #### `vertical_bar` parameters
 
-| Name | Default | Description |
-|---|---|---|
-| `main_color` | `beautiful.fg_normal` | Color of the bar |
-| `mute_color` | `beautiful.fg_urgent` | Color of the bar when mute |
-| `bg_color` | `#ffffff11` | Color of the bar's background |
-| `width` | 10 | The bar width |
-| `margins` | 20 | Top and bottom margins (if your wibar is 22 px high, bar will be 2 px = 22 - 2*10) |
-| `shape` | `bar` | [gears.shape](https://awesomewm.org/doc/api/libraries/gears.shape.html), could be `octogon`, `hexagon`, `powerline`, etc |
-| `with_icon` | true | Show volume icon| 
+| Name         | Default               | Description                                                                                                              |
+|--------------|-----------------------|--------------------------------------------------------------------------------------------------------------------------|
+| `main_color` | `beautiful.fg_normal` | Color of the bar                                                                                                         |
+| `mute_color` | `beautiful.fg_urgent` | Color of the bar when mute                                                                                               |
+| `bg_color`   | `#ffffff11`           | Color of the bar's background                                                                                            |
+| `width`      | 10                    | The bar width                                                                                                            |
+| `margins`    | 20                    | Top and bottom margins (if your wibar is 22 px high, bar will be 2 px = 22 - 2*10)                                       |
+| `shape`      | `bar`                 | [gears.shape](https://awesomewm.org/doc/api/libraries/gears.shape.html), could be `octogon`, `hexagon`, `powerline`, etc |
+| `with_icon`  | true                  | Show volume icon                                                                                                         |

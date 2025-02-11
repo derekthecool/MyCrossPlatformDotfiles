@@ -10,9 +10,11 @@ BeforeAll {
         Where-Object { $_.FullName -notmatch 'Tests' } |
         Select-Object -First 1 -ExpandProperty FullName
 
-    if ($scriptPath) {
+    if ($scriptPath)
+{
         . $scriptPath
-    } else {
+    } else
+                     {
         Write-Error "Expected script not found for: $scriptFileName"
         Write-Error "Script base: $scriptBase"
     }
@@ -21,6 +23,6 @@ BeforeAll {
 Describe 'Mason tools in path' {
     It 'Should add mason bin path to path environment variable' {
         Add-MasonToolsToPath
-        {$env:Path -match 'mason'} | Should -Be $true
+        { $env:Path -match 'mason' } | Should -Be $true
     }
 }

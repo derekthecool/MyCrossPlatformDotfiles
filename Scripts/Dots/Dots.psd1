@@ -4,25 +4,25 @@
 
 @{
     # Script module or binary module file associated with this manifest.
-    RootModule = './Dots.psm1'
+    RootModule        = './Dots.psm1'
 
     # Version number of this module.
-    ModuleVersion = '1.0.0'
+    ModuleVersion     = '1.0.0'
 
     # ID used to uniquely identify this module
-    GUID = '463ce966-d7ad-4cde-9874-cf133833f073'
+    GUID              = '463ce966-d7ad-4cde-9874-cf133833f073'
 
     # Author of this module
-    Author = 'Derek Lomax'
+    Author            = 'Derek Lomax'
 
     # Company or vendor of this module
-    CompanyName = 'Unknown'
+    CompanyName       = 'Unknown'
 
     # Copyright statement for this module
-    Copyright = '(c) Derek Lomax. All rights reserved.'
+    Copyright         = '(c) Derek Lomax. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description = 'Powerful dot file collect module'
+    Description       = 'Powerful dot file collect module'
 
     # Minimum version of the PowerShell engine required by this module
     PowerShellVersion = '7.4'
@@ -82,14 +82,14 @@
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry,
     # use an empty array if there are no cmdlets to export.
-    CmdletsToExport = '*'
+    CmdletsToExport   = '*'
 
     # Variables to export from this module
     VariablesToExport = '*'
 
     # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry,
     # use an empty array if there are no aliases to export.
-    AliasesToExport = @(
+    AliasesToExport   = @(
         '*'
     )
 

@@ -8,10 +8,10 @@ This widget shows file system disk space usage which is based on the `df` output
 
 It is possible to customize widget by providing a table with all or some of the following config parameters:
 
-| Name | Default | Description |
-|---|---|---|
-| `mounts` | `{ '/' }` | Table with mounts to monitor, check the output from a `df` command for available options (column `Mounted on`) |
-| `timeout` | 60 | How often in seconds the widget refreshes |
+| Name      | Default   | Description                                                                                                    |
+|-----------|-----------|----------------------------------------------------------------------------------------------------------------|
+| `mounts`  | `{ '/' }` | Table with mounts to monitor, check the output from a `df` command for available options (column `Mounted on`) |
+| `timeout` | 60        | How often in seconds the widget refreshes                                                                      |
 
 ## Installation
 

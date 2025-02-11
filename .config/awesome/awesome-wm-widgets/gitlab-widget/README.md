@@ -18,12 +18,12 @@ The widget shows the number of merge requests assigned to the user and when clic
 
 It is possible to customize widget by providing a table with all or some of the following config parameters:
 
-| Name | Default | Description |
-|---|---|---|
-| `icon` | `./icons/gitlab-icon.svg` | Path to the icon |
-| `host` | Required | e.g. `https://gitlab.yourcompany.com` |
-| `access_token` | Required | e.g. `h2v531iYASDz6McxYk4A` |
-| `timeout` | 60 | How often in seconds the widget should be refreshed |
+| Name           | Default                   | Description                                         |
+|----------------|---------------------------|-----------------------------------------------------|
+| `icon`         | `./icons/gitlab-icon.svg` | Path to the icon                                    |
+| `host`         | Required                  | e.g. `https://gitlab.yourcompany.com`               |
+| `access_token` | Required                  | e.g. `h2v531iYASDz6McxYk4A`                         |
+| `timeout`      | 60                        | How often in seconds the widget should be refreshed |
 
 _Note:_
  - to get the access token, go to **User Settings** -> **Access Tokens** and generate a token with **api** scope

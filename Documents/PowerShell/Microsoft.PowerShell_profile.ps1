@@ -37,7 +37,7 @@ $PSStyle.Progress.UseOSCIndicator = $true
 
 # Some of these PSReadLineOptions cause trouble with Plover stenography on WSL
 # so do not load them if running WSL
-if(-not $((Get-Content '/proc/version' -ErrorAction SilentlyContinue) -match 'WSL'))
+if (-not $((Get-Content '/proc/version' -ErrorAction SilentlyContinue) -match 'WSL'))
 {
     Set-PSReadLineOption -EditMode Vi
     Set-PSReadLineOption -ViModeIndicator Prompt
@@ -88,7 +88,7 @@ try
 }
 
 # Init Zoxide
-if(Get-Command zoxide -ErrorAction SilentlyContinue)
+if (Get-Command zoxide -ErrorAction SilentlyContinue)
 {
     Invoke-Expression (& { (zoxide init powershell | Out-String) })
     Remove-Alias cd -ErrorAction SilentlyContinue
@@ -120,7 +120,7 @@ $PSDefaultParameterValues = @{
 # Make sure to use PathSeparator because windows uses ';' and Linux uses ':'
 $env:PSModulePath += "$([System.IO.Path]::PathSeparator)$HOME/Scripts/"
 
-if($IsLinux)
+if ($IsLinux)
 {
     # Set aliases to match windows default Linux friendly aliases
     # Get-ChildItem is far better than /usr/bin/ls
@@ -135,7 +135,7 @@ if($IsLinux)
     function Add-ToPath
     {
         param(
-            [Parameter(Mandatory,ValueFromPipeline)]
+            [Parameter(Mandatory, ValueFromPipeline)]
             [string]$NewPathItem
         )
         Process

@@ -14,10 +14,10 @@ function Get-GitIgnore
     Write-Host "Selected gitignore: $selected"
     $gitignoreContent = Invoke-RestMethod -Uri "https://www.toptal.com/developers/gitignore/api/$selected"
 
-    if($Write)
+    if ($Write)
     {
         Write-Host ".gitignore written"
-        $gitignoreContent | Out-File -FilePath $(Join-Path -path $pwd -ChildPath ".gitignore") -Encoding ascii
+        $gitignoreContent | Out-File -FilePath $(Join-Path -Path $pwd -ChildPath ".gitignore") -Encoding ascii
     } else
     {
         $gitignoreContent

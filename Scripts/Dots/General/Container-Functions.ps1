@@ -1,15 +1,15 @@
 function Get-ContainerRunner
 {
-    if($Global:ContainerRunner)
+    if ($Global:ContainerRunner)
     {
         return $Global:ContainerRunner
     }
 
-    if(Get-Command -Name podman -ErrorAction SilentlyContinue)
+    if (Get-Command -Name podman -ErrorAction SilentlyContinue)
     {
         $Global:ContainerRunner = 'podman'
         return 'podman'
-    } elseif(Get-Command -Name podman -ErrorAction SilentlyContinue)
+    } elseif (Get-Command -Name podman -ErrorAction SilentlyContinue)
     {
         $Global:ContainerRunner = 'docker'
         return 'docker'

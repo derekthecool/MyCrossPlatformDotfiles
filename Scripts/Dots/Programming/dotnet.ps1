@@ -11,7 +11,7 @@ function dotnet-ListOutdated
     | Select-Object -ExpandProperty frameworks
     | Select-Object -ExpandProperty topLevelPackages
 
-    if($Update)
+    if ($Update)
     {
         $packages | ForEach-Object {
             dotnet remove package $_.id

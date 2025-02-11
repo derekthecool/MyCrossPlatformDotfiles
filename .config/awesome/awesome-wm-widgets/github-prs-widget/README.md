@@ -19,8 +19,8 @@ The widget shows the number of pull requests assigned to the user and when click
 
 It is possible to customize widget by providing a table with all or some of the following config parameters:
 
-| Name | Default | Description |
-|---|---|---|
+| Name       | Default  | Description     |
+|------------|----------|-----------------|
 | `reviewer` | Required | GitHub username |
 
 ## Installation

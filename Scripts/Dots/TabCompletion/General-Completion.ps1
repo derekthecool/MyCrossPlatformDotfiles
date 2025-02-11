@@ -25,10 +25,10 @@ $scriptblock = {
         $item = $_.CommandOrHelp
 
         $CompletionResultValues = @{
-            CompletionText      = $item
-            ListItemText        = $item
-            ResultType          = 'ParameterName'
-            ToolTip             = $item
+            CompletionText = $item
+            ListItemText   = $item
+            ResultType     = 'ParameterName'
+            ToolTip        = $item
         }
 
         [System.Management.Automation.CompletionResult]::new(

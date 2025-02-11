@@ -1,7 +1,9 @@
 # Function designed to basically be like dotnet watch
-if($IsWindows) {
+if ($IsWindows)
+                                                     {
     # This function sets all the build environment for ESP-IDF
-    function Source-Espidf() {
+    function Source-Espidf()
+                                                              {
         # Customize these for your install path and version
         $version = '5.0.1'
         $root_location = 'D:\'

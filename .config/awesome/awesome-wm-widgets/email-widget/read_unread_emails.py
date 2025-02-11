@@ -1,13 +1,14 @@
-import imaplib
 import email
-import html2text
-import re
-from email.header import make_header, decode_header
-from pathlib import Path  
+import imaplib
 import os
+import re
+from email.header import decode_header, make_header
+from pathlib import Path
+
+import html2text
 from dotenv import load_dotenv
 
-path_to_env = Path(__file__).parent / '.env'
+path_to_env = Path(__file__).parent / ".env"
 load_dotenv(path_to_env)
 EMAIL = os.getenv("EMAIL")
 PASSWORD = os.getenv("PASSWORD")
@@ -20,11 +21,14 @@ END_COLOR = "\033[0m"
 
 UNSEEN_FLAG = "(UNSEEN)"
 BODY_PEEK_FLAG = "(BODY.PEEK[])"
+
+
 def colorful_text(text, color):
     """
     Function to format text with Pango markup for color.
     """
     return f"<span foreground='{color}'>{text}</span>"
+
 
 def format_body(body, max_length=MAX_BODY_LENGTH):
     body = body.decode("utf-8", errors="ignore")
@@ -35,6 +39,7 @@ def format_body(body, max_length=MAX_BODY_LENGTH):
     body = re.sub(r"\[.*\]\(.*\)", "", body)
 
     return body if len(body) < max_length else body[:max_length] + "..."
+
 
 def get_short_email_str(M, num_emails=MAX_MSG_COUNT):
     rv, data = M.search(None, UNSEEN_FLAG)
@@ -91,10 +96,12 @@ def get_short_email_str(M, num_emails=MAX_MSG_COUNT):
         except Exception:
             print("ERROR  processing message: ", num)
 
+
 if __name__ == "__main__":
     # Example usage:
     # read_unread_emails.py
     import time
+
     start = time.time()
 
     M = imaplib.IMAP4_SSL("imap.gmail.com", 993)

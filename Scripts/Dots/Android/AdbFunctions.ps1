@@ -2,27 +2,33 @@
 https://gist.github.com/Pulimet/5013acf2cd5b28e55036c82c91bd56d8#file-adbcommands
 #>
 
-enum AdbState {
+enum AdbState
+{
     Normal
     Unauthorized
     Offline
 }
 
-class AdbDevice {
+class AdbDevice
+{
     [string]$Id
     [AdbState]$State
 
-    AdbDevice([string]$Id, [AdbState]$State) {
+    AdbDevice([string]$Id, [AdbState]$State)
+{
         $this.Id = $Id
         $this.State = $State
     }
 }
 
-function Adb-Devices {
-    try {
+function Adb-Devices
+{
+    try
+                      {
         # Attempt to run `adb get-state` to see if adb is accessible
         $adbStateOutput = adb get-state 2>&1
-        if($adbStateOutput -match 'error: no devices/emulators found') {
+        if ($adbStateOutput -match 'error: no devices/emulators found')
+                                            {
             Write-Error 'No devices found'
             return $false
         }
@@ -31,17 +37,22 @@ function Adb-Devices {
 
         $devices = $deviceLines | ForEach-Object {
             $splitOutput = $_ -split '\s+'
-            $state = switch ($splitOutput[1]) {
-                'device' {
+            $state = switch ($splitOutput[1])
+                                          {
+                'device'
+                                               {
                     [AdbState]::Normal
                 }
-                'unauthorized' {
+                'unauthorized'
+                 {
                     [AdbState]::Unauthorized
                 }
-                'offline' {
+                'offline'
+                 {
                     [AdbState]::Offline
                 }
-                Default {
+                Default
+                 {
                     [AdbState]::Offline
                 } # Fallback case if state is not recognized
             }
@@ -50,36 +61,41 @@ function Adb-Devices {
         }
 
         return $devices
-    } catch {
+    } catch
+                       {
         Write-Error "adb command failed: $_"
         return $false
     }
 }
 
-function Get-AdbImages {
+function Get-AdbImages
+{
     param (
         [Parameter()]
         [string]$DirectoryToSaveFilesTo = './'
     )
 
     $devices = Adb-Devices
-    if($devices -eq $null) {
+    if ($devices -eq $null)
+                          {
         return
     }
 
 
-    $deviceCount = (adb devices).Replace('List of devices attached','')
-    if([string]::IsNullOrEmpty($deviceCount)) {
+    $deviceCount = (adb devices).Replace('List of devices attached', '')
+    if ([string]::IsNullOrEmpty($deviceCount))
+                                                                       {
         Write-Error 'No devices connected'
     }
 
     $DirectoryToSaveFilesTo = './'
     adb shell 'find /sdcard/DCIM/Camera/ ~/storage/*/DCIM/Camera/ -name $(date +"%Y%m%d")*'
-    | ForEach-Object { $_.Replace('//','/') -split ' ' }
+    | ForEach-Object { $_.Replace('//', '/') -split ' ' }
     | ForEach-Object { adb pull "$_" "$DirectoryToSaveFilesTo" }
 }
 
-function New-AdbScreenshot {
+function New-AdbScreenshot
+{
     param (
         [Parameter()]
         [string]$OutputPathNameWithoutFileEnding

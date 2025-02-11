@@ -5,7 +5,7 @@ function Get-ISOFilename
         [string]$Filename
     )
 
-    if($Filename -cmatch '([^/]+\.iso)')
+    if ($Filename -cmatch '([^/]+\.iso)')
     {
         return $Matches[1]
     } else
@@ -18,7 +18,7 @@ function Download-ISO
 {
     param (
         [ValidatePattern('.*/([^/]+\.iso)')]
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [string]$URL,
 
         [string]$CheckSumLink,
@@ -30,7 +30,7 @@ function Download-ISO
 
     $LocalFilename = Get-ISOFilename -Filename $URL
 
-    if(Test-Path $LocalFilename)
+    if (Test-Path $LocalFilename)
     {
         Write-Host "File: $LocalFilename exists locally, verifying the checksum"
     } else
@@ -41,7 +41,7 @@ function Download-ISO
 
     # If a check sum link has been provided use it
     # otherwise try to get it through sneaky approaches
-    if($CheckSumLink)
+    if ($CheckSumLink)
     {
         $CheckSumText = [System.Text.Encoding]::UTF8.GetString($(Invoke-WebRequest -Uri $CheckSumLink | Select-Object -ExpandProperty Content))
     } else
@@ -52,7 +52,7 @@ function Download-ISO
 
     $fileHash = Get-FileHash -Path $LocalFilename -Algorithm $HashType | Select-Object -ExpandProperty Hash
 
-    if($CheckSumText -match $fileHash)
+    if ($CheckSumText -match $fileHash)
     {
         Write-Host 'ISO hash matched!' -ForegroundColor Green
     } else

@@ -5,7 +5,7 @@ $modules = Get-ChildItem -Recurse 'Dots.psd1'
 | Select-Object -ExpandProperty Matches
 | ForEach-Object {
     [PSCustomObject]@{
-        Name = $_.Groups['Name']
+        Name    = $_.Groups['Name']
         Version = $_.Groups['Version']
     }
 }

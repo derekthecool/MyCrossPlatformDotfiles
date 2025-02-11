@@ -10,15 +10,15 @@ The widget consists of one section:
 It is possible to customize widget by providing a table with all or some of the
 following config parameters:
 
-| Name | Default | Description |
-|---|---|---|
-| coordinates | Required | Table with two elements: latitude and longitude, e.g. `{46.204400, 6.143200}` | 
-| api_key | Required | [Follow the documentation](https://www.weatherapi.com/docs/) |
-| font_name | `beautiful.font:gsub("%s%d+$", "")` | **Name** of the font to use e.g. 'Play' |
-| units | `metric` | `metric` for celsius, `imperial` for fahrenheit |
-| icon_pack_name | `weather-underground-icons` | Name of the icon pack, could be `weather-underground-icon` or `VitalyGorbachev` or create your own, more details below |
-| icons_extension | `.png` | File extension of icons in the pack |
-| timeout | 120 | How often in seconds the widget refreshes |
+| Name            | Default                             | Description                                                                                                            |
+|-----------------|-------------------------------------|------------------------------------------------------------------------------------------------------------------------|
+| coordinates     | Required                            | Table with two elements: latitude and longitude, e.g. `{46.204400, 6.143200}`                                          |
+| api_key         | Required                            | [Follow the documentation](https://www.weatherapi.com/docs/)                                                           |
+| font_name       | `beautiful.font:gsub("%s%d+$", "")` | **Name** of the font to use e.g. 'Play'                                                                                |
+| units           | `metric`                            | `metric` for celsius, `imperial` for fahrenheit                                                                        |
+| icon_pack_name  | `weather-underground-icons`         | Name of the icon pack, could be `weather-underground-icon` or `VitalyGorbachev` or create your own, more details below |
+| icons_extension | `.png`                              | File extension of icons in the pack                                                                                    |
+| timeout         | 120                                 | How often in seconds the widget refreshes                                                                              |
 
 ### Icons:
 

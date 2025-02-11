@@ -12,11 +12,11 @@ Describe 'Profile benchmarks' {
             $sb = { . $PROFILE }
             Get-Benchmark -ScriptBlock $sb
             | Get-BenchmarkTotalMilliseconds
-        }| Should -Not -Throw
+        } | Should -Not -Throw
     }
 
     It 'Profile benchmark should not be null' {
-        $sb =  { . $PROFILE }
+        $sb = { . $PROFILE }
         Get-Benchmark -ScriptBlock $sb | Should -Not -BeNullOrEmpty
     }
 
@@ -25,7 +25,7 @@ Describe 'Profile benchmarks' {
         @{ Time = 2000 }
         @{ Time = 1500 }
         @{ Time = 1200 }
-    ){
+    ) {
         $sb = { . $PROFILE }
         Get-Benchmark -ScriptBlock $sb | Get-BenchmarkTotalMilliseconds | Should -BeLessThan $Time
     }

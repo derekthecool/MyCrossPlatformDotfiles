@@ -1,7 +1,8 @@
 # yaml-language-server: $schema=C:\Users\dlomax\AppData\Local\Programs\Whim\plugins\Whim.Yaml\schema.json
 workspaces:
   # workspaces are defined in ./whim.config.csx
-  entries: []
+  entries:
+    []
     # - name: "🛠️"
     # - name: "🏄"
     # - name: "💬"
@@ -85,7 +86,8 @@ filters:
 
 routers:
   routing_behavior: route_to_launched_workspace
-  entries: []
+  entries:
+    []
     # - type: process_file_name
     #   value: explorer.exe
     #   workspace_name: Docs

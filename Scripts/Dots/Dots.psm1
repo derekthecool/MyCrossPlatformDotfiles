@@ -1,7 +1,7 @@
 # Dot source all local scripts
 Write-Verbose "Getting ready to dot source files from $PSScriptRoot"
 
-$ExcludeItems =  @(
+$ExcludeItems = @(
     # Pester tests
     '*Tests*'
 

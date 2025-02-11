@@ -18,6 +18,6 @@ function Use-SpoonacularApi
     Invoke-RestMethod -Method Post -Uri "https://api.spoonacular.com/mealplanner/derekthecool/shopping-list/2024-07-15/2024-07-21" -Body @{
         apiKey = $(Get-Secret -Name SpoonacularApiKey -AsPlainText)
         # username = $(Get-Secret -Name SpoonacularUsername -AsPlainText)
-        hash = $(Get-Secret -Name SpoonacularUsernameHash -AsPlainText)
+        hash   = $(Get-Secret -Name SpoonacularUsernameHash -AsPlainText)
     }
 }

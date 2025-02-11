@@ -13,12 +13,12 @@ The widget allows to manage docker and podman containers, namely start/stop/paus
 
 It is possible to customize widget by providing a table with all or some of the following config parameters:
 
-| Name | Default | Description |
-|---|---|---|
-| `icon` | `./docker-widget/icons/docker.svg` | Path to the icon |
-| `number_of_containers` | -1 | Number of last created containers to show |
-| `executable_name` | `docker` | Name of the executable to use, defaults to `docker` |
-| `max_widget_width` | 270 | Maximum width of the widget before the text breaks |
+| Name                   | Default                            | Description                                         |
+|------------------------|------------------------------------|-----------------------------------------------------|
+| `icon`                 | `./docker-widget/icons/docker.svg` | Path to the icon                                    |
+| `number_of_containers` | -1                                 | Number of last created containers to show           |
+| `executable_name`      | `docker`                           | Name of the executable to use, defaults to `docker` |
+| `max_widget_width`     | 270                                | Maximum width of the widget before the text breaks  |
 
 The `executable_name` allows you to use `Podman` instead of docker. This works since `Podman` is compatible to `docker` in the sense that the syntax and command outputs are identical.
 

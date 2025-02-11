@@ -1,6 +1,7 @@
 Measure-Script -Path $PROFILE
 
-function Get-AverageProfileStartupTime {
+function Get-AverageProfileStartupTime
+{
     $a = 0
     $totalTimes = 10
     1 .. $totalTimes | ForEach-Object {
@@ -10,7 +11,7 @@ function Get-AverageProfileStartupTime {
             }).TotalMilliseconds
     }
     Write-Progress -Id 1 -Activity 'profile' -Completed
-    $a/$totalTimes - $p
+    $a / $totalTimes - $p
 }
 
 Write-Host 'Getting average profile startup time'

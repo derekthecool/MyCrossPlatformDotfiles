@@ -16,7 +16,7 @@ function Get-BytesToSize
         $i++
     }
 
-    if($Bytes -lt 1kb)
+    if ($Bytes -lt 1kb)
     {
         return "$size$($sizeUnits[$i])"
     } else
@@ -51,7 +51,7 @@ function number
             $SizeFormat = $PSStyle.Foreground.Blue + $Size + $PSStyle.Foreground.White
 
             [PSCustomObject]@{
-                Number = $CurrentNumber
+                Number    = $CurrentNumber
                 Formatted = "$DecimalFormat $HexFormat $BinaryFormat $SizeFormat"
             }
         }

@@ -13,9 +13,9 @@ $scriptblock = {
 
         $CompletionResultValues = @{
             CompletionText = $item
-            ListItemText = $item
-            ResultType = 'ParameterValue'
-            ToolTip = $item
+            ListItemText   = $item
+            ResultType     = 'ParameterValue'
+            ToolTip        = $item
         }
 
         [System.Management.Automation.CompletionResult]::new(

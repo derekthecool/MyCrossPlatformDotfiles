@@ -18,29 +18,29 @@
 
 Keyboard navigation (copied from [`awful.prompt`](https://awesomewm.org/doc/api/libraries/awful.prompt.html) API documentation page):
 
-| Name | Usage |
-|---|---|
-| CTRL+A | beginning-of-line |
-| CTRL+B | backward-char |
-| CTRL+C | cancel |
-| CTRL+D | delete-char |
-| CTRL+E | end-of-line |
-| CTRL+J | accept-line |
-| CTRL+M | accept-line |
-| CTRL+F | move-cursor-right |
-| CTRL+H | backward-delete-char |
-| CTRL+K | kill-line |
-| CTRL+U | unix-line-discard |
-| CTRL+W | unix-word-rubout |
-| CTRL+BACKSPACE | unix-word-rubout |
-| SHIFT+INSERT | paste |
-| HOME | beginning-of-line |
-| END | end-of-line |
-| CTRL+R | reverse history search, matches any history entry containing search term. |
-| CTRL+S | forward history search, matches any history entry containing search term. |
-| CTRL+UP | ZSH up line or search, matches any history entry starting with search term. |
-| CTRL+DOWN | ZSH down line or search, matches any history entry starting with search term. |
-| CTRL+DELETE | delete the currently visible history entry from history file. This does not delete new commands or history entries under user editing. |
+| Name           | Usage                                                                                                                                  |
+|----------------|----------------------------------------------------------------------------------------------------------------------------------------|
+| CTRL+A         | beginning-of-line                                                                                                                      |
+| CTRL+B         | backward-char                                                                                                                          |
+| CTRL+C         | cancel                                                                                                                                 |
+| CTRL+D         | delete-char                                                                                                                            |
+| CTRL+E         | end-of-line                                                                                                                            |
+| CTRL+J         | accept-line                                                                                                                            |
+| CTRL+M         | accept-line                                                                                                                            |
+| CTRL+F         | move-cursor-right                                                                                                                      |
+| CTRL+H         | backward-delete-char                                                                                                                   |
+| CTRL+K         | kill-line                                                                                                                              |
+| CTRL+U         | unix-line-discard                                                                                                                      |
+| CTRL+W         | unix-word-rubout                                                                                                                       |
+| CTRL+BACKSPACE | unix-word-rubout                                                                                                                       |
+| SHIFT+INSERT   | paste                                                                                                                                  |
+| HOME           | beginning-of-line                                                                                                                      |
+| END            | end-of-line                                                                                                                            |
+| CTRL+R         | reverse history search, matches any history entry containing search term.                                                              |
+| CTRL+S         | forward history search, matches any history entry containing search term.                                                              |
+| CTRL+UP        | ZSH up line or search, matches any history entry starting with search term.                                                            |
+| CTRL+DOWN      | ZSH down line or search, matches any history entry starting with search term.                                                          |
+| CTRL+DELETE    | delete the currently visible history entry from history file. This does not delete new commands or history entries under user editing. |
 
 
 ## Installation

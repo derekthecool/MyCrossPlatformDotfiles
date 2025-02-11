@@ -1,3 +1,3 @@
 #!/bin/bash
 
-lftp "$(fzf < ~/.ftplist)"
+lftp "$(fzf <~/.ftplist)"

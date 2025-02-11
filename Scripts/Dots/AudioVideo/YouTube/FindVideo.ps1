@@ -46,7 +46,7 @@ function Iterate-ChildNodes
     )
 
     # Output the current node's name and value
-    if($node.InnerText.Contains('TtZETmRja78'))
+    if ($node.InnerText.Contains('TtZETmRja78'))
     {
         Write-Output "The node $($node.Name) contains a match"
 

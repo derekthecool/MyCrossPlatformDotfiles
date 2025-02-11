@@ -1,18 +1,18 @@
 # shellcheck shell=bash
 # Source the command not found feature (not done by default for zsh like bash)
 if [ -e /etc/zsh_command_not_found ]; then
-  source /etc/zsh_command_not_found
+	source /etc/zsh_command_not_found
 fi
 
 # Declare vim as the default editor
 export EDITOR='nvim'
 
 function OpenFileInNeovim() {
-  FileToOpen=$(fzf)
-  if [[ -n $FileToOpen ]]; then
-    echo "Opening $FileToOpen"
-    nvim $FileToOpen
-  fi
+	FileToOpen=$(fzf)
+	if [[ -n $FileToOpen ]]; then
+		echo "Opening $FileToOpen"
+		nvim $FileToOpen
+	fi
 }
 
 # Add hotkey Ctrl + o for to use fzf to find file and open with neovim

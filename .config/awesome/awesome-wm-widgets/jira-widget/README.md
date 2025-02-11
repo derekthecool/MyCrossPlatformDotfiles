@@ -16,12 +16,12 @@ If you are on Atlassian Cloud, then instead of providing a password in netrc fil
 
 It is possible to customize widget by providing a table with all or some of the following config parameters:
 
-| Name | Default | Description |
-|---|---|---|
-| `host` | Required | e.g. `http://jira.tmnt.com` |
-| `query` | `jql=assignee=currentuser() AND resolution=Unresolved` | JQL query |
-| `icon` | `~/.config/awesome/awesome-wm-widgets/jira-widget/jira-mark-gradient-blue.svg` | Path to the icon |
-| `timeout` | 600 | How often in seconds the widget refreshes |
+| Name      | Default                                                                        | Description                               |
+|-----------|--------------------------------------------------------------------------------|-------------------------------------------|
+| `host`    | Required                                                                       | e.g. `http://jira.tmnt.com`               |
+| `query`   | `jql=assignee=currentuser() AND resolution=Unresolved`                         | JQL query                                 |
+| `icon`    | `~/.config/awesome/awesome-wm-widgets/jira-widget/jira-mark-gradient-blue.svg` | Path to the icon                          |
+| `timeout` | 600                                                                            | How often in seconds the widget refreshes |
 
 ## Installation
 

@@ -32,7 +32,7 @@ function Initialize-Dotfiles
         [string]$ConfigDirectory = "$HOME/.cfg"
     )
 
-    if(-not (Get-Command git -ErrorAction SilentlyContinue))
+    if (-not (Get-Command git -ErrorAction SilentlyContinue))
     {
         Write-Host 'Git is not installed, install that first then try again'
         return 1
@@ -81,7 +81,7 @@ function Clone-GitRepository
         # Ensure the target directory exists, creating any necessary parent directories
         if (Test-Path -Path $TargetDirectory -ErrorAction SilentlyContinue)
         {
-            if($(git rev-parse --is-inside-work-tree) -match 'true')
+            if ($(git rev-parse --is-inside-work-tree) -match 'true')
             {
                 Write-Host "Directory: $TargetDirectory is already a git repository" -ForegroundColor Green
                 return 'complete'
@@ -105,7 +105,7 @@ function Clone-GitRepository
 
 function Get-NeovimConfigurationDirectory
 {
-    if($IsWindows)
+    if ($IsWindows)
     {
         $cloneTargetPath = Join-Path -Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::LocalApplicationData)) -ChildPath 'nvim'
     } else
@@ -143,7 +143,7 @@ function Get-WeztermConfiguration
 
 function Get-PloverConfigurationDirectory
 {
-    if($IsWindows)
+    if ($IsWindows)
     {
         # Windows default is uppercase for Plover, but case does not matter on windows file names
         $cloneTargetPath = Join-Path -Path ([Environment]::GetFolderPath([Environment+SpecialFolder]::LocalApplicationData)) -ChildPath 'Plover'
@@ -204,7 +204,7 @@ function dots
     Push-Location
 
     $repositories | ForEach-Object {
-        if(-not $(Test-Path "$_"))
+        if (-not $(Test-Path "$_"))
         {
             Write-Error "Git repository path $_ does not exist"
             continue

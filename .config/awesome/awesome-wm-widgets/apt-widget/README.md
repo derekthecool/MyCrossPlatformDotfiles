@@ -13,8 +13,8 @@ Features:
 
 It is possible to customize widget by providing a table with the following config parameters:
 
-| Name | Default | Description |
-|---|---|---|
+| Name           | Default | Description                                                                                  |
+|----------------|---------|----------------------------------------------------------------------------------------------|
 | `icon_control` | `false` | Set or unset whether _any_ click on the screen closes the dropdown after it has been opened. |
 
 

@@ -18,7 +18,7 @@ function Calculate-Tithing
     | Where-Object { $_.Credit }
     | Where-Object { $_.Description -notmatch 'VENMO' -and $_.Description -notmatch 'MOBILE BANKING FUNDS TRANSFER' }
 
-    $transactions | Sort-Object -Property @{ Expression = {[datetime]::Parse($_.Date)} }
+    $transactions | Sort-Object -Property @{ Expression = { [datetime]::Parse($_.Date) } }
     $transactions | Format-Table
     $total = ($transactions | Select-Object -ExpandProperty Credit | Measure-Object -Sum).Sum
     $tithing = $total * 0.12

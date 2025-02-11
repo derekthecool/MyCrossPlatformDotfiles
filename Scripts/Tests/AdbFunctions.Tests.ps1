@@ -10,9 +10,11 @@ BeforeAll {
         Where-Object { $_.FullName -notmatch 'Tests' } |
         Select-Object -First 1 -ExpandProperty FullName
 
-    if ($scriptPath) {
+    if ($scriptPath)
+{
         . $scriptPath
-    } else {
+    } else
+                     {
         Write-Error "Expected script not found for: $scriptFileName"
         Write-Error "Script base: $scriptBase"
     }
@@ -21,12 +23,13 @@ BeforeAll {
 Describe 'Adb function tests' {
     It 'Adb-Devices calls adb exactly once when no devices are connected' {
         # Exit if adb not found
-        if(-not (Get-Command adb -ErrorAction SilentlyContinue)) {
+        if (-not (Get-Command adb -ErrorAction SilentlyContinue))
+                               {
             $true | Should -Be $true
             return
         }
 
-        Mock adb {return 'error: no devices/emulators found'}
+        Mock adb { return 'error: no devices/emulators found' }
         $output = Adb-Devices 2> $null
         Assert-MockCalled adb -Exactly 1 -Scope It
         $output | Should -Be $false
@@ -34,23 +37,25 @@ Describe 'Adb function tests' {
 
     It 'Adb-Devices should return false when adb command is not found' {
         # Exit if adb not found
-        if(-not (Get-Command adb -ErrorAction SilentlyContinue)) {
+        if (-not (Get-Command adb -ErrorAction SilentlyContinue))
+                               {
             $true | Should -Be $true
             return
         }
 
-        Mock adb {return 'error: no devices/emulators found'}
-        {Adb-Devices 2> $null | Should -Throw -ExpectedMessage 'adb command failed:.*'}
+        Mock adb { return 'error: no devices/emulators found' }
+        { Adb-Devices 2> $null | Should -Throw -ExpectedMessage 'adb command failed:.*' }
     }
 
     It 'Return for a single device' {
         # Exit if adb not found
-        if(-not (Get-Command adb -ErrorAction SilentlyContinue)) {
+        if (-not (Get-Command adb -ErrorAction SilentlyContinue))
+                               {
             $true | Should -Be $true
             return
         }
 
-        Mock adb {return "List of devices attached`nR5CN715HPPW     device" }
+        Mock adb { return "List of devices attached`nR5CN715HPPW     device" }
         $output = Adb-Devices 2> $null
         $output | Should -Be AdbDevice
         $output.Length | Should -Be 1

@@ -35,11 +35,11 @@ s.mytasklist, -- Middle widget
 
 It is possible to customize the widget by providing a table with all or some of the following config parameters:
 
-| Name | Default | Description |
-|---|---|---|
-| `font` | `beautiful.font` | Font of the menu items |
-| `onlogout` | `function() awesome.quit() end` | Function which is called when the logout item is clicked |
-| `onlock` | `function() awful.spawn.with_shell("i3lock") end` | Function which is called when the lock item is clicked |
-| `onreboot` | `function() awful.spawn.with_shell("reboot") end` | Function which is called when the reboot item is clicked |
-| `onsuspend` | `function() awful.spawn.with_shell("systemctl suspend") end` | Function which is called when the suspend item is clicked |
-| `onpoweroff` | `function() awful.spawn.with_shell("shutdown now") end` | Function which is called when the poweroff item is clicked |
+| Name         | Default                                                      | Description                                                |
+|--------------|--------------------------------------------------------------|------------------------------------------------------------|
+| `font`       | `beautiful.font`                                             | Font of the menu items                                     |
+| `onlogout`   | `function() awesome.quit() end`                              | Function which is called when the logout item is clicked   |
+| `onlock`     | `function() awful.spawn.with_shell("i3lock") end`            | Function which is called when the lock item is clicked     |
+| `onreboot`   | `function() awful.spawn.with_shell("reboot") end`            | Function which is called when the reboot item is clicked   |
+| `onsuspend`  | `function() awful.spawn.with_shell("systemctl suspend") end` | Function which is called when the suspend item is clicked  |
+| `onpoweroff` | `function() awful.spawn.with_shell("shutdown now") end`      | Function which is called when the poweroff item is clicked |

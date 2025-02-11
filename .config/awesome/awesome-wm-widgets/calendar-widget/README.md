@@ -17,13 +17,13 @@ Calendar widget for Awesome WM - slightly improved version of the `wibox.widget.
 
  - themes:
 
-    | Name | Screenshot |
-    |---|---|
-    | nord           | ![nord_theme](./nord.png) |
-    | outrun         | ![outrun_theme](./outrun.png) |
-    | light          | ![outrun_theme](./light.png) |
-    | dark           | ![outrun_theme](./dark.png) |
-    | naughty (default) | from local theme |
+    | Name              | Screenshot                    |
+    |-------------------|-------------------------------|
+    | nord              | ![nord_theme](./nord.png)     |
+    | outrun            | ![outrun_theme](./outrun.png) |
+    | light             | ![outrun_theme](./light.png)  |
+    | dark              | ![outrun_theme](./dark.png)   |
+    | naughty (default) | from local theme              |
 
  - setup widget placement
 

@@ -22,7 +22,7 @@ function better-unzip
     )
 
     $details = Get-ChildItem $ZipArchive
-    if($details.Extension -ne '.zip')
+    if ($details.Extension -ne '.zip')
     {
         Write-Error "Expected a .zip file extension for the input file $ZipArchive"
     }

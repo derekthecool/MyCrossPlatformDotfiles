@@ -1,9 +1,11 @@
 import imaplib
-import re
-from dotenv import load_dotenv
-from pathlib import Path  
 import os
-path_to_env = Path(__file__).parent / '.env'
+import re
+from pathlib import Path
+
+from dotenv import load_dotenv
+
+path_to_env = Path(__file__).parent / ".env"
 load_dotenv(path_to_env)
 EMAIL = os.getenv("EMAIL")
 PASSWORD = os.getenv("PASSWORD")

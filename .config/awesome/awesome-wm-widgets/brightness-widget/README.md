@@ -6,18 +6,18 @@ This widget represents current brightness level, depending on config parameters 
 
 It is possible to customize widget by providing a table with all or some of the following config parameters:
 
-| Name | Default | Description |
-|---|---|---|
-| `type`| `arc` | The widget type. Could be `arc` or `icon_and_text` |
-| `program` | `light` | The program used to control the brightness, either `light`, `xbacklight`, or `brightnessctl`. |
-| `step` | 5 | Step |
-| `base` | 20 | Base level to set brightness to on left click. |
-| `path_to_icon` | `/usr/share/icons/Arc/status/symbolic/display-brightness-symbolic.svg` | Path to the icon |
-| `font` | `beautiful.font` | Font name and size, like `Play 12` |
-| `timeout` | 1 | How often in seconds the widget refreshes. Check the note below |
-| `tooltip` | false | Display brightness level in a tooltip when the mouse cursor hovers the widget |
-| `percentage` | false | Display a '%' character after the brightness level |
-| `rmb_set_max` | false | Right mouse click sets the brightness level to maximum |
+| Name           | Default                                                                | Description                                                                                   |
+|----------------|------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------|
+| `type`         | `arc`                                                                  | The widget type. Could be `arc` or `icon_and_text`                                            |
+| `program`      | `light`                                                                | The program used to control the brightness, either `light`, `xbacklight`, or `brightnessctl`. |
+| `step`         | 5                                                                      | Step                                                                                          |
+| `base`         | 20                                                                     | Base level to set brightness to on left click.                                                |
+| `path_to_icon` | `/usr/share/icons/Arc/status/symbolic/display-brightness-symbolic.svg` | Path to the icon                                                                              |
+| `font`         | `beautiful.font`                                                       | Font name and size, like `Play 12`                                                            |
+| `timeout`      | 1                                                                      | How often in seconds the widget refreshes. Check the note below                               |
+| `tooltip`      | false                                                                  | Display brightness level in a tooltip when the mouse cursor hovers the widget                 |
+| `percentage`   | false                                                                  | Display a '%' character after the brightness level                                            |
+| `rmb_set_max`  | false                                                                  | Right mouse click sets the brightness level to maximum                                        |
 
 _Note:_ If brightness is controlled only by the widget (either by a mouse, or by a shortcut, then the `timeout` could be quite big, as there is no reason to synchronize the brightness level).
 
