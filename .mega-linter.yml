@@ -14,6 +14,9 @@ APPLY_FIXES: all
 # default
 # ENABLE_LINTERS:
 
+# Global filter for GitHub actions directory -- changes will be rejected by commit
+FILTER_REGEX_EXCLUDE: ".*github/workflows/.*"
+
 DISABLE:
   - COPYPASTE
   - SPELL
