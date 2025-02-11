@@ -85,13 +85,13 @@ filters:
 
 routers:
   routing_behavior: route_to_launched_workspace
-  entries:
-    - type: process_file_name
-      value: explorer.exe
-      workspace_name: Docs
-    - type: process_file_name
-      value: teams.exe
-      workspace_name: Chat
+  entries: []
+    # - type: process_file_name
+    #   value: explorer.exe
+    #   workspace_name: Docs
+    # - type: process_file_name
+    #   value: teams.exe
+    #   workspace_name: Chat
 
 plugins:
   bar:

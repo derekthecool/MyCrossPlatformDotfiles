@@ -89,24 +89,64 @@ void DoConfig(IContext context)
     AddWorkspace("two", "8");
     AddWorkspace("three", "9");
 
+    // // Set up layout engines.
+    // // TODO: (Derek Lomax) 2/11/2025 9:52:34 AM, not working from website guide
+    // context.Store.Dispatch(
+    //     new SetCreateLayoutEnginesTransform(
+    //         () => new CreateLeafLayoutEngine[]
+    //         {
+    //             (id) => SliceLayouts.CreatePrimaryStackLayout(context, sliceLayoutPlugin, id),
+    //             (id) => new TreeLayoutEngine(context, treeLayoutPlugin, id)
+    //         }
+    //     )
+    // );
+
 
     // context.RouterManager.AddProcessFileNameRoute("wezterm-gui", workspaces["terminal"]);
 
     // Plover
     context.RouterManager.AddProcessFileNameRoute("pythonw", workspaces["plover"]);
-    // https://dalyisaac.github.io/Whim/script/core/filtering.html?q=filter
-    context.FilterManager.AddTitleMatchFilter(".*Plover: Lookup.*");
-    context.FilterManager.AddTitleMatchFilter(".*Plover: Add Translation.*");
+
+    // // https://dalyisaac.github.io/Whim/script/core/filtering.html?q=filter
+    // context.FilterManager.AddTitleMatchFilter(".*Plover: Lookup.*");
+    // context.FilterManager.AddTitleMatchFilter(".*Plover: Add Translation.*");
+
+    new List<string> {
+        "keypirinha_wndcls_run",
+        ".*Plover: Lookup.*",
+        ".*Plover: Add Translation.*"
+    }
+    .ForEach(program => {
+            context.FilterManager.AddTitleMatchFilter(program);
+            context.FilterManager.AddWindowClassFilter(program);
+            }
+            );
 
     context.RouterManager.AddProcessFileNameRoute("firefox.exe", workspaces["web"]);
 
-    // [
-    //     "wezterm-gui",
-    //     "alacritty",
-    // ].ForEach(x => context.RouterManager.AddProcessFileNameRoute(x, workspaces["terminal"]));
-
-    new List<string> { "wezterm-gui", "alacritty" }
+    // {{{ Routes
+    new List<string> { "wezterm-gui", "alacritty", "devenv" }
     .ForEach(program => context.RouterManager.AddProcessFileNameRoute(program, workspaces["terminal"]));
+
+    // Chat
+    new List<string> { "TeamsWebView" }
+    .ForEach(program => context.RouterManager.AddWindowClassRoute(program, workspaces["chat"]));
+
+    // Docs and music
+    new List<string> {
+        "vcxsrv",
+        "love",
+        "Obsidian",
+        "WINWORD",
+        "EXCEL",
+        "POWERPNT",
+        "explorer",
+        "okular",
+        "MusicBee",
+    }
+    .ForEach(program => context.RouterManager.AddProcessFileNameRoute($"{program}.exe", workspaces["docs"]));
+
+    // }}}
 
     // context.WindowRouter.RouteProcessName("alacritty", MyWorkSpaceNames.Terminal);
     // context.WindowRouter.RouteProcessName("wezterm-gui", MyWorkSpaceNames.Terminal);
@@ -151,20 +191,6 @@ void DoConfig(IContext context)
     // New teams released 2023
     context.WindowRouter.RouteWindowClass("TeamsWebView", MyWorkSpaceNames.Chat);
     context.WindowRouter.RouteProcessName("thunderbird", MyWorkSpaceNames.Chat);
-
-    // WSL gui applications, mainly for zathura PDF viewer
-    context.WindowRouter.RouteProcessName("vcxsrv", MyWorkSpaceNames.Docs);
-    // Okular PDF viewer
-    context.WindowRouter.RouteProcessName("okular", MyWorkSpaceNames.Docs);
-    // Love 2D windows
-    context.WindowRouter.RouteProcessName("love", MyWorkSpaceNames.Docs);
-
-    // Documents
-    context.WindowRouter.RouteProcessName("Obsidian", MyWorkSpaceNames.Docs);
-    context.WindowRouter.RouteProcessName("WINWORD", MyWorkSpaceNames.Docs);
-    context.WindowRouter.RouteProcessName("EXCEL", MyWorkSpaceNames.Docs);
-    context.WindowRouter.RouteProcessName("POWERPNT", MyWorkSpaceNames.Docs);
-    context.WindowRouter.RouteProcessName("explorer", MyWorkSpaceNames.Docs);
 
     // QXDM
     context.WindowRouter.RouteProcessName("QXDM", MyWorkSpaceNames.PlusOne);
@@ -231,6 +257,29 @@ void DoConfig(IContext context)
       end of workspacer migration
       */
 
+    // Close active window
+    // https://github.com/urob/whim-config/blob/3387b154edadf384271c90d2ed75a90c10e53790/whim.commands.csx
+    context.CommandManager.Add(
+        identifier: "close_window",
+        title: "Close focused window",
+        callback: () => context.WorkspaceManager.ActiveWorkspace.LastFocusedWindow.Close()
+    );
+
+    // Modifiers
+    KeyModifiers mod1 = KeyModifiers.LAlt;
+    KeyModifiers mod2 = KeyModifiers.LAlt | KeyModifiers.LShift;
+
+    void Bind(KeyModifiers mod, string key, string cmd)
+    {
+        VIRTUAL_KEY vk = (VIRTUAL_KEY)Enum.Parse(typeof(VIRTUAL_KEY), "VK_" + key);
+        context.KeybindManager.SetKeybind(cmd, new Keybind(mod, vk));
+    }
+
+    Bind(mod1, "X", "whim.custom.close_window");
+    Bind(mod1, "H", "whim.core.focus_window_in_direction.left");
+    Bind(mod1, "L", "whim.core.focus_window_in_direction.right");
+    Bind(mod1, "K", "whim.core.focus_window_in_direction.up");
+    Bind(mod1, "J", "whim.core.focus_window_in_direction.down");
 }
 
 // We return doConfig here so that Whim can call it when it loads.
