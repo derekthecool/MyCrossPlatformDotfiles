@@ -42,6 +42,8 @@ jobs:
 
     # Give the default GITHUB_TOKEN write permission to commit and push, comment
     # issues, and post new Pull Requests; remove the ones you do not need
+    # Create a fine grained secret named PAT with a repository specific PAT with
+    # these permissions (applied 2025-02-11)
     permissions:
       contents: write
       issues: write
