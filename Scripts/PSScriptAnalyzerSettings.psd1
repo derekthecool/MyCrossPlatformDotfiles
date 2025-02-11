@@ -4,6 +4,7 @@
         'PSAvoidUsingInvokeExpression'
         'PSAlignAssignmentStatement'
         'PSAvoidUsingWriteHost'
+        'PSAvoidUsingPlainTextForPassword'
     )
     IncludeRules = @(
         '*'
@@ -20,8 +21,6 @@
         # 'PSAvoidUsingEmptyCatchBlock',
         # 'PSAvoidUsingFilePath',
         # 'PSAvoidUsingInvokeExpression',
-        # 'PSAvoidUsingPlainTextForPassword',
-        # 'PSAvoidUsingPlaintTextForPassword',
         # 'PSAvoidUsingPositionalParameters',
         # 'PSAvoidUsingUserNameAndPassWordParams',
         # 'PSAvoidUsingUserNameAndPasswordParams',
