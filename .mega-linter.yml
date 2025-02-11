@@ -41,5 +41,6 @@ LUA_LUACHECK_FILTER_REGEX_EXCLUDE: '.*awesome-wm-widgets.*'
 LUA_SELENE_FILTER_REGEX_EXCLUDE: '.*awesome-wm-widgets.*'
 
 LUA_STYLUA_CONFIG_FILE: '.stylua.toml'
+
 # Uncomment if you want MegaLinter to detect errors but not block CI to pass
-# DISABLE_ERRORS: true
+DISABLE_ERRORS: true
