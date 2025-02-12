@@ -36,7 +36,6 @@ function Use-MermaidCli
 
 function Use-PandocLatexMdToPdf
 {
-
     param (
         [Parameter()]
         [string]$InputMarkdown,
@@ -56,4 +55,15 @@ function Use-PandocLatexMdToPdf
         -o $OutputPDF `
         "$AdditionalPandocArgs" `
         $InputMarkdown
+}
+
+function Use-YTDLP
+{
+    $containerName = "ghcr.io/jauderho/yt-dlp:latest"
+
+    Use-Container run --rm `
+        -v $HOME/yt-dlp.conf:/root/yt-dlp.conf `
+        -v $HOME/YouTube:/root/YouTube `
+        $containerName `
+        @args
 }
