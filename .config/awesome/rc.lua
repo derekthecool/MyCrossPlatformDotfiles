@@ -24,7 +24,22 @@ local naughty = require('naughty')
 local menubar = require('menubar')
 local hotkeys_popup = require('awful.hotkeys_popup')
 
-local photos = '/home/derek/MyDesktopBackgrounds'
+local function do_if_directory_not_found(dir, action)
+    if not gears.filesystem.is_dir(dir) then
+        action()
+    end
+end
+
+local desktop_backgrounds = string.format('%s/MyDesktopBackgrounds', os.getenv('HOME'))
+do_if_directory_not_found(desktop_backgrounds, function()
+    naughty.notify({
+        preset = naughty.config.presets.normal,
+        title = 'Cloning desktop backgrounds',
+        text = 'Cloning desktop backgrounds',
+    })
+    awful.spawn.with_shell(string.format('git clone https://gitlab.com/dwt1/wallpapers.git %s', desktop_backgrounds))
+end)
+
 if not gears.filesystem.is_dir(photos) then
     -- use images from Derek Taylor (DT) : git clone https://gitlab.com/dwt1/wallpapers.git ~/MyDesktopBackgrounds
     awful.spawn.with_shell('git clone https://gitlab.com/dwt1/wallpapers.git ~/MyDesktopBackgrounds')
@@ -449,7 +464,7 @@ Globalkeys = gears.table.join(
     awful.key({}, 'XF86AudioRaiseVolume', function()
         volume_widget:inc(5)
     end),
-    awful.key({ModKey}, 'y', function()
+    awful.key({ ModKey }, 'y', function()
         volume_widget:inc(5)
     end),
     awful.key({}, 'XF86AudioLowerVolume', function()

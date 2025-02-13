@@ -181,12 +181,19 @@ function Get-ExercismConfiguration
     return Clone-GitRepository -RepoURL "$RepoURL" -TargetDirectory "$cloneTargetPath"
 }
 
+function Get-AwesomeWmWidgets
+{
+    Write-Host "Install awesome-wm-widgets"
+    ~/.config/awesome/Update-awesome-wm-widgets-repo.ps1
+}
+
 function Get-AllConfigurations
 {
     Get-NeovimConfiguration
     Get-WeztermConfiguration
     Get-PloverConfiguration
     Get-ExercismConfiguration
+    Get-AwesomeWmWidgets
 }
 
 function dots
