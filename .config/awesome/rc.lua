@@ -40,11 +40,6 @@ do_if_directory_not_found(desktop_backgrounds, function()
     awful.spawn.with_shell(string.format('git clone https://gitlab.com/dwt1/wallpapers.git %s', desktop_backgrounds))
 end)
 
-if not gears.filesystem.is_dir(photos) then
-    -- use images from Derek Taylor (DT) : git clone https://gitlab.com/dwt1/wallpapers.git ~/MyDesktopBackgrounds
-    awful.spawn.with_shell('git clone https://gitlab.com/dwt1/wallpapers.git ~/MyDesktopBackgrounds')
-end
-
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 -- require('awful.hotkeys_popup.keys')
