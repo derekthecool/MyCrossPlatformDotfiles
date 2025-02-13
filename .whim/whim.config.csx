@@ -102,8 +102,6 @@ void DoConfig(IContext context)
     // );
 
 
-    // context.RouterManager.AddProcessFileNameRoute("wezterm-gui", workspaces["terminal"]);
-
     // Plover
     context.RouterManager.AddProcessFileNameRoute("pythonw", workspaces["plover"]);
 
@@ -124,6 +122,12 @@ void DoConfig(IContext context)
 
     context.RouterManager.AddProcessFileNameRoute("firefox.exe", workspaces["web"]);
 
+    // Tips for finding window information:
+    // Ideally you can use the workspacer debug window, however this has not
+    // been working for me lately as of 2023.
+    // There is AHK window spy as well
+    // Or you can use an application named winspy, 'scoop install winspy' to get it
+
     // {{{ Routes
     new List<string> { "wezterm-gui", "alacritty", "devenv" }
     .ForEach(program => context.RouterManager.AddProcessFileNameRoute(program, workspaces["terminal"]));
@@ -132,8 +136,16 @@ void DoConfig(IContext context)
     new List<string> { "TeamsWebView" }
     .ForEach(program => context.RouterManager.AddWindowClassRoute(program, workspaces["chat"]));
 
+   void Route(List<string> programs, string workspace)
+    {
+         foreach(var program in programs)
+         {
+             context.RouterManager.AddProcessFileNameRoute($"{program}.exe", workspaces[workspace]);
+         }
+    }
+
     // Docs and music
-    new List<string> {
+    var docs_programs = new List<string> {
         "vcxsrv",
         "love",
         "Obsidian",
@@ -143,39 +155,30 @@ void DoConfig(IContext context)
         "explorer",
         "okular",
         "MusicBee",
-    }
-    .ForEach(program => context.RouterManager.AddProcessFileNameRoute($"{program}.exe", workspaces["docs"]));
+    };
+
+    var one_programs = new List<string> {
+        "wsl-usb-gui",
+        // Windows device manager
+        "mmc",
+        // Remote desktop
+        "mstsc",
+    };
+
+    // three programs
+    var three_programs = new List<string> {
+        "ConsoleWindowClass",
+    };
+
+    Route(docs_programs, "docs");
+    Route(one_programs, "one");
+
 
     // }}}
 
-    // context.WindowRouter.RouteProcessName("alacritty", MyWorkSpaceNames.Terminal);
-    // context.WindowRouter.RouteProcessName("wezterm-gui", MyWorkSpaceNames.Terminal);
-
+    /*
     // context.RouterManager.AddProcessFileNameRoute("TIDAL.exe", workspaces["other"]);
-
-
-    /*start of workspacer configuration I need to my grace
-
-    // Tips for finding window information:
-    // Ideally you can use the workspacer debug window, however this has not
-    // been working for me lately as of 2023.
-    // There is AHK window spy as well
-    // Or you can use an application named winspy, 'scoop install winspy' to get it
-
-    // Routes: automatically send opened applications to the specified workspace
-    // Terminal applications
-    context.WindowRouter.RouteTitle("Email", MyWorkSpaceNames.Chat); // thunderbird neovim terminal
-    context.WindowRouter.RouteProcessName("alacritty", MyWorkSpaceNames.Terminal);
-    context.WindowRouter.RouteProcessName("wezterm-gui", MyWorkSpaceNames.Terminal);
-    // Terminal catch all
-    // context.WindowRouter.RouteWindowClass("ConsoleWindowClass", MyWorkSpaceNames.Terminal);
-
-    // Visual Studio
-    context.WindowRouter.RouteProcessName("devenv", MyWorkSpaceNames.Terminal);
-
-    // Remote desktop
-    context.WindowRouter.RouteProcessName("mstsc", MyWorkSpaceNames.PlusOne);
-
+    //
     // Web browsers
     context.WindowRouter.RouteProcessName("Vieb", MyWorkSpaceNames.Web);
     context.WindowRouter.RouteProcessName("firefox", MyWorkSpaceNames.Web);
@@ -184,13 +187,6 @@ void DoConfig(IContext context)
     // many electron applications use this as well.
     // Send this to the last tab
     context.WindowRouter.RouteProcessName("chrome", MyWorkSpaceNames.PlusThree);
-
-    // Chat apps
-    // Old teams
-    context.WindowRouter.RouteProcessName("Teams", MyWorkSpaceNames.Chat);
-    // New teams released 2023
-    context.WindowRouter.RouteWindowClass("TeamsWebView", MyWorkSpaceNames.Chat);
-    context.WindowRouter.RouteProcessName("thunderbird", MyWorkSpaceNames.Chat);
 
     // QXDM
     context.WindowRouter.RouteProcessName("QXDM", MyWorkSpaceNames.PlusOne);
@@ -253,8 +249,6 @@ void DoConfig(IContext context)
     // Odd items that have exe of explorer but are actually web applications
     // These are items like teams authentication sign in, azure cli sign in etc.
     context.WindowRouter.AddFilter((window) => !window.Class.Contains("ApplicationFrameWindow"));
-
-      end of workspacer migration
       */
 
     // Close active window
