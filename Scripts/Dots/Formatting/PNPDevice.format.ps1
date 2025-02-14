@@ -4,8 +4,10 @@
 Write-FormatView `
     -TypeName 'Microsoft.Management.Infrastructure.CimInstance#ROOT/cimv2/Win32_PnPEntity' `
     -Name DotsPNPDevice `
-    -Property Name, DeviceId, Status `
-    -StyleRow {
+    -Property Name, Port, DeviceId, Status `
+    -VirtualProperty @{
+        Port = {[Regex]::Match($_.Name, '(COM\d+)').Value}
+    } -StyleRow {
     $_.Status -eq 'OK' ? 'Foreground.Green' : 'Foreground.Red'
 } `
     -AutoSize
