@@ -5,8 +5,7 @@ function Get-LatestGithubRelease
         [ValidatePattern('\w+/\w+')]
         [string]$Repo
     )
-    Invoke-WebRequest -Uri "https://api.github.com/repos/${Repo}/releases/latest"
-    | ConvertFrom-Json
+    Invoke-RestMethod "https://api.github.com/repos/${Repo}/releases/latest"
     | Select-Object -ExpandProperty assets
     | Select-Object -ExpandProperty browser_download_url
 }
