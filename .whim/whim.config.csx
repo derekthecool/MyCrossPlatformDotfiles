@@ -43,6 +43,13 @@ using Windows.Win32.UI.Input.KeyboardAndMouse;
 void DoConfig(IContext context)
 {
 	context.Logger.Config = new LoggerConfig();
+    // context.Logger.Config = new LoggerConfig() { BaseMinLogLevel = LogLevel.Debug };
+    // // The logger will log messages with a level of `Debug` or higher to a file.
+    // if (context.Logger.Config.FileSink is FileSinkConfig fileSinkConfig)
+    // {
+    //     fileSinkConfig.MinLogLevel = LogLevel.Debug;
+    // }
+
 
 	// YAML config. It's best to load this first so that you can use it in your C# config.
 	YamlLoader.Load(context);
@@ -54,24 +61,6 @@ void DoConfig(IContext context)
     // Example configs
     // https://github.com/formesean/configs/blob/d076ef27e74898b31e511126c9b01b0a34d2649c/whim/whim.config.csx#L4
     // https://github.com/urob/whim-config/blob/3387b154edadf384271c90d2ed75a90c10e53790/whim.config.csx#L4
-
-    // TODO: (Derek Lomax) 2/6/2025 4:17:02 PM, this command was not working right away
-    // // Create the command.
-    // context.CommandManager.Add(
-    //     // Automatically namespaced to `whim.custom`.
-    //     identifier: "close_window",
-    //     title: "Close focused window",
-    //     callback: () =>
-    //     {
-    //         if (context.Store.Pick(Pickers.PickLastFocusedWindow).TryGet(out IWindow window))
-    //         {
-    //             window.Close();
-    //         }
-    //     }
-    // );
-    //
-    // // Create an associated keybind.
-    // // context.KeybindManager.SetKeybind("whim.custom.close_window", new Keybind(IKeybind.Alt, VIRTUAL_KEY.VK_X));
 
     Dictionary<string, string> workspaces = new Dictionary<string, string>();
     void AddWorkspace(string name, string icon) {
@@ -102,13 +91,7 @@ void DoConfig(IContext context)
     // );
 
 
-    // Plover
-    context.RouterManager.AddProcessFileNameRoute("pythonw", workspaces["plover"]);
-
     // // https://dalyisaac.github.io/Whim/script/core/filtering.html?q=filter
-    // context.FilterManager.AddTitleMatchFilter(".*Plover: Lookup.*");
-    // context.FilterManager.AddTitleMatchFilter(".*Plover: Add Translation.*");
-
     new List<string> {
         "keypirinha_wndcls_run",
         ".*Plover: Lookup.*",
@@ -132,17 +115,24 @@ void DoConfig(IContext context)
     new List<string> { "wezterm-gui", "alacritty", "devenv" }
     .ForEach(program => context.RouterManager.AddProcessFileNameRoute(program, workspaces["terminal"]));
 
-    // Chat
-    new List<string> { "TeamsWebView" }
-    .ForEach(program => context.RouterManager.AddWindowClassRoute(program, workspaces["chat"]));
+    // // // Chat
+    // new List<string> { "TeamsWebView" }
+    // .ForEach(program => context.RouterManager.AddWindowClassRoute(program, workspaces["chat"]));
+    // // new List<string> { "ms-teams" }
+    // // .ForEach(program => context.RouterManager.AddProcessFileNameRoute($"{program}.exe", workspaces["chat"]));
 
    void Route(List<string> programs, string workspace)
     {
-         foreach(var program in programs)
+    foreach(var program in programs)
          {
              context.RouterManager.AddProcessFileNameRoute($"{program}.exe", workspaces[workspace]);
          }
     }
+
+    // Plover
+    Route(new List<string> {
+            "pythonw",
+    }, "plover");
 
     // Docs and music
     var docs_programs = new List<string> {
