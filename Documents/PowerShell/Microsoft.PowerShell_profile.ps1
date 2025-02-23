@@ -116,7 +116,7 @@ $PSDefaultParameterValues = @{
 
 # Add my custom powershell modules to the psmodulepath
 # Make sure to use PathSeparator because windows uses ';' and Linux uses ':'
-$env:PSModulePath += "$([System.IO.Path]::PathSeparator)$HOME/Scripts/"
+$env:PSModulePath += "$([System.IO.Path]::PathSeparator)$HOME/Atelier/pwsh/MyModules/"
 
 if ($IsLinux)
 {
