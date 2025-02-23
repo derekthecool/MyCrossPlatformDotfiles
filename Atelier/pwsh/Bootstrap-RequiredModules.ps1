@@ -1,23 +1,36 @@
 Write-Output "Current location is: $PSScriptRoot"
 
-$modules = Get-ChildItem -Recurse 'Dots.psd1'
-| Select-String -AllMatches -Pattern "ModuleName\s*=\s*'(?<Name>[a-zA-Z0-9.-]+)';\s*ModuleVersion\s*=\s*'(?<Version>.*?)'"
-| Select-Object -ExpandProperty Matches
-| ForEach-Object {
-    [PSCustomObject]@{
-        Name    = $_.Groups['Name']
-        Version = $_.Groups['Version']
+$RequiredModules = @(
+    'PSModuleDevelopment'
+    'Posh'
+    'PSScriptTools'
+    'Microsoft.PowerShell.SecretManagement'
+    'EZOut'
+    'PSFzf'
+    'Selenium'
+    @{
+        ModuleName    = 'SimplySql'; ModuleVersion = '2.0.3.73'
+    },
+    @{
+        ModuleName    =  'Profiler'; ModuleVersion = '4.3.0'
+    }
+)
+
+
+# Convert module entries to a consistent format and install them
+$RequiredModules | ForEach-Object {
+    if ($_ -is [string])
+    {
+        Install-Module -Name $_ -Scope CurrentUser -Force
+    } else
+    {
+        Install-Module -Name $_.ModuleName -RequiredVersion $_.ModuleVersion -Scope CurrentUser -Force
     }
 }
-
-Write-Host "Modules found"
-$modules
-
-$modules | ForEach-Object {
-    Write-Host "Installing $($_.Name)"
-    Install-Module -Name $_.Name -MaximumVersion $_.Version -Force -SkipPublisherCheck
-    Write-Host "Importing $($_.Name)"
-    Import-Module -Name $_.Name
-}
-
+# $modules | ForEach-Object {
+#     Write-Host "Installing $($_.Name)"
+#     Install-Module -Name $_.Name -MaximumVersion $_.Version -Force -SkipPublisherCheck
+#     Write-Host "Importing $($_.Name)"
+#     Import-Module -Name $_.Name
+# }
 Get-Module -All

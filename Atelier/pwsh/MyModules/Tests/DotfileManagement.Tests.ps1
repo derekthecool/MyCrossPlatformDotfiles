@@ -3,7 +3,7 @@ BeforeAll {
   $fileNameWithoutExtension = [System.IO.Path]::GetFileNameWithoutExtension($PSCommandPath)
   $scriptName = $fileNameWithoutExtension -replace '\.Tests$', ''
   $scriptFileName = "$scriptName.ps1"
-  $scriptBase = ([regex]::Match($PSCommandPath, '(.*[/\\]Scripts)')).Groups[1].Value
+  $scriptBase = ([regex]::Match($PSCommandPath, '(.*[/\\]MyModules)')).Groups[1].Value
 
   # Search for the script within the base directory, excluding any paths that still include 'Tests'
   $scriptPath = Get-ChildItem -Path $scriptBase -Recurse -Filter $scriptFileName |

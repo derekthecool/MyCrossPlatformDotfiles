@@ -58,7 +58,7 @@ function Initialize-Dotfiles
     dot config status.showUntrackedFiles no
 
     # Run this script to install all my favorite powershell modules
-    ./$HOME/Scripts/Bootstrap-RequiredModules.ps1
+    ./$HOME/Atelier/pwsh/Bootstrap-RequiredModules.ps1
 
     Write-Host 'Dotfiles are initialized and ready.'
 }

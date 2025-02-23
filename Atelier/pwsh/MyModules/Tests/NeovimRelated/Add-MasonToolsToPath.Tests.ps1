@@ -1,7 +1,7 @@
 BeforeAll {
     # Extract just the filename without extension and replace '.Tests' with nothing, assuming the test script ends with '.Tests.ps1'
     $fileNameWithoutExtension = [System.IO.Path]::GetFileNameWithoutExtension($PSCommandPath)
-    $scriptName = $fileNameWithoutExtension -replace '\.Tests$', ''
+    $scriptName = $fileNameWithoutExtension -replace '\.MyModules$', ''
     $scriptFileName = "$scriptName.ps1"
     $scriptBase = ([regex]::Match($PSCommandPath, '(.*[/\\]Scripts)')).Groups[1].Value
 

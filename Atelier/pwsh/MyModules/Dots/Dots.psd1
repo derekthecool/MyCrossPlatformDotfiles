@@ -27,38 +27,6 @@
     # Minimum version of the PowerShell engine required by this module
     PowerShellVersion = '7.4'
 
-    # Modules that must be imported into the global environment prior to importing this module
-    # NOTE: At first I thought this would be like .csproj nuget dependency
-    # listing. But it just fails to load the module if these are not installed.
-    # But these comments can't be deleted because the script
-    # ../Bootstrap-RequiredModules.ps1 depends on this to install the modules
-    # RequiredModules = @(
-    #     @{
-    #         ModuleName    = 'PSScriptTools'; ModuleVersion = '2.48.0'
-    #     },
-    #     @{
-    #         ModuleName    = 'PSFzf'; ModuleVersion = '2.5.22'
-    #     },
-    #     @{
-    #         ModuleName    = 'Selenium'; ModuleVersion = '4.0.0'
-    #     },
-    #     @{
-    #         ModuleName    = 'SimplySql'; ModuleVersion = '2.0.3.73'
-    #     },
-    #     @{
-    #         ModuleName    =  'Microsoft.PowerShell.SecretManagement'; ModuleVersion = '1.1.2'
-    #     }
-    #     @{
-    #         ModuleName    =  'Profiler'; ModuleVersion = '4.3.0'
-    #     }
-    #     @{
-    #         ModuleName    =  'EZOut'; ModuleVersion = '4.3.0'
-    #     }
-    #
-    #     # Maybe add Catesta (module creation helper)
-    #     and ps2exe executable creation from powershell scripts)
-    # )
-
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry,
     # use an empty array if there are no functions to export.
     FunctionsToExport = @(
