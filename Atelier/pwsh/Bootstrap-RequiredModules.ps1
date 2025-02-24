@@ -8,6 +8,7 @@ $RequiredModules = @(
     'EZOut'
     'PSFzf'
     'Selenium'
+    'Pester'
     @{
         ModuleName    = 'SimplySql'; ModuleVersion = '2.0.3.73'
     },

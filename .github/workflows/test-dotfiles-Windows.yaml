@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - Scripts/**
+      - Atelier/pwsh/**
 
 jobs:
   test:
@@ -27,9 +27,9 @@ jobs:
         shell: pwsh
         run: |
           Install-Module -Name Pester -RequiredVersion 5.3.1 -Force -SkipPublisherCheck
-          pwsh -File './Scripts/Bootstrap-RequiredModules.ps1'
+          pwsh -File './Atelier/pwsh/Bootstrap-RequiredModules.ps1'
 
       - name: Run Pester Tests
         shell: pwsh
         run: |
-          Invoke-Pester -Path './Scripts/Tests' -Passthru -Output Detailed
+          Invoke-Pester -Path './Atelier/pwsh/MyModules/Tests' -Passthru -Output Detailed

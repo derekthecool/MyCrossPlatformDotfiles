@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - Scripts/**
+      - Atelier/pwsh/**
 
 jobs:
   test:
@@ -34,13 +34,13 @@ jobs:
               dpkg -i packages-microsoft-prod.deb
               apt-get update && apt-get install -y powershell git
               pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
-              pwsh -File './Scripts/Bootstrap-RequiredModules.ps1'
+              pwsh -File './Atelier/pwsh/Bootstrap-RequiredModules.ps1'
               ;;
             #fedora*)
             #  # Download and install directly from GitHub releases
             #  dnf install https://github.com/PowerShell/PowerShell/releases/download/v7.4.6/powershell-7.4.6-1.rh.x86_64.rpm
             #  pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
-            #  pwsh -File './Scripts/Bootstrap-RequiredModules.ps1'
+            #  pwsh -File './Atelier/pwsh/Bootstrap-RequiredModules.ps1'
             #  ;;
             archlinux*)
               pacman -Sy --noconfirm wget git base-devel sudo
@@ -49,7 +49,7 @@ jobs:
               echo "builduser ALL=(ALL) NOPASSWD: ALL" | tee -a /etc/sudoers
               sudo -u builduser bash -c "cd; git clone https://aur.archlinux.org/powershell-bin.git; cd powershell-bin; makepkg -si --noconfirm"
               sudo -u builduser pwsh -Command "Install-Module -Name Pester -Force -SkipPublisherCheck"
-              sudo -u builduser pwsh -File './Scripts/Bootstrap-RequiredModules.ps1'
+              sudo -u builduser pwsh -File './Atelier/pwsh/Bootstrap-RequiredModules.ps1'
               echo "PSModulePath=$PSModulePath:/home/builduser/.local/share/powershell/Modules" | sudo tee -a /etc/environment
               sudo -E pwsh -Command "Import-Module Pester; Get-Module -ListAvailable Pester"
               ;;
@@ -61,4 +61,4 @@ jobs:
           PSModulePath: '/home/builduser/.local/share/powershell/Modules'
         run: |
           Import-Module Pester -Force
-          Invoke-Pester -Path './Scripts/Tests' -Passthru -Output Detailed
+          Invoke-Pester -Path './Atelier/pwsh/MyModules/Tests' -Passthru -Output Detailed
