@@ -1,5 +1,5 @@
 function Get-TopMemoryProcesses
-                                {
+{
     Get-Process | Group-Object -Property ProcessName |
         ForEach-Object {
             [PSCustomObject]@{
@@ -34,8 +34,8 @@ function Get-CombinedCPUUsagePercentage
         $process = $_
         $startCpu = $startCpuTimes | Where-Object { $_.Id -eq $process.Id } | Select-Object -ExpandProperty CPU -Unique
 
-        if ($startCpu -ne $null)
-{
+        if ($null -ne $startCpu)
+        {
             $cpuTimeDiff = $process.CPU - $startCpu
             $elapsedTime = ($endTime - $startTime).TotalMilliseconds
             $cpuPercentage = ($cpuTimeDiff / $elapsedTime) * 100 * [Environment]::ProcessorCount

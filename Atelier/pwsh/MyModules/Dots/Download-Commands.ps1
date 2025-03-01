@@ -14,7 +14,7 @@ function Get-ISOFilename
     }
 }
 
-function Download-ISO
+function Get-ISO
 {
     param (
         [ValidatePattern('.*/([^/]+\.iso)')]

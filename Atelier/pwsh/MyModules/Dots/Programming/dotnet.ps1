@@ -1,4 +1,4 @@
-function dotnet-ListOutdated
+function Get-DotnetOutdatedPackages
 {
     param (
         [Parameter()]
@@ -21,3 +21,5 @@ function dotnet-ListOutdated
 
     $packages
 }
+
+New-Alias -Name dotnet-GetOutdated -Value Get-DotnetOutdatedPackages
