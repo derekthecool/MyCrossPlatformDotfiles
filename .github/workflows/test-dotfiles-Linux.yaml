@@ -58,7 +58,7 @@ jobs:
       - name: Run Pester Tests
         shell: pwsh
         env:
-          PSModulePath: '/home/builduser/.local/share/powershell/Modules'
+          PSModulePath: '/home/builduser/.local/share/powershell/Modules:./Atelier/pwsh/MyModules'
         run: |
           Import-Module Pester -Force
           Invoke-Pester -Path './Atelier/pwsh/MyModules/Tests' -Passthru -Output Detailed
