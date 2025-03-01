@@ -1,6 +1,5 @@
 BeforeAll {
-    # Import the containing module
-    Import-Module $PSScriptRoot/*.psd1
+    Import-Module $PSScriptRoot/../*.psd1 -Force
 }
 
 Describe 'DotPSMDTemplater tests' {
