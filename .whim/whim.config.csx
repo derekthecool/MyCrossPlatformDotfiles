@@ -95,13 +95,15 @@ void DoConfig(IContext context)
     new List<string> {
         "keypirinha_wndcls_run",
         ".*Plover: Lookup.*",
-        ".*Plover: Add Translation.*"
+        ".*Plover: Add Translation.*",
+        "Upgrade_tool.exe",
     }
     .ForEach(program => {
             context.FilterManager.AddTitleMatchFilter(program);
             context.FilterManager.AddWindowClassFilter(program);
+            context.FilterManager.AddProcessFileNameFilter(program);
             }
-            );
+    );
 
     context.RouterManager.AddProcessFileNameRoute("firefox.exe", workspaces["web"]);
 
@@ -158,10 +160,12 @@ void DoConfig(IContext context)
     // three programs
     var three_programs = new List<string> {
         "ConsoleWindowClass",
+        "WindowsTerminal",
     };
 
     Route(docs_programs, "docs");
     Route(one_programs, "one");
+    Route(three_programs, "three");
 
 
     // }}}
