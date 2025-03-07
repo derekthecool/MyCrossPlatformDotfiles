@@ -32,5 +32,5 @@ jobs:
       - name: Run Pester Tests
         shell: pwsh
         run: |
-          $env.PSModulePath += ';./Atelier/pwsh/MyModules'
+          $env:PSModulePath += ';./Atelier/pwsh/MyModules'
           Invoke-Pester -Path './Atelier/pwsh' -Passthru -Output Detailed
