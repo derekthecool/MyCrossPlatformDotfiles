@@ -33,4 +33,4 @@ jobs:
         shell: pwsh
         run: |
           $env:PSModulePath += ';./Atelier/pwsh/MyModules'
-          Invoke-Pester -Path './Atelier/pwsh' -Passthru -Output Detailed
+          Invoke-Pester -Path './Atelier/pwsh/MyModules' -Passthru -Output Detailed

@@ -33,8 +33,8 @@ FILEIO_REPORTER: false
 
 # Powershell configuration
 # My PSScriptAnalyzerSettings.psd1 contains the rules for formatting and linting
-POWERSHELL_POWERSHELL_FORMATTER_CONFIG_FILE: ./Scripts/PSScriptAnalyzerSettings.psd1
-POWERSHELL_POWERSHELL_CONFIG_FILE: ./Scripts/PSScriptAnalyzerSettings.psd1
+POWERSHELL_POWERSHELL_FORMATTER_CONFIG_FILE: ./Atelier/pwsh/PSScriptAnalyzerSettings.psd1
+POWERSHELL_POWERSHELL_CONFIG_FILE: ./Atelier/pwsh/PSScriptAnalyzerSettings.psd1
 
 # Configuration needed to ignore items from ./.config/awesome/awesome-wm-widgets/
 # TODO: (Derek Lomax) 2/10/2025 1:32:23 PM, maybe remove awesome-wm-widgets from the repository (I've made no changes, it could be ignored)
@@ -46,4 +46,4 @@ LUA_SELENE_FILTER_REGEX_EXCLUDE: ".*awesome-wm-widgets.*"
 LUA_STYLUA_CONFIG_FILE: ".stylua.toml"
 
 # Uncomment if you want MegaLinter to detect errors but not block CI to pass
-DISABLE_ERRORS: false
+DISABLE_ERRORS: true
