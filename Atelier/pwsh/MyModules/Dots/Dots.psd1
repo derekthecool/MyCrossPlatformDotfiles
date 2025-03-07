@@ -31,9 +31,7 @@
     # use an empty array if there are no functions to export.
     FunctionsToExport = @(
         # Functions from ./DotfileManagement.ps1
-        'dot'
         'dots'
-        'Initialize-Dotfiles'
         'Clone-GitRepository'
         'Add-MasonToolsToPath'
 
