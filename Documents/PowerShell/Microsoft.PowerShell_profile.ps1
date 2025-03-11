@@ -1,6 +1,7 @@
 # Personal settings
 # PowerShell 7 (pwsh)
-#
+$env:POWERSHELL_TELEMETRY_OPTOUT = $true
+
 # TODO: (Derek Lomax) 2/14/2025 4:24:24 PM, Try using this module
 # to load things async https://github.com/fsackur/ProfileAsync
 

@@ -1,3 +1,7 @@
 .single_computer_specific
 
 megalinter-reports/
+
+# Dotnet
+obj
+bin
