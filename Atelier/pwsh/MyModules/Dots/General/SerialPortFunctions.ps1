@@ -1,6 +1,6 @@
 function Get-SerialPorts
 {
-    if($IsWindows)
+    if ($IsWindows)
     {
         Get-PnpDevice -Class ports | Where-Object { $_.Status -eq 'OK' }
     } else

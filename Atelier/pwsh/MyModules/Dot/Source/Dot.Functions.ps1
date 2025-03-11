@@ -1,4 +1,4 @@
-﻿# Function to using my git bare repo for my windows config files
+# Function to using my git bare repo for my windows config files
 function dot
 {
     # Create a copy of the arguments array to manipulate

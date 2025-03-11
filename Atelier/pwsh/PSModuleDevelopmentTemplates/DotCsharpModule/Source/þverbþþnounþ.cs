@@ -8,12 +8,11 @@ public class þverbþþnounþ : PSCmdlet
         Mandatory = true,
         Position = 0,
         ValueFromPipeline = true,
-        ValueFromPipelineByPropertyName = true)]
+        ValueFromPipelineByPropertyName = true
+    )]
     public int FavoriteNumber { get; set; }
 
-    [Parameter(
-        Position = 1,
-        ValueFromPipelineByPropertyName = true)]
+    [Parameter(Position = 1, ValueFromPipelineByPropertyName = true)]
     [ValidateSet("Cat", "Dog", "Horse")]
     public string FavoritePet { get; set; } = "Dog";
 
@@ -26,11 +25,9 @@ public class þverbþþnounþ : PSCmdlet
     // This method will be called for each input received from the pipeline to this cmdlet; if no input is received, this method is not called
     protected override void ProcessRecord()
     {
-        WriteObject(new FavoriteStuff
-        {
-            FavoriteNumber = FavoriteNumber,
-            FavoritePet = FavoritePet
-        });
+        WriteObject(
+            new FavoriteStuff { FavoriteNumber = FavoriteNumber, FavoritePet = FavoritePet }
+        );
     }
 
     // This method will be called once at the end of pipeline execution; if no input is received, this method is not called

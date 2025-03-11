@@ -1,4 +1,4 @@
-﻿BeforeAll {
+BeforeAll {
     Import-Module $PSScriptRoot/../*.psd1 -Force
 }
 
@@ -8,7 +8,7 @@ Describe 'Dot tests' {
     }
 
     It 'Dot should load very fast' {
-        $time = Measure-Command { Import-Module $PSScriptRoot/../*.psd1 -Force}
+        $time = Measure-Command { Import-Module $PSScriptRoot/../*.psd1 -Force }
         $time.TotalMilliseconds | Should -BeLessThan 30
     }
 

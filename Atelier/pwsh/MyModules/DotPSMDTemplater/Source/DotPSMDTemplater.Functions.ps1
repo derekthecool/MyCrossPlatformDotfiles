@@ -1,4 +1,4 @@
-﻿function Get-DotPSMDTemplate
+function Get-DotPSMDTemplate
 {
     Get-PSMDTemplate -Store Default
 }
