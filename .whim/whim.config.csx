@@ -42,7 +42,7 @@ using Windows.Win32.UI.Input.KeyboardAndMouse;
 /// <param name="context"></param>
 void DoConfig(IContext context)
 {
-	context.Logger.Config = new LoggerConfig();
+    context.Logger.Config = new LoggerConfig();
     // context.Logger.Config = new LoggerConfig() { BaseMinLogLevel = LogLevel.Debug };
     // // The logger will log messages with a level of `Debug` or higher to a file.
     // if (context.Logger.Config.FileSink is FileSinkConfig fileSinkConfig)
@@ -51,19 +51,20 @@ void DoConfig(IContext context)
     // }
 
 
-	// YAML config. It's best to load this first so that you can use it in your C# config.
-	YamlLoader.Load(context);
+    // YAML config. It's best to load this first so that you can use it in your C# config.
+    YamlLoader.Load(context);
 
-	// Customize your config in C# here.
-	// For more, see https://dalyisaac.github.io/Whim/script/scripting.html
-	// ...
+    // Customize your config in C# here.
+    // For more, see https://dalyisaac.github.io/Whim/script/scripting.html
+    // ...
     //
     // Example configs
     // https://github.com/formesean/configs/blob/d076ef27e74898b31e511126c9b01b0a34d2649c/whim/whim.config.csx#L4
     // https://github.com/urob/whim-config/blob/3387b154edadf384271c90d2ed75a90c10e53790/whim.config.csx#L4
 
     Dictionary<string, string> workspaces = new Dictionary<string, string>();
-    void AddWorkspace(string name, string icon) {
+    void AddWorkspace(string name, string icon)
+    {
         workspaces.Add(name, icon);
         context.WorkspaceManager.Add(icon);
     }
@@ -92,20 +93,18 @@ void DoConfig(IContext context)
 
 
     // // https://dalyisaac.github.io/Whim/script/core/filtering.html?q=filter
-    new List<string> {
+    new List<string>
+    {
         "keypirinha_wndcls_run",
         ".*Plover: Lookup.*",
         ".*Plover: Add Translation.*",
         "Upgrade_tool.exe",
-    }
-    .ForEach(program => {
-            context.FilterManager.AddTitleMatchFilter(program);
-            context.FilterManager.AddWindowClassFilter(program);
-            context.FilterManager.AddProcessFileNameFilter(program);
-            }
-    );
-
-    context.RouterManager.AddProcessFileNameRoute("firefox.exe", workspaces["web"]);
+    }.ForEach(program =>
+    {
+        context.FilterManager.AddTitleMatchFilter(program);
+        context.FilterManager.AddWindowClassFilter(program);
+        context.FilterManager.AddProcessFileNameFilter(program);
+    });
 
     // Tips for finding window information:
     // Ideally you can use the workspacer debug window, however this has not
@@ -113,31 +112,31 @@ void DoConfig(IContext context)
     // There is AHK window spy as well
     // Or you can use an application named winspy, 'scoop install winspy' to get it
 
-    // {{{ Routes
-    new List<string> { "wezterm-gui", "alacritty", "devenv" }
-    .ForEach(program => context.RouterManager.AddProcessFileNameRoute(program, workspaces["terminal"]));
-
-    // // // Chat
-    // new List<string> { "TeamsWebView" }
-    // .ForEach(program => context.RouterManager.AddWindowClassRoute(program, workspaces["chat"]));
-    // // new List<string> { "ms-teams" }
-    // // .ForEach(program => context.RouterManager.AddProcessFileNameRoute($"{program}.exe", workspaces["chat"]));
-
-   void Route(List<string> programs, string workspace)
+    void Route(List<string> programs, string workspace)
     {
-    foreach(var program in programs)
-         {
-             context.RouterManager.AddProcessFileNameRoute($"{program}.exe", workspaces[workspace]);
-         }
+        foreach (var program in programs)
+        {
+            context.RouterManager.AddProcessFileNameRoute($"{program}.exe", workspaces[workspace]);
+        }
     }
 
+    // Terminal
+    Route(new List<string> { "wezterm-gui", "alacritty", "devenv" }, "terminal");
+
+    // Web
+    Route(new List<string> { "firefox", "brave" }, "web");
+
+    // Chat
+    new List<string> { "TeamsWebView" }.ForEach(program =>
+        context.RouterManager.AddWindowClassRoute(program, workspaces["chat"])
+    );
+
     // Plover
-    Route(new List<string> {
-            "pythonw",
-    }, "plover");
+    Route(new List<string> { "pythonw" }, "plover");
 
     // Docs and music
-    var docs_programs = new List<string> {
+    var docs_programs = new List<string>
+    {
         "vcxsrv",
         "love",
         "Obsidian",
@@ -149,7 +148,8 @@ void DoConfig(IContext context)
         "MusicBee",
     };
 
-    var one_programs = new List<string> {
+    var one_programs = new List<string>
+    {
         "wsl-usb-gui",
         // Windows device manager
         "mmc",
@@ -158,15 +158,11 @@ void DoConfig(IContext context)
     };
 
     // three programs
-    var three_programs = new List<string> {
-        "ConsoleWindowClass",
-        "WindowsTerminal",
-    };
+    var three_programs = new List<string> { "ConsoleWindowClass", "WindowsTerminal" };
 
     Route(docs_programs, "docs");
     Route(one_programs, "one");
     Route(three_programs, "three");
-
 
     // }}}
 
