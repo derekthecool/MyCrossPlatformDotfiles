@@ -19,13 +19,42 @@ function Get-ContainerRunner
     }
 }
 
-Set-Alias -Name 'c' -Value Use-Container
-Set-Alias -Name 'container' -Value Use-Container
 function Use-Container
 {
     Write-Host "Use-Container args: $args"
     & $(Get-ContainerRunner) @args
 }
+Set-Alias -Name 'c' -Value Use-Container
+Set-Alias -Name 'container' -Value Use-Container
+
+function Get-ComposeContainerRunner
+{
+    if ($Global:ComposeContainerRunner)
+    {
+        return $Global:ComposeContainerRunner
+    }
+
+    # TODO: (Derek Lomax) 3/6/2025 3:40:03 PM, add better support for podman compose and docker compose without the '-'
+    if (Get-Command -Name 'podman-compose' -ErrorAction SilentlyContinue)
+    {
+        $Global:ComposeContainerRunner = 'podman-compose'
+        return $Global:ComposeContainerRunner
+    } elseif (Get-Command -Name 'docker-compose' -ErrorAction SilentlyContinue)
+    {
+        $Global:ComposeContainerRunner = 'docker-compose'
+        return $Global:ComposeContainerRunner
+    } else
+    {
+        throw "No compose container runner application found, install podman-compose or docker-compose or docker with compose plugin"
+    }
+}
+
+function Use-ComposeContainer
+{
+    Write-Host "Use-ComposeContainer args: $args"
+    & $(Get-ComposeContainerRunner) @args
+}
+Set-Alias -Name 'compose' -Value Use-ComposeContainer
 
 Set-Alias -Name 'mmdc' -Value Use-MermaidCli
 function Use-MermaidCli
