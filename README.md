@@ -87,7 +87,7 @@ Now the module can be loaded in two different ways.
 ### **PowerShell**
 
 | Profile File                                                        | Used In This Repo | Repository File                                   |
-| ------------------------------------------------------------------- | ----------------- | ------------------------------------------------- |
+|---------------------------------------------------------------------|-------------------|---------------------------------------------------|
 | **Machine-Wide, All Hosts**: `$profile.AllUsersAllHosts`            | no                |                                                   |
 | **Machine-Wide, Host-Specific**: `$profile.AllUsersCurrentHost`     | no                |                                                   |
 | **User-Specific, All Hosts**: `$profile.CurrentUserAllHosts`        | yes               | [profile.ps1](./Documents/PowerShell/profile.ps1) |
@@ -137,11 +137,11 @@ Files located `./.config/awesome/` and the config root file is
 ### General Purpose Tools
 
 | Application            | Configured With | My Config                                                  | Emoji Rating | Description                                                    |
-| ---------------------- | --------------- | ---------------------------------------------------------- | ------------ | -------------------------------------------------------------- |
+|------------------------|-----------------|------------------------------------------------------------|--------------|----------------------------------------------------------------|
 | [asciinema][asciinema] | conf            | [./.config/asciinema/config](./.config/asciinema/config)   |             | Awesome tool to record and play back terminal sessions         |
 | [neomutt][neomutt]     | conf            | [./.config/neomutt/neomuttrc](.config/neomutt/neomuttrc)   |              | Terminal email clinet                                          |
 | [vifm][vifm]           | vimscript like  | [./.config/vifm/vifmrc](./.config/vifm/vifmrc)             |              | Terminal file manager with vim like mappings                   |
-| [starship][starship]   | toml            | [./.config/starship.toml](./.config/starship.toml)         | 󰱫            | Beautiful and functional terminal prompt. Highly configurable. |
+| [starship][starship]   | toml            | [./.config/starship.toml](./.config/starship.toml)         | 󰱫           | Beautiful and functional terminal prompt. Highly configurable. |
 | [zathura][zathura]     | vimscript like  | [./.config/zathura/zathurarc](./.config/zathura/zathurarc) |              | Vim-like PDF viewer (NOTE this is a graphical application)     |
 | [rofi][rofi]           |                 | [./.config/rofi/config.rasi](./.config/rofi/config.rasi)   |              | Linux application launcher                                     |
 
