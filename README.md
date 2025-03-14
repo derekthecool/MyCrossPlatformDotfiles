@@ -56,7 +56,7 @@ text pipeline. This provides so much power and makes basic tasks easier.
 
 [![Run Pester Tests on Linux](https://github.com/derekthecool/MyCrossPlatformDotfiles/actions/workflows/test-dotfiles-Linux.yaml/badge.svg)](https://github.com/derekthecool/MyCrossPlatformDotfiles/actions/workflows/test-dotfiles-Linux.yaml)
 [![Run Pester Tests Windows](https://github.com/derekthecool/MyCrossPlatformDotfiles/actions/workflows/test-dotfiles-Windows.yaml/badge.svg)](https://github.com/derekthecool/MyCrossPlatformDotfiles/actions/workflows/test-dotfiles-Windows.yaml)
-[![MegaLinter](https://github.com/derekthecool/MyCrossPlatformDotfiles/workflows/MegaLinter/badge.svg?branch=main)](https://github.com/derekthecool/MyCrossPlatformDotfiles/actions?query=workflow%3AMegaLinter+branch%3Amain)
+[![MegaLinter](https://github.com/derekthecool/MyCrossPlatformDotfiles/workflows/MegaLinter/badge.svg?branch=master)](https://github.com/derekthecool/MyCrossPlatformDotfiles/actions?query=workflow%3AMegaLinter+branch%3Amaster)
 
 This repo comes with a powershell module included. This module is loaded with
 functions to help with managing this repo as a git bare repo.
