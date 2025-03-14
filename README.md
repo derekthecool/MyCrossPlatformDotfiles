@@ -56,6 +56,7 @@ text pipeline. This provides so much power and makes basic tasks easier.
 
 [![Run Pester Tests on Linux](https://github.com/derekthecool/MyCrossPlatformDotfiles/actions/workflows/test-dotfiles-Linux.yaml/badge.svg)](https://github.com/derekthecool/MyCrossPlatformDotfiles/actions/workflows/test-dotfiles-Linux.yaml)
 [![Run Pester Tests Windows](https://github.com/derekthecool/MyCrossPlatformDotfiles/actions/workflows/test-dotfiles-Windows.yaml/badge.svg)](https://github.com/derekthecool/MyCrossPlatformDotfiles/actions/workflows/test-dotfiles-Windows.yaml)
+[![MegaLinter](https://github.com/derekthecool/MyCrossPlatformDotfiles/workflows/MegaLinter/badge.svg?branch=main)](https://github.com/derekthecool/MyCrossPlatformDotfiles/actions?query=workflow%3AMegaLinter+branch%3Amain)
 
 This repo comes with a powershell module included. This module is loaded with
 functions to help with managing this repo as a git bare repo.
@@ -81,22 +82,27 @@ Now the module can be loaded in two different ways.
    - `Initialize-Dotfiles`: clone any missing repos of mine such as
      [my-wezterm-repo][my-wezterm-repo], or [my-neovim-repo][my-neovim-repo]
 
-### Powershell Profile
-
-You can find where your profile is from the built in variable `$PROFILE`.
-It is important to not load more than necessary in your powershell profile.
-
-Functions that are not essential to be in the profile, should be moved into the
-powershell module `./Scripts/Dots/`
-
 ## A Note About Shell Profile Precedence
 
 ### **PowerShell**
 
-1. **Machine-Wide, All Hosts**: `$profile.AllUsersAllHosts`
-2. **Machine-Wide, Host-Specific**: `$profile.AllUsersCurrentHost`
-3. **User-Specific, All Hosts**: `$profile.CurrentUserAllHosts`
-4. **User-Specific, Host-Specific**: `$profile.CurrentUserCurrentHost`
+| Profile File                                                        | Used In This Repo | Repository File                                   |
+| ------------------------------------------------------------------- | ----------------- | ------------------------------------------------- |
+| **Machine-Wide, All Hosts**: `$profile.AllUsersAllHosts`            | no                |                                                   |
+| **Machine-Wide, Host-Specific**: `$profile.AllUsersCurrentHost`     | no                |                                                   |
+| **User-Specific, All Hosts**: `$profile.CurrentUserAllHosts`        | yes               | [profile.ps1](./Documents/PowerShell/profile.ps1) |
+| **User-Specific, Host-Specific**: `$profile.CurrentUserCurrentHost` | no                |                                                   |
+
+My preference is to avoid system-wide profiles because:
+
+1. They require root/admin access to write
+2. I'm the only one using my computer
+
+And preferring CurrentUserAllHosts profile allows me to have a profile that can
+apply to all of my various computers.
+At work I use Windows 11, at home I use Arch Linux.
+If necessary I can have any machine specific config in the
+CurrentUserCurrentHost profile.
 
 ### **Bash**
 
@@ -131,11 +137,11 @@ Files located `./.config/awesome/` and the config root file is
 ### General Purpose Tools
 
 | Application            | Configured With | My Config                                                  | Emoji Rating | Description                                                    |
-|------------------------|-----------------|------------------------------------------------------------|--------------|----------------------------------------------------------------|
+| ---------------------- | --------------- | ---------------------------------------------------------- | ------------ | -------------------------------------------------------------- |
 | [asciinema][asciinema] | conf            | [./.config/asciinema/config](./.config/asciinema/config)   |             | Awesome tool to record and play back terminal sessions         |
 | [neomutt][neomutt]     | conf            | [./.config/neomutt/neomuttrc](.config/neomutt/neomuttrc)   |              | Terminal email clinet                                          |
 | [vifm][vifm]           | vimscript like  | [./.config/vifm/vifmrc](./.config/vifm/vifmrc)             |              | Terminal file manager with vim like mappings                   |
-| [starship][starship]   | toml            | [./.config/starship.toml](./.config/starship.toml)         | 󰱫           | Beautiful and functional terminal prompt. Highly configurable. |
+| [starship][starship]   | toml            | [./.config/starship.toml](./.config/starship.toml)         | 󰱫            | Beautiful and functional terminal prompt. Highly configurable. |
 | [zathura][zathura]     | vimscript like  | [./.config/zathura/zathurarc](./.config/zathura/zathurarc) |              | Vim-like PDF viewer (NOTE this is a graphical application)     |
 | [rofi][rofi]           |                 | [./.config/rofi/config.rasi](./.config/rofi/config.rasi)   |              | Linux application launcher                                     |
 
