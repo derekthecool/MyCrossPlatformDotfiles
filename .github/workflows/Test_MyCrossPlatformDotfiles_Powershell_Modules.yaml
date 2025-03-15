@@ -1,4 +1,4 @@
-name: Run Powershell Pester Tests
+name: Test MyCrossPlatformDotfiles Powershell Modules
 
 on: [workflow_dispatch, push]
 

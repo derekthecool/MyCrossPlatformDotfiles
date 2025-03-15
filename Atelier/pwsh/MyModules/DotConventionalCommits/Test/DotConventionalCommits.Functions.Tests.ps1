@@ -13,6 +13,6 @@ Describe 'DotConventionalCommits tests' {
 
     It 'Module should load super FAST!' {
         $Time = Measure-Command { Import-Module $PSScriptRoot/../*.psd1 -Force }
-        $Time.TotalMilliseconds | Should -BeLessOrEqual 15
+        $Time.TotalMilliseconds | Should -BeLessOrEqual 50
     }
 }

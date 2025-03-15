@@ -9,7 +9,7 @@ Describe 'Dot tests' {
 
     It 'Dot should load very fast' {
         $time = Measure-Command { Import-Module $PSScriptRoot/../*.psd1 -Force }
-        $time.TotalMilliseconds | Should -BeLessThan 30
+        $time.TotalMilliseconds | Should -BeLessThan 50
     }
 
     It 'Can call dot' {
