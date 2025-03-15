@@ -58,6 +58,6 @@ jobs:
       - name: Run Pester Tests
         shell: pwsh
         run: |
-          $env:PSModulePath += ';./Atelier/pwsh/MyModules'
+          $env:PSModulePath += "$([System.IO.Path]::PathSeparator)./Atelier/pwsh/MyModules/"
           Import-Module Pester -Force
           Invoke-Pester -Path './Atelier/pwsh/MyModules' -Passthru -Output Detailed
