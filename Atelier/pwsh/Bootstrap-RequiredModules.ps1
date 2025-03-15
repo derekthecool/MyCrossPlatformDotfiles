@@ -22,16 +22,11 @@ $RequiredModules = @(
 $RequiredModules | ForEach-Object {
     if ($_ -is [string])
     {
-        Install-Module -Name $_ -Scope CurrentUser -Force
+        Install-Module -Name $_ -Scope CurrentUser -Force -AllowClobber
     } else
     {
-        Install-Module -Name $_.ModuleName -RequiredVersion $_.ModuleVersion -Scope CurrentUser -Force
+        Install-Module -Name $_.ModuleName -RequiredVersion $_.ModuleVersion -Scope CurrentUser -Force -AllowClobber
     }
 }
-# $modules | ForEach-Object {
-#     Write-Host "Installing $($_.Name)"
-#     Install-Module -Name $_.Name -MaximumVersion $_.Version -Force -SkipPublisherCheck
-#     Write-Host "Importing $($_.Name)"
-#     Import-Module -Name $_.Name
-# }
+
 Get-Module -All
