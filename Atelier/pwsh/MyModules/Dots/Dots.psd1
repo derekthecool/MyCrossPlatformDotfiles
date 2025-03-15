@@ -35,11 +35,6 @@
         'Clone-GitRepository'
         'Add-MasonToolsToPath'
 
-        # Conventional commit helper functions
-        'Get-ConventionalCommitValues'
-        'Select-ConventionalCommitValue'
-        'Select-ConventionalCommitFileScope'
-
         'Get-AdventOfCodeData'
 
         # Lastly, load everything else so every function is available after the first Import-Module

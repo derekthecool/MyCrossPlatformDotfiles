@@ -11,7 +11,7 @@
 #>
 function Get-ConventionalCommitValues
 {
-    return 'build', 'chore', 'ci', 'docs', 'feat', 'fix', 'perf', 'refactor', 'revert', 'style', 'test'
+    'build', 'chore', 'ci', 'docs', 'feat', 'fix', 'perf', 'refactor', 'revert', 'style', 'test'
 }
 
 function Select-ConventionalCommitValue
