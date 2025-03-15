@@ -1,0 +1,28 @@
+name: Run Powershell Pester Tests
+
+on: [workflow_dispatch, push]
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Install required powershell modules
+      run: ./Atelier/pwsh/Bootstrap-RequiredModules.ps1
+
+    - name: Run Pester Tests
+      run: |
+        $env:PSModulePath += "$([System.IO.Path]::PathSeparator)./Atelier/pwsh/MyModules/"
+        Import-Module Pester -Force
+        Invoke-Pester -Path './Atelier/pwsh/MyModules' -Passthru -Output Detailed
