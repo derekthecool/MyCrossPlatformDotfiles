@@ -1,4 +1,4 @@
- # Bash
+# Bash
 
  At the moment this repository is dominated by powershell
 
