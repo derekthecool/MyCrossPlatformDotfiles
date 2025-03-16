@@ -1,5 +1,8 @@
 # Dereks Cross-Platform Configuration Files
 
+[![Test MyCrossPlatformDotfiles Powershell Modules](https://github.com/derekthecool/MyCrossPlatformDotfiles/actions/workflows/Test_MyCrossPlatformDotfiles_Powershell_Modules.yaml/badge.svg)](https://github.com/derekthecool/MyCrossPlatformDotfiles/actions/workflows/Test_MyCrossPlatformDotfiles_Powershell_Modules.yaml)
+[![MegaLinter](https://github.com/derekthecool/MyCrossPlatformDotfiles/workflows/MegaLinter/badge.svg?branch=master)](https://github.com/derekthecool/MyCrossPlatformDotfiles/actions?query=workflow%3AMegaLinter+branch%3Amaster)
+
 I primarily live in the terminal for everything. Coding, journaling, email, web
 browsing... the list goes on.
 **To be comfortable on your computer you need to cherish your dot file
@@ -52,35 +55,16 @@ version 7.4.2.
 Also Powershell is amazing because it uses an object pipeline and not just a
 text pipeline. This provides so much power and makes basic tasks easier.
 
-### Powershell Module [Dots](./Scripts/Dots/Dots.psd1]
+### Modules, Modules, Modules!
 
-[![Run Pester Tests on Linux](https://github.com/derekthecool/MyCrossPlatformDotfiles/actions/workflows/test-dotfiles-Linux.yaml/badge.svg)](https://github.com/derekthecool/MyCrossPlatformDotfiles/actions/workflows/test-dotfiles-Linux.yaml)
-[![Run Pester Tests Windows](https://github.com/derekthecool/MyCrossPlatformDotfiles/actions/workflows/test-dotfiles-Windows.yaml/badge.svg)](https://github.com/derekthecool/MyCrossPlatformDotfiles/actions/workflows/test-dotfiles-Windows.yaml)
-[![MegaLinter](https://github.com/derekthecool/MyCrossPlatformDotfiles/workflows/MegaLinter/badge.svg?branch=master)](https://github.com/derekthecool/MyCrossPlatformDotfiles/actions?query=workflow%3AMegaLinter+branch%3Amaster)
+TODO: Update details on latest lazy mini module setup
 
-This repo comes with a powershell module included. This module is loaded with
-functions to help with managing this repo as a git bare repo.
-Many more functions are included as well.
-
-For a fresh install run the script to get dependency modules installed
-
-```powershell
-./Scripts/Bootstrap-RequiredModules.ps1
-```
-
-Now the module can be loaded in two different ways.
-
-1. Explicit load with `Import-Module -Force Dots`. After running this every
-   function from the module will be availble for use.
-2. Calling any of the **lazy loaded** functions from [Dots.psd1](./Scripts/Dots/Dots.psd1)
-   As of July 2024, this list is pretty short containing only these functions:
-
-   - `dot`: function for running any git commands but for the bare repo setup
-     that I use for this repository.
-   - `dots`: similar to dot but runs on all of my most important other missio
-     critical repositories including:
-   - `Initialize-Dotfiles`: clone any missing repos of mine such as
-     [my-wezterm-repo][my-wezterm-repo], or [my-neovim-repo][my-neovim-repo]
+- `dot`: function for running any git commands but for the bare repo setup
+ that I use for this repository.
+- `dots`: similar to dot but runs on all of my most important other missio
+ critical repositories including:
+- `Initialize-Dotfiles`: clone any missing repos of mine such as
+ [my-wezterm-repo][my-wezterm-repo], or [my-neovim-repo][my-neovim-repo]
 
 ## A Note About Shell Profile Precedence
 
@@ -147,10 +131,12 @@ Files located `./.config/awesome/` and the config root file is
 
 ## Separate Repositories Referenced
 
-- My [Neovim](Neovim) configuration: [Stimpack][my-neovim-repo]
-- My [Wezterm](Wezterm) configuration: [WeztermStimpack][my-wezterm-repo]
+- My [Neovim][Neovim] configuration: [Stimpack][my-neovim-repo]
+- My [Wezterm][Wezterm] configuration: [WeztermStimpack][my-wezterm-repo]
 - My [Plover][Plover] configuration: [PloverStenoDictionaries][my-plover-repo]
 
+[Neovim]: https://neovim.io/
+[Wezterm]: https://wezterm.org/index.html
 [my-neovim-repo]: https://github.com/derekthecool/stimpack
 [my-wezterm-repo]: https://github.com/derekthecool/WeztermStimpack
 [Plover]: https://www.openstenoproject.org/plover/
