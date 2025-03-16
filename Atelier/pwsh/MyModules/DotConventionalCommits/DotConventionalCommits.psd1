@@ -1,4 +1,4 @@
-﻿@{
+@{
     RootModule        = 'DotConventionalCommits.psm1'
     ModuleVersion     = '0.1.0'
     GUID              = 'a989056c-1729-4431-a082-b87c21ccca3b'

@@ -55,7 +55,7 @@ version 7.4.2.
 Also Powershell is amazing because it uses an object pipeline and not just a
 text pipeline. This provides so much power and makes basic tasks easier.
 
-### Modules, Modules, Modules!
+### Modules, Modules, Modules
 
 TODO: Update details on latest lazy mini module setup
 

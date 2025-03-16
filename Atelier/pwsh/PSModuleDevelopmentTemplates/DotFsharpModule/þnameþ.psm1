@@ -8,11 +8,11 @@ Write-Verbose "Building binary $Lang module $PSScriptRoot"
 Write-Verbose "BuildExists: $BuildExists, $BoundParameters"
 Write-Verbose "ForceRebuild: $ForceRebuild"
 
-if(-not $BuildExists -or $ForceRebuild)
+if (-not $BuildExists -or $ForceRebuild)
 {
     Write-Verbose "Building $Lang binary module $PSScriptRoot"
     dotnet publish $PSScriptRoot/*sproj
-    if(-not $?)
+    if (-not $?)
     {
         Write-Error "Could not build binary $Lang module $PSScriptRoot"
         return
