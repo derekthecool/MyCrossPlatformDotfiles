@@ -26,6 +26,7 @@ DISABLE_LINTERS:
   - REPOSITORY_KICS
   - REPOSITORY_DEVSKIM
   - REPOSITORY_TRUFFLEHOG
+  - CSHARP_DOTNET_FORMAT  # Expects a solution and csproj root, csharpier is better
 
 SHOW_ELAPSED_TIME: true
 
