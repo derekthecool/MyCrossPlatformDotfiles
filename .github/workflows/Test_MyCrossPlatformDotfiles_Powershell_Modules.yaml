@@ -1,6 +1,9 @@
+---
 name: Test MyCrossPlatformDotfiles Powershell Modules
 
 on: [workflow_dispatch, push]
+
+permissions: read-all
 
 defaults:
   run:
