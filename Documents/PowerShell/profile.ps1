@@ -35,18 +35,12 @@ $PSReadLineOptions = @{
     HistoryNoDuplicates           = $true
     HistorySearchCursorMovesToEnd = $true
     BellStyle                     = 'None'
+    EditMode                      = 'Vi'
+    ViModeIndicator               = 'Prompt'
 }
 Set-PSReadLineOption @PSReadLineOptions
 
 $PSStyle.Progress.UseOSCIndicator = $true
-
-# Some of these PSReadLineOptions cause trouble with Plover stenography on WSL
-# so do not load them if running WSL
-if (-not $((Get-Content '/proc/version' -ErrorAction SilentlyContinue) -match 'WSL'))
-{
-    Set-PSReadLineOption -EditMode Vi
-    Set-PSReadLineOption -ViModeIndicator Prompt
-}
 
 # Custom key mappings
 Set-PSReadLineKeyHandler -Chord Ctrl+u -Function PreviousHistory
