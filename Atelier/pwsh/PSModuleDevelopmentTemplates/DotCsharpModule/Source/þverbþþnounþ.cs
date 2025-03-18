@@ -1,4 +1,4 @@
-﻿namespace MT;
+﻿namespace þnameþ;
 
 [Cmdlet("þverbþ", "þnounþ")]
 [OutputType(typeof(FavoriteStuff))]

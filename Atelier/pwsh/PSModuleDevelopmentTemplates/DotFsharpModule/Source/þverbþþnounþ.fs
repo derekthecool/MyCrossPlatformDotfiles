@@ -1,4 +1,4 @@
-﻿namespace FT
+﻿namespace þnameþ;
 
 open System.Management.Automation
 
