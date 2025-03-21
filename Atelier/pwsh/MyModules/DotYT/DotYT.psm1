@@ -4,28 +4,23 @@ $ForceRebuild = $env:FORCE_DOT_REBUILD
 
 Set-Variable -Name Lang -Option ReadOnly -Value 'C#'
 
-function Show-DebugOutputOnError
-{
-    Write-Host "Building binary $Lang module $PSScriptRoot"
-    Write-Host "BuildExists: $BuildExists, $BoundParameters"
+    Write-Host "BuildExists: $BuildExists"
     Write-Host "ForceRebuild: $ForceRebuild"
-}
 
 if (-not $BuildExists -or $ForceRebuild)
 {
     if(-not $(Get-Command dotnet -ErrorAction SilentlyContinue))
     {
-        Show-DebugOutputOnError
         Write-Error "dotnet is installed or found cannot build binary $Lang module $PSScriptRoot"
         return
     }
 
     Write-Host "Building $Lang binary module $PSScriptRoot"
 
-    dotnet publish $PSScriptRoot/*sproj
+    dotnet publish $PSScriptRoot/DotYT.csproj --verbosity normal
     if (-not $?)
     {
-        Write-Error "Could not build binary $Lang module $PSScriptRoot"
+        dotnet --list-sdks
         Show-DebugOutputOnError
         return
     }
