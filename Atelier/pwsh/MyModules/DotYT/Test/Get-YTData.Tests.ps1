@@ -1,5 +1,6 @@
 ﻿BeforeAll {
-    Import-Module $PSScriptRoot/../*.psd1 -Force
+    $DebugPreference = 'Continue'
+    Import-Module $PSScriptRoot/../*.psd1 -Force -Verbose -PassThru -Debug
 }
 
 Describe 'DotYT tests' {
