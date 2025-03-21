@@ -1,13 +1,12 @@
 ﻿# Build module with 'dotnet publish` only as needed
 $BuildExists = Test-Path $PSScriptRoot/bin -ErrorAction SilentlyContinue
-$ForceRebuild = $env:FORCE_DOT_REBUILD
 
 Set-Variable -Name Lang -Option ReadOnly -Value 'C#'
 
-    Write-Host "BuildExists: $BuildExists"
-    Write-Host "ForceRebuild: $ForceRebuild"
+Write-Host "BuildExists: $BuildExists"
+Write-Host "env:FORCE_DOT_REBUILD: $env:FORCE_DOT_REBUILD"
 
-if (-not $BuildExists -or $ForceRebuild)
+if (-not $BuildExists -or $env:FORCE_DOT_REBUILD)
 {
     if(-not $(Get-Command dotnet -ErrorAction SilentlyContinue))
     {
@@ -21,7 +20,6 @@ if (-not $BuildExists -or $ForceRebuild)
     if (-not $?)
     {
         dotnet --list-sdks
-        Show-DebugOutputOnError
         return
     }
 }

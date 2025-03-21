@@ -1,26 +1,31 @@
-# Build module if needed not found or if -Force arg found
+# Build module with 'dotnet publish` only as needed
 $BuildExists = Test-Path $PSScriptRoot/bin -ErrorAction SilentlyContinue
-$ForceRebuild = $env:FORCE_DOT_REBUILD
 
 Set-Variable -Name Lang -Option ReadOnly -Value 'C#'
 
-Write-Verbose "Building binary $Lang module $PSScriptRoot"
-Write-Verbose "BuildExists: $BuildExists, $BoundParameters"
-Write-Verbose "ForceRebuild: $ForceRebuild"
+Write-Host "BuildExists: $BuildExists"
+Write-Host "env:FORCE_DOT_REBUILD: $env:FORCE_DOT_REBUILD"
 
-if (-not $BuildExists -or $ForceRebuild)
+if (-not $BuildExists -or $env:FORCE_DOT_REBUILD)
 {
-    Write-Verbose "Building $Lang binary module $PSScriptRoot"
-    dotnet publish $PSScriptRoot/*sproj
+    if(-not $(Get-Command dotnet -ErrorAction SilentlyContinue))
+    {
+        Write-Error "dotnet is installed or found cannot build binary $Lang module $PSScriptRoot"
+        return
+    }
+
+    Write-Host "Building $Lang binary module $PSScriptRoot"
+
+    dotnet publish $PSScriptRoot/þnameþ.csproj --verbosity normal
     if (-not $?)
     {
-        Write-Error "Could not build binary $Lang module $PSScriptRoot"
+        dotnet --list-sdks
         return
     }
 }
 
 Get-ChildItem "$PSScriptRoot/bin/Release/net*.0/publish/*.dll" | ForEach-Object {
     $Module = $_
-    Write-Verbose "Loading $Lang dll: $Module"
+    Write-Host "Loading $Lang dll: $Module"
     Import-Module $Module
 }
