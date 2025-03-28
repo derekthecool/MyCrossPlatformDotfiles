@@ -29,6 +29,6 @@ Describe 'DotInitializer tests' {
     }
 
     It 'Function Update-DotPackages' {
-        Update-DotPackages | Should -Throw
+        {Update-DotPackages} | Should -Throw
     }
 }
