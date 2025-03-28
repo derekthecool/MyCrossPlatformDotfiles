@@ -18,17 +18,20 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Install required powershell modules
-      run: ./Atelier/pwsh/Bootstrap-RequiredModules.ps1
+      - name: Install required powershell modules
+        run: ./Atelier/pwsh/Bootstrap-RequiredModules.ps1
 
-    - name: Run Pester Tests
-      uses: actions/setup-dotnet@v4
-      with:
-         dotnet-version: '9.x'
-    - run: |
-        $env:PSModulePath += "$([System.IO.Path]::PathSeparator)./Atelier/pwsh/MyModules/"
-        Import-Module Pester -Force
-        Invoke-Pester -Path './Atelier/pwsh/MyModules' -Passthru -Output Detailed
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v4
+
+        # with:
+        #    dotnet-version: '9.x'
+
+      - name: Run Pester Tests
+        run: |
+          $env:PSModulePath += "$([System.IO.Path]::PathSeparator)./Atelier/pwsh/MyModules/"
+          # Import-Module Pester -Force
+          Invoke-Pester -Path './Atelier/pwsh/MyModules' -Passthru -Output Detailed
