@@ -29,7 +29,6 @@
             @{ Name = '7zip'; Provider = 'Scoop' },
             @{ Name = 'adb'; Provider = 'Scoop' },
             @{ Name = 'android-studio'; Provider = 'Scoop' },
-            @{ Name = 'aria2'; Provider = 'Scoop' },
             @{ Name = 'bat'; Provider = 'Scoop' },
             @{ Name = 'btop'; Provider = 'Scoop' },
             @{ Name = 'busybox'; Provider = 'Scoop' },
