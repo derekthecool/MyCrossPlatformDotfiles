@@ -98,14 +98,22 @@
         @{Name = 'ilspycmd'; Provider = '.NET Tool' },
         @{Name = 'terminalguidesigner'; Provider = '.NET Tool' },
         @{Name = 'vpk'; Provider = '.NET Tool' }
-    ) | Where-Object { -not [string]::IsNullOrEmpty($_.Name) }
+    )
 }
 
 function Get-DotPackages
 {
     Get-DotPackageList | ForEach-Object {
+        $Name = $_.Name
+        $Provider = $_.Provider
         Get-Variable _ | Write-Verbose
-        Get-Package @_
+        if([string]::IsNullOrEmpty($Name))
+        {
+            Write-Host "Package name is empty, skipping"
+        } else
+        {
+            Get-Package @_
+        }
     }
 }
 
@@ -113,8 +121,15 @@ function Install-DotPackages
 {
     Get-DotPackageList | ForEach-Object {
         Get-Variable _ | Write-Verbose
-        Install-Package @_
+        if([string]::IsNullOrEmpty($Name))
+        {
+            Write-Host "Package name is empty, skipping"
+        } else
+        {
+            Install-Package @_
+        }
     }
+
 }
 
 function Update-DotPackages
