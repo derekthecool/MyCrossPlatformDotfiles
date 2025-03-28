@@ -1,5 +1,5 @@
 ﻿BeforeAll {
-    Import-Module $PSScriptRoot/../*.psd1 -Force
+    Import-Module $PSScriptRoot/../*.psd1 -Force -Verbose
 }
 
 Describe 'DotInitializer tests' {
@@ -26,5 +26,9 @@ Describe 'DotInitializer tests' {
     It 'Function Install-DotPackages works (this may be too slow to test)' -Skip:($CI -eq $false) {
         {Install-DotPackages} | Should -Not -Throw
         {Get-DotPackages} | Should -Not -Throw
+    }
+
+    It 'Function Update-DotPackages' {
+        Update-DotPackages | Should -Throw
     }
 }

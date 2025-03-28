@@ -16,7 +16,8 @@
             @{ Name = 'autohotkey'; Provider = 'Scoop' },
             @{ Name = 'flutter'; Provider = 'Scoop' },
             @{ Name = 'gh'; Provider = 'Scoop' },
-            @{ Name = 'git'; Provider = 'Scoop' },
+            # Git will be installed for scoop in ./Install-Scoop.ps1
+            # @{ Name = 'git'; Provider = 'Scoop' },
             @{ Name = 'go'; Provider = 'Scoop' },
             @{ Name = 'nodejs'; Provider = 'Scoop' },
             @{ Name = 'podman'; Provider = 'Scoop' },
@@ -103,6 +104,7 @@
 function Get-DotPackages
 {
     Get-DotPackageList | ForEach-Object {
+        Get-Variable _ | Write-Verbose
         Get-Package @_
     }
 }
@@ -110,7 +112,7 @@ function Get-DotPackages
 function Install-DotPackages
 {
     Get-DotPackageList | ForEach-Object {
-        Get-Variable _
+        Get-Variable _ | Write-Verbose
         Install-Package @_
     }
 }
