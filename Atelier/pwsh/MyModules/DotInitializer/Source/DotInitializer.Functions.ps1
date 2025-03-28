@@ -18,7 +18,6 @@
             @{ Name = 'gh'; Provider = 'Scoop' },
             @{ Name = 'git'; Provider = 'Scoop' },
             @{ Name = 'go'; Provider = 'Scoop' },
-            @{ Name = 'lua'; Provider = 'Scoop' },
             @{ Name = 'nodejs'; Provider = 'Scoop' },
             @{ Name = 'podman'; Provider = 'Scoop' },
             @{ Name = 'python'; Provider = 'Scoop' },
@@ -112,6 +111,7 @@ function Get-DotPackages
 function Install-DotPackages
 {
     Get-DotPackageList | ForEach-Object {
+        Get-Variable _
         Install-Package @_
     }
 }
