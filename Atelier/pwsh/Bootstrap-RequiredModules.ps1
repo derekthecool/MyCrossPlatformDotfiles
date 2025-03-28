@@ -15,6 +15,26 @@ $RequiredModules = @(
     @{
         ModuleName    =  'Profiler'; ModuleVersion = '4.3.0'
     }
+
+    #region AnyPackage
+    'AnyPackage'
+    'AnyPackage.WinGet'
+    'AnyPackage.Scoop'
+    'AnyPackage.PSResourceGet'
+    'AnyPackage.Programs'
+    'AnyPackage.DotNet.Tool'
+    'AnyPackage.Apt'
+
+    # Available official anypackage providers that I don't want
+    # 'AnyPackage.Wsl'
+    # 'AnyPackage.Pkgx'
+    # 'AnyPackage.NuGet'
+    # 'AnyPackage.Msu'
+    # 'AnyPackage.Msi'
+    # 'AnyPackage.ModuleFast'
+    # 'AnyPackage.Homebrew'
+    # 'AnyPackage.Chocolatey'
+    #endregion
 )
 
 
