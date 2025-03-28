@@ -98,7 +98,7 @@
         @{Name = 'ilspycmd'; Provider = '.NET Tool' },
         @{Name = 'terminalguidesigner'; Provider = '.NET Tool' },
         @{Name = 'vpk'; Provider = '.NET Tool' }
-    )
+    ) | Where-Object { -not [string]::IsNullOrEmpty($_.Name) }
 }
 
 function Get-DotPackages

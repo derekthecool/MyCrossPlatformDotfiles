@@ -27,11 +27,7 @@ jobs:
       - name: Setup dotnet
         uses: actions/setup-dotnet@v4
 
-        # with:
-        #    dotnet-version: '9.x'
-
       - name: Run Pester Tests
         run: |
           $env:PSModulePath += "$([System.IO.Path]::PathSeparator)./Atelier/pwsh/MyModules/"
-          # Import-Module Pester -Force
           Invoke-Pester -Path './Atelier/pwsh/MyModules' -Passthru -Output Detailed
