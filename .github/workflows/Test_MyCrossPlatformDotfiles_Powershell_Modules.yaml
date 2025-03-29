@@ -35,6 +35,9 @@ jobs:
                   PassThru = $true
                   Path = './Atelier/pwsh/MyModules'
               }
-              Output = @{Verbosity = 'Diagnostic' }
+              Debug = @{
+                  WriteDebugMessages = $true
+              }
+              Output = @{Verbosity = 'Detailed' }
           }
-          Invoke-Pester -Configuration $config
+          Invoke-Pester -S -Configuration $config
