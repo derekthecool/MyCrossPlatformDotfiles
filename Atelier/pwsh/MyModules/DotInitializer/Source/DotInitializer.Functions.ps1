@@ -119,24 +119,32 @@ function Get-DotPackages
 
 function Install-DotPackages
 {
+    Get-PackageProvider
+    Get-PackageProvider | Write-Verbose
+    Get-PackageProvider | Write-Error
+
     Get-Module *AnyPackage*
-    Get-DotPackageList | ForEach-Object {
-        Get-Variable _ | Write-Verbose
-        $Name = $_.Name
-        $Provider = $_.Provider
-        if([string]::IsNullOrEmpty($Name))
-        {
-            Write-Host "Package name is empty, skipping"
-        } else
-        {
-            Install-Package @_ -ErrorAction Continue
-        }
+    Get-Module *AnyPackage* | Write-Verbose
+    Get-Module *AnyPackage* | Write-Error
+
+    Get-Variable _
+    Get-Variable _ | Write-Verbose
+    Get-Variable _ | Write-Error
+
+    $Name = $_.Name
+    $Provider = $_.Provider
+    if([string]::IsNullOrEmpty($Name))
+    {
+        Write-Host "Package name is empty, skipping"
+    } else
+    {
+        Install-Package @_ -ErrorAction Continue
     }
+}
 
-    Write-Host "Showing all installed packages"
-
-    # Show all packages after completion
-    Get-Package
+function Update-DotPackages
+{
+    throw 'Not implemented'
 }
 
 function Update-DotPackages
