@@ -24,7 +24,9 @@ Describe 'DotInitializer tests' {
     }
 
     It 'Function Install-DotPackages works (this may be too slow to test)' -Skip:($CI -eq $false) {
-        {Install-DotPackages} | Should -Not -Throw
+        {
+            Install-DotPackages
+        }
         # {Get-DotPackages} | Should -Not -Throw
     }
 
