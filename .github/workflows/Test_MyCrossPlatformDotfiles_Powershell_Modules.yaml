@@ -40,4 +40,4 @@ jobs:
               }
               Output = @{Verbosity = 'Detailed' }
           }
-          Invoke-Pester -S -Configuration $config
+          Invoke-Pester -Configuration $config
