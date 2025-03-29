@@ -41,4 +41,6 @@ jobs:
               Output = @{Verbosity = 'Detailed' }
           }
           Invoke-Pester -Configuration $config
-          Get-Package
+          Get-PackageProvider
+          Get-PackageProvider -ListAvailable
+          Get-Package | Group-Object -Property Provider
