@@ -121,15 +121,12 @@ function Install-DotPackages
 {
     Get-PackageProvider -Verbose
     Get-PackageProvider | Write-Verbose
-    Get-PackageProvider | Write-Error
 
     Get-Module *AnyPackage* -Verbose
     Get-Module *AnyPackage* | Write-Verbose
-    Get-Module *AnyPackage* | Write-Error
 
     Get-Variable _ -Verbose
     Get-Variable _ | Write-Verbose
-    Get-Variable _ | Write-Error
 
     $Name = $_.Name
     $Provider = $_.Provider
