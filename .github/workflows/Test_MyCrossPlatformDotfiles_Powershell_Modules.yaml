@@ -43,4 +43,4 @@ jobs:
           Invoke-Pester -Configuration $config
           Get-PackageProvider
           Get-PackageProvider -ListAvailable
-          Get-Package | Group-Object -Property Provider
+          Get-Package -ErrorAction SilentlyContinue | Group-Object -Property Provider
