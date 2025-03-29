@@ -121,6 +121,8 @@ function Install-DotPackages
 {
     Get-DotPackageList | ForEach-Object {
         Get-Variable _ | Write-Verbose
+        $Name = $_.Name
+        $Provider = $_.Provider
         if([string]::IsNullOrEmpty($Name))
         {
             Write-Host "Package name is empty, skipping"
