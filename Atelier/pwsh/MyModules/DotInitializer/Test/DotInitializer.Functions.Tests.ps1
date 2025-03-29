@@ -1,5 +1,7 @@
 ﻿BeforeAll {
     Import-Module $PSScriptRoot/../*.psd1 -Force -Verbose
+    $VerbosePreference = 'Continue'
+    $DebugPreference = 'Continue'
 }
 
 Describe 'DotInitializer tests' {
@@ -30,5 +32,9 @@ Describe 'DotInitializer tests' {
 
     It 'Function Update-DotPackages' {
         {Update-DotPackages} | Should -Throw
+    }
+
+    It 'Get-Package Check' {
+        Get-Package
     }
 }
