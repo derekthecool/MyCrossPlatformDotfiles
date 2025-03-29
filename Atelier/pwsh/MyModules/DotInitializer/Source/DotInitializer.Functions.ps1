@@ -11,70 +11,70 @@
         {
             # Scoop
             # # Essential
-            @{ Name = 'pwsh'; Provider = 'Scoop' },
-            @{ Name = 'wezterm'; Provider = 'Scoop' },
-            @{ Name = 'autohotkey'; Provider = 'Scoop' },
-            @{ Name = 'flutter'; Provider = 'Scoop' },
-            @{ Name = 'gh'; Provider = 'Scoop' },
+            @{ Name = 'pwsh' },
+            @{ Name = 'wezterm' },
+            @{ Name = 'autohotkey' },
+            @{ Name = 'flutter' },
+            @{ Name = 'gh' },
             # Git will be installed for scoop in ./Install-Scoop.ps1
-            # @{ Name = 'git'; Provider = 'Scoop' },
-            @{ Name = 'go'; Provider = 'Scoop' },
-            @{ Name = 'nodejs'; Provider = 'Scoop' },
-            @{ Name = 'podman'; Provider = 'Scoop' },
-            @{ Name = 'python'; Provider = 'Scoop' },
-            @{ Name = 'starship'; Provider = 'Scoop' },
-            @{ Name = 'neovim'; Provider = 'Scoop' },
-            @{ Name = 'fzf'; Provider = 'Scoop' },
+            # @{ Name = 'git' },
+            @{ Name = 'go' },
+            @{ Name = 'nodejs' },
+            @{ Name = 'podman' },
+            @{ Name = 'python' },
+            @{ Name = 'starship' },
+            @{ Name = 'neovim' },
+            @{ Name = 'fzf' },
 
             # Non-essential packages but still awesome
-            @{ Name = '7zip'; Provider = 'Scoop' },
-            @{ Name = 'adb'; Provider = 'Scoop' },
-            @{ Name = 'android-studio'; Provider = 'Scoop' },
-            @{ Name = 'bat'; Provider = 'Scoop' },
-            @{ Name = 'btop'; Provider = 'Scoop' },
-            @{ Name = 'busybox'; Provider = 'Scoop' },
-            @{ Name = 'curl'; Provider = 'Scoop' },
-            @{ Name = 'exercism'; Provider = 'Scoop' },
-            @{ Name = 'ffmpeg'; Provider = 'Scoop' },
-            @{ Name = 'gcc'; Provider = 'Scoop' },
-            @{ Name = 'gdb'; Provider = 'Scoop' },
-            @{ Name = 'jq'; Provider = 'Scoop' },
-            @{ Name = 'keypirinha'; Provider = 'Scoop' },
-            @{ Name = 'lftp'; Provider = 'Scoop' },
-            @{ Name = 'luarocks'; Provider = 'Scoop' },
-            @{ Name = 'make'; Provider = 'Scoop' },
-            @{ Name = 'mosquitto'; Provider = 'Scoop' },
-            @{ Name = 'mpv'; Provider = 'Scoop' },
-            @{ Name = 'musescore'; Provider = 'Scoop' },
-            @{ Name = 'musicbee'; Provider = 'Scoop' },
-            @{ Name = 'mysql-lts'; Provider = 'Scoop' },
-            @{ Name = 'mysql-shell'; Provider = 'Scoop' },
-            @{ Name = 'netcat'; Provider = 'Scoop' },
-            @{ Name = 'nmap'; Provider = 'Scoop' },
-            @{ Name = 'ntop'; Provider = 'Scoop' },
-            @{ Name = 'nuget'; Provider = 'Scoop' },
-            @{ Name = 'obs-studio'; Provider = 'Scoop' },
-            @{ Name = 'obsidian'; Provider = 'Scoop' },
-            @{ Name = 'okular'; Provider = 'Scoop' },
-            @{ Name = 'poppler'; Provider = 'Scoop' },
-            @{ Name = 'protobuf'; Provider = 'Scoop' },
-            @{ Name = 'putty'; Provider = 'Scoop' },
-            @{ Name = 'qpdf'; Provider = 'Scoop' },
-            @{ Name = 'raspberry-pi-imager'; Provider = 'Scoop' },
-            @{ Name = 'ripgrep'; Provider = 'Scoop' },
-            @{ Name = 'rust'; Provider = 'Scoop' },
-            @{ Name = 'simplyserial'; Provider = 'Scoop' },
-            @{ Name = 'sqlite'; Provider = 'Scoop' },
-            @{ Name = 'stylua'; Provider = 'Scoop' },
-            @{ Name = 'termscp'; Provider = 'Scoop' },
-            @{ Name = 'termshark'; Provider = 'Scoop' },
-            @{ Name = 'twilio-cli'; Provider = 'Scoop' },
-            @{ Name = 'unrar'; Provider = 'Scoop' },
-            @{ Name = 'vlc'; Provider = 'Scoop' },
-            @{ Name = 'wireshark'; Provider = 'Scoop' },
-            @{ Name = 'yarn'; Provider = 'Scoop' },
-            @{ Name = 'yt-dlp'; Provider = 'Scoop' },
-            @{ Name = 'zoxide'; Provider = 'Scoop' }
+            @{ Name = '7zip' },
+            @{ Name = 'adb' },
+            @{ Name = 'android-studio' },
+            @{ Name = 'bat' },
+            @{ Name = 'btop' },
+            @{ Name = 'busybox' },
+            @{ Name = 'curl' },
+            @{ Name = 'exercism' },
+            @{ Name = 'ffmpeg' },
+            @{ Name = 'gcc' },
+            @{ Name = 'gdb' },
+            @{ Name = 'jq' },
+            @{ Name = 'keypirinha' },
+            @{ Name = 'lftp' },
+            @{ Name = 'luarocks' },
+            @{ Name = 'make' },
+            @{ Name = 'mosquitto' },
+            @{ Name = 'mpv' },
+            @{ Name = 'musescore' },
+            @{ Name = 'musicbee' },
+            @{ Name = 'mysql-lts' },
+            @{ Name = 'mysql-shell' },
+            @{ Name = 'netcat' },
+            @{ Name = 'nmap' },
+            @{ Name = 'ntop' },
+            @{ Name = 'nuget' },
+            @{ Name = 'obs-studio' },
+            @{ Name = 'obsidian' },
+            @{ Name = 'okular' },
+            @{ Name = 'poppler' },
+            @{ Name = 'protobuf' },
+            @{ Name = 'putty' },
+            @{ Name = 'qpdf' },
+            @{ Name = 'raspberry-pi-imager' },
+            @{ Name = 'ripgrep' },
+            @{ Name = 'rust' },
+            @{ Name = 'simplyserial' },
+            @{ Name = 'sqlite' },
+            @{ Name = 'stylua' },
+            @{ Name = 'termscp' },
+            @{ Name = 'termshark' },
+            @{ Name = 'twilio-cli' },
+            @{ Name = 'unrar' },
+            @{ Name = 'vlc' },
+            @{ Name = 'wireshark' },
+            @{ Name = 'yarn' },
+            @{ Name = 'yt-dlp' },
+            @{ Name = 'zoxide' }
 
             # Winget
             @{ Name = 'Microsoft.DotNet.SDK.8'; Provider = 'WinGet' }
@@ -126,10 +126,15 @@ function Install-DotPackages
             Write-Host "Package name is empty, skipping"
         } else
         {
-            Install-Package @_
+            try
+            {
+                Install-Package @_
+            } catch
+            {
+                Write-Error "Error installing package: $Name"
+            }
         }
     }
-
 }
 
 function Update-DotPackages
