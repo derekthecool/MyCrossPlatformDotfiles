@@ -125,18 +125,23 @@ function Install-DotPackages
     Get-Module *AnyPackage* -Verbose
     Get-Module *AnyPackage* | Write-Verbose
 
-    Get-Variable _ -Verbose
-    Get-Variable _ | Write-Verbose
+    Get-DotPackageList | ForEach-Object {
 
-    $Name = $_.Name
-    $Provider = $_.Provider
-    if([string]::IsNullOrEmpty($Name))
-    {
-        Write-Host "Package name is empty, skipping"
-    } else
-    {
-        Install-Package @_ -ErrorAction Continue
+        Get-Variable _ -Verbose
+        Get-Variable _ | Write-Verbose
+
+        $Name = $_.Name
+        $Provider = $_.Provider
+        if([string]::IsNullOrEmpty($Name))
+        {
+            Write-Host "Package name is empty, skipping"
+        } else
+        {
+            Install-Package @_ -ErrorAction Continue
+        }
     }
+
+    Get-Package
 }
 
 function Update-DotPackages
