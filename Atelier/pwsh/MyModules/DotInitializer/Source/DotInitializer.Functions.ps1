@@ -112,7 +112,7 @@ function Get-DotPackages
             Write-Host "Package name is empty, skipping"
         } else
         {
-            Get-Package @_
+            Get-Package @_ -ErrorAction Continue
         }
     }
 }
@@ -128,13 +128,7 @@ function Install-DotPackages
             Write-Host "Package name is empty, skipping"
         } else
         {
-            try
-            {
-                Install-Package @_
-            } catch
-            {
-                Write-Error "Error installing package: $Name"
-            }
+            Install-Package @_ -ErrorAction Continue
         }
     }
 }
