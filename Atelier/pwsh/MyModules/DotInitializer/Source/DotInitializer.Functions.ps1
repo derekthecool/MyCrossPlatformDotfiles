@@ -119,6 +119,7 @@ function Get-DotPackages
 
 function Install-DotPackages
 {
+    Get-Module *AnyPackage*
     Get-DotPackageList | ForEach-Object {
         Get-Variable _ | Write-Verbose
         $Name = $_.Name
@@ -131,6 +132,11 @@ function Install-DotPackages
             Install-Package @_ -ErrorAction Continue
         }
     }
+
+    Write-Host "Showing all installed packages"
+
+    # Show all packages after completion
+    Get-Package
 }
 
 function Update-DotPackages
