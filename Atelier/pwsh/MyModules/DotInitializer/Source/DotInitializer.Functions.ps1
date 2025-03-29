@@ -135,5 +135,6 @@ function Install-DotPackages
 
 function Update-DotPackages
 {
+    Write-Host "This function needs to be implemented"
     throw 'Not implemented'
 }
