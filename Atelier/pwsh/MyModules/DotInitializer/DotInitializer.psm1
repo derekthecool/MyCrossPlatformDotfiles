@@ -28,4 +28,4 @@ $Providers | ForEach-Object{ $_.Priority = 50 }
 $Providers | Where-Object { $_.Name -match 'Scoop|Apt|PSResourceGet' } | ForEach-Object{ $_.Priority += 25 }
 
 # Decrease less important providers
-$Providers | Where-Object { $_.Name -match 'Tool' } | ForEach-Object{ $_.Priority -= 25 }
+$Providers | Where-Object { $_.Name -match 'AnyPackage.DotNet.Tool' } | ForEach-Object{ $_.Priority = 0 }
