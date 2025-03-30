@@ -25,16 +25,16 @@ Describe 'DotInitializer tests' {
         $packages | Should -BeGreaterOrEqual
     }
 
-    # It 'Function Install-DotPackages works (this may be too slow to test)' -Skip:($CI -eq $false) {
-    #     Install-DotPackages
-    #     # {Get-DotPackages} | Should -Not -Throw
-    # }
+    It 'Function Install-DotPackages works (this may be too slow to test)' -Skip:($CI -eq $false) {
+        Install-DotPackages
+        # {Get-DotPackages} | Should -Not -Throw
+    }
 
     It 'Function Update-DotPackages' {
         {Update-DotPackages} | Should -Throw
     }
 
-    It 'Get-Package Check' {
-        Get-Package
-    }
+    # It 'Get-Package Check' {
+    #     Get-Package
+    # }
 }

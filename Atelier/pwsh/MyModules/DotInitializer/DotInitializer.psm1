@@ -3,7 +3,7 @@
     . $_.FullName
 }
 
-# Needed for every.OS
+# Needed for every OS
 Import-Module 'AnyPackage.PSResourceGet', 'AnyPackage.DotNet.Tool'
 
 # Linux only
@@ -19,3 +19,13 @@ if($IsWindows)
     Import-Module 'AnyPackage.WinGet', 'AnyPackage.Scoop', 'AnyPackage.Programs'
 }
 
+$Providers = Get-PackageProvider
+
+# Set all providers priority to 50 instead of 100
+$Providers | ForEach-Object{ $_.Priority = 50 }
+
+# Increase important providers
+$Providers | Where-Object { $_.Name -match 'Scoop|Apt|PSResourceGet' } | ForEach-Object{ $_.Priority += 25 }
+
+# Decrease less important providers
+$Providers | Where-Object { $_.Name -match 'Tool' } | ForEach-Object{ $_.Priority -= 25 }
