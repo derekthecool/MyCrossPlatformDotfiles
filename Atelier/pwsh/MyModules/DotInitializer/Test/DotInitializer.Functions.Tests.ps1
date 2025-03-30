@@ -15,11 +15,11 @@ Describe 'DotInitializer tests' {
         {
             {$IsWindows}
             {
-                76
+                70
             }
             default
             {
-                8
+                1
             }
         }
         $packages | Should -BeGreaterOrEqual

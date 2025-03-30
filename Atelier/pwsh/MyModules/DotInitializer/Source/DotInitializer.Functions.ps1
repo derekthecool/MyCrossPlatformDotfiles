@@ -1,6 +1,9 @@
 ﻿function Get-DotPackageList
 {
     @(
+        # All platforms
+        @{ Name = 'neovim' }
+
         # Linux only: TODO: (Derek Lomax) 3/28/2025 10:20:23 AM, This section will need to lot of work to support Ubuntu, Arch, etc.
         if($IsLinux)
         {
@@ -23,7 +26,6 @@
             @{ Name = 'podman' },
             @{ Name = 'python' },
             @{ Name = 'starship' },
-            @{ Name = 'neovim' },
             @{ Name = 'fzf' },
 
             # Non-essential packages but still awesome
