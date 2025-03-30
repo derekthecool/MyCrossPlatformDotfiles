@@ -4,7 +4,7 @@
 }
 
 # Needed for every OS
-Import-Module 'AnyPackage.PSResourceGet', 'AnyPackage.DotNet.Tool'
+Import-Module 'AnyPackage.PSResourceGet'
 
 # Linux only
 if($IsLinux -and ($PSVersionTable.OS -match 'Ubuntu'))
@@ -27,5 +27,6 @@ $Providers | ForEach-Object{ $_.Priority = 50 }
 # Increase important providers
 $Providers | Where-Object { $_.Name -match 'Scoop|Apt|PSResourceGet' } | ForEach-Object{ $_.Priority += 25 }
 
-# Decrease less important providers
-$Providers | Where-Object { $_.Name -match 'AnyPackage.DotNet.Tool' } | ForEach-Object{ $_.Priority = 0 }
+# # Decrease less important providers
+# $Providers | Where-Object { $_.Name -match 'AnyPackage.DotNet.Tool' } | ForEach-Object{ $_.Priority = 0 }
+# TODO: (Derek Lomax) Sat 29 Mar 2025 09:01:01 PM MDT, The DotNet.Tool provider is not respecting the priority

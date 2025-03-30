@@ -89,15 +89,15 @@
         {
         }
 
-        # Dotnet tools: supported on every OS
-        @{Name = 'csharpier'; Provider = '.NET tool' },
-        @{Name = 'csharprepl'; Provider = '.NET Tool' },
-        @{Name = 'dotnet-ef'; Provider = '.NET Tool' },
-        @{Name = 'dotnet-script'; Provider = '.NET Tool' },
-        @{Name = 'fantomas'; Provider = '.NET Tool' },
-        @{Name = 'ilspycmd'; Provider = '.NET Tool' },
-        @{Name = 'terminalguidesigner'; Provider = '.NET Tool' },
-        @{Name = 'vpk'; Provider = '.NET Tool' }
+        # # Dotnet tools: supported on every OS
+        # @{Name = 'csharpier'; Provider = '.NET tool' },
+        # @{Name = 'csharprepl'; Provider = '.NET Tool' },
+        # @{Name = 'dotnet-ef'; Provider = '.NET Tool' },
+        # @{Name = 'dotnet-script'; Provider = '.NET Tool' },
+        # @{Name = 'fantomas'; Provider = '.NET Tool' },
+        # @{Name = 'ilspycmd'; Provider = '.NET Tool' },
+        # @{Name = 'terminalguidesigner'; Provider = '.NET Tool' },
+        # @{Name = 'vpk'; Provider = '.NET Tool' }
     )
 }
 
