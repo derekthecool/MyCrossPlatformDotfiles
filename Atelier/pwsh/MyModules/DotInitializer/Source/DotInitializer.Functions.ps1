@@ -139,7 +139,7 @@ function Install-DotPackages
             Write-Host "Package name is empty, skipping"
         } else
         {
-            Install-Package @_ -ErrorAction Continue
+            Install-Package @_ -ErrorAction Continue -Verbose
         }
     }
 

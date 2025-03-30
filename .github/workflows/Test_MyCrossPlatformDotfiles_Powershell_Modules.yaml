@@ -40,8 +40,10 @@ jobs:
               }
               Output = @{Verbosity = 'Detailed' }
           }
-          Get-PackageProvider
-          Invoke-Pester -Configuration $config
-          Get-PackageProvider
-          Get-PackageProvider -ListAvailable
-          Get-Package -ErrorAction SilentlyContinue | Group-Object -Property Provider
+
+      - name: Install all packages
+        run: |
+          $env:PSModulePath += "$([System.IO.Path]::PathSeparator)./Atelier/pwsh/MyModules/"
+          Get-PackageProvider | Select-Object FullName, Priority, Operations
+          Install-DotPackages
+          Get-Package | Group-Object Provider

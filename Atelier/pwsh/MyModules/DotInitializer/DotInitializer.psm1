@@ -19,14 +19,10 @@ if($IsWindows)
     Import-Module 'AnyPackage.WinGet', 'AnyPackage.Scoop', 'AnyPackage.Programs'
 }
 
+# Make main package providers higher priority
 $Providers = Get-PackageProvider
-
-# Set all providers priority to 50 instead of 100
 $Providers | ForEach-Object{ $_.Priority = 50 }
+$Providers | Where-Object { $_.Name -match 'PSResourceGet|WinGet' } | ForEach-Object{ $_.Priority += 20 }
+$Providers | Where-Object { $_.Name -match 'Scoop|Apt' } | ForEach-Object{ $_.Priority += 25 }
 
-# Increase important providers
-$Providers | Where-Object { $_.Name -match 'Scoop|Apt|PSResourceGet' } | ForEach-Object{ $_.Priority += 25 }
-
-# # Decrease less important providers
-# $Providers | Where-Object { $_.Name -match 'AnyPackage.DotNet.Tool' } | ForEach-Object{ $_.Priority = 0 }
 # TODO: (Derek Lomax) Sat 29 Mar 2025 09:01:01 PM MDT, The DotNet.Tool provider is not respecting the priority
