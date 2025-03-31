@@ -44,6 +44,8 @@ jobs:
       - name: Install all packages
         run: |
           $env:PSModulePath += "$([System.IO.Path]::PathSeparator)./Atelier/pwsh/MyModules/"
-          Get-PackageProvider | Select-Object FullName, Priority, Operations
+          Write-Host "Get-PackageProviders"
+          Get-PackageProvider
+          Write-Host "Start install"
           Install-DotPackages
           Get-Package | Group-Object Provider
