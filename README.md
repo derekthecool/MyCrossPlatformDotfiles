@@ -16,19 +16,18 @@ Prerequisites before installing:
 - `` Powershell 7 or higher
 
 ```powershell
-# Download the script long version
-Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/derekthecool/MyCrossPlatformDotfiles/refs/heads/master/Atelier/pwsh/MyModules/Dot/Source/Dot.Functions.ps1' -OutFile ~/dot.ps1
-# Short url version using https://free-url-shortener.rb.gy/
-iwr -Uri 'https://rb.gy/49hpz2' -OutFile ~/dot.ps1
+# Download the script: long version
+Invoke-RestMethod 'https://raw.githubusercontent.com/derekthecool/MyCrossPlatformDotfiles/refs/heads/master/Atelier/pwsh/MyModules/Dot/Source/Dot.Functions.ps1' | Invoke-Expression
+# Download the script: short version using https://free-url-shortener.rb.gy/
+irm 'https://rb.gy/49hpz2' | iex
 
-# Dot source the script
-. ~/dot.ps1
+# Download the git bare repository
+Initialize-Dotfiles
 
-# Run the function to setup dotfiles
-Initialize-Dotfiles && rm ~/dot.ps1
+# Clone all other important configuration repositories
+Get-AllConfigurations
 
-# Now open a new shell to load the profile and gain access to all modules to run
-# main program installer
+# Then open new shell to launch profile and install packages
 pwsh
 Install-DotPackages
 ```

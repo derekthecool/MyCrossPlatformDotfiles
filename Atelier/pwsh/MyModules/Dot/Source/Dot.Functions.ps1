@@ -51,8 +51,14 @@ function Initialize-Dotfiles
     # Configure git to not show untracked files
     dot config status.showUntrackedFiles no
 
+    # If not running in CI container cd to home
+    if(-not $env:CI)
+    {
+        Set-Location $HOME
+    }
+
     # Run this script to install all my favorite powershell modules
-    ./$HOME/Atelier/pwsh/Bootstrap-RequiredModules.ps1
+    ./Atelier/pwsh/Bootstrap-RequiredModules.ps1
 
     Write-Host 'Dotfiles are initialized and ready.'
 }

@@ -16,5 +16,12 @@ if($IsLinux -and ($PSVersionTable.OS -match 'Ubuntu'))
 if($IsWindows)
 {
     Install-Scoop
-    Import-Module 'AnyPackage.WinGet', 'AnyPackage.Scoop', 'AnyPackage.Programs'
+
+    Import-Module 'AnyPackage.WinGet', 'AnyPackage.Scoop'
+
+    # The programs provider hangs in CI
+    if(-not $env:CI)
+    {
+        Import-Module 'AnyPackage.Programs'
+    }
 }
