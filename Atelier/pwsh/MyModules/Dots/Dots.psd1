@@ -34,6 +34,7 @@
         'dots'
         'Clone-GitRepository'
         'Add-MasonToolsToPath'
+        'Get-AllConfigurations'
 
         'Get-AdventOfCodeData'
 

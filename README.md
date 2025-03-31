@@ -16,14 +16,21 @@ Prerequisites before installing:
 - `` Powershell 7 or higher
 
 ```powershell
-# Download the script
-Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/derekthecool/MyCrossPlatformDotfiles/master/Scripts/Dots/DotfileManagement.ps1' -OutFile ~/dot.ps1
+# Download the script long version
+Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/derekthecool/MyCrossPlatformDotfiles/refs/heads/master/Atelier/pwsh/MyModules/Dot/Source/Dot.Functions.ps1' -OutFile ~/dot.ps1
+# Short url version using https://free-url-shortener.rb.gy/
+iwr -Uri 'https://rb.gy/49hpz2' -OutFile ~/dot.ps1
 
 # Dot source the script
 . ~/dot.ps1
 
 # Run the function to setup dotfiles
 Initialize-Dotfiles && rm ~/dot.ps1
+
+# Now open a new shell to load the profile and gain access to all modules to run
+# main program installer
+pwsh
+Install-DotPackages
 ```
 
 ## Cross Platform Support
