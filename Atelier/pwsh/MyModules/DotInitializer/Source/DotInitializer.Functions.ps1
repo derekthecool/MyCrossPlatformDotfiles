@@ -105,6 +105,7 @@
 
 function Get-DotPackages
 {
+    Set-PackageProviderPriority
     Get-DotPackageList | ForEach-Object {
         $Name = $_.Name
         $Provider = $_.Provider
@@ -119,8 +120,19 @@ function Get-DotPackages
     }
 }
 
+Set-PackageProviderPriority
+{
+    # Make main package providers higher priority
+    $Providers = Get-PackageProvider
+    $Providers | ForEach-Object{ $_.Priority = 50 }
+    $Providers | Where-Object { $_.Name -match 'PSResourceGet|WinGet' } | ForEach-Object{ $_.Priority += 20 }
+    $Providers | Where-Object { $_.Name -match 'Scoop|Apt' } | ForEach-Object{ $_.Priority += 25 }
+}
+
 function Install-DotPackages
 {
+    Set-PackageProviderPriority
+    Get-PackageProvider
     Get-DotPackageList | ForEach-Object {
 
         Get-Variable _ -Verbose
