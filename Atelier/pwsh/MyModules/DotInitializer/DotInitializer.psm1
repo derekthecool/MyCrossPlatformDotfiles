@@ -4,7 +4,7 @@
 }
 
 # Needed for every OS
-Import-Module 'AnyPackage.PSResourceGet'
+Import-Module 'AnyPackage.PSResourceGet', 'AnyPackage.DotNet.Tool'
 
 # Linux only
 if($IsLinux -and ($PSVersionTable.OS -match 'Ubuntu'))
