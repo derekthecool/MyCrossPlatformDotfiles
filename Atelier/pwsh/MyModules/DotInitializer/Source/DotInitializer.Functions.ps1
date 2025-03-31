@@ -1,4 +1,14 @@
-﻿function Get-DotPackageList
+﻿function Set-PackageProviderPriority
+{
+    # TODO: (Derek Lomax) Sat 29 Mar 2025 09:01:01 PM MDT, The DotNet.Tool provider is not respecting the priority
+    # Make main package providers higher priority
+    $Providers = Get-PackageProvider
+    $Providers | ForEach-Object{ $_.Priority = 50 }
+    $Providers | Where-Object { $_.Name -match 'PSResourceGet|WinGet' } | ForEach-Object{ $_.Priority += 20 }
+    $Providers | Where-Object { $_.Name -match 'Scoop|Apt' } | ForEach-Object{ $_.Priority += 25 }
+}
+
+function Get-DotPackageList
 {
     @(
         # All platforms
@@ -118,15 +128,6 @@ function Get-DotPackages
             Get-Package @_ -ErrorAction Continue
         }
     }
-}
-
-Set-PackageProviderPriority
-{
-    # Make main package providers higher priority
-    $Providers = Get-PackageProvider
-    $Providers | ForEach-Object{ $_.Priority = 50 }
-    $Providers | Where-Object { $_.Name -match 'PSResourceGet|WinGet' } | ForEach-Object{ $_.Priority += 20 }
-    $Providers | Where-Object { $_.Name -match 'Scoop|Apt' } | ForEach-Object{ $_.Priority += 25 }
 }
 
 function Install-DotPackages
