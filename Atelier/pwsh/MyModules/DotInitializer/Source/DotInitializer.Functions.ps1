@@ -121,12 +121,6 @@ function Get-DotPackages
 
 function Install-DotPackages
 {
-    Get-PackageProvider -Verbose
-    Get-PackageProvider | Write-Verbose
-
-    Get-Module *AnyPackage* -Verbose
-    Get-Module *AnyPackage* | Write-Verbose
-
     Get-DotPackageList | ForEach-Object {
 
         Get-Variable _ -Verbose
@@ -142,8 +136,6 @@ function Install-DotPackages
             Install-Package @_ -ErrorAction Continue -Verbose
         }
     }
-
-    Get-Package
 }
 
 function Update-DotPackages
