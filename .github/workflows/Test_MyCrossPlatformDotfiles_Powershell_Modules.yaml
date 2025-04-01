@@ -45,4 +45,3 @@ jobs:
         run: |
           $env:PSModulePath += "$([System.IO.Path]::PathSeparator)./Atelier/pwsh/MyModules/"
           Install-DotPackages
-          Get-Package -ErrorAction SilentlyContinue | Group-Object Provider
