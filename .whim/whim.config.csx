@@ -126,10 +126,10 @@ void DoConfig(IContext context)
     // Web
     Route(new List<string> { "firefox", "brave" }, "web");
 
-    // Chat
-    new List<string> { "TeamsWebView" }.ForEach(program =>
-        context.RouterManager.AddWindowClassRoute(program, workspaces["chat"])
-    );
+    // // Chat
+    // new List<string> { "TeamsWebView" }.ForEach(program =>
+    //     context.RouterManager.AddWindowClassRoute(program, workspaces["chat"])
+    // );
 
     // Plover
     Route(new List<string> { "pythonw" }, "plover");
