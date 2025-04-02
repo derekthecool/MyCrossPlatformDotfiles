@@ -77,6 +77,7 @@ function Get-DotPackageList
             # @{ Name = 'musicbee' },
 
             # Winget
+            @{ Name = 'Microsoft.Sqlcmd'; Provider = 'WinGet' }
             @{ Name = 'Microsoft.DotNet.SDK.8'; Provider = 'WinGet' }
             @{ Name = 'Microsoft.DotNet.SDK.9'; Provider = 'WinGet' }
             @{ Name = 'Microsoft.DotNet.SDK.Preview'; Provider = 'WinGet' }
