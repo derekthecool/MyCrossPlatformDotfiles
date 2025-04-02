@@ -50,6 +50,11 @@
     insteadOf = myGitHub:
 [url "https://github.com/derekthecool/"]
     insteadOf = myGitHubHTTPS:
+# Work urls
+[url "git@ssh.dev.azure.com:v3/freeus/FreeusDevice/"]
+    insteadOf = Freeus:
+[url "git@ssh.dev.azure.com:v3/freeus/Freeus/"]
+    insteadOf = Freeus2:
 
 # Work git config
 [includeIf "gitdir:~/repos/"]
