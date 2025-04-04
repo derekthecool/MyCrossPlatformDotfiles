@@ -10,6 +10,46 @@
 function Get-DotPackageList
 {
     @(
+            # # Essential
+            # Scoop
+            @{ Name = 'neovim' },
+            @{ Name = 'pwsh' },
+            @{ Name = 'wezterm' },
+            @{ Name = 'autohotkey' },
+            @{ Name = 'flutter' },
+            @{ Name = 'gh' },
+            @{ Name = 'go' },
+            @{ Name = 'nodejs' },
+            @{ Name = 'podman' },
+            @{ Name = 'python' },
+            @{ Name = 'starship' },
+            @{ Name = 'rust' },
+
+            # Yazi https://yazi-rs.github.io/docs/installation/#windows
+            @{ Name = 'yazi' },
+            @{ Name = 'ffmpeg' },
+            @{ Name = '7zip' },
+            @{ Name = 'jq' },
+            @{ Name = 'poppler' },
+            @{ Name = 'fd' },
+            @{ Name = 'ripgrep' },
+            @{ Name = 'fzf' },
+            @{ Name = 'zoxide' },
+            @{ Name = 'imagemagick' },
+
+            # Other important packages
+            @{ Name = 'curl' },
+            @{ Name = 'exercism' },
+            @{ Name = 'netcat' },
+            @{ Name = 'nmap' },
+            @{ Name = 'okular' },
+            @{ Name = 'putty' },
+            @{ Name = 'stylua' },
+            @{ Name = 'unrar' },
+            @{ Name = 'vlc' },
+            @{ Name = 'yt-dlp' },
+            @{ Name = 'mpv' },
+
 
         # Linux only: TODO: (Derek Lomax) 3/28/2025 10:20:23 AM, This section will need to lot of work to support Ubuntu, Arch, etc.
         if($IsLinux)
@@ -19,61 +59,28 @@ function Get-DotPackageList
         # TODO: (Derek Lomax) 3/28/2025 10:28:47 AM, Consider grouping by functionality such as web, terminal, programming languages etc. instead of OS.
         if($IsWindows)
         {
-            # # Essential
-            # Scoop
-            @{ Name = 'neovim' },
-            @{ Name = 'pwsh' },
-            @{ Name = 'wezterm' },
-            @{ Name = 'autohotkey' },
-            @{ Name = 'flutter' },
-            @{ Name = 'gh' },
-            # Git will be installed for scoop in ./Install-Scoop.ps1
-            # @{ Name = 'git' },
-            @{ Name = 'go' },
-            @{ Name = 'nodejs' },
-            @{ Name = 'podman' },
-            @{ Name = 'python' },
-            @{ Name = 'starship' },
-            @{ Name = 'fzf' },
-            @{ Name = 'ripgrep' },
-            @{ Name = 'rust' },
-
             # Non-essential packages but still awesome
-            @{ Name = '7zip' },
             @{ Name = 'adb' },
             @{ Name = 'btop' },
             @{ Name = 'busybox' },
-            @{ Name = 'curl' },
-            @{ Name = 'exercism' },
-            @{ Name = 'ffmpeg' },
-            @{ Name = 'gcc' },
-            @{ Name = 'jq' },
             @{ Name = 'keypirinha' },
             @{ Name = 'lftp' },
             @{ Name = 'make' },
             @{ Name = 'mosquitto' },
-            @{ Name = 'mpv' },
             @{ Name = 'musescore' },
             @{ Name = 'mysql-lts' },
-            @{ Name = 'netcat' },
-            @{ Name = 'nmap' },
             @{ Name = 'ntop' },
             @{ Name = 'nuget' },
             @{ Name = 'obsidian' },
-            @{ Name = 'okular' },
             @{ Name = 'protobuf' },
-            @{ Name = 'putty' },
             @{ Name = 'simplyserial' },
             @{ Name = 'sqlite' },
-            @{ Name = 'stylua' },
             @{ Name = 'termscp' },
             @{ Name = 'twilio-cli' },
-            @{ Name = 'unrar' },
-            @{ Name = 'vlc' },
-            @{ Name = 'yt-dlp' },
-            @{ Name = 'zoxide' },
+            @{ Name = 'gcc' },
 
             # applications that seem to have problems installing
+            # Works with scoop install musicbee but fails with anypackage
             # @{ Name = 'musicbee' },
 
             # Winget
