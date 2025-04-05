@@ -91,6 +91,19 @@ if($IsWindows)
     if((Get-Command yazi -ErrorAction SilentlyContinue))
     {
         $env:YAZI_FILE_ONE = "$HOME\scoop\apps\git\current\usr\bin\file.exe", "$env:PROGRAMFILES\Git\usr\bin\file.exe" | Where-Object {Test-Path $_} | Select-Object -First 1
+
+        # Suggested function to set path to where yazi ended upon exit
+        function y
+        {
+            $tmp = [System.IO.Path]::GetTempFileName()
+            yazi $args --cwd-file="$tmp"
+            $cwd = Get-Content -Path $tmp -Encoding UTF8
+            if (-not [String]::IsNullOrEmpty($cwd) -and $cwd -ne $PWD.Path)
+            {
+                Set-Location -LiteralPath ([System.IO.Path]::GetFullPath($cwd))
+            }
+            Remove-Item -Path $tmp
+        }
     }
 }
 
