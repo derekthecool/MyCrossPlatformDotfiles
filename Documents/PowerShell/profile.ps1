@@ -83,6 +83,18 @@ if (Get-Command zoxide -ErrorAction SilentlyContinue)
     New-Alias -Name cd -Value z
 }
 
+# Setup yazi file manager path to file.exe
+# required for image preview
+# https://yazi-rs.github.io/docs/installation/#windows
+if($IsWindows)
+{
+    if((Get-Command yazi -ErrorAction SilentlyContinue))
+    {
+        $env:YAZI_FILE_ONE = "$HOME\scoop\apps\git\current\usr\bin\file.exe", "$env:PROGRAMFILES\Git\usr\bin\file.exe" | Where-Object {Test-Path $_} | Select-Object -First 1
+    }
+}
+
+
 # PSFzf mappings
 Import-Module PSFzf -Force
 Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
