@@ -2,7 +2,7 @@
 {
     # TODO: (Derek Lomax) Sat 29 Mar 2025 09:01:01 PM MDT, The DotNet.Tool provider is not respecting the priority
     # Make main package providers higher priority
-    $Providers = Get-PackrgeProvider
+    $Providers = Get-PackageProvider
     $Providers | Where-Object { $_.Name -match 'PSResourceGet|WinGet' } | ForEach-Object{ $_.Priority -= 20 }
     $Providers | Where-Object { $_.Name -match 'Scoop|Apt' } | ForEach-Object{ $_.Priority -= 25 }
 }
