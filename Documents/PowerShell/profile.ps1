@@ -83,27 +83,31 @@ if (Get-Command zoxide -ErrorAction SilentlyContinue)
     New-Alias -Name cd -Value z
 }
 
-# Setup yazi file manager path to file.exe
-# required for image preview
-# https://yazi-rs.github.io/docs/installation/#windows
-if($IsWindows)
+if((Get-Command yazi -ErrorAction SilentlyContinue))
 {
-    if((Get-Command yazi -ErrorAction SilentlyContinue))
+    if($IsWindows)
     {
+        # Setup yazi file manager path to file.exe
+        # required for image preview
+        # https://yazi-rs.github.io/docs/installation/#windows
         $env:YAZI_FILE_ONE = "$HOME\scoop\apps\git\current\usr\bin\file.exe", "$env:PROGRAMFILES\Git\usr\bin\file.exe" | Where-Object {Test-Path $_} | Select-Object -First 1
+    }
 
-        # Suggested function to set path to where yazi ended upon exit
-        function y
+    # The default Windows yazi config is: %AppData%\yazi\config
+    # which is stupid, so use this to set it the same as Linux
+    $env:YAZI_CONFIG_HOME = "$HOME/.config/yazi"
+
+    # Suggested function to set path to where yazi ended upon exit
+    function y
+    {
+        $tmp = [System.IO.Path]::GetTempFileName()
+        yazi $args --cwd-file="$tmp"
+        $cwd = Get-Content -Path $tmp -Encoding UTF8
+        if (-not [String]::IsNullOrEmpty($cwd) -and $cwd -ne $PWD.Path)
         {
-            $tmp = [System.IO.Path]::GetTempFileName()
-            yazi $args --cwd-file="$tmp"
-            $cwd = Get-Content -Path $tmp -Encoding UTF8
-            if (-not [String]::IsNullOrEmpty($cwd) -and $cwd -ne $PWD.Path)
-            {
-                Set-Location -LiteralPath ([System.IO.Path]::GetFullPath($cwd))
-            }
-            Remove-Item -Path $tmp
+            Set-Location -LiteralPath ([System.IO.Path]::GetFullPath($cwd))
         }
+        Remove-Item -Path $tmp
     }
 }
 
@@ -115,7 +119,8 @@ Set-PSReadLineKeyHandler -Key Tab -ScriptBlock { Invoke-FzfTabCompletion }
 
 # Set editor environment variables
 $env:EDITOR = 'nvim'
-$env:VISUAL = 'nvim'
+$env:VISUAL = $env:EDITOR
+$EDITOR = $env:EDITOR
 
 $PSDefaultParameterValues = @{
     'Out-Default:OutVariable'           = 'LastResult'         # Save output to $LastResult
