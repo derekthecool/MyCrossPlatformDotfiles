@@ -145,10 +145,10 @@ function Install-DotPackages
             Install-Package @_ -ErrorAction Continue -Verbose
 
             # Add explicit return when last package is found, GitHub actions is not exiting
-            if($Name = 'vpk')
+            if($Name = 'vpk' -and $env:CI)
             {
-                Write-Host "Last package found, explicitly returning from function"
-                return
+                Write-Host "Last package found, exiting"
+                exit 0
             }
         }
     }
