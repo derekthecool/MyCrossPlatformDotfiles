@@ -33,6 +33,15 @@ jobs:
     # Or on schedule
     if: ${{ github.event.workflow_run.conclusion == 'success' }} || ${{ github.event.schedule == '5 17 * * MON' }}
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install required powershell modules
+        run: ./Atelier/pwsh/Bootstrap-RequiredModules.ps1
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v4
+
       - name: Install all packages
         run: |
           $env:PSModulePath += "$([System.IO.Path]::PathSeparator)./Atelier/pwsh/MyModules/"

@@ -147,6 +147,7 @@ function Install-DotPackages
             # Add explicit return when last package is found, GitHub actions is not exiting
             if($Name = 'vpk')
             {
+                Write-Host "Last package found, explicitly returning from function"
                 return
             }
         }
