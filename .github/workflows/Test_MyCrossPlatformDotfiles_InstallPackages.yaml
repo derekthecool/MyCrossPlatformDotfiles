@@ -1,0 +1,39 @@
+---
+name: 'Test MyCrossPlatformDotfiles Install-Packages'
+
+on:
+  # Enable manual triggered runs
+  workflow_dispatch:
+  # Run workflow every Monday afternoon
+  schedule:
+    - cron: '5 17 * * MON'
+  # Run after another workflow
+  # To check if the workflow was successful use this block above the steps command
+  # if: ${ github.event.workflow_run.conclusion == 'success' }
+  workflow_run:
+    workflows: [ 'Test MyCrossPlatformDotfiles Powershell Modules']
+    types:
+      - completed
+
+permissions: read-all
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    # Run after MyCrossPlatformDotfiles workflow success
+    # Or on schedule
+    if: ${{ github.event.workflow_run.conclusion == 'success' }} || ${{ github.event.schedule == '5 17 * * MON' }}
+    steps:
+      - name: Install all packages
+        run: |
+          $env:PSModulePath += "$([System.IO.Path]::PathSeparator)./Atelier/pwsh/MyModules/"
+          Install-DotPackages

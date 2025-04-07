@@ -1,7 +1,12 @@
 ---
-name: Test MyCrossPlatformDotfiles Powershell Modules
+name: 'Test MyCrossPlatformDotfiles Powershell Modules'
 
-on: [workflow_dispatch, push]
+on:
+  workflow_dispatch:
+  push:
+    # Only on these paths or specific files
+    paths:
+      - 'Atelier/pwsh/**'
 
 permissions: read-all
 
@@ -40,8 +45,4 @@ jobs:
               }
               Output = @{Verbosity = 'Detailed' }
           }
-
-      - name: Install all packages
-        run: |
-          $env:PSModulePath += "$([System.IO.Path]::PathSeparator)./Atelier/pwsh/MyModules/"
-          Install-DotPackages
+          Invoke-Pester -Configuration $config
