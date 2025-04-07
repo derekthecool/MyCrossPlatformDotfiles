@@ -9,6 +9,7 @@ $RequiredModules = @(
     'PSFzf'
     'Selenium'
     'Pester'
+    'posh-git'
     @{
         ModuleName    = 'SimplySql'; ModuleVersion = '2.0.3.73'
     },
