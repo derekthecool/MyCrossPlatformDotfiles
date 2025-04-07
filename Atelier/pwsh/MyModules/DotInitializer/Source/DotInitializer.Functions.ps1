@@ -21,6 +21,7 @@ function Get-DotPackageList
             @{ Name = 'go' },
             @{ Name = 'nodejs' },
             @{ Name = 'podman' },
+            @{ Name = 'docker-compose' },
             @{ Name = 'python' },
             @{ Name = 'starship' },
             @{ Name = 'rust' },
@@ -148,7 +149,7 @@ function Install-DotPackages
             if($Name -eq 'vpk' -and $env:CI)
             {
                 Write-Host "Last package found, exiting"
-                exit 0
+                break
             }
         }
     }
