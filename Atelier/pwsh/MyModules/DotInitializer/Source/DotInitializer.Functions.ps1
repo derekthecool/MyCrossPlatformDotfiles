@@ -143,6 +143,12 @@ function Install-DotPackages
         } else
         {
             Install-Package @_ -ErrorAction Continue -Verbose
+
+            # Add explicit return when last package is found, GitHub actions is not exiting
+            if($Name = 'vpk')
+            {
+                return
+            }
         }
     }
 }
