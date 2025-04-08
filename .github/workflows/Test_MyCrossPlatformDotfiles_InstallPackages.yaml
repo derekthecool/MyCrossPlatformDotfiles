@@ -50,3 +50,4 @@ jobs:
         run: |
           $env:PSModulePath += "$([System.IO.Path]::PathSeparator)./Atelier/pwsh/MyModules/"
           Install-DotPackages
+          exit 0
