@@ -145,7 +145,7 @@ function Install-DotPackages
             Write-Host "Package name is empty, skipping"
         } else
         {
-            Install-Package @_ -ErrorAction Continue -Verbose
+            Install-Package @package -ErrorAction Continue -Verbose
 
             # Add explicit return when last package is found, GitHub actions is not exiting
             if($Name -eq 'vpk' -and $env:CI)
