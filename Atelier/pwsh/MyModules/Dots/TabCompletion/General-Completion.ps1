@@ -5,7 +5,7 @@ function Get-GeneralCompletion
         [string]$Command
     )
 
-    Process
+    process
     {
         $helpCommand = "$Command --help"
         Write-Verbose "helpCommand:`n$helpCommand"

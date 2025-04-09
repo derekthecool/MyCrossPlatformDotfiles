@@ -1,4 +1,4 @@
-﻿BeforeAll {
+BeforeAll {
     Import-Module $PSScriptRoot/../*.psd1 -Force
 }
 
@@ -9,7 +9,7 @@ Describe 'DotAlias tests' {
     }
 }
 
-Describe 'Naughty aliases that require functions to lazy load'  {
+Describe 'Naughty aliases that require functions to lazy load' {
     It 'rmdir' {
         (Get-Command rmdir).Source | Should -Be 'DotAlias'
     }

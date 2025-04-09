@@ -1,4 +1,4 @@
-﻿# This module only includes aliases!
+# This module only includes aliases!
 
 # Linux and Windows included aliases in powershell are different!
 # In general my preference is to use the Linux command name e.g. 'ls'

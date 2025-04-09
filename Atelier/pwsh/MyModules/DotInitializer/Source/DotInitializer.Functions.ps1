@@ -1,8 +1,8 @@
-﻿function Set-PackageProviderPriority
+function Set-PackageProviderPriority
 {
     $Providers = Get-PackageProvider
-    $Providers | Where-Object { $_.Name -match 'PSResourceGet|WinGet' } | ForEach-Object{ $_.Priority -= 20 }
-    $Providers | Where-Object { $_.Name -match 'Scoop|Apt' } | ForEach-Object{ $_.Priority -= 25 }
+    $Providers | Where-Object { $_.Name -match 'PSResourceGet|WinGet' } | ForEach-Object { $_.Priority -= 20 }
+    $Providers | Where-Object { $_.Name -match 'Scoop|Apt' } | ForEach-Object { $_.Priority -= 25 }
 }
 
 function Get-DotPackageList
@@ -51,12 +51,12 @@ function Get-DotPackageList
 
 
         # Linux only: TODO: (Derek Lomax) 3/28/2025 10:20:23 AM, This section will need to lot of work to support Ubuntu, Arch, etc.
-        if($IsLinux)
+        if ($IsLinux)
         {
         }
 
         # TODO: (Derek Lomax) 3/28/2025 10:28:47 AM, Consider grouping by functionality such as web, terminal, programming languages etc. instead of OS.
-        if($IsWindows)
+        if ($IsWindows)
         {
             # Non-essential packages but still awesome
             @{ Name = 'adb' },
@@ -92,7 +92,7 @@ function Get-DotPackageList
             @{ Name = 'Zoom.Zoom'; Provider = 'WinGet' }
         }
 
-        if($IsMacOS)
+        if ($IsMacOS)
         {
         }
 
@@ -115,7 +115,7 @@ function Get-DotPackages
         $Name = $_.Name
         $Provider = $_.Provider
         Get-Variable _ | Write-Verbose
-        if([string]::IsNullOrEmpty($Name))
+        if ([string]::IsNullOrEmpty($Name))
         {
             Write-Host "Package name is empty, skipping"
         } else
@@ -131,10 +131,10 @@ function Install-DotPackages
     Get-PackageProvider
     $packages = Get-DotPackageList
 
-    foreach($package in $packages)
+    foreach ($package in $packages)
     {
         $Name = $package.Name
-        if([string]::IsNullOrEmpty($Name))
+        if ([string]::IsNullOrEmpty($Name))
         {
             Write-Host "Package name is empty, skipping"
         } else
@@ -142,7 +142,7 @@ function Install-DotPackages
             Install-Package @package -ErrorAction Continue -Verbose
 
             # Add explicit return when last package is found, GitHub actions is not exiting
-            if($Name -eq 'vpk' -and $env:CI)
+            if ($Name -eq 'vpk' -and $env:CI)
             {
                 Write-Host "Last package found, exiting"
                 break

@@ -1,4 +1,4 @@
-﻿@{
+@{
     RootModule        = 'DotAlias.psm1'
     ModuleVersion     = '0.1.0'
     GUID              = 'd607bab7-58b8-4fa9-9ade-1ca1ef16bae7'

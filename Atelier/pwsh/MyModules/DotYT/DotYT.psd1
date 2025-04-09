@@ -1,4 +1,4 @@
-﻿@{
+@{
     RootModule        = 'DotYT.psm1'
     ModuleVersion     = '0.1.0'
     GUID              = 'eb74faa9-af67-4001-b672-acd52c8fb357'

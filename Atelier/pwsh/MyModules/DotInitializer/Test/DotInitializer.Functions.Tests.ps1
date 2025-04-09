@@ -1,4 +1,4 @@
-﻿BeforeAll {
+BeforeAll {
     Import-Module $PSScriptRoot/../*.psd1 -Force -Verbose
     $VerbosePreference = 'Continue'
     $DebugPreference = 'Continue'
@@ -13,7 +13,7 @@ Describe 'DotInitializer tests' {
 
         switch ($null)
         {
-            {$IsWindows}
+            { $IsWindows }
             {
                 70
             }
@@ -31,7 +31,7 @@ Describe 'DotInitializer tests' {
     # }
 
     It 'Function Update-DotPackages' {
-        {Update-DotPackages} | Should -Throw
+        { Update-DotPackages } | Should -Throw
     }
 
     # It 'Get-Package Check' {

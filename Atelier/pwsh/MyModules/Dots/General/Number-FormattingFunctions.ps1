@@ -34,7 +34,7 @@ function number
         [int[]]$Number
     )
 
-    Process
+    process
     {
         $Number | ForEach-Object {
             $CurrentNumber = $_

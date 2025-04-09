@@ -14,7 +14,7 @@ function Get-FlutterCommandsAndNonGlobalOptions
         [string]$FlutterCommand
     )
 
-    Process
+    process
     {
         $helpOutput = Invoke-Expression "$FlutterCommand --help"
         $helpOutput

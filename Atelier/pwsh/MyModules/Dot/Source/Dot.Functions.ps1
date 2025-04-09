@@ -52,7 +52,7 @@ function Initialize-Dotfiles
     dot config status.showUntrackedFiles no
 
     # If not running in CI container cd to home
-    if(-not $env:CI)
+    if (-not $env:CI)
     {
         Set-Location $HOME
     }

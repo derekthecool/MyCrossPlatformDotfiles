@@ -51,7 +51,7 @@ function Get-AdbDevices
                 {
                     [AdbState]::Offline
                 }
-                Default
+                default
                 {
                     [AdbState]::Offline
                 } # Fallback case if state is not recognized

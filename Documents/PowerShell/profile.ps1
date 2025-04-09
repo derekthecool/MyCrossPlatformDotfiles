@@ -86,14 +86,14 @@ Set-PSReadLineKeyHandler -Chord Ctrl+y `
     }
 }
 
-if((Get-Command yazi -ErrorAction SilentlyContinue))
+if ((Get-Command yazi -ErrorAction SilentlyContinue))
 {
-    if($IsWindows)
+    if ($IsWindows)
     {
         # Setup yazi file manager path to file.exe
         # required for image preview
         # https://yazi-rs.github.io/docs/installation/#windows
-        $env:YAZI_FILE_ONE = "$HOME\scoop\apps\git\current\usr\bin\file.exe", "$env:PROGRAMFILES\Git\usr\bin\file.exe" | Where-Object {Test-Path $_} | Select-Object -First 1
+        $env:YAZI_FILE_ONE = "$HOME\scoop\apps\git\current\usr\bin\file.exe", "$env:PROGRAMFILES\Git\usr\bin\file.exe" | Where-Object { Test-Path $_ } | Select-Object -First 1
     }
 
     # The default Windows yazi config is: %AppData%\yazi\config
@@ -154,7 +154,7 @@ if ($IsLinux)
             [Parameter(Mandatory, ValueFromPipeline)]
             [string]$NewPathItem
         )
-        Process
+        process
         {
             $env:PATH += [IO.Path]::PathSeparator + $NewPathItem
         }

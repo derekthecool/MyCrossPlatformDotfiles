@@ -1,4 +1,4 @@
-﻿@{
+@{
     RootModule        = 'DotInitializer.psm1'
     ModuleVersion     = '0.1.0'
     GUID              = '9f16aa9b-62cf-46c9-bc6a-005c4eb08c6a'
