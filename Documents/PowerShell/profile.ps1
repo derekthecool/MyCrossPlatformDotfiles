@@ -2,6 +2,17 @@
 # PowerShell 7 (pwsh)
 $env:POWERSHELL_TELEMETRY_OPTOUT = $true
 
+# Most aliases are set in the module DotAlias so they can lazy load
+# However, some require the exiting alias to be removed
+Remove-Alias -Force diff, rmdir, sleep, sort, tee -ErrorAction  SilentlyContinue
+
+# Init Zoxide and set cd alias
+if (Get-Command zoxide -ErrorAction SilentlyContinue)
+{
+    Invoke-Expression (& { (zoxide init powershell | Out-String) })
+    Set-Alias -Name cd -Value z -Option AllScope -Force -Description 'DotAlias for zoxide special cd'
+}
+
 # TODO: (Derek Lomax) 2/14/2025 4:24:24 PM, Try using this module
 # to load things async https://github.com/fsackur/ProfileAsync
 
@@ -75,14 +86,6 @@ Set-PSReadLineKeyHandler -Chord Ctrl+y `
     }
 }
 
-# Init Zoxide
-if (Get-Command zoxide -ErrorAction SilentlyContinue)
-{
-    Invoke-Expression (& { (zoxide init powershell | Out-String) })
-    Remove-Alias cd -ErrorAction SilentlyContinue
-    New-Alias -Name cd -Value z
-}
-
 if((Get-Command yazi -ErrorAction SilentlyContinue))
 {
     if($IsWindows)
@@ -145,16 +148,6 @@ $env:PSModulePath += "$([System.IO.Path]::PathSeparator)$HOME/Atelier/pwsh/MyMod
 
 if ($IsLinux)
 {
-    # Set aliases to match windows default Linux friendly aliases
-    # Get-ChildItem is far better than /usr/bin/ls
-    Set-Alias -Name ls -Value Get-ChildItem
-    Set-Alias -Name cp -Value Copy-Item
-    Set-Alias -Name sort -Value Sort-Object
-    Set-Alias -Name sleep -Value Start-Sleep
-    Set-Alias -Name ps -Value Get-Process
-    Set-Alias -Name rmdir -Value Remove-Item
-    Set-Alias -Name kill -Value Stop-Process
-
     function Add-ToPath
     {
         param(
