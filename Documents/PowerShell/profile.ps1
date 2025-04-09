@@ -13,27 +13,26 @@ if (Get-Command zoxide -ErrorAction SilentlyContinue)
     Set-Alias -Name cd -Value z -Option AllScope -Force -Description 'DotAlias for zoxide special cd'
 }
 
-# TODO: (Derek Lomax) 2/14/2025 4:24:24 PM, Try using this module
-# to load things async https://github.com/fsackur/ProfileAsync
-
-# Set Starship prompt
-# Config file is located: ~/.config/starship.toml
-# Support for OSC7 (CWD detector or wezterm terminal emulator)
-$prompt = ""
-function Invoke-Starship-PreCommand
+if (Get-Command zoxide -ErrorAction SilentlyContinue)
 {
-    $current_location = $executionContext.SessionState.Path.CurrentLocation
-    if ($current_location.Provider.Name -eq "FileSystem")
+    # Set Starship prompt
+    # Config file is located: ~/.config/starship.toml
+    # Support for OSC7 (CWD detector or wezterm terminal emulator)
+    $prompt = ""
+    function Invoke-Starship-PreCommand
     {
-        $ansi_escape = [char]27
-        $provider_path = $current_location.ProviderPath -replace "\\", "/"
-        $prompt = "$ansi_escape]7;file://${env:COMPUTERNAME}/${provider_path}$ansi_escape\"
+        $current_location = $executionContext.SessionState.Path.CurrentLocation
+        if ($current_location.Provider.Name -eq "FileSystem")
+        {
+            $ansi_escape = [char]27
+            $provider_path = $current_location.ProviderPath -replace "\\", "/"
+            $prompt = "$ansi_escape]7;file://${env:COMPUTERNAME}/${provider_path}$ansi_escape\"
+        }
+        $host.ui.Write($prompt)
     }
-    $host.ui.Write($prompt)
+    Invoke-Expression (&starship init powershell)
 }
-Invoke-Expression (&starship init powershell)
 
-# $AsyncScriptBlock = {
 # Configure PSReadLine. Does not like to be loaded from another script with dot sourcing.
 # For configuration help see these resources
 # https://github.com/PowerShell/PSReadLine
@@ -114,12 +113,14 @@ if ((Get-Command yazi -ErrorAction SilentlyContinue))
     }
 }
 
-
 # PSFzf mappings
-Import-Module PSFzf -Force
-Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
-Set-PSReadLineKeyHandler -Key Tab -ScriptBlock { Invoke-FzfTabCompletion }
-
+if (Get-Module PSFzf -ErrorAction SilentlyContinue)
+{
+    Import-Module PSFzf -Force
+    Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
+    Set-PSReadLineKeyHandler -Key Tab -ScriptBlock { Invoke-FzfTabCompletion }
+}
+    
 # Set editor environment variables
 $env:EDITOR = 'nvim'
 $env:VISUAL = $env:EDITOR
@@ -175,7 +176,3 @@ function git
 }
 
 Import-Module Posh
-# }
-#
-# # Import-ProfileAsync $AsyncScriptBlock
-# Import-ProfileAsync $AsyncScriptBlock -Verbose
