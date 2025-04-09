@@ -2,9 +2,37 @@
 # PowerShell 7 (pwsh)
 $env:POWERSHELL_TELEMETRY_OPTOUT = $true
 
+# Add my custom powershell modules to the psmodulepath
+# Make sure to use PathSeparator because windows uses ';' and Linux uses ':'
+$env:PSModulePath += "$([System.IO.Path]::PathSeparator)$HOME/Atelier/pwsh/MyModules/"
+
 # Most aliases are set in the module DotAlias so they can lazy load
 # However, some require the exiting alias to be removed
 Remove-Alias -Force diff, rmdir, sleep, sort, tee -ErrorAction  SilentlyContinue
+
+if ($IsLinux)
+{
+    function Add-ToPath
+    {
+        param(
+            [Parameter(Mandatory, ValueFromPipeline)]
+            [string]$NewPathItem
+        )
+        process
+        {
+            $env:PATH += [IO.Path]::PathSeparator + $NewPathItem
+        }
+    }
+
+    Get-Content $PSScriptRoot/AdditionalPathItems_Linux.txt
+    | Add-ToPath
+
+    if(Test-Path '/home/linuxbrew' -ErrorAction SilentlyContinue)
+    {
+        Invoke-Expression (& { (/home/linuxbrew/.linuxbrew/bin/brew shellenv | Out-String) })
+        Set-Alias -Name cd -Value z -Option AllScope -Force -Description 'DotAlias for zoxide special cd'
+    }
+}
 
 # Init Zoxide and set cd alias
 if (Get-Command zoxide -ErrorAction SilentlyContinue)
@@ -13,7 +41,7 @@ if (Get-Command zoxide -ErrorAction SilentlyContinue)
     Set-Alias -Name cd -Value z -Option AllScope -Force -Description 'DotAlias for zoxide special cd'
 }
 
-if (Get-Command zoxide -ErrorAction SilentlyContinue)
+if (Get-Command starship -ErrorAction SilentlyContinue)
 {
     # Set Starship prompt
     # Config file is located: ~/.config/starship.toml
@@ -141,28 +169,6 @@ $PSDefaultParameterValues = @{
     'Find-PSResource:Repository'        = 'PSGallery'   # Useful if you have private test repos
     'Install-PSResource:Repository'     = 'PSGallery'   # Useful if you have private test repos
     'Import-Module:DisableNameChecking' = $true         # To not warning me of functions or scripts not using verb-noun names
-}
-
-# Add my custom powershell modules to the psmodulepath
-# Make sure to use PathSeparator because windows uses ';' and Linux uses ':'
-$env:PSModulePath += "$([System.IO.Path]::PathSeparator)$HOME/Atelier/pwsh/MyModules/"
-
-if ($IsLinux)
-{
-    function Add-ToPath
-    {
-        param(
-            [Parameter(Mandatory, ValueFromPipeline)]
-            [string]$NewPathItem
-        )
-        process
-        {
-            $env:PATH += [IO.Path]::PathSeparator + $NewPathItem
-        }
-    }
-
-    Get-Content $PSScriptRoot/AdditionalPathItems_Linux.txt
-    | Add-ToPath
 }
 
 # Load git related powershell modules upon first call to git, then remove this function
