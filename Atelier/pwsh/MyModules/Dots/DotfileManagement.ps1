@@ -118,8 +118,12 @@ function Get-ExercismConfiguration
 
 function Get-AwesomeWmWidgets
 {
-    Write-Host "Install awesome-wm-widgets"
-    ~/.config/awesome/Update-awesome-wm-widgets-repo.ps1
+    if ($IsLinux)
+    {
+        Write-Host "Install awesome-wm-widgets"
+	mkdir -p ~/.config/awesome/
+        ~/.config/awesome/Update-awesome-wm-widgets-repo.ps1
+    }
 }
 
 function Get-AllConfigurations

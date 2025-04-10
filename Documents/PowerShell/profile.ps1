@@ -142,13 +142,13 @@ if ((Get-Command yazi -ErrorAction SilentlyContinue))
 }
 
 # PSFzf mappings
-if (Get-Module PSFzf -ErrorAction SilentlyContinue)
+if ((Get-Module PSFzf -ErrorAction SilentlyContinue -ListAvailable) -and (Get-Command fzf -ErrorAction SilentlyContinue))
 {
     Import-Module PSFzf -Force
     Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
     Set-PSReadLineKeyHandler -Key Tab -ScriptBlock { Invoke-FzfTabCompletion }
 }
-    
+
 # Set editor environment variables
 $env:EDITOR = 'nvim'
 $env:VISUAL = $env:EDITOR
