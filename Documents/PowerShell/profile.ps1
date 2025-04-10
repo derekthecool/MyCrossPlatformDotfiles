@@ -27,7 +27,7 @@ if ($IsLinux)
     Get-Content $PSScriptRoot/AdditionalPathItems_Linux.txt
     | Add-ToPath
 
-    if(Test-Path '/home/linuxbrew' -ErrorAction SilentlyContinue)
+    if (Test-Path '/home/linuxbrew' -ErrorAction SilentlyContinue)
     {
         Invoke-Expression (& { (/home/linuxbrew/.linuxbrew/bin/brew shellenv | Out-String) })
         Set-Alias -Name cd -Value z -Option AllScope -Force -Description 'DotAlias for zoxide special cd'
