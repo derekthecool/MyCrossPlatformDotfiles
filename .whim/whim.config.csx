@@ -50,7 +50,6 @@ void DoConfig(IContext context)
     //     fileSinkConfig.MinLogLevel = LogLevel.Debug;
     // }
 
-
     // YAML config. It's best to load this first so that you can use it in your C# config.
     YamlLoader.Load(context);
 
@@ -92,20 +91,6 @@ void DoConfig(IContext context)
     // );
 
 
-    // // https://dalyisaac.github.io/Whim/script/core/filtering.html?q=filter
-    new List<string>
-    {
-        "keypirinha_wndcls_run",
-        ".*Plover: Lookup.*",
-        ".*Plover: Add Translation.*",
-        "Upgrade_tool.exe",
-    }.ForEach(program =>
-    {
-        context.FilterManager.AddTitleMatchFilter(program);
-        context.FilterManager.AddWindowClassFilter(program);
-        context.FilterManager.AddProcessFileNameFilter(program);
-    });
-
     // Tips for finding window information:
     // Ideally you can use the workspacer debug window, however this has not
     // been working for me lately as of 2023.
@@ -125,11 +110,6 @@ void DoConfig(IContext context)
 
     // Web
     Route(new List<string> { "firefox", "brave" }, "web");
-
-    // // Chat
-    // new List<string> { "TeamsWebView" }.ForEach(program =>
-    //     context.RouterManager.AddWindowClassRoute(program, workspaces["chat"])
-    // );
 
     // Plover
     Route(new List<string> { "pythonw" }, "plover");
@@ -163,6 +143,27 @@ void DoConfig(IContext context)
     Route(docs_programs, "docs");
     Route(one_programs, "one");
     Route(three_programs, "three");
+
+    // // https://dalyisaac.github.io/Whim/script/core/filtering.html?q=filter
+    new List<string>
+    {
+        "keypirinha_wndcls_run",
+        ".*Plover: Lookup.*",
+        ".*Plover: Add Translation.*",
+        "Upgrade_tool.exe",
+        @"teams\.microsoft.com is sharing your.*",
+    }.ForEach(program =>
+    {
+        // Normal case insensitive string
+        context.FilterManager.AddTitleMatchFilter(program);
+        // Regex input
+        context.FilterManager.AddWindowClassFilter(program);
+        // Normal case insensitive string
+        context.FilterManager.AddProcessFileNameFilter(program);
+    });
+
+    // The best option for teams meeting compact view is to add this filter
+    context.FilterManager.AddWindowClassFilter("TeamsWebView");
 
     // }}}
 

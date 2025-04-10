@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=C:\Users\dlomax\AppData\Local\Programs\Whim\plugins\Whim.Yaml\schema.json
+# yaml-language-server: C:/Program Files/Whim/plugins/Whim.Yaml/schema.json
 workspaces:
   # workspaces are defined in ./whim.config.csx
   entries:
@@ -75,7 +75,8 @@ keybinds:
       keybind: Alt+8
     - command: whim.core.activate_workspace_9
       keybind: Alt+9
-
+    - command: whim.core.exit_whim
+      keybind: Alt+Shift+q
     - command: whim.core.restart_whim
       keybind: Alt+q
 
