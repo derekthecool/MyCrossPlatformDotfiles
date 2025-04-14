@@ -58,6 +58,9 @@ function Get-DotPackageList
         # TODO: (Derek Lomax) 3/28/2025 10:28:47 AM, Consider grouping by functionality such as web, terminal, programming languages etc. instead of OS.
         if ($IsWindows)
         {
+            # Needed for WSL
+            @{ Name = 'win32yank'; -Provider 'Scoop' },
+
             # Non-essential packages but still awesome
             @{ Name = 'adb' },
             @{ Name = 'btop' },

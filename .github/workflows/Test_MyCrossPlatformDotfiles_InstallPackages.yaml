@@ -49,5 +49,8 @@ jobs:
       - name: Install all packages
         run: |
           $env:PSModulePath += "$([System.IO.Path]::PathSeparator)./Atelier/pwsh/MyModules/"
+          Write-Host "Starting Install-DotPackages"
           Install-DotPackages
+          Write-Host "Ending Install-DotPackages"
+          Remove-Module *AnyPackage* -Force
           exit 0
