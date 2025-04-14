@@ -59,7 +59,7 @@ function Get-DotPackageList
         if ($IsWindows)
         {
             # Needed for WSL
-            @{ Name = 'win32yank'; -Provider 'Scoop' },
+            @{ Name = 'win32yank'; Provider = 'Scoop' },
 
             # Non-essential packages but still awesome
             @{ Name = 'adb' },
