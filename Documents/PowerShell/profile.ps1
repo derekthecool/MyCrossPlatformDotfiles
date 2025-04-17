@@ -10,38 +10,64 @@ $env:PSModulePath += "$([System.IO.Path]::PathSeparator)$HOME/Atelier/pwsh/MyMod
 # However, some require the exiting alias to be removed
 Remove-Alias -Force diff, rmdir, sleep, sort, tee -ErrorAction  SilentlyContinue
 
-if ($IsLinux)
+function Find-Program
 {
-    function Add-ToPath
+    param (
+        [Parameter(Mandatory = $true, Position = 0)]
+        [string]$Program,
+
+        [Parameter(Mandatory = $false, Position = 1)]
+        [string[]]$PossiblePaths
+    )
+
+    $PossiblePathsNotNull = $null -ne $PossiblePaths
+    Get-Variable Program, PossiblePaths, PossiblePathsNotNull
+    if($PossiblePathsNotNull)
     {
-        param(
-            [Parameter(Mandatory, ValueFromPipeline)]
-            [string]$NewPathItem
-        )
-        process
+        $result = Test-Path -Path $PossiblePaths
+        $AtLeastOnePathFound = ($result | Where-Object { $_ -eq $true }).Length -ge 1
+        Get-Variable result, AtLeastOnePathFound
+        if($AtLeastOnePathFound)
         {
-            $env:PATH += [IO.Path]::PathSeparator + $NewPathItem
+            return $true
         }
     }
 
-    Get-Content $PSScriptRoot/AdditionalPathItems_Linux.txt
-    | Add-ToPath
+    $find_program_job = Start-Job -ArgumentList $Program -ScriptBlock {
+        param($ProgramName)
+        [string]::IsNullOrEmpty((Get-Command -Name $ProgramName -ErrorAction SilentlyContinue).Path) -ne $true
+    }
 
-    if (Test-Path '/home/linuxbrew' -ErrorAction SilentlyContinue)
+    $MaximumDelaySeconds = 3
+    if(Wait-Job -Job $find_program_job -Timeout $MaximumDelaySeconds)
     {
-        Invoke-Expression (& { (/home/linuxbrew/.linuxbrew/bin/brew shellenv | Out-String) })
-        Set-Alias -Name cd -Value z -Option AllScope -Force -Description 'DotAlias for zoxide special cd'
+        $result = Receive-Job $find_program_job
+        return $result
+    } else
+    {
+        Write-Verbose "Timed out searching for $Program after $MaximumDelaySeconds seconds"
+        return $false
     }
 }
 
-# Init Zoxide and set cd alias
-if (Get-Command zoxide -ErrorAction SilentlyContinue)
+if ($IsLinux)
 {
-    Invoke-Expression (& { (zoxide init powershell | Out-String) })
-    Set-Alias -Name cd -Value z -Option AllScope -Force -Description 'DotAlias for zoxide special cd'
+    $CurrentPath = $env:PATH -split [IO.Path]::PathSeparator
+    Get-Content $PSScriptRoot/AdditionalPathItems_Linux.txt | ForEach-Object {
+        $Item = $_
+        if([string]::IsNullOrEmpty($Item) -eq $false -and $CurrentPath -notcontains $Item)
+        {
+            $env:PATH += [IO.Path]::PathSeparator + $Item
+        }
+    }
+
+    # if (Test-Path '/home/linuxbrew' -ErrorAction SilentlyContinue)
+    # {
+    #     Invoke-Expression (& { (/home/linuxbrew/.linuxbrew/bin/brew shellenv | Out-String) })
+    # }
 }
 
-if (Get-Command starship -ErrorAction SilentlyContinue)
+if (Find-Program -Program 'starship' -PossiblePaths "$HOME/scoop/ships/starship*", "/usr/local/bin/starship*")
 {
     # Set Starship prompt
     # Config file is located: ~/.config/starship.toml
@@ -113,7 +139,7 @@ Set-PSReadLineKeyHandler -Chord Ctrl+y `
     }
 }
 
-if ((Get-Command yazi -ErrorAction SilentlyContinue))
+if (Find-Program -Program 'yazi')
 {
     if ($IsWindows)
     {
@@ -142,7 +168,7 @@ if ((Get-Command yazi -ErrorAction SilentlyContinue))
 }
 
 # PSFzf mappings
-if ((Get-Module PSFzf -ErrorAction SilentlyContinue -ListAvailable) -and (Get-Command fzf -ErrorAction SilentlyContinue))
+if ((Find-Program -Program 'fzf' -PossiblePaths "$HOME/scoop/ships/starship*", "/usr/local/bin/starship*") -and (Get-Module PSFzf -ErrorAction SilentlyContinue -ListAvailable))
 {
     Import-Module PSFzf -Force
     Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
@@ -182,3 +208,11 @@ function git
 }
 
 Import-Module Posh
+
+# Init Zoxide and set cd alias
+# Add this to the end of your config file (find it by running echo $profile in PowerShell
+if (Find-Program -Program 'zoxide' -PossiblePaths "$HOME/.cargo/bin/zoxide*", "$HOME/scoop/shims/zoxide*")
+{
+    Invoke-Expression (& { (zoxide init powershell | Out-String) })
+    Set-Alias -Name cd -Value z -Option AllScope -Force -Description 'DotAlias for zoxide special cd'
+}

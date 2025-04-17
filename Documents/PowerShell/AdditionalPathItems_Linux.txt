@@ -3,3 +3,4 @@
 /var/lib/snapd/snap/bin
 ~/.cargo/bin
 ~/.pub-cache/bin
+/home/linuxbrew/.linuxbrew/bin/
