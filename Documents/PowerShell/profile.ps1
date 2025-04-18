@@ -22,12 +22,12 @@ function Find-Program
 
     $PossiblePathsNotNull = $null -ne $PossiblePaths
     Get-Variable Program, PossiblePaths, PossiblePathsNotNull
-    if($PossiblePathsNotNull)
+    if ($PossiblePathsNotNull)
     {
         $result = Test-Path -Path $PossiblePaths
         $AtLeastOnePathFound = ($result | Where-Object { $_ -eq $true }).Length -ge 1
         Get-Variable result, AtLeastOnePathFound
-        if($AtLeastOnePathFound)
+        if ($AtLeastOnePathFound)
         {
             return $true
         }
@@ -39,7 +39,7 @@ function Find-Program
     }
 
     $MaximumDelaySeconds = 3
-    if(Wait-Job -Job $find_program_job -Timeout $MaximumDelaySeconds)
+    if (Wait-Job -Job $find_program_job -Timeout $MaximumDelaySeconds)
     {
         $result = Receive-Job $find_program_job
         return $result
@@ -55,7 +55,7 @@ if ($IsLinux)
     $CurrentPath = $env:PATH -split [IO.Path]::PathSeparator
     Get-Content $PSScriptRoot/AdditionalPathItems_Linux.txt | ForEach-Object {
         $Item = $_
-        if([string]::IsNullOrEmpty($Item) -eq $false -and $CurrentPath -notcontains $Item)
+        if ([string]::IsNullOrEmpty($Item) -eq $false -and $CurrentPath -notcontains $Item)
         {
             $env:PATH += [IO.Path]::PathSeparator + $Item
         }
