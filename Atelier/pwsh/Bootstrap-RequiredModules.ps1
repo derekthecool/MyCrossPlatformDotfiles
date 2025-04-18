@@ -10,12 +10,16 @@ $RequiredModules = @(
     'Selenium'
     'Pester'
     'posh-git'
-    @{
-        ModuleName    = 'SimplySql'; ModuleVersion = '2.0.3.73'
-    },
-    @{
-        ModuleName    =  'Profiler'; ModuleVersion = '4.3.0'
-    }
+    'SimplySql'
+    'Profiler'
+
+    # https://github.com/dfinke/ImportExcel
+    # Easy excel for powershell
+    'ImportExcel'
+
+    # https://github.com/PSModule/Markdown
+    # easily create markdown items using simple functions
+    'Markdown'
 
     #region AnyPackage
     'AnyPackage'
@@ -25,6 +29,7 @@ $RequiredModules = @(
     'AnyPackage.Programs'
     'AnyPackage.DotNet.Tool'
     'AnyPackage.Apt'
+    'AnyPackage.Homebrew'
 
     # Available official anypackage providers that I don't want
     # 'AnyPackage.Wsl'
@@ -33,7 +38,6 @@ $RequiredModules = @(
     # 'AnyPackage.Msu'
     # 'AnyPackage.Msi'
     # 'AnyPackage.ModuleFast'
-    # 'AnyPackage.Homebrew'
     # 'AnyPackage.Chocolatey'
     #endregion
 )
