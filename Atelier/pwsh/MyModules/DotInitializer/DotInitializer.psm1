@@ -12,6 +12,13 @@ if ($IsLinux -and ($PSVersionTable.OS -match 'Ubuntu'))
     Import-Module 'AnyPackage.Apt'
 }
 
+if($IsLinux -or $IsMacOS)
+{
+    Install-Homebrew
+    Import-Module 'AnyPackage.Apt'
+}
+
+
 # Windows only
 if ($IsWindows)
 {
