@@ -17,6 +17,10 @@ $RequiredModules = @(
     # Easy excel for powershell
     'ImportExcel'
 
+    # https://github.com/EvotecIT/PSWriteOffice
+    # Easily create excel, word, and powerpoint
+    'PSWriteOffice'
+
     # https://github.com/PSModule/Markdown
     # easily create markdown items using simple functions
     'Markdown'
