@@ -22,6 +22,7 @@
         'Get-DotPackages'
         'Install-DotPackages'
         'Update-DotPackages'
+        'Set-WindowsRegistrySettings'
     )
 }
 
