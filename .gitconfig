@@ -64,3 +64,5 @@
 # https://stackoverflow.com/questions/72978485/git-submodule-update-failed-with-fatal-detected-dubious-ownership-in-reposit
 [safe]
 	directory = *
+[pager]
+	grep = false
