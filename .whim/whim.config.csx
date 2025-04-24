@@ -102,6 +102,7 @@ void DoConfig(IContext context)
         foreach (var program in programs)
         {
             context.RouterManager.AddProcessFileNameRoute($"{program}.exe", workspaces[workspace]);
+            context.RouterManager.AddWindowClassRoute($"{program}", workspaces[workspace]);
         }
     }
 
@@ -127,6 +128,13 @@ void DoConfig(IContext context)
         "okular",
         "MusicBee",
     };
+    Route(docs_programs, "docs");
+
+    var device_programs = new List<string>
+    {
+        "Qt650QWindowIcon",
+    };
+    Route(device_programs, "device");
 
     var one_programs = new List<string>
     {
@@ -136,12 +144,10 @@ void DoConfig(IContext context)
         // Remote desktop
         "mstsc",
     };
+    Route(one_programs, "one");
 
     // three programs
     var three_programs = new List<string> { "ConsoleWindowClass", "WindowsTerminal" };
-
-    Route(docs_programs, "docs");
-    Route(one_programs, "one");
     Route(three_programs, "three");
 
     // // https://dalyisaac.github.io/Whim/script/core/filtering.html?q=filter
