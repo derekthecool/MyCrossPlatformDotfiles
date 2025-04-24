@@ -66,3 +66,5 @@
 	directory = *
 [pager]
 	grep = false
+[push]
+	autoSetupRemote = true
