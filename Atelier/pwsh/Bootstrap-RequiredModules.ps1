@@ -25,6 +25,10 @@ $RequiredModules = @(
     # easily create markdown items using simple functions
     'Markdown'
 
+    # https://github.com/cloudbase/powershell-yaml
+    # Adds the much needed powershell support for yaml like json (ConvertFrom-Yaml, ConvertTo-Yaml)
+    'powershell-yaml'
+
     #region AnyPackage
     'AnyPackage'
     'AnyPackage.WinGet'
