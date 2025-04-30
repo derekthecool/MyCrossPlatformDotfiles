@@ -4,6 +4,9 @@
 
 Describe 'DotPcap tests' {
     It 'Function Read-Pcap works' {
-        Read-Pcap 23 | Should -Be -Not $null
+        $file = "$PSScriptRoot/../ExamplePcap/200722_tcp_anon.pcapng"
+        $result = Read-Pcap -Path $file
+        $result.Length | Should -Be 35
+        $result[0].HardwareAddress | Should -Be 'ECF4BB96120E'
     }
 }
