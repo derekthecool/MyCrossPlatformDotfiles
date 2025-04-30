@@ -1,8 +1,10 @@
-function Install-Homebrew {
+function Install-Homebrew
+{
     [CmdletBinding()]
     param()
 
-    try {
+    try
+    {
         if($IsWindows)
         {
             Write-Error "Windows is not supported"
@@ -10,7 +12,8 @@ function Install-Homebrew {
         }
 
         # Check if Homebrew is already installed
-        if (Get-Command brew -ErrorAction SilentlyContinue) {
+        if (Get-Command brew -ErrorAction SilentlyContinue)
+        {
             Write-Host "Homebrew is already installed."
             return
         }
@@ -20,21 +23,39 @@ function Install-Homebrew {
         bash -c "curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash"
 
         # Set up Homebrew environment
-        if ($IsMacOS) {
+        if ($IsMacOS)
+        {
             $brewPath = "/opt/homebrew/bin/brew"
-        } elseif ($IsLinux) {
+        } elseif ($IsLinux)
+        {
             $brewPath = "/home/linuxbrew/.linuxbrew/bin/brew"
         }
 
-        if (Test-Path $brewPath) {
+        if (Test-Path $brewPath)
+        {
             $shellEnvCmd = "$brewPath shellenv"
             Invoke-Expression (& $brewPath shellenv)
             Write-Host "Homebrew installed and environment configured for current session."
-        } else {
+        } else
+        {
             Write-Warning "Homebrew installed, but path not found. You may need to add it manually to your shell profile."
         }
 
-    } catch {
+    } catch
+    {
+        $errorMessage = $_.Exception.Message
+        $stackTrace = $_.ScriptStackTrace
+        $innerException = $_.Exception.InnerException
+
+        Write-Error "An error occurred during installation:"
+        Write-Error "Message        : $errorMessage"
+        Write-Error "Stack Trace    : $stackTrace"
+
+        if ($innerException)
+        {
+            Write-Error "Inner Exception: $($innerException.Message)"
+        }
+
         Write-Error "An error occurred during installation: $_"
     }
 }
