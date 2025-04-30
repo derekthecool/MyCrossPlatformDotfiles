@@ -20,6 +20,7 @@
         'Get-AdbImages'
         'New-AdbScreenshot'
         'Update-AndroidApplications'
+        'Get-AdbLogCode'
     )
 }
 
