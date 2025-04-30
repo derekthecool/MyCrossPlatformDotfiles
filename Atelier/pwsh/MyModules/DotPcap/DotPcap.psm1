@@ -16,7 +16,7 @@ if (-not $BuildExists -or $env:FORCE_DOT_REBUILD)
 
     Write-Host "Building $Lang binary module $PSScriptRoot"
 
-    dotnet publish $PSScriptRoot/DotPcap.csproj --verbosity normal | Write-Verbose -Verbose
+    dotnet publish $PSScriptRoot/DotPcap.csproj --verbosity normal
     if ($LASTEXITCODE -ne 0)
     {
         dotnet --list-sdks
