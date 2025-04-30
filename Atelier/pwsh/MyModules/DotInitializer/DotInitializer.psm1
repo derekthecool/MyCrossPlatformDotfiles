@@ -14,7 +14,7 @@ if ($IsLinux -and ($PSVersionTable.OS -match 'Ubuntu'))
 
 if ($IsLinux -or $IsMacOS)
 {
-    Install-Homebrew
+    Install-Homebrew -Verbose
     Import-Module 'AnyPackage.Homebrew'
 }
 
