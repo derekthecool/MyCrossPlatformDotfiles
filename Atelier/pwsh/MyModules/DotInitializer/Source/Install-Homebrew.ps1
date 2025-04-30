@@ -47,15 +47,15 @@ function Install-Homebrew
         $stackTrace = $_.ScriptStackTrace
         $innerException = $_.Exception.InnerException
 
-        Write-Error "An error occurred during installation:"
-        Write-Error "Message        : $errorMessage"
-        Write-Error "Stack Trace    : $stackTrace"
+        Write-Verbose "An error occurred during installation:"
+        Write-Verbose "Message        : $errorMessage"
+        Write-Verbose "Stack Trace    : $stackTrace"
 
         if ($innerException)
         {
-            Write-Error "Inner Exception: $($innerException.Message)"
+            Write-Verbose "Inner Exception: $($innerException.Message)"
         }
 
-        Write-Error "An error occurred during installation: $_"
+        Write-Verbose "An error occurred during installation: $_"
     }
 }
