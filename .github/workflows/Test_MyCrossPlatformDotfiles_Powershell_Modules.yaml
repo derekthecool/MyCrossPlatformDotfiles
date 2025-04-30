@@ -25,7 +25,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        lfs: true
+        # checkout all files including binary ones
+        with:
+          lfs: true
 
       - name: Install required powershell modules
         run: ./Atelier/pwsh/Bootstrap-RequiredModules.ps1
