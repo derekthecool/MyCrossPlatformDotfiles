@@ -18,8 +18,6 @@ function Get-AdbLogCode
         Write-Host "Code found"
         Set-Clipboard $code_match.Value
         $code_match.Value
-
-        adb shell rm $file
     } else
     {
         Write-Error "Code not found"
