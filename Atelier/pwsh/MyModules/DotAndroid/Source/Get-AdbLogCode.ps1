@@ -6,14 +6,14 @@ function Get-AdbLogCode
     Write-Host "Device connected" -ForegroundColor Green
     $code_file = adb shell cat $file
 
-    if([string]::IsNullOrEmpty($code_file))
+    if ([string]::IsNullOrEmpty($code_file))
     {
         Write-Error "file $file is empty"
         return
     }
 
     $code_match = ([regex]'(\d+)').Match($($code_file))
-    if($code_match.Success)
+    if ($code_match.Success)
     {
         Write-Host "Code found"
         Set-Clipboard $code_match.Value

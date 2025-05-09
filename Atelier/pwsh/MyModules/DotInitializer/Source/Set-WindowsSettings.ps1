@@ -1,6 +1,6 @@
 function Set-WindowsRegistrySettings
 {
-    if($IsWindows)
+    if ($IsWindows)
     {
         # Show file extension in explorer
         Write-Host "Set file explorer extension to be visible" -ForegroundColor Green
@@ -17,7 +17,7 @@ function Set-WindowsRegistrySettings
             New-Item -Path $RegistryKeyPath -ItemType Directory -Force
         }
         New-ItemProperty -Path $RegistryKeyPath -Name AllowDevelopmentWithoutDevLicense -PropertyType DWORD -Value 1 -ErrorAction Continue
-        if(-not $?)
+        if (-not $?)
         {
             Write-Error "Setting the developer mode registry item requires admin access"
         }

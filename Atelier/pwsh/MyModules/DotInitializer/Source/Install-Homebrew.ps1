@@ -5,7 +5,7 @@ function Install-Homebrew
 
     try
     {
-        if($IsWindows)
+        if ($IsWindows)
         {
             Write-Error "Windows is not supported"
             return

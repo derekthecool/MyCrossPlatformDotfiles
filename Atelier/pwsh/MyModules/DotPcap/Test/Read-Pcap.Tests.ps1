@@ -1,11 +1,11 @@
-﻿BeforeAll {
+BeforeAll {
     Import-Module $PSScriptRoot/../*.psd1 -Force
 }
 
 Describe 'DotPcap tests' {
     It 'Function Read-Pcap works' -Skip:($env:CI -ne '') {
         $file = "$PSScriptRoot/../ExamplePcap/200722_tcp_anon.pcapng"
-        if([System.IO.File]::Exists($file))
+        if ([System.IO.File]::Exists($file))
         {
             return
         }
