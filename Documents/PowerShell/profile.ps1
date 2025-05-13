@@ -208,6 +208,8 @@ function git
 }
 
 Import-Module Posh
+# TODO: (Derek Lomax) 5/13/2025 3:46:29 PM, Move this to some other async loader, this always takes 2 seconds
+Import-Module DotBeautiful
 
 # Init Zoxide and set cd alias
 # Add this to the end of your config file (find it by running echo $profile in PowerShell

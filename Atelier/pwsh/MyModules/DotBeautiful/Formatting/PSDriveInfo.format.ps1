@@ -3,7 +3,7 @@
 # Generated output located ../Dots.format.ps1xml
 Write-FormatView `
     -TypeName 'System.Management.Automation.PSDriveInfo' `
-    -Name DotsRegexView `
+    -Name DotsPSDriveInfoView `
     -Property Name, Used, Root, Description `
     -VirtualProperty @{
     Used = {
