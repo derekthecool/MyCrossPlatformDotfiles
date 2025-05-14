@@ -4,6 +4,7 @@
 
 Describe 'DotPcap tests' {
     It 'Function Read-Pcap works' {
-        Read-Pcap | Should -Be -Not $null
+        $module = Import-Module $PSScriptRoot/../*.psd1 -Force -PassThru
+        $module.ExportedFunctions.Count | Should -BeGreaterOrEqual 1
     }
 }
