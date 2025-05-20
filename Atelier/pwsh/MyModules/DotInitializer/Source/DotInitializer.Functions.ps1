@@ -18,6 +18,7 @@ function Get-DotPackageList
             @{ Name = 'gh' },
             @{ Name = 'go' },
             @{ Name = 'nodejs' },
+            @{ Name = 'yarn' },
             @{ Name = 'podman' },
             @{ Name = 'docker-compose' },
             @{ Name = 'python' },
