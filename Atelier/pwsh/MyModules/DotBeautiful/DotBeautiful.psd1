@@ -1,4 +1,4 @@
-﻿@{
+@{
     RootModule        = 'DotBeautiful.psm1'
     ModuleVersion     = '0.1.0'
     GUID              = 'a616240a-5394-4c60-b2d5-f345ff624e01'

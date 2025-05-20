@@ -1,4 +1,4 @@
-﻿BeforeAll {
+BeforeAll {
     Import-Module $PSScriptRoot/../*.psd1 -Force
 }
 

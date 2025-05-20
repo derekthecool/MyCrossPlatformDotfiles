@@ -1,4 +1,4 @@
-﻿@{
+@{
     RootModule        = 'DotPcap.psm1'
     ModuleVersion     = '0.1.0'
     GUID              = '8b1d6929-c04d-4713-9135-888800ef219c'

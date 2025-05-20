@@ -1,4 +1,4 @@
-﻿Describe 'DotBeautiful tests' {
+Describe 'DotBeautiful tests' {
     It 'No functions should be included' {
         $functions = Import-Module $PSScriptRoot/../DotBeautiful.psd1 -PassThru
         $functions.ExportedFunctions.Count | Should -Be 0

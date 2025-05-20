@@ -1,4 +1,4 @@
-﻿<#
+<#
     .SYNOPSIS
     pcap/pcapng packet analysis helper
 
@@ -18,13 +18,13 @@ function Read-Pcap
         [string]$PcapPath
     )
 
-    if(-not $(Get-Command tshark -ErrorAction SilentlyContinue))
+    if (-not $(Get-Command tshark -ErrorAction SilentlyContinue))
     {
         Write-Error "The command [tshark] not found, cannot continue program"
         return
     }
 
-    if(-not (Test-Path $PcapPath))
+    if (-not (Test-Path $PcapPath))
     {
         Write-Error "The input file $PcapPath is not found"
         return
