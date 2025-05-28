@@ -107,6 +107,8 @@ Set-PSReadLineOption @PSReadLineOptions
 $PSStyle.Progress.UseOSCIndicator = $true
 
 # Custom key mappings
+# Set-PSReadLineKeyHandler -Chord Ctrl+b -Function YankLastArg
+# Set-PSReadLineKeyHandler -Chord Ctrl+w -Function YankNthArg
 Set-PSReadLineKeyHandler -Chord Ctrl+u -Function PreviousHistory
 Set-PSReadLineKeyHandler -Chord Ctrl+d -Function NextHistory
 Set-PSReadLineKeyHandler -Chord × -Function DeleteEndOfBuffer
@@ -137,6 +139,25 @@ Set-PSReadLineKeyHandler -Chord Ctrl+y `
         [Microsoft.PowerShell.PSConsoleReadLine]::Replace(0, $line.Length, '(' + $line + ')')
         [Microsoft.PowerShell.PSConsoleReadLine]::EndOfLine()
     }
+}
+
+Set-PSReadLineKeyHandler -Chord Ctrl+w `
+    -BriefDescription UpOneDirectory `
+    -LongDescription 'Move up one directory' `
+    -ScriptBlock {
+    [Microsoft.PowerShell.PSConsoleReadLine]::RevertLine()
+    Push-Location -StackName PSReadLine
+    Set-Location ..
+    [Microsoft.PowerShell.PSConsoleReadLine]::AcceptLine()
+}
+
+Set-PSReadLineKeyHandler -Chord Ctrl+Alt+w `
+    -BriefDescription UpOneDirectory `
+    -LongDescription 'Move back one directory' `
+    -ScriptBlock {
+    [Microsoft.PowerShell.PSConsoleReadLine]::RevertLine()
+    Pop-Location -StackName PSReadLine
+    [Microsoft.PowerShell.PSConsoleReadLine]::AcceptLine()
 }
 
 if (Find-Program -Program 'yazi')
