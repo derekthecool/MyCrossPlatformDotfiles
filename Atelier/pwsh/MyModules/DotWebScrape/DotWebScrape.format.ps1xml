@@ -50,7 +50,6 @@
             <Label>Html</Label>
           </TableColumnHeader>
           <TableColumnHeader>
-            <Label>TextContent</Label>
           </TableColumnHeader>
         </TableHeaders>
         <TableRowEntries>
@@ -66,7 +65,7 @@
                 <ScriptBlock> $_.OuterHtml -replace '\s+', ' ' </ScriptBlock>
               </TableColumnItem>
               <TableColumnItem>
-                <ScriptBlock> [string]::IsNullOrWhiteSpace($_.TextContent) ? 'empty' : $_.TextContent </ScriptBlock>
+                <PropertyName>TextContent</PropertyName>
               </TableColumnItem>
             </TableColumnItems>
           </TableRowEntry>

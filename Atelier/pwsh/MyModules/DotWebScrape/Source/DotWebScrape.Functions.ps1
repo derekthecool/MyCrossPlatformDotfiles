@@ -1,32 +1,32 @@
-﻿class WebScrape
-{
-    [string]$Flags
-    [string]$TextContent
-    [string]$Attributes
-    [int]$Children
-    [string]$ClassName
-}
+﻿<#
+    .SYNOPSIS
+    Web scraping in powershell made easy
 
+    .DESCRIPTION
+    This function uses the module https://github.com/EvotecIT/PSParseHTML which itself includes two
+    dotnet packages AngleSharp and HtmlAgilityPack
+
+    .PARAMETER Url
+    Link to site to scrape
+
+    .PARAMETER QuerySelectorFilter
+    CSS query selector to filter, defaults to using * which will show all children recursively
+
+    .EXAMPLE
+    PS> Add-Extension -name "File"
+#>
 function Get-Site
 {
-
     param (
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [string]$Url,
 
-        [string]$QuerySelectorFilter = ""
-
+        # Default to using * for the query filter to select everything recursively
+        [string]$QuerySelectorFilter = "*"
     )
 
     $result = ConvertFrom-Html -Url $Url -Engine AngleSharp
-    if($QuerySelectorFilter)
-    {
-        $result.Children[1].Children.QuerySelectorAll($QuerySelectorFilter)
-    }
-    else
-    {
-        $result.Children[1].Children
-    }
+    $result.Children[1].Children.QuerySelectorAll($QuerySelectorFilter)
 }
 
 New-Alias -Name 'scrape' -Value Get-Site

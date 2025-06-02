@@ -29,6 +29,11 @@ $RequiredModules = @(
     # Adds the much needed powershell support for yaml like json (ConvertFrom-Yaml, ConvertTo-Yaml)
     'powershell-yaml'
 
+    # https://github.com/EvotecIT/PSParseHTML
+    # Amazing module that helps make web scraping easy
+    # Used by ./MyModules/DotWebScrape/
+    'PSParseHTML'
+
     #region AnyPackage
     'AnyPackage'
     'AnyPackage.WinGet'
