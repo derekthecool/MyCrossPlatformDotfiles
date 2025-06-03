@@ -18,9 +18,11 @@
     CmdletsToExport   = @()
     AliasesToExport   = @(
         'scrape'
+        'text'
     )
     FunctionsToExport = @(
         'Get-Site'
+        'Get-SiteText'
     )
 }
 
