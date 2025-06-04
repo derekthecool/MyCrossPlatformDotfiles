@@ -4,7 +4,6 @@
     GUID              = '9f16aa9b-62cf-46c9-bc6a-005c4eb08c6a'
     Author            = 'Derek Lomax'
     Description       = 'Module for initializing my cross platform array of cross platform computers'
-    PowerShellVersion = '7.4'
     PrivateData       = @{
         PSData = @{
             Tags = @('dots')

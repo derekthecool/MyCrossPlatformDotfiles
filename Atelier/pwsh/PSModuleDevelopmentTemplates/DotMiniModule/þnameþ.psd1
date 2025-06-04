@@ -4,7 +4,6 @@
     GUID              = 'þ!guid!þ'
     Author            = 'Derek Lomax'
     Description       = 'þDescriptionþ'
-    PowerShellVersion = '7.4'
     PrivateData       = @{
         PSData = @{
             Tags = @('dots')
@@ -16,7 +15,9 @@
     # must be explicitly set! Never use * because the module will not load if that item is called.
 
     CmdletsToExport   = @()
-    AliasesToExport   = @()
+    AliasesToExport   = @(
+        'þFirst-FunctionAliasþ'
+    )
     FunctionsToExport = @(
         'þFirst-Functionþ'
     )

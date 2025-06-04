@@ -4,7 +4,6 @@
     GUID              = 'a989056c-1729-4431-a082-b87c21ccca3b'
     Author            = 'Derek Lomax'
     Description       = 'Helper functions to use conventional commits in my workflows'
-    PowerShellVersion = '7.4'
     PrivateData       = @{
         PSData = @{
             Tags = @('dots')

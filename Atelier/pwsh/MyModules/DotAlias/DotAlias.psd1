@@ -4,7 +4,6 @@
     GUID              = 'd607bab7-58b8-4fa9-9ade-1ca1ef16bae7'
     Author            = 'Derek Lomax'
     Description       = 'Collection of powershell aliases which will be lazy loaded'
-    PowerShellVersion = '7.4'
     PrivateData       = @{
         PSData = @{
             Tags = @('dots')

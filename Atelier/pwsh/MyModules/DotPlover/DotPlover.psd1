@@ -4,7 +4,6 @@
     GUID              = '57a53bc4-e79f-48d3-b6c5-2ad83ba6052b'
     Author            = 'Derek Lomax'
     Description       = 'Helpful module to run plover_console commands more easily'
-    PowerShellVersion = '7.4'
     PrivateData       = @{
         PSData = @{
             Tags = @('dots')

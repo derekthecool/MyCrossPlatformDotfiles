@@ -4,7 +4,6 @@
     GUID              = '2bbabdf4-23c8-4ae2-be9c-8192842a3c10'
     Author            = 'Derek Lomax'
     Description       = 'Core function for bare repository management. Quick loading is essential.'
-    PowerShellVersion = '7.4'
     PrivateData       = @{
         PSData = @{
             Tags = @('dots')

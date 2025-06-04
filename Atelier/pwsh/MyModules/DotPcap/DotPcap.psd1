@@ -4,7 +4,6 @@
     GUID              = '8b1d6929-c04d-4713-9135-888800ef219c'
     Author            = 'Derek Lomax'
     Description       = 'Simple powershell pcap helper functions'
-    PowerShellVersion = '7.4'
     PrivateData       = @{
         PSData = @{
             Tags = @('dots')

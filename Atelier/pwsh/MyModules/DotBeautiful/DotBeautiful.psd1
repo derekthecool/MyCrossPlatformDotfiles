@@ -4,7 +4,6 @@
     GUID              = 'a616240a-5394-4c60-b2d5-f345ff624e01'
     Author            = 'Derek Lomax'
     Description       = 'Formatting and display helpers using EZOut. Basically a mini Posh: formatting only module.'
-    PowerShellVersion = '7.4'
     PrivateData       = @{
         PSData = @{
             Tags = @('dots')

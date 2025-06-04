@@ -4,7 +4,6 @@
     GUID              = '3c51f361-f9f6-4076-bbb3-5832f040ca3d'
     Author            = 'Derek Lomax'
     Description       = 'Module to manage PSModuleDevelopment custom templates'
-    PowerShellVersion = '7.4'
     PrivateData       = @{
         PSData = @{
             Tags = @('dots')

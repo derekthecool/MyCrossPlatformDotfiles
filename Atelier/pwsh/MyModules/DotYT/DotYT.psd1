@@ -4,7 +4,6 @@
     GUID              = 'eb74faa9-af67-4001-b672-acd52c8fb357'
     Author            = 'Derek Lomax'
     Description       = 'Functions for YT'
-    PowerShellVersion = '7.4'
     PrivateData       = @{
         PSData = @{
             Tags = @('dots', 'binary_module', 'compile_on_import')

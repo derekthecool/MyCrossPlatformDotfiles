@@ -4,7 +4,6 @@
     GUID              = 'þ!guid!þ'
     Author            = 'Derek Lomax'
     Description       = 'þDescriptionþ'
-    PowerShellVersion = '7.4'
     PrivateData       = @{
         PSData = @{
             Tags = @('dots', 'binary_module', 'compile_on_import')

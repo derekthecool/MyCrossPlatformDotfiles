@@ -4,7 +4,6 @@
     GUID              = '5705eff0-ddf3-48ff-a2e6-aa174404edb3'
     Author            = 'Derek Lomax'
     Description       = 'Module for simple web scraping tasks'
-    PowerShellVersion = '7.4'
     PrivateData       = @{
         PSData = @{
             Tags = @('dots')
