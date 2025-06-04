@@ -34,6 +34,10 @@ $RequiredModules = @(
     # Used by ./MyModules/DotWebScrape/
     'PSParseHTML'
 
+    # https://github.com/drewgreenwell/ps-menu
+    # Plain is simple tui for selecting items interactively, better than Read-Host!
+    'ps-menu'
+
     #region AnyPackage
     'AnyPackage'
     'AnyPackage.WinGet'
