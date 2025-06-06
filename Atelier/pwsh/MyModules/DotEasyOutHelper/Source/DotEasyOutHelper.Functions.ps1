@@ -7,6 +7,7 @@
         [switch]$Interactive
     )
 
+    # I used module PSScriptTools helper function New-PSDynamicParameter to generate this dynamic param
     dynamicparam
     {
         if (-not $PSBoundParameters['Interactive'])
