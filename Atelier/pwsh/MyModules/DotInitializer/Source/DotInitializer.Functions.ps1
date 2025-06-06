@@ -54,6 +54,8 @@ function Get-DotPackageList
         # Linux only: TODO: (Derek Lomax) 3/28/2025 10:20:23 AM, This section will need to lot of work to support Ubuntu, Arch, etc.
         if ($IsLinux)
         {
+            # Cool wsl package which helps to open windows default browser
+            @{ Name = 'wslu' }
         }
 
         # TODO: (Derek Lomax) 3/28/2025 10:28:47 AM, Consider grouping by functionality such as web, terminal, programming languages etc. instead of OS.
