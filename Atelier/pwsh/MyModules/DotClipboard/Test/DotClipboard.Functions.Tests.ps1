@@ -28,8 +28,18 @@ Describe 'DotClipboard tests' {
             Length = 5
             ClipBoard = "hello`nworld`tthis, should       work"
         }
+        # Stripping empty white space items
+        @{
+            Length = 2
+            ClipBoard = "1,,,,5"
+        }
     ) {
         $ClipBoard | Set-Clipboard
         Get-ClipboardAsArray | Should -HaveCount $Length
+    }
+
+    It 'Json format works' {
+        '1,2, 3, 4, 5' | Set-Clipboard
+        Get-ClipboardAsArray -Json | Should -Be '["1","2","3","4","5"]'
     }
 }
