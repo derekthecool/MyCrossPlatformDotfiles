@@ -132,7 +132,9 @@ void DoConfig(IContext context)
 
     var device_programs = new List<string>
     {
+        // Internal python applications
         "Qt650QWindowIcon",
+        "Qt690QWindowIcon",
     };
     Route(device_programs, "device");
 
