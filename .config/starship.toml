@@ -7,10 +7,7 @@ right_format = ""
 continuation_prompt = '[▶▶ ](purple)'
 scan_timeout = 30
 command_timeout = 400
-add_newline = false
-
-[line_break]
-disabled = true
+add_newline = true
 
 [character]
 success_symbol = '[➜](bold green)'
