@@ -114,6 +114,10 @@ Set-PSReadLineKeyHandler -Chord Ctrl+d -Function NextHistory
 Set-PSReadLineKeyHandler -Chord × -Function DeleteEndOfBuffer
 # Somehow Ctrl+Alt+H  == Backspace. Does not seem to work in a neovim terminal
 Set-PSReadLineKeyHandler -Chord Ctrl+Alt+H -Function BackwardDeleteWord
+Set-PSReadLineKeyHandler -Chord Ctrl+Shift+y -ScriptBlock {
+    Get-History | Select-Object -Last 1 -ExpandProperty CommandLine | Set-Clipboard
+    Write-Host "Saved the last command to clipboard"
+}
 
 # Put parentheses around the selection or entire line and move the cursor to after the closing paren
 Set-PSReadLineKeyHandler -Chord Ctrl+y `
@@ -193,7 +197,8 @@ if ((Find-Program -Program 'fzf' -PossiblePaths "$HOME/scoop/ships/starship*", "
 {
     Import-Module PSFzf -Force
     Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
-    Set-PSReadLineKeyHandler -Key Tab -ScriptBlock { Invoke-FzfTabCompletion }
+    Set-PSReadLineKeyHandler -Key Tab -BriefDescription 'Use PSFZF as tab completion helper' -ScriptBlock { Invoke-FzfTabCompletion }
+    Set-PSReadLineKeyHandler -Chord Ctrl+m -BriefDescription 'Run PSFZF Invoke-FuzzySetLocation for easier deep navigation' -ScriptBlock { Invoke-FuzzySetLocation }
 }
 
 # Set editor environment variables
