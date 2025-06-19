@@ -148,6 +148,10 @@ void DoConfig(IContext context)
     };
     Route(one_programs, "one");
 
+    // two programs
+    var two_programs = new List<string> { "Wireshark",};
+    Route(two_programs, "two");
+
     // three programs
     var three_programs = new List<string> { "ConsoleWindowClass", "WindowsTerminal" };
     Route(three_programs, "three");
@@ -212,9 +216,6 @@ void DoConfig(IContext context)
     context.WindowRouter.RouteProcessName("dotnet", MyWorkSpaceNames.PlusThree);
     context.WindowRouter.RouteTitle(@"C:\Program Files\dotnet\dotnet.exe", MyWorkSpaceNames.PlusThree);
     context.WindowRouter.RouteProcessName("WindowsTerminal", MyWorkSpaceNames.PlusThree);
-
-    // Wireshark
-    context.WindowRouter.RouteProcessName("Wireshark", MyWorkSpaceNames.PlusThree);
 
     // Zoom and Teams video calls
     context.WindowRouter.RouteProcessName("Zoom", MyWorkSpaceNames.PlusOne);
