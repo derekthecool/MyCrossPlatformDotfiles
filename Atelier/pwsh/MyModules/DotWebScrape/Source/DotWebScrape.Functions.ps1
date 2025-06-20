@@ -1,4 +1,4 @@
-﻿<#
+<#
     .SYNOPSIS
     Web scraping in powershell made easy
 

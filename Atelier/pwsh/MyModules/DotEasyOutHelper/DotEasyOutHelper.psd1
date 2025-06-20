@@ -1,4 +1,4 @@
-﻿@{
+@{
     RootModule        = 'DotEasyOutHelper.psm1'
     ModuleVersion     = '0.1.0'
     GUID              = '41339f68-7de4-4625-a174-8426292f2bd8'

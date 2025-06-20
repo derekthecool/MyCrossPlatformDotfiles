@@ -1,4 +1,4 @@
-﻿@{
+@{
     RootModule        = 'DotClipboard.psm1'
     ModuleVersion     = '0.1.0'
     GUID              = '56ffda10-03e5-41d3-af90-8cf848df1897'

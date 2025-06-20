@@ -7,16 +7,18 @@ Push-Location $myRoot
 $formatting = @(
     # Add your own Write-FormatView here,
     # or put them in a Formatting or Views directory
-    foreach ($potentialDirectory in 'Formatting','Views','Types') {
+    foreach ($potentialDirectory in 'Formatting', 'Views', 'Types')
+                                                    {
         Join-Path $myRoot $potentialDirectory |
             Get-ChildItem -ea ignore |
-            Import-FormatView -FilePath {$_.Fullname}
+            Import-FormatView -FilePath { $_.Fullname }
     }
 )
 
 $destinationRoot = $myRoot
 
-if ($formatting) {
+if ($formatting)
+{
     $myFormatFilePath = Join-Path $destinationRoot "$myModuleName.format.ps1xml"
     # You can also output to multiple paths by passing a hashtable to -OutputPath.
     $formatting | Out-FormatData -Module $MyModuleName -OutputPath $myFormatFilePath
@@ -31,7 +33,8 @@ $types = @(
 
 )
 
-if ($types) {
+if ($types)
+{
     $myTypesFilePath = Join-Path $destinationRoot "$myModuleName.types.ps1xml"
     # You can also output to multiple paths by passing a hashtable to -OutputPath.
     $types | Out-TypeData -OutputPath $myTypesFilePath

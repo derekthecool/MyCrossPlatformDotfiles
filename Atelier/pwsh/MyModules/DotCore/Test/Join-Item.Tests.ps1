@@ -1,6 +1,6 @@
-﻿BeforeAll {
+BeforeAll {
     Import-Module $PSScriptRoot/../*.psd1 -Force
-    $items = 1 .. 5 | ForEach-Object {  [PSCustomObject]@{Index = $_; Sum = $_ * 2}}
+    $items = 1 .. 5 | ForEach-Object { [PSCustomObject]@{Index = $_; Sum = $_ * 2 } }
 }
 
 Describe 'DotCore tests' {

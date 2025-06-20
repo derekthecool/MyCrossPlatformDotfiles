@@ -1,4 +1,4 @@
-﻿@{
+@{
     RootModule        = 'DotCore.psm1'
     ModuleVersion     = '0.1.0'
     GUID              = 'c188bcf0-9fba-460d-befd-001c5ff45abf'

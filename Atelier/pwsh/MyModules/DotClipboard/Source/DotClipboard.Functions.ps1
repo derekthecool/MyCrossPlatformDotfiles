@@ -1,4 +1,4 @@
-﻿function Get-ClipboardAsArray
+function Get-ClipboardAsArray
 {
     param (
         [Parameter(Position = 0)]
@@ -8,7 +8,7 @@
 
     $items = (Get-Clipboard) -split $Separator | Where-Object { -not [string]::IsNullOrEmpty($_) }
 
-    if($Json)
+    if ($Json)
     {
         $items | ConvertTo-Json -Compress
     } else

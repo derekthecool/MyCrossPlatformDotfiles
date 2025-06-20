@@ -1,4 +1,4 @@
-﻿<#
+<#
     .SYNOPSIS
     Adds a file name extension to a supplied name.
 
@@ -15,15 +15,15 @@ function Get-PloverPath
 {
     switch ($null)
     {
-        {$IsWindows}
+        { $IsWindows }
         {
             return (Get-ChildItem "$env:PROGRAMFILES/Open Steno Project/Plover*/plover_console*").FullName
         }
-        {$IsLinux}
+        { $IsLinux }
         {
             throw 'TODO support Linux appimage path search'
         }
-        {$IsMacOS}
+        { $IsMacOS }
         {
             Get-ChildItem "/Applications/Plover.app/Contents/MacOS/Plover"
         }
@@ -37,7 +37,7 @@ function Get-PloverPath
 function Invoke-Plover
 {
     $ploverPath = Get-PloverPath
-    if(-not $ploverPath)
+    if (-not $ploverPath)
     {
         throw 'Could not find plover_console'
     }
@@ -54,15 +54,15 @@ function Get-PloverConfigurationDirectory
 {
     switch ($null)
     {
-        {$IsWindows}
+        { $IsWindows }
         {
             "$env:LOCALAPPDATA/Plover/Plover"
         }
-        {$IsLinux}
+        { $IsLinux }
         {
             "$HOME/.config/plover"
         }
-        {$IsMacOS}
+        { $IsMacOS }
         {
             "$HOME/Library/Application Support/plover"
         }

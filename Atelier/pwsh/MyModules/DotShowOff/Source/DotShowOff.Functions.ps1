@@ -1,4 +1,4 @@
-﻿function Show-Object
+function Show-Object
 {
     [CmdletBinding()]
     param (

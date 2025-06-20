@@ -10,12 +10,12 @@ Write-FormatView `
 } -AutoSize
 
 $splat = @{
-    TypeName = 'AngleSharp.Html.Dom.HtmlElement'
-    Name = 'HtmlElement'
-    Property = @('TagName', 'ChildElementCount', 'Html', 'TextContent')
+    TypeName        = 'AngleSharp.Html.Dom.HtmlElement'
+    Name            = 'HtmlElement'
+    Property        = @('TagName', 'ChildElementCount', 'Html', 'TextContent')
     VirtualProperty = @{
         Html = { $_.OuterHtml -replace '\s+', ' ' }
     }
-    AutoSize = $true
+    AutoSize        = $true
 }
 Write-FormatView @splat

@@ -1,4 +1,4 @@
-﻿@{
+@{
     RootModule        = 'DotWebScrape.psm1'
     ModuleVersion     = '0.1.0'
     GUID              = '5705eff0-ddf3-48ff-a2e6-aa174404edb3'

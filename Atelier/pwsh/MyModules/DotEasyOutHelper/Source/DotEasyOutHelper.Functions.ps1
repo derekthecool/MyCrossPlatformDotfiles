@@ -1,4 +1,4 @@
-﻿function Use-EasyOut
+function Use-EasyOut
 {
     [CmdletBinding()]
     param (
@@ -55,7 +55,7 @@
 Write-FormatView @splat
 "@
 
-        if($Interactive)
+        if ($Interactive)
         {
             Write-Host "Running EZOut for interactive formatting, not saving to a file. Code to run`n" -ForegroundColor Green
             Write-Host "$EasyOutString" -ForegroundColor Yellow
@@ -65,7 +65,7 @@ Write-FormatView @splat
             return $InputObject
         }
 
-        if($PSBoundParameters.ContainsKey('Path'))
+        if ($PSBoundParameters.ContainsKey('Path'))
         {
             $Path = $PSBoundParameters['Path']
             $Path

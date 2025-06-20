@@ -56,7 +56,7 @@ namespace ShowOffTUI
             }
         }
 
-        private string FormatObjectInfo(dynamic? obj)
+        private static string FormatObjectInfo(dynamic? obj)
         {
             if (obj is null)
                 return "Null object.";

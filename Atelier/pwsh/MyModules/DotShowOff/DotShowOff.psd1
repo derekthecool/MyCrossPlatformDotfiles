@@ -1,4 +1,4 @@
-﻿@{
+@{
     RootModule        = 'DotShowOff.psm1'
     ModuleVersion     = '0.1.0'
     GUID              = '3a3a6a4b-525d-4f14-99e1-7beade4185ae'

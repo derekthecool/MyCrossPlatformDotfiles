@@ -1,4 +1,4 @@
-﻿function Join-Item
+function Join-Item
 {
     [CmdletBinding()]
     param (
