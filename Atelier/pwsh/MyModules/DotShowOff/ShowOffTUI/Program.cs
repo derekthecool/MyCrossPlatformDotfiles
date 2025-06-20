@@ -5,7 +5,8 @@ Application.Init();
 
 try
 {
-    Application.Run(new MyView());
+    var json = args.Length > 0 ? args[0] : null;
+    Application.Run(new MyView(json));
 }
 finally
 {

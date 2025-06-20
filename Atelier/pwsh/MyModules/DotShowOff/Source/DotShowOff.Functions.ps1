@@ -1,14 +1,27 @@
 ﻿function Show-Object
 {
+    [CmdletBinding()]
     param (
-        [Parameter(ValueFromPipeline=$true)]
+        [Parameter(ValueFromPipeline = $true)]
         $InputObject
     )
 
+    begin
+    {
+        $items = @()
+    }
+
     process
     {
-        $json = $InputObject | ConvertTo-Json -Depth 10
-        & dotnet run --project $PSScriptRoot/../ShowOffTUI/ShowOffTUI.csproj -- $json
+        $items += $InputObject
+    }
+
+    end
+    {
+        $json = $items | ConvertTo-Json -Depth 10 -Compress
+        $escapedJson = $json.Replace('"', '\"')  # Escape quotes for shell safety
+
+        & dotnet run --project $PSScriptRoot/../ShowOffTUI/ShowOffTUI.csproj -- "$escapedJson"
     }
 }
 
