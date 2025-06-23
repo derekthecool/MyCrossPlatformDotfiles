@@ -68,7 +68,10 @@
 	grep = false
 [push]
 	autoSetupRemote = true
+
 # Fix trouble with bare repository cloning.
 # By default remote.origin.fetch is not set. This means no remote branches are visible with 'git branch -r'
-[remote "origin"]
-        fetch = "+refs/heads/*:refs/remotes/origin/*"
+#[remote "origin"]
+#        fetch = "+refs/heads/*:refs/remotes/origin/*"
+# However, this works well enough for most other repositories but fails when
+# to clone with a command like 'git clone --recurse-submodules'
