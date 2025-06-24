@@ -51,6 +51,10 @@ function Initialize-Dotfiles
     # Configure git to not show untracked files
     dot config status.showUntrackedFiles no
 
+    # Set git fetch string, bare repositories do not have this set by default
+    # without this no separate branches or work trees can be used
+    dot config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+
     # If not running in CI container cd to home
     if (-not $env:CI)
     {
