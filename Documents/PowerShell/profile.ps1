@@ -1,6 +1,9 @@
 # PowerShell 7 (pwsh) profile
 
 #region Basic Settings
+# Set output encoding for pwsh spectre console
+$OutputEncoding = [console]::InputEncoding = [console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
+
 $env:POWERSHELL_TELEMETRY_OPTOUT = $true
 
 # Add my custom powershell modules to the psmodulepath
