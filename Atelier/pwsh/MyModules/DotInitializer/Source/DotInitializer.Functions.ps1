@@ -24,7 +24,9 @@ function Get-DotPackageList
             @{ Name = 'python' },
             @{ Name = 'starship' },
             @{ Name = 'rust' },
+            # C and C++ build tools
             @{ Name = 'cmake' },
+            @{ Name = 'ninja' },
 
             # Yazi https://yazi-rs.github.io/docs/installation/#windows
             @{ Name = 'yazi' },
