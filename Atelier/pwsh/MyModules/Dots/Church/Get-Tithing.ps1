@@ -9,11 +9,10 @@
     This input file is required
 
     .PARAMETER Filiter
-    This [string] variable allows for multiple filters in the from of 'one|two|three'
+    This [string[]] variable allows for multiple filters for items to not match
 
     .EXAMPLE
-    $OutputTrasactions = Get-Tithing -TithingCsv ./oct262024_feb262025_tithing.csv -Filter 'tax|REIMBURSED'
-    $OutputTrasactions | select Description, Credit
+    $OutputTrasactions = Get-Tithing -TithingCsv ./oct262024_feb262025_tithing.csv -Filter tax, REIMBURSED
 #>
 function Get-Tithing
 {
@@ -21,7 +20,7 @@ function Get-Tithing
         [Parameter(Mandatory)]
         [ValidatePattern('\.csv$')]
         [string]$TithingCsv,
-        [string]$Filter
+        [string[]]$AdditionalFilters
     )
 
     if (-not (Test-Path $TithingCsv))
@@ -29,17 +28,29 @@ function Get-Tithing
         throw "File $TithingCsv not found"
     }
 
-    $transactions = Import-Csv -Path $TithingCsv
-    | Where-Object { $_.Credit }
-    | Where-Object { $_.Description -notmatch 'VENMO' -and $_.Description -notmatch 'MOBILE BANKING FUNDS TRANSFER' }
-    | Where-Object { $_.Description -notmatch $Filter }
+    $exclude_patterns = @(
+        'JESUSCHRIST REIMBURSED'
+        'ATM DEPOSIT'
+        'ITEMS DEPOSITED'
+        'MOBILE BANKING FUNDS TRANSFER'
 
-    $transactions | Sort-Object -Property @{ Expression = { [datetime]::Parse($_.Date) } }
-    $transactions | Format-Table
-    $total = ($transactions | Select-Object -ExpandProperty Credit | Measure-Object -Sum).Sum
+        # Insert provided additional filters here
+        if($AdditionalFilters)
+        {
+            $AdditionalFilters | ForEach-Object { $_ }
+        }
+    )
+
+    $transactions_raw = Import-Csv $TithingCsv | Where-Object { $_.Credit } | Select-Object Date, Credit, Description
+
+    $exclude_pattern = $exclude_patterns -join '|'
+    Write-Host "exclude_pattern: $exclude_pattern"
+    $transactions = $transactions_raw | Where-Object { $_.Description -notmatch $exclude_pattern }
+
+    $total = ($transactions | Measure-Object -Property Credit -Sum).Sum
     $tithing = $total * 0.12
-    Write-Host "Total credit found: $total" -ForegroundColor Green
-    Write-Host "Total tithing: $tithing" -ForegroundColor Cyan
+    Write-Host "Total credit found: $($total.ToString('C'))" -ForegroundColor Green
+    Write-Host "Total tithing: $($tithing.ToString('C'))" -ForegroundColor Cyan
 
     $transactions
 }
