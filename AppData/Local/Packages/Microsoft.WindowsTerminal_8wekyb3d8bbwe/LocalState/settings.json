@@ -1,86 +1,78 @@
 {
-    "$help": "https://aka.ms/terminal-documentation",
-    "$schema": "https://aka.ms/terminal-profiles-schema",
-    "actions": 
-    [
-        {
-            "command": 
-            {
-                "action": "nextTab"
-            },
-            "id": "User.nextTab.0"
-        }
-    ],
-    "copyFormatting": "all",
-    "copyOnSelect": true,
-    "defaultProfile": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
-    "keybindings": 
-    [
-        {
-            "id": "Terminal.CopyToClipboard",
-            "keys": "ctrl+c"
-        },
-        {
-            "id": "Terminal.DuplicatePaneAuto",
-            "keys": "alt+shift+d"
-        }
-    ],
-    "newTabMenu": 
-    [
-        {
-            "type": "remainingProfiles"
-        }
-    ],
-    "profiles": 
+  "$help": "https://aka.ms/terminal-documentation",
+  "$schema": "https://aka.ms/terminal-profiles-schema",
+  "actions": [
     {
-        "defaults": 
-        {
-            "bellStyle": "none",
-            "cursorShape": "filledBox",
-            "font": 
-            {
-                "face": "JetBrainsMono Nerd Font Mono",
-                "size": 14
-            },
-            "opacity": 71,
-            "useAcrylic": true
-        },
-        "list": 
-        [
-            {
-                "colorScheme": "Campbell Powershell",
-                "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
-                "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
-                "hidden": false,
-                "name": "Windows PowerShell"
-            },
-            {
-                "commandline": "%SystemRoot%\\System32\\cmd.exe",
-                "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
-                "hidden": false,
-                "name": "Command Prompt"
-            },
-            {
-                "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
-                "hidden": false,
-                "name": "PowerShell",
-                "source": "Windows.Terminal.PowershellCore"
-            },
-            {
-                "colorScheme": "Campbell",
-                "guid": "{a56e146b-5897-57c9-ae25-fd9ce697e5b7}",
-                "hidden": false,
-                "name": "Ubuntu-24.04",
-                "source": "Microsoft.WSL"
-            },
-            {
-                "guid": "{f4cfbcc2-6b60-5abc-84ea-ee9e2b96f686}",
-                "hidden": false,
-                "name": "podman-machine-default",
-                "source": "Microsoft.WSL"
-            }
-        ]
+      "command": {
+        "action": "nextTab"
+      },
+      "id": "User.nextTab.0"
+    }
+  ],
+  "copyFormatting": "all",
+  "copyOnSelect": true,
+  "defaultProfile": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
+  "keybindings": [
+    {
+      "id": "Terminal.CopyToClipboard",
+      "keys": "ctrl+c"
     },
-    "schemes": [],
-    "themes": []
+    {
+      "id": "Terminal.DuplicatePaneAuto",
+      "keys": "alt+shift+d"
+    }
+  ],
+  "newTabMenu": [
+    {
+      "type": "remainingProfiles"
+    }
+  ],
+  "profiles": {
+    "defaults": {
+      "bellStyle": "none",
+      "cursorShape": "filledBox",
+      "font": {
+        "face": "JetBrainsMono Nerd Font Mono",
+        "size": 14
+      },
+      "opacity": 71,
+      "useAcrylic": true
+    },
+    "list": [
+      {
+        "colorScheme": "Campbell Powershell",
+        "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+        "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+        "hidden": false,
+        "name": "Windows PowerShell"
+      },
+      {
+        "commandline": "%SystemRoot%\\System32\\cmd.exe",
+        "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
+        "hidden": false,
+        "name": "Command Prompt"
+      },
+      {
+        "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
+        "hidden": false,
+        "name": "PowerShell",
+        "source": "Windows.Terminal.PowershellCore"
+      },
+      {
+        "colorScheme": "Campbell",
+        "guid": "{a56e146b-5897-57c9-ae25-fd9ce697e5b7}",
+        "hidden": false,
+        "name": "Ubuntu-24.04",
+        "source": "Microsoft.WSL"
+      },
+      {
+        "guid": "{f4cfbcc2-6b60-5abc-84ea-ee9e2b96f686}",
+        "hidden": false,
+        "name": "podman-machine-default",
+        "source": "Microsoft.WSL"
+      }
+    ]
+  },
+  "schemes": [],
+  "themes": []
 }

@@ -1,4 +1,4 @@
-﻿@{
+@{
   RootModule        = 'DotGit.psm1'
   ModuleVersion     = '0.1.0'
   GUID              = '87cf412c-909a-4f9b-b08f-5f90f6493992'

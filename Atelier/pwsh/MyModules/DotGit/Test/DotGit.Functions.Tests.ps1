@@ -1,4 +1,4 @@
-﻿BeforeAll {
+BeforeAll {
   $module = Import-Module $PSScriptRoot/../*.psd1 -Force -PassThru
 }
 

@@ -35,7 +35,7 @@ function Get-Tithing
         'MOBILE BANKING FUNDS TRANSFER'
 
         # Insert provided additional filters here
-        if($AdditionalFilters)
+        if ($AdditionalFilters)
         {
             $AdditionalFilters | ForEach-Object { $_ }
         }
