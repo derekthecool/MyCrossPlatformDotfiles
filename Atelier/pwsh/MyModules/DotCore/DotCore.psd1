@@ -21,6 +21,7 @@
     FunctionsToExport = @(
         'Join-Item'
         'ConvertFrom-Xml'
+        'Find-DuplicateFile'
     )
 }
 
