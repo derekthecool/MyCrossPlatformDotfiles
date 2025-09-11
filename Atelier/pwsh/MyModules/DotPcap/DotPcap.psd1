@@ -18,6 +18,10 @@
     AliasesToExport   = @()
     FunctionsToExport = @(
         'Read-Pcap'
+        'Get-PcapFields'
+        'Get-PcapTcpStreams'
+        'Split-Pcap'
+        'Split-PcapMqtt'
     )
 }
 
