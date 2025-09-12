@@ -102,19 +102,45 @@ param (
     [Parameter(Mandatory, ValueFromPipeline, Position = 0)]
     [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
     [string]$Path,
-    [string]$ClientIdFilter = ".+",
-    [string]$OutputDirectory = "$([System.IO.Path]::GetFileNameWithoutExtension($Path))_parsed"
+    [string]$ClientIdFilter = ".+"
 )
-  New-Item -ItemType Directory -ErrorAction SilentlyContinue $OutputDirectory
-  $client_ids = $Path | Get-PcapFields -Field 'mqtt.clientid' | Where-Object { $_ -match $ClientIdFilter }
-  $client_count = $client_ids.Length
-  $count = 0
-  $client_ids | ForEach-Object { 
-    $count++
-    $streams = Get-PcapFields -Path $Path -Field 'tcp.stream' -DisplayFilter "mqtt.clientid contains `"$_`"" | Join-String -Separator ','
-    tshark -r "$Path" -Y "tcp.stream in {$streams}" -w "$OutputDirectory/mqtt_session_${_}.pcap" 2>$null
-    $PercentComplete = $([Math]::Floor(($count / $client_count) * 100))
-    Write-Progress -Activity $MyInvocation.MyCommand.Name -Status "Percent complete: $PercentComplete, Current Item: $_" -PercentComplete $PercentComplete
+  begin {
+    Write-Verbose "Begin parsing pcap files for mqtt data with ClientIdFilter: $ClientIdFilter"
+    $script:allPaths = @()
+  }
+  process {
+    $script:allPaths += $Path
   }
 
+  end {
+    $file_index = 0
+    Write-Verbose "Processing $($script:allPaths.Length) files"
+    $script:AllPaths | ForEach-Object {
+      $CurrentPath = $_
+      $client_ids = $CurrentPath | Get-PcapFields -Field 'mqtt.clientid' | Where-Object { $_ -match $ClientIdFilter }
+      if($client_ids)
+      {
+          Write-Verbose "$client_ids"
+      }
+      else
+      {
+          Write-Verbose "No mqtt client ids matching pattern ($ClientIdFilter) were found in file $((ls $CurrentPath).Name)"
+      }
+      
+      $FilesPercentComplete = [Math]::Floor(($file_index / $script:allPaths.Length) * 100)
+      Write-Progress -Id 1 -Activity $MyInvocation.MyCommand.Name -Status "File Percent complete: $FilesPercentComplete, Current Item: $((ls $CurrentPath).Name)" -PercentComplete $FilesPercentComplete
+      $client_count = $client_ids.Length
+      $count = 0
+      $client_ids | ForEach-Object { 
+        $count++
+        $streams = Get-PcapFields -Path $CurrentPath -Field 'tcp.stream' -DisplayFilter "mqtt.clientid contains `"$_`"" | Join-String -Separator ','
+        $outputDirectory = "$([System.IO.Path]::GetFileNameWithoutExtension($CurrentPath))_parsed"
+        New-Item -ItemType Directory -ErrorAction SilentlyContinue $outputDirectory | Out-Null
+        tshark -r "$CurrentPath" -Y "tcp.stream in {$streams}" -w "$outputDirectory/mqtt_session_${_}.pcap" 2>$null
+        $PercentComplete = $([Math]::Floor(($count / $client_count) * 100))
+        Write-Progress -Id 2 -Activity $MyInvocation.MyCommand.Name -Status "Percent complete: $PercentComplete, Current Item: $_" -PercentComplete $PercentComplete
+      }
+      $file_index++
+    }
+  }
 }
