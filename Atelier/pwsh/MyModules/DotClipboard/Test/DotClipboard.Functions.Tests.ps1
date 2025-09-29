@@ -42,4 +42,9 @@ Describe 'DotClipboard tests' {
         '1,2, 3, 4, 5' | Set-Clipboard
         Get-ClipboardAsArray -Json | Should -Be '["1","2","3","4","5"]'
     }
+
+    It 'AsSqlQueryList works' {
+        '1,2, 3, 4, 5' | Set-Clipboard
+        Get-ClipboardAsArray -AsSqlQueryList | Should -Be '"1","2","3","4","5"'
+    }
 }
