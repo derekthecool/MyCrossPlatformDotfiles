@@ -22,6 +22,7 @@
         'Get-PcapTcpStreams'
         'Split-Pcap'
         'Split-PcapMqtt'
+        'Get-PcapSummary'
     )
 }
 

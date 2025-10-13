@@ -144,3 +144,29 @@ param (
     }
   }
 }
+
+function Get-PcapSummary {
+param (
+    [Parameter(Mandatory, ValueFromPipeline, Position = 0)]
+    [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
+    [string]$Path
+)
+  process {
+      $summary = capinfos -T -m $Path | ConvertFrom-Csv
+      if(-not $? -or $LASTEXITCODE -ne 0)
+      {
+          # TODO: (Derek Lomax) 10/13/2025 4:38:46 PM, handle the error where pcap file last packet is corrupted. This entire command will fail.
+          # this command might help to fix the error
+          # editcap -r input.pcap trimmed.pcap 0 -2  # drop last 2 packets, for example
+          throw "capinfos failure"
+      }
+      $protocols = tshark -T fields -e _ws.col.Protocol -r "$Path" | Sort-Object -Unique
+      if(-not $? -or $LASTEXITCODE -ne 0)
+      {
+          throw "tshark failure"
+      }
+
+      $summary | Add-Member -MemberType NoteProperty -Name Protocols -Value $protocols
+      $summary
+  }
+}
