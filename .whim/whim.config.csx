@@ -124,6 +124,8 @@ void DoConfig(IContext context)
         "WINWORD",
         "EXCEL",
         "POWERPNT",
+        "ONENOTE",
+        "VISIO",
         "explorer",
         "okular",
         "MusicBee",
