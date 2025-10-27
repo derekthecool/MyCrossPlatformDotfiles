@@ -65,7 +65,8 @@ function Get-PcapField
     )
     process
     {
-        tshark -r "$Path" -d tcp.port==1886-1888, mqtt -T fields -e "$Field" --display-filter $DisplayFilter 2>$null |
+        Write-Verbose "Processing Path: $Path, Field: $Field, DisplayFilter: $DisplayFilter"
+        tshark -r "$Path" -d "tcp.port==1886-1888,mqtt" -T fields -e "$Field" --display-filter $DisplayFilter 2>$null |
             Where-Object { $_ } |
             Sort-Object -Unique
     }
