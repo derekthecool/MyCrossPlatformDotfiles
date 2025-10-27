@@ -154,59 +154,58 @@ if ($IsLinux)
             $env:PATH += [IO.Path]::PathSeparator + $Item
         }
     }
-
-    # if (Test-Path '/home/linuxbrew' -ErrorAction SilentlyContinue)
-    # {
-    #     Invoke-Expression (& { (/home/linuxbrew/.linuxbrew/bin/brew shellenv | Out-String) })
-    # }
 }
 #endregion
 
-#region Find-Program Function
-function Find-Program
-{
-    param (
-        [Parameter(Mandatory = $true, Position = 0)]
-        [string]$Program,
-
-        [Parameter(Mandatory = $false, Position = 1)]
-        [string[]]$PossiblePaths
-    )
-
-    $PossiblePathsNotNull = $null -ne $PossiblePaths
-    Get-Variable Program, PossiblePaths, PossiblePathsNotNull
-    if ($PossiblePathsNotNull)
-    {
-        $result = Test-Path -Path $PossiblePaths
-        $AtLeastOnePathFound = ($result | Where-Object { $_ -eq $true }).Length -ge 1
-        Get-Variable result, AtLeastOnePathFound
-        if ($AtLeastOnePathFound)
-        {
-            return $true
-        }
-    }
-
-    $find_program_job = Start-Job -ArgumentList $Program -ScriptBlock {
-        param($ProgramName)
-        [string]::IsNullOrEmpty((Get-Command -Name $ProgramName -ErrorAction SilentlyContinue).Path) -ne $true
-    }
-
-    $MaximumDelaySeconds = 3
-    if (Wait-Job -Job $find_program_job -Timeout $MaximumDelaySeconds)
-    {
-        $result = Receive-Job $find_program_job
-        return $result
-    } else
-    {
-        Write-Verbose "Timed out searching for $Program after $MaximumDelaySeconds seconds"
-        return $false
-    }
-}
-#endregion
+##region Find-Program Function
+#function Find-Program
+#{
+#    param (
+#        [Parameter(Mandatory = $true, Position = 0)]
+#        [string]$Program,
+#
+#        [Parameter(Mandatory = $false, Position = 1)]
+#        [string[]]$PossiblePaths
+#    )
+#
+#    $PossiblePathsNotNull = $null -ne $PossiblePaths
+#    Get-Variable Program, PossiblePaths, PossiblePathsNotNull
+#    if ($PossiblePathsNotNull)
+#    {
+#        $result = Test-Path -Path $PossiblePaths
+#        $AtLeastOnePathFound = ($result | Where-Object { $_ -eq $true }).Length -ge 1
+#        Get-Variable result, AtLeastOnePathFound
+#        if ($AtLeastOnePathFound)
+#        {
+#            return $true
+#        }
+#    }
+#
+#    $find_program_job = Start-Job -ArgumentList $Program -ScriptBlock {
+#        param($ProgramName)
+#        [string]::IsNullOrEmpty((Get-Command -Name $ProgramName -ErrorAction SilentlyContinue).Path) -ne $true
+#    }
+#
+#    $MaximumDelaySeconds = 3
+#    if (Wait-Job -Job $find_program_job -Timeout $MaximumDelaySeconds)
+#    {
+#        $result = Receive-Job $find_program_job
+#        return $result
+#    } else
+#    {
+#        Write-Verbose "Timed out searching for $Program after $MaximumDelaySeconds seconds"
+#        return $false
+#    }
+#}
+##endregion
 
 #region Starship
-if (Find-Program -Program 'starship' -PossiblePaths "$HOME/scoop/ships/starship*", "/usr/local/bin/starship*")
+try
 {
+    # Fail fast if starship is not found - do not run the recommended double Invoke-Expression
+    # website shows this: Invoke-Expression (&starship init powershell)
+    $init = starship init powershell
+
     # Set Starship prompt
     # Config file is located: ~/.config/starship.toml
     # Support for OSC7 (CWD detector or wezterm terminal emulator)
@@ -222,57 +221,41 @@ if (Find-Program -Program 'starship' -PossiblePaths "$HOME/scoop/ships/starship*
         }
         $host.ui.Write($prompt)
     }
-    Invoke-Expression (&starship init powershell)
-}
-#endregion
-
-#region Yazi
-if (Find-Program -Program 'yazi')
+    Invoke-Expression ($init)
+} catch
 {
-    if ($IsWindows)
-    {
-        # Setup yazi file manager path to file.exe
-        # required for image preview
-        # https://yazi-rs.github.io/docs/installation/#windows
-        $env:YAZI_FILE_ONE = "$HOME\scoop\apps\git\current\usr\bin\file.exe", "$env:PROGRAMFILES\Git\usr\bin\file.exe" | Where-Object { Test-Path $_ } | Select-Object -First 1
-    }
-
-    # The default Windows yazi config is: %AppData%\yazi\config
-    # which is stupid, so use this to set it the same as Linux
-    $env:YAZI_CONFIG_HOME = "$HOME/.config/yazi"
-
-    # Suggested function to set path to where yazi ended upon exit
-    function y
-    {
-        $tmp = [System.IO.Path]::GetTempFileName()
-        yazi $args --cwd-file="$tmp"
-        $cwd = Get-Content -Path $tmp -Encoding UTF8
-        if (-not [String]::IsNullOrEmpty($cwd) -and $cwd -ne $PWD.Path)
-        {
-            Set-Location -LiteralPath ([System.IO.Path]::GetFullPath($cwd))
-        }
-        Remove-Item -Path $tmp
-    }
+    Write-Host "starship not found" -ForegroundColor Yellow
 }
 #endregion
 
 #region PSFzf
-if ((Find-Program -Program 'fzf' -PossiblePaths "$HOME/scoop/ships/starship*", "/usr/local/bin/starship*") -and (Get-Module PSFzf -ErrorAction SilentlyContinue -ListAvailable))
+try
 {
     Import-Module PSFzf -Force
     Set-PsFzfOption -PSReadlineChordProvider 'Ctrl+t' -PSReadlineChordReverseHistory 'Ctrl+r'
-    Set-PSReadLineKeyHandler -Key Tab -BriefDescription 'Use PSFZF as tab completion helper' -ScriptBlock { Invoke-FzfTabCompletion }
-    Set-PSReadLineKeyHandler -Chord Ctrl+m -BriefDescription 'Run PSFZF Invoke-FuzzySetLocation for easier deep navigation' -ScriptBlock { Invoke-FuzzySetLocation }
+    Set-PSReadLineKeyHandler -Key Tab -BriefDescription 'Use PSFZF as tab completion helper' -ScriptBlock {
+        Invoke-FzfTabCompletion
+    }
+    Set-PSReadLineKeyHandler -Chord Ctrl+m -BriefDescription 'Run PSFZF Invoke-FuzzySetLocation for easier deep navigation' -ScriptBlock {
+        Invoke-FuzzySetLocation
+    }
+} catch
+{
+    Write-Host "PSFzf or fzf not found" -ForegroundColor Yellow
 }
 #endregion
 
 #region Zoxide
 # Init Zoxide and set cd alias
 # Add this to the end of your config file (find it by running echo $profile in PowerShell
-if (Find-Program -Program 'zoxide' -PossiblePaths "$HOME/.cargo/bin/zoxide*", "$HOME/scoop/shims/zoxide*")
+try
 {
-    Invoke-Expression (& { (zoxide init powershell | Out-String) })
+    zoxide init powershell | Out-String | Invoke-Expression
     Set-Alias -Name cd -Value z -Option AllScope -Force -Description 'DotAlias for zoxide special cd'
+} catch
+{
+
+    Write-Host "zoxide not found" -ForegroundColor Yellow
 }
 #endregion
 
