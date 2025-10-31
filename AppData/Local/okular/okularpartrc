@@ -7,6 +7,9 @@ ShellOpenFileInTabs=true
 ttsEngine=sapi
 ttsVoice=Microsoft Zira Desktop
 
+[Main View]
+ShowLeftPanel=false
+
 [PageView]
 MouseMode=TextSelect
 

@@ -1,4 +1,5 @@
 # PowerShell 7 (pwsh) profile
+$start = Get-Date
 
 #region Basic Settings
 # Set output encoding for pwsh spectre console
@@ -157,53 +158,13 @@ if ($IsLinux)
 }
 #endregion
 
-##region Find-Program Function
-#function Find-Program
-#{
-#    param (
-#        [Parameter(Mandatory = $true, Position = 0)]
-#        [string]$Program,
-#
-#        [Parameter(Mandatory = $false, Position = 1)]
-#        [string[]]$PossiblePaths
-#    )
-#
-#    $PossiblePathsNotNull = $null -ne $PossiblePaths
-#    Get-Variable Program, PossiblePaths, PossiblePathsNotNull
-#    if ($PossiblePathsNotNull)
-#    {
-#        $result = Test-Path -Path $PossiblePaths
-#        $AtLeastOnePathFound = ($result | Where-Object { $_ -eq $true }).Length -ge 1
-#        Get-Variable result, AtLeastOnePathFound
-#        if ($AtLeastOnePathFound)
-#        {
-#            return $true
-#        }
-#    }
-#
-#    $find_program_job = Start-Job -ArgumentList $Program -ScriptBlock {
-#        param($ProgramName)
-#        [string]::IsNullOrEmpty((Get-Command -Name $ProgramName -ErrorAction SilentlyContinue).Path) -ne $true
-#    }
-#
-#    $MaximumDelaySeconds = 3
-#    if (Wait-Job -Job $find_program_job -Timeout $MaximumDelaySeconds)
-#    {
-#        $result = Receive-Job $find_program_job
-#        return $result
-#    } else
-#    {
-#        Write-Verbose "Timed out searching for $Program after $MaximumDelaySeconds seconds"
-#        return $false
-#    }
-#}
-##endregion
-
 #region Starship
+# Roughly 1000 ms load time for this
 try
 {
     # Fail fast if starship is not found - do not run the recommended double Invoke-Expression
     # website shows this: Invoke-Expression (&starship init powershell)
+    # 200 ms
     $init = starship init powershell
 
     # Set Starship prompt
@@ -221,6 +182,7 @@ try
         }
         $host.ui.Write($prompt)
     }
+    # 800 ms
     Invoke-Expression ($init)
 } catch
 {
@@ -271,3 +233,5 @@ function git
 }
 
 Import-Module Posh
+
+Write-Host "Profile load: $([int]((Get-Date) - (Get-Process -Id $PID).StartTime).TotalMilliseconds) ms" -ForegroundColor Cyan
