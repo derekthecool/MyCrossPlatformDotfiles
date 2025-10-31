@@ -151,7 +151,7 @@ void DoConfig(IContext context)
     Route(one_programs, "one");
 
     // two programs
-    var two_programs = new List<string> { "Wireshark",};
+    var two_programs = new List<string> { "Wireshark", "CG Local"};
     Route(two_programs, "two");
 
     // three programs
