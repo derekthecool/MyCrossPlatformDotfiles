@@ -1,30 +1,33 @@
 function Get-ClipboardAsArray
 {
+    [CmdletBinding(DefaultParameterSetName = 'Default')]
     param (
-        [Parameter(Position = 0)]
+        [Parameter(Position = 0, ParameterSetName = '__AllParameterSets')]
         [string]$Separator = "[`n`r`t, ]+",
+
+        [Parameter(ParameterSetName = 'Json')]
         [switch]$Json,
+
+        [Parameter(ParameterSetName = 'Describe')]
         [switch]$Describe,
-        [switch]$AsSqlQueryList
+
+        [Parameter(ParameterSetName = 'AsSqlQueryList')]
+        [switch]$AsSqlQueryList,
+
+        [Parameter(ParameterSetName = 'AsSqlInsert')]
+        [switch]$AsSqlInsert
     )
 
     $items = (Get-Clipboard) -split $Separator | Where-Object { -not [string]::IsNullOrEmpty($_) }
 
-    if($Describe)
+    switch ($PSCmdlet.ParameterSetName)
     {
-        Write-Host "Count : $($items.Length)" -ForegroundColor Blue
+        'Default' { $items }
+        'Describe' { Write-Host "Count : $($items.Length)" -ForegroundColor Blue }
+        'Json' { $items | ConvertTo-Json -Compress }
+        'AsSqlQueryList' { ($items | ConvertTo-Json -Compress).TrimStart("[").TrimEnd("]") }
+        'AsSqlInsert' { $items | ForEach-Object { "`"($_)`"" } | Join-String -Separator "," } 
     }
-
-    if ($Json -or $AsSqlQueryList)
-    {
-        $items = $items | ConvertTo-Json -Compress
-        if($AsSqlQueryList)
-        {
-            $items = $items.TrimStart("[").TrimEnd("]")
-        }
-    }
-  
-    $items
 }
 
 New-Alias -Name 'clipped' -Value Get-ClipboardAsArray

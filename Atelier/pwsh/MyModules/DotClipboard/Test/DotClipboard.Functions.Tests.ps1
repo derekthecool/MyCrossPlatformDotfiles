@@ -47,4 +47,9 @@ Describe 'DotClipboard tests' {
         '1,2, 3, 4, 5' | Set-Clipboard
         Get-ClipboardAsArray -AsSqlQueryList | Should -Be '"1","2","3","4","5"'
     }
+
+    It 'AsSqlInsert works' {
+        '1,2, 3, 4, 5' | Set-Clipboard
+        Get-ClipboardAsArray -AsSqlInsert | Should -Be '"(1)","(2)","(3)","(4)","(5)"'
+    }
 }
