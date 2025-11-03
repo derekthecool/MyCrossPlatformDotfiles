@@ -26,7 +26,7 @@ function Get-ClipboardAsArray
         'Describe' { Write-Host "Count : $($items.Length)" -ForegroundColor Blue }
         'Json' { $items | ConvertTo-Json -Compress }
         'AsSqlQueryList' { ($items | ConvertTo-Json -Compress).TrimStart("[").TrimEnd("]") }
-        'AsSqlInsert' { $items | ForEach-Object { "`"($_)`"" } | Join-String -Separator "," } 
+        'AsSqlInsert' { $items | ForEach-Object { "(`"$_`")" } | Join-String -Separator "," } 
     }
 }
 
