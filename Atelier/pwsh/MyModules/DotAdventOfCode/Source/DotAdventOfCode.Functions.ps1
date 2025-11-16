@@ -51,3 +51,5 @@ function Get-AdventOfCodeData
         }
     }
 }
+
+New-Alias -Name 'aoc' -Value Get-AdventOfCodeData
