@@ -3,7 +3,7 @@
 }
 
 Describe 'DotContainer tests' {
-    It 'Function asdf works' {
-        asdf | Should -Be -Not $null
+    It 'Function Get-ContainerRunner works' {
+        Get-ContainerRunner | Should -Be -Not $null
     }
 }
