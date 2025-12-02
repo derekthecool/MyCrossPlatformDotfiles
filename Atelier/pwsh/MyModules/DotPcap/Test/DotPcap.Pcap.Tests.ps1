@@ -28,7 +28,7 @@ Describe 'Pcap processing tests' -Skip:([bool](!(Get-Command tshark -ErrorAction
             Should -Match $getFileHashResult
     }
 
-    It 'Get-PcapSummary should have exact number of packets' { 
+    It 'Get-PcapSummary should have exact number of packets' {
         $pcap_file |
             Get-PcapSummary |
             Select-Object -ExpandProperty 'Number of packets' |
