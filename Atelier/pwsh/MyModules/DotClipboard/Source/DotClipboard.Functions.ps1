@@ -6,6 +6,9 @@ function Get-ClipboardAsArray
         [string]$Separator = "[`n`r`t, ]+",
 
         [Parameter(ParameterSetName = '__AllParameterSets')]
+        [string]$MatchFilter = ".*",
+
+        [Parameter(ParameterSetName = '__AllParameterSets')]
         [Alias('Reclip', 'R')]
         [switch]$ReloadClipboard,
 
@@ -24,7 +27,7 @@ function Get-ClipboardAsArray
         [switch]$AsSqlInsert
     )
 
-    $items = (Get-Clipboard) -split $Separator | Where-Object { -not [string]::IsNullOrEmpty($_) }
+    $items = (Get-Clipboard) -split $Separator | Where-Object { -not [string]::IsNullOrEmpty($_) -and $_ -cmatch $MatchFilter }
 
     $result = switch ($PSCmdlet.ParameterSetName)
     {
