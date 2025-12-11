@@ -59,6 +59,49 @@ Describe 'DotClipboard tests' {
         Get-ClipboardAsArray -MatchFilter $MatchFilter | Should -HaveCount $Length
     }
 
+    # TODO: (Derek Lomax) 12/11/2025 4:31:22 PM, these tests are busted for now
+    # It 'Using script block Transform truly converts types' -TestCases @(
+    #     @{
+    #         Length       = 5
+    #         ClipBoard    = (1 .. 5) -join "`n"
+    #         Transform    = { [int]$args[0] }
+    #         ExpectedType = [int]
+    #     }
+    #     @{
+    #         Length       = 5
+    #         ClipBoard    = (1 .. 5 | ForEach-Object { Get-Random }) -join "`n"
+    #         Transform    = { [IPAddress]$args[0] }
+    #         ExpectedType = ([IPAddress])
+    #     }
+    # ) { 
+    #     $ClipBoard | Set-Clipboard
+    #     $result = Get-ClipboardAsArray -Transform $Transform
+    #
+    #     $result | Should -HaveCount $Length
+    #     $result | Should -BeOfType ([int])
+    # }
+    #
+    # It 'Using TypeTransform <TypeTransform> should work similar to normal transform resulting in type <ExpectedType>' -TestCases @(
+    #     @{
+    #         Length        = 5
+    #         ClipBoard     = (1 .. 5) -join "`n"
+    #         TypeTransform = [int]
+    #         ExpectedType  = [int]
+    #     }
+    #     @{
+    #         Length        = 5
+    #         ClipBoard     = (1 .. 5 | ForEach-Object { Get-Random }) -join "`n"
+    #         TypeTransform = [IPAddress]
+    #         ExpectedType  = [IPAddress]
+    #     }
+    # ) { 
+    #     $ClipBoard | Set-Clipboard
+    #     $result = Get-ClipboardAsArray -TypeTransform ($TypeTransform)
+    #
+    #     $result | Should -HaveCount $Length
+    #     $result | Should -BeOfType $ExpectedType
+    # }
+
     It 'Json format works' {
         '1,2, 3, 4, 5' | Set-Clipboard
         Get-ClipboardAsArray -Json | Should -Be '["1","2","3","4","5"]'
