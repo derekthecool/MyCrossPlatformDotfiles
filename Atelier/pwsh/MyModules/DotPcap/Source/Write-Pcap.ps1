@@ -58,7 +58,7 @@ function Get-PcapFileHeader
 <#
     .SYNOPSIS
     Returns a 16-byte PCAP packet header as a byte array.
-    
+
     .PARAMETER Timestamp
     A [datetime] object representing the packet capture time.
 
@@ -73,7 +73,6 @@ function Get-PcapFileHeader
     #>
 function Get-PcapPacketHeader
 {
-
     param(
         [Parameter()]
         [datetime]$Timestamp,
@@ -85,71 +84,93 @@ function Get-PcapPacketHeader
         [int]$OriginalLength
     )
 
+    # Create fixed 16-byte header
     $header = New-Object byte[] 16
 
-    # Convert timestamp to seconds and microseconds
+    # Timestamp as seconds + microseconds since epoch
     $epoch = [datetime]"1970-01-01T00:00:00Z"
     $ts = $Timestamp.ToUniversalTime() - $epoch
     $ts_sec = [int][math]::Floor($ts.TotalSeconds)
     $ts_usec = [int](($ts.TotalSeconds - $ts_sec) * 1e6)
 
-    # Helper to convert 32-bit int to little-endian bytes
+    # Convert 32-bit int to little-endian bytes
     function ToLEBytes32([int]$val)
     {
         return [BitConverter]::GetBytes([UInt32]$val)
     }
 
-    Write-Verbose "ts_sec: $ts_sec"
-    Write-Verbose "ts_usec: $ts_usec"
-
-    # Write fields
+    # Copy fields into header
     [Array]::Copy((ToLEBytes32 $ts_sec), 0, $header, 0, 4)
     [Array]::Copy((ToLEBytes32 $ts_usec), 0, $header, 4, 4)
     [Array]::Copy((ToLEBytes32 $CapturedLength), 0, $header, 8, 4)
     [Array]::Copy((ToLEBytes32 $OriginalLength), 0, $header, 12, 4)
 
-    return $header
+    # Return strict byte[] with leading comma to avoid unrolling
+    return , ([byte[]]$header)
 }
 
 function Format-PcapPacket
 {
-    param (
-        [Parameter(ValueFromPipeline)]
+    param(
+        [Parameter(Mandatory)]
         [byte[]]$Bytes
     )
-    begin
-    {
-        $byteArray = @()
-        Get-PcapPacketHeader -Timestamp (Get-Date) -CapturedLength ($Bytes.Length) -OriginalLength ($Bytes.Length)
+
+    # Build packet header
+    $headerSplat = @{
+        Timestamp      = (Get-Date)
+        CapturedLength = $Bytes.Length
+        OriginalLength = $Bytes.Length
     }
-    process
-    {
-        $byteArray += $Bytes
-    }
-    end
-    {
-        $byteArray
-    }
+
+    $header = Get-PcapPacketHeader @headerSplat
+
+    # Concatenate header + payload safely
+    return [byte[]]($header + $Bytes)
 }
 
 function Format-Pcap
 {
+    [CmdletBinding()]
     param (
         [Parameter(ValueFromPipeline)]
         [byte[]]$Bytes
     )
+
     begin
     {
-        $byteArray = @()
-        Get-PcapFileHeader
+        # Accumulate flattened byte values
+        $packetData = New-Object System.Collections.Generic.List[byte]
     }
+
     process
     {
-        $byteArray += $Bytes
+        if ($Bytes -is [byte[]])
+        {
+            # Always add strict byte array
+            $packetData.AddRange([byte[]]$Bytes)
+        } else
+        {
+            throw "Format-Pcap received invalid type: $($Bytes.GetType().FullName)"
+        }
     }
+
     end
     {
-        # TODO: (Derek Lomax) 12/12/2025 10:11:01 AM, obviously this really only supports a single packet
-        $byteArray | Format-PcapPacket
+        # Build full packet bytes
+        $packetBytes = New-Object System.Collections.Generic.List[byte]
+
+        # Create header for all accumulated bytes
+        $header = Get-PcapPacketHeader -Timestamp (Get-Date) `
+            -CapturedLength $packetData.Count `
+            -OriginalLength $packetData.Count
+
+        # Add header and payload safely
+        $packetBytes.AddRange([byte[]](Get-PcapFileHeader))
+        $packetBytes.AddRange([byte[]]$header)
+        $packetBytes.AddRange([byte[]]$packetData.ToArray())
+
+        # Output final flat byte array
+        return $packetBytes.ToArray()
     }
 }
