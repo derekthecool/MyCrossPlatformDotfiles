@@ -23,5 +23,9 @@
         'Split-Pcap'
         'Split-PcapMqtt'
         'Get-PcapSummary'
+        'Get-PcapFileHeader'
+        'Get-PcapPacketHeader'
+        'Format-PcapPacket'
+        'Format-Pcap'
     )
 }

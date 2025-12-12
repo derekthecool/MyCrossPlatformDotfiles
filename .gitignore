@@ -5,3 +5,5 @@ megalinter-reports/
 # Dotnet
 obj
 bin
+
+**/*.pcap
