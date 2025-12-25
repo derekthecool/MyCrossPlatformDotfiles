@@ -3,6 +3,42 @@ using namespace Spectre.Console
 
 function Show-ChristmasTree
 {
+
+    param (
+        [Parameter()]
+        [string]$AnimationDelayMilliseconds = 190,
+        [string]$TreeBaseChar = '^'
+
+    )
+
+    # Helper function: safely crop lines with markup
+    function CropMarkupLine
+    {
+        param($line, $maxWidth)
+
+        $plainLength = ($line -replace '\[.*?\]', '').Length
+        if ($plainLength -le $maxWidth) { return $line }
+
+        $cropped = ""
+        $count = 0
+        $regex = [regex]'\[.*?\]|.'
+        foreach ($match in $regex.Matches($line))
+        {
+            $text = $match.Value
+            if ($text -match '^\[.*\]$')
+            {
+                # Keep markup tags intact
+                $cropped += $text
+            } else
+            {
+                if ($count -ge $maxWidth) { break }
+                $cropped += $text
+                $count++
+            }
+        }
+        return $cropped
+    }
+
     [Console]::CursorVisible = $false
 
     try
@@ -25,7 +61,6 @@ function Show-ChristmasTree
                 while ($true)
                 {
 
-                    # --- Detect resize ---
                     $winHeight = [Console]::WindowHeight
                     $winWidth = [Console]::WindowWidth
 
@@ -36,74 +71,65 @@ function Show-ChristmasTree
                         $lastWidth = $winWidth
                     }
 
-                    # --- Use full available height ---
-                    $height = [Math]::Max(
-                        6,
-                        $winHeight - 6
-                    )
+                    # Full-height tree
+                    $height = [Math]::Max(8, $winHeight - 3)
 
                     $lines = @()
 
                     # Star
-                    $lines += (" " * ($height - 1)) + "[yellow]★[/]"
+                    $starRow = "[yellow]★[/]"
+                    $starPadding = " " * ([Math]::Floor(($winWidth - 1) / 2))
+                    $lines += "$starPadding$starRow"
 
-                    # Tree
+                    # Tree body
                     for ($i = 1; $i -le $height; $i++)
                     {
-                        $spaces = " " * ($height - $i)
+                        $treeWidth = 2 * $i - 1
                         $row = ""
-
-                        for ($j = 1; $j -le (2 * $i - 1); $j++)
+                        for ($j = 1; $j -le $treeWidth; $j++)
                         {
                             if ((Get-Random -Max 6) -eq 0)
                             {
                                 $row += ($ornaments | Get-Random)
                             } else
                             {
-                                $row += "[green]^[/]"
+                                $row += "[green]$TreeBaseChar[/]"
                             }
                         }
 
-                        # Clip line to window width (prevents wrap glitches)
-                        if ($row.Length -gt ($winWidth - $spaces.Length - 4))
-                        {
-                            $row = $row.Substring(0, [Math]::Max(0, $winWidth - $spaces.Length - 4))
-                        }
+                        # Center row horizontally
+                        $paddingSize = [Math]::Floor(($winWidth - $treeWidth) / 2)
+                        $paddingSize = [Math]::Max(0, $paddingSize)
+                        $row = (" " * $paddingSize) + $row
 
-                        $lines += "$spaces$row"
+                        # Clip safely
+                        $maxWidth = $winWidth - $paddingSize
+                        $row = CropMarkupLine $row $maxWidth
+
+                        $lines += $row
                     }
 
-                    # Trunk
-                    $lines += (" " * ($height - 2)) + "[red]|||[/]"
-                    $lines += ""
-                    $lines += "[yellow]Merry Christmas!  (Press Q to quit)[/]"
+                    # Trunk (2 rows) centered
+                    $trunk = "[red]|||[/]"
+                    $trunkPadding = [Math]::Floor(($winWidth - 3) / 2)
+                    $lines += (" " * $trunkPadding) + $trunk
+                    $lines += (" " * $trunkPadding) + $trunk
 
-                    # --- Force re-layout on resize ---
-                    if ($resized)
-                    {
-                        $panel = [Spectre.Console.Panel]::new($lines -join "`n")
-                    } else
-                    {
-                        $panel = [Spectre.Console.Panel]::new($lines -join "`n")
-                    }
-
-                    $panel.Border = [Spectre.Console.BoxBorder]::Rounded
-                    $panel.Padding = [Spectre.Console.Padding]::new(1, 0, 1, 0)
-                    $panel.Header = [Spectre.Console.PanelHeader]::new(
-                        "[green]🎄 Christmas Tree 🎄[/]",
-                        [Spectre.Console.Justify]::Center
-                    )
+                    # Build panel with NO border
+                    $panel = [Spectre.Console.Panel]::new($lines -join "`n")
+                    $panel.Border = [Spectre.Console.BoxBorder]::None
+                    $panel.Padding = [Spectre.Console.Padding]::new(0, 0, 0, 0)
 
                     $ctx.UpdateTarget($panel)
 
-                    # Exit on Q
+                    # Quit on Q
                     if ([Console]::KeyAvailable -and
                         [Console]::ReadKey($true).Key -eq 'Q')
                     {
                         break
                     }
 
-                    Start-Sleep -Milliseconds 100
+                    Start-Sleep -Milliseconds $AnimationDelayMilliseconds
                 }
             })
     } finally
