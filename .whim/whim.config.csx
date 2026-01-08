@@ -13,7 +13,6 @@
 #r "C:\Program Files\Whim\plugins\Whim.Updater\Whim.Updater.dll"
 #r "C:\Program Files\Whim\plugins\Whim.Yaml\Whim.Yaml.dll"
 
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -55,8 +54,6 @@ void DoConfig(IContext context)
 
     // Customize your config in C# here.
     // For more, see https://dalyisaac.github.io/Whim/script/scripting.html
-    // ...
-    //
     // Example configs
     // https://github.com/formesean/configs/blob/d076ef27e74898b31e511126c9b01b0a34d2649c/whim/whim.config.csx#L4
     // https://github.com/urob/whim-config/blob/3387b154edadf384271c90d2ed75a90c10e53790/whim.config.csx#L4
@@ -89,7 +86,6 @@ void DoConfig(IContext context)
     //         }
     //     )
     // );
-
 
     // Tips for finding window information:
     // Ideally you can use the workspacer debug window, however this has not
@@ -151,14 +147,14 @@ void DoConfig(IContext context)
     Route(one_programs, "one");
 
     // two programs
-    var two_programs = new List<string> { "Wireshark", "CG Local"};
+    var two_programs = new List<string> { "Wireshark", "CG Local" };
     Route(two_programs, "two");
 
     // three programs
     var three_programs = new List<string> { "ConsoleWindowClass", "WindowsTerminal" };
     Route(three_programs, "three");
 
-    // // https://dalyisaac.github.io/Whim/script/core/filtering.html?q=filter
+    // https://dalyisaac.github.io/Whim/script/core/filtering.html?q=filter
     new List<string>
     {
         "keypirinha_wndcls_run",
@@ -179,38 +175,7 @@ void DoConfig(IContext context)
     // The best option for teams meeting compact view is to add this filter
     context.FilterManager.AddWindowClassFilter("TeamsWebView");
 
-    // }}}
-
     /*
-    // context.RouterManager.AddProcessFileNameRoute("TIDAL.exe", workspaces["other"]);
-    //
-    // Web browsers
-    context.WindowRouter.RouteProcessName("Vieb", MyWorkSpaceNames.Web);
-    context.WindowRouter.RouteProcessName("firefox", MyWorkSpaceNames.Web);
-    // I do not like chrome but often use it for development purposes, it has a
-    // class of "Chrome_WidgetWin_1". But this is not too good to use because so
-    // many electron applications use this as well.
-    // Send this to the last tab
-    context.WindowRouter.RouteProcessName("chrome", MyWorkSpaceNames.PlusThree);
-
-    // QXDM
-    context.WindowRouter.RouteProcessName("QXDM", MyWorkSpaceNames.PlusOne);
-
-    // Plover stenography: use the RouteWindowClass instead to move all windows
-    context.WindowRouter.RouteProcessName("pythonw", MyWorkSpaceNames.Plover);
-    // context.WindowRouter.RouteWindowClass("Qt5152QWindowIcon", MyWorkSpaceNames.Plover);
-
-    // Route my applications
-    context.WindowRouter.RouteProcessName("BelleLTE_DataLogger", MyWorkSpaceNames.Device);
-    // All versions of the "Belle LTE Utility", not sure how to do a regex on process names
-    // context.WindowRouter.RouteWindowClass("#32770", MyWorkSpaceNames.Device);
-
-    // My apps using Avalonia TODO: find a way to get a regex in process name
-    context.WindowRouter.RouteProcessName("BelleDealerAudioInterface.Desktop", MyWorkSpaceNames.PlusTwo);
-    context.WindowRouter.RouteWindowClass("Avalonia-eeffded2-1696-4c6b-b5c5-596e477cd4c5", MyWorkSpaceNames.PlusTwo);
-    context.WindowRouter.RouteProcessName("FreeusSerialLogger", MyWorkSpaceNames.PlusTwo);
-    context.WindowRouter.RouteTitle("FotaRemoteAdd", MyWorkSpaceNames.Device);
-
     // Application development with flutter
     context.WindowRouter.RouteWindowClass("FLUTTERVIEW", MyWorkSpaceNames.Chat);
 
@@ -222,35 +187,6 @@ void DoConfig(IContext context)
     // Zoom and Teams video calls
     context.WindowRouter.RouteProcessName("Zoom", MyWorkSpaceNames.PlusOne);
 
-    // My applications do not get tiled when run as admin
-    context.WindowRouter.RouteProcessName("Wallaby_Tool", MyWorkSpaceNames.Device);
-    context.WindowRouter.RouteProcessName("BelleX_Server", MyWorkSpaceNames.Device);
-    context.WindowRouter.RouteProcessName("Quokka Companion", MyWorkSpaceNames.Device);
-    context.WindowRouter.RouteProcessName("BelleX_DealerTool", MyWorkSpaceNames.Device);
-    // The title of glow window appears in all of my WPF apps
-    context.WindowRouter.RouteTitle("GlowWindow", MyWorkSpaceNames.Device);
-
-    // Filters: Filters will stop a window from being tiled or routed
-    // Micron device firmware update tool
-    context.WindowRouter.AddFilter((window) => !window.Title.Contains("Upgrade_Tool"));
-    context.WindowRouter.AddFilter((window) => !window.Class.Contains("TMainWindow"));
-    context.WindowRouter.AddFilter((window) => !window.Class.Contains("TApplication"));
-
-    // Plover windows that need to remain floating
-    context.WindowRouter.AddFilter((window) => !window.Title.Contains("Plover: Lookup"));
-    context.WindowRouter.AddFilter((window) => !window.Title.Contains("Plover: Add Translation"));
-
-    // Windows Screen Snipper
-    context.WindowRouter.AddFilter((window) => !window.Title.Contains("Screen Snipping"));
-
-    // Any connect client cisco
-    context.WindowRouter.AddFilter((window) => !window.Title.Contains("Cisco AnyConnect"));
-    // context.WindowRouter.AddFilter((window) => !window.Title.Contains("Cisco AnyConnect Secure Mobility Client"));
-    // context.WindowRouter.AddFilter((window) => !window.Title.Contains("Cisco AnyConnect Login"));
-
-    // Odd items that have exe of explorer but are actually web applications
-    // These are items like teams authentication sign in, azure cli sign in etc.
-    context.WindowRouter.AddFilter((window) => !window.Class.Contains("ApplicationFrameWindow"));
       */
 
     // Close active window

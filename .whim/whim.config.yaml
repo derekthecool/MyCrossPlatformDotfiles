@@ -1,17 +1,7 @@
 # yaml-language-server: C:/Program Files/Whim/plugins/Whim.Yaml/schema.json
 workspaces:
   # workspaces are defined in ./whim.config.csx
-  entries:
-    []
-    # - name: "🛠️"
-    # - name: "🏄"
-    # - name: "💬"
-    # - name: "⌨️"
-    # - name: "📄"
-    # - name: "📞"
-    # - name: "1"
-    # - name: "2"
-    # - name: "3"
+  entries: []
 
 layout_engines:
   entries:
@@ -38,12 +28,6 @@ layout_engines:
       variant:
         type: multi_column_stack
         columns: [2, 1, 0]
-
-    # - type: slice
-    #   variant:
-    #     type: secondary_primary_stack
-    #     primary_capacity: 1
-    #     secondary_capacity: 2
 
     - type: focus
       maximize: false
@@ -87,14 +71,7 @@ filters:
 
 routers:
   routing_behavior: route_to_launched_workspace
-  entries:
-    []
-    # - type: process_file_name
-    #   value: explorer.exe
-    #   workspace_name: Docs
-    # - type: process_file_name
-    #   value: teams.exe
-    #   workspace_name: Chat
+  entries: []
 
 plugins:
   bar:
