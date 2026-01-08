@@ -38,6 +38,10 @@ $RequiredModules = @(
     # Plain is simple tui for selecting items interactively, better than Read-Host!
     'ps-menu'
 
+    # https://pwshspectreconsole.com/
+    # Great for simple and complexity tuis
+    'PwshSpectreConsole'
+
     #region AnyPackage
     'AnyPackage'
     'AnyPackage.WinGet'
@@ -47,6 +51,7 @@ $RequiredModules = @(
     'AnyPackage.DotNet.Tool'
     'AnyPackage.Apt'
     'AnyPackage.Homebrew'
+    'AnyPackage.ModuleFast'
 
     # Available official anypackage providers that I don't want
     # 'AnyPackage.Wsl'
@@ -54,7 +59,6 @@ $RequiredModules = @(
     # 'AnyPackage.NuGet'
     # 'AnyPackage.Msu'
     # 'AnyPackage.Msi'
-    # 'AnyPackage.ModuleFast'
     # 'AnyPackage.Chocolatey'
     #endregion
 )
