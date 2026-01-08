@@ -22,10 +22,22 @@ function Read-Pcap
     process
     {
         $tshark_json = & tshark -T json --no-duplicate-keys --read-file "$Path"
+
+        # Clean up the json
+        $tshark_json = $tshark_json -replace '"\w+\.', '"'
+
+        # Now parse the json and select important items
         $tshark_json |
             ConvertFrom-Json -Depth 100 |
             Select-Object -ExpandProperty _source |
-            Select-Object -ExpandProperty layers
+            Select-Object -ExpandProperty layers |
+            ForEach-Object {
+                [PSCustomObject]@{
+                    Data = $_
+                    Time = [DateTime]::ParseExact(($_.frame.time_utc -replace '\.(\d{7})\d+','.$1'),"MMM dd, yyyy HH:mm:ss.fffffff 'UTC'",$null)
+                    HighestProtocol = $_.PSObject.Properties | Select-Object -Last 1 -ExpandProperty Name
+                }
+            }
     }
 }
 
