@@ -17,9 +17,10 @@
     CmdletsToExport   = @()
     AliasesToExport   = @(
         'zip'
+        'reduce'
     )
     FunctionsToExport = @(
         'Format-Pairs'
+        'Reduce-Object'
     )
 }
-
