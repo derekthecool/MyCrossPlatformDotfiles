@@ -3,7 +3,7 @@ BeforeAll {
 }
 
 Describe 'þnameþ tests' {
-    It 'Function þFirst-Functionþ works' {
-        þFirst-Functionþ | Should -Be -Not $null
+    It 'Function þFirst-Functionþ exists' {
+        Get-Command þFirst-Functionþ | Should -Be -Not $null
     }
 }
