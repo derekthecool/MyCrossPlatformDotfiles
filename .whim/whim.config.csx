@@ -147,7 +147,8 @@ void DoConfig(IContext context)
     Route(one_programs, "one");
 
     // two programs
-    var two_programs = new List<string> { "Wireshark", "CG Local" };
+    // KDE Connect ahk_class Qt692QWindowIcon ahk_exe kdeconnect-app.exe
+    var two_programs = new List<string> { "Wireshark", "CG Local", "Qt692QWindowIcon" };
     Route(two_programs, "two");
 
     // three programs
