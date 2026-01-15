@@ -2,6 +2,7 @@
 
 [Cmdlet("þverbþ", "þnounþ")]
 [OutputType(typeof(FavoriteStuff))]
+[List("þaliasþ")]
 public class þverbþþnounþ : PSCmdlet
 {
     [Parameter(

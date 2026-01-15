@@ -1,6 +1,6 @@
 function þFirst-Functionþ
 {
+    [CmdletBinding()]
+    [Alias("þFirst-FunctionAliasþ")]
 
 }
-
-New-Alias -Name 'þFirst-FunctionAliasþ' -Value þFirst-Functionþ
