@@ -16,8 +16,9 @@
 
     CmdletsToExport   = @()
     AliasesToExport   = @(
-        'zip'
-        'reduce'
+        'Zip'
+        'Reduce'
+        'Sum'
     )
     FunctionsToExport = @(
         'Format-Pairs'

@@ -4,7 +4,7 @@
 function Format-Pairs
 {
     [CmdletBinding()]
-    [Alias("zip")]
+    [Alias("Zip")]
     param (
         [Parameter(ValueFromPipeline)]
         [object]$InputObject,
@@ -42,15 +42,16 @@ function Format-Pairs
 function Reduce-Object
 {
     [CmdletBinding()]
-    [Alias("reduce")]
+    [Alias("Reduce")]
+    [Alias("Sum")]
     [OutputType([Int])]
     param(
         [Parameter(Mandatory, ValueFromPipeline)]
         [Array] $InputObject,
-        [Parameter(Mandatory, Position = 0)]
-        [ScriptBlock] $ScriptBlock,
-        [Parameter(Mandatory, Position = 1)]
-        [Int] $InitialValue
+        [Parameter(Position = 0)]
+        [ScriptBlock] $ScriptBlock = { $args[0] + $args[1] },
+        [Parameter(Position = 1)]
+        [Int] $InitialValue = 0
     )
     begin
     {
