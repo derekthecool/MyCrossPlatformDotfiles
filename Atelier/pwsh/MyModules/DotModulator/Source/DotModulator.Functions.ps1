@@ -99,6 +99,71 @@ function Get-PowershellAst
             $tokens = $null
             $errors = $null
             [System.Management.Automation.Language.Parser]::ParseFile($file, [ref]$tokens, [ref]$errors)
+
+            # if the code contains syntax errors and is invalid, bail out:
+            if ($errors)
+            {
+                throw [System.InvalidCastException]::new("Submitted text could not be converted to PowerShell because it contains syntax errors: $($errors | Out-String)")
+            }
         }
+    }
+}
+
+# https://powershell.one/powershell-internals/parsing-and-tokenization/abstract-syntax-tree
+# TODO: (Derek Lomax) 1/15/2026 4:12:15 PM, modify this function from the website to read from files instead
+function Get-PsOneAst
+{
+    param
+    (
+        # PowerShell code to examine:
+        [Parameter(Mandatory, ValueFromPipeline)]
+        [string]
+        $Code,
+    
+        # requested Ast type
+        # use dynamic argument completion:
+        [ArgumentCompleter({
+                # receive information about current state:
+                param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
+    
+    
+                # get all ast types
+                [PSObject].Assembly.GetTypes().Where{ $_.Name.EndsWith('Ast') }.Name | 
+                    Sort-Object |
+                    # filter results by word to complete
+                    Where-Object { $_.LogName -like "$wordToComplete*" } | 
+                    ForEach-Object { 
+                        # create completionresult items:
+                        [System.Management.Automation.CompletionResult]::new($_, $_, "ParameterValue", $_)
+                    }
+            })]
+        $AstType = '*',
+    
+        # when set, do not recurse into nested scriptblocks:
+        [Switch]
+        $NoRecursion
+    )
+
+    begin
+    {
+        # create the filter predicate by using the submitted $AstType
+        # if the user did not specify it is "*" by default, including all:
+        $predicate = { param($astObject) $astObject.GetType().Name -like $AstType }
+    }  
+    # do this for every submitted code:
+    process
+    {
+        # we need to read the errors because we are accepting text which
+        # can contain syntax errors:
+        $errors = $null
+        $ast = [System.Management.Automation.Language.Parser]::ParseInput($Code, [ref]$null, [ref]$errors)
+    
+        # if the code contains syntax errors and is invalid, bail out:
+        if ($errors) { throw [System.InvalidCastException]::new("Submitted text could not be converted to PowerShell because it contains syntax errors: $($errors | Out-String)") }
+    
+        # search for all requested ast...
+        $ast.FindAll($predicate, !$NoRecursion) |
+            # and dynamically add a visible property for the ast object type:
+            Add-Member -MemberType ScriptProperty -Name Type -Value { $this.GetType().Name } -PassThru
     }
 }
