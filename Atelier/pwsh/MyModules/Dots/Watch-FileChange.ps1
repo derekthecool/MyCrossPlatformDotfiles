@@ -1,6 +1,7 @@
 # Function designed to basically be like dotnet watch
+# powershell module Eventful can do this and more
 function Watch-FileChange
-                                                     {
+{
     param(
         [string]$Path,
         [string]$Filter = '*',

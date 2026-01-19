@@ -19,6 +19,17 @@
     FunctionsToExport = @(
         'dot'
         'Initialize-Dotfiles'
+        'Clone-GitRepository'
+        'Get-NeovimConfigurationDirectory'
+        'Get-NeovimConfiguration'
+        'Get-WeztermConfigurationDirectory'
+        'Get-WeztermConfiguration'
+        'Get-PloverConfigurationDirectory'
+        'Get-PloverConfiguration'
+        'Get-ExercismConfigurationDirectory'
+        'Get-ExercismConfiguration'
+        'Get-AwesomeWmWidgets'
+        'Get-AllConfigurations'
+        'dots'
     )
 }
-
