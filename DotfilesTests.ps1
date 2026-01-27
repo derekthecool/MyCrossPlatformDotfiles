@@ -9,4 +9,8 @@ $config = New-PesterConfiguration -Hashtable @{
     Output   = @{Verbosity = 'Detailed' }
     PassThru = $true
 }
-Invoke-Pester -Configuration $config
+$results = Invoke-Pester -Configuration $config
+if ($results.Failed)
+{
+    $results.Failed | Select-Object Name, Block, ErrorRecord
+}
