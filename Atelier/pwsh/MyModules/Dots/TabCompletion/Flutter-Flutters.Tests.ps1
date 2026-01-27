@@ -34,7 +34,7 @@ Describe 'Testing Get-FlutterCommandsAndNonGlobalOptions' -Skip:$skipTests {
         }
         @{
             InputCommand      = 'flutter run'
-            OptionsOrCommands = 41
+            OptionsOrCommands = 40
         }
     ) {
         Get-FlutterCommandsAndNonGlobalOptions -FlutterCommand $InputCommand | Should -HaveCount $OptionsOrCommands
