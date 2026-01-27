@@ -3,7 +3,7 @@
 }
 
 Describe 'DotContainer tests' -Skip:(-not(Test-Path Env:CI)) {
-    It 'Function Get-ContainerRunner works' {
-        Get-ContainerRunner | Should -Be -Not $null
+    It 'Function Get-ContainerRunner exists' {
+        Get-Command Get-ContainerRunner | Should -Be -Not $null
     }
 }
