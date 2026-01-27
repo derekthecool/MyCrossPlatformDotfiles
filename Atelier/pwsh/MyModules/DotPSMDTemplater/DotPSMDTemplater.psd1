@@ -17,6 +17,6 @@
     FunctionsToExport = @(
         'Get-DotPSMDTemplate'
         'Update-DotPSMDTemplate'
+        'Remove-DotPSMDTemplate'
     )
 }
-

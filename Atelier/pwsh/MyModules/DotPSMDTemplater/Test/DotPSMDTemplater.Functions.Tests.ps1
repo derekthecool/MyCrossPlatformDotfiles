@@ -4,6 +4,7 @@ BeforeAll {
 
 Describe 'DotPSMDTemplater tests' {
     It 'Function Get-DotPSMDTemplate is null initially' {
+        Remove-DotPSMDTemplate
         Get-DotPSMDTemplate | Should -Be $null
     }
 

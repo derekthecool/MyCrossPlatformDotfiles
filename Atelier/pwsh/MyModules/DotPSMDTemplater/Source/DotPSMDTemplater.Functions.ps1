@@ -15,6 +15,18 @@ function Get-DotPSMDTemplate
 
 <#
     .SYNOPSIS
+    Remove all dot PSMD templates - do not kill others from the PSMD module
+
+    .EXAMPLE
+    PS> Remove-DotPSMDTemplate
+#>
+function Remove-DotPSMDTemplate
+{
+    Get-PSMDTemplate -Store Default | Remove-PSMDTemplate -Confirm:$false
+}
+
+<#
+    .SYNOPSIS
     Delete all of my templates and load the latest version
 
     .DESCRIPTION
