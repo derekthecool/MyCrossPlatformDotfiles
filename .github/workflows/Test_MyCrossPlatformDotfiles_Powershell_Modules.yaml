@@ -1,12 +1,12 @@
 ---
-name: 'Test MyCrossPlatformDotfiles Powershell Modules'
+name: "Test MyCrossPlatformDotfiles Powershell Modules"
 
 on:
   workflow_dispatch:
   push:
     # Only on these paths or specific files
     paths:
-      - 'Atelier/pwsh/**'
+      - "Atelier/pwsh/**"
 
 permissions: read-all
 
@@ -36,16 +36,4 @@ jobs:
         uses: actions/setup-dotnet@v4
 
       - name: Run Pester Tests
-        run: |
-          $env:PSModulePath += "$([System.IO.Path]::PathSeparator)./Atelier/pwsh/MyModules/"
-          $config = New-PesterConfiguration -Hashtable @{
-              Run = @{
-                  PassThru = $true
-                  Path = './Atelier/pwsh/MyModules'
-              }
-              Debug = @{
-                  WriteDebugMessages = $true
-              }
-              Output = @{Verbosity = 'Detailed' }
-          }
-          Invoke-Pester -Configuration $config
+        run: ./DotfilesTests.ps1
