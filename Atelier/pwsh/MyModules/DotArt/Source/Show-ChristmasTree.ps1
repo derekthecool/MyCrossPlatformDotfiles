@@ -1,7 +1,4 @@
-﻿using module PwshSpectreConsole
-using namespace Spectre.Console
-
-function Show-ChristmasTree
+﻿function Show-ChristmasTree
 {
     [Alias('sct')]
     param (
