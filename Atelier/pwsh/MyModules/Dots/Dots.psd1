@@ -6,6 +6,7 @@
     Copyright         = '(c) Derek Lomax. All rights reserved.'
     Description       = 'Powerful dot file collection module'
     FunctionsToExport = @(
+        'Get-Benchmark'
         'Add-MasonToolsToPath'
         'Get-AllConfigurations'
         'Get-TopMemoryProcesses'
