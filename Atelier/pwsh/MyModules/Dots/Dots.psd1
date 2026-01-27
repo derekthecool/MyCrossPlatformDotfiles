@@ -7,6 +7,7 @@
     Description       = 'Powerful dot file collection module'
     FunctionsToExport = @(
         'Get-Benchmark'
+        'Get-BenchmarkTotalMilliseconds'
         'Add-MasonToolsToPath'
         'Get-AllConfigurations'
         'Get-TopMemoryProcesses'
