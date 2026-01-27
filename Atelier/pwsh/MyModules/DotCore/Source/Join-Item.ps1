@@ -1,6 +1,7 @@
 function Join-Item
 {
     [CmdletBinding()]
+    [Alias('join')]
     param (
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [object]$InputObject,
@@ -32,5 +33,3 @@ function Join-Item
         }
     }
 }
-
-New-Alias -Name join -Value Join-Item

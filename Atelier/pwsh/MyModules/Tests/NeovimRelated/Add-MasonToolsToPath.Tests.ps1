@@ -1,5 +1,5 @@
 BeforeAll {
-    Import-Module -Force Dots
+    Import-Module $PSScriptRoot/../../Dots/Dots.psd1 -Force
 }
 
 Describe 'Mason tools in path' {

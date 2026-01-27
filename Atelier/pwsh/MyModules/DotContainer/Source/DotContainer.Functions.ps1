@@ -24,8 +24,8 @@ function Use-Container
     Write-Host "Use-Container args: $args"
     & $(Get-ContainerRunner) @args
 }
-Set-Alias -Name 'c' -Value Use-Container
-Set-Alias -Name 'container' -Value Use-Container
+Set-Alias -Name 'c' -Value Use-Container -Force
+Set-Alias -Name 'container' -Value Use-Container -Force
 
 function Get-ComposeContainerRunner
 {
@@ -54,9 +54,9 @@ function Use-ComposeContainer
     Write-Host "Use-ComposeContainer args: $args"
     & $(Get-ComposeContainerRunner) @args
 }
-Set-Alias -Name 'compose' -Value Use-ComposeContainer
+Set-Alias -Name 'compose' -Value Use-ComposeContainer -Force
 
-Set-Alias -Name 'mmdc' -Value Use-MermaidCli
+Set-Alias -Name 'mmdc' -Value Use-MermaidCli -Force
 function Use-MermaidCli
 {
     $DiagramPath = $PWD

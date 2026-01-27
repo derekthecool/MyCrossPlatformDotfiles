@@ -17,6 +17,7 @@
 function Get-PdfInfo
 {
     [CmdletBinding()]
+    [Alias('gpi')]
     param (
         [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
         [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
@@ -50,5 +51,3 @@ function Get-PdfInfo
         }
     }
 }
-
-New-Alias -Name 'gpi' -Value Get-PdfInfo

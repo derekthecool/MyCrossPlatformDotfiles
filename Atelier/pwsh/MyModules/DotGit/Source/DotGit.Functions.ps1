@@ -1,12 +1,16 @@
 function Get-GitWorktree
 {
+    [CmdletBinding()]
+    [Alias('gwt')]
+    param()
     git worktree list | ConvertFrom-Text '(?<Path>\S+)\s+\w+\s\[(?<Name>\w+)\]'
 }
 
-New-Alias -Name 'gwt' -Value Get-GitWorktree
-
 function Switch-GitWorktree
 {
+    [CmdletBinding()]
+    [Alias('swt')]
+    param()
     $trees = Get-GitWorktree
     if ($trees)
     {
@@ -15,10 +19,7 @@ function Switch-GitWorktree
     {
         Write-Error "No git worktrees found"
     }
-  
 }
-
-New-Alias -Name 'swt' -Value Switch-GitWorktree
 
 <#
     .SYNOPSIS

@@ -47,8 +47,8 @@ function Invoke-Plover
     Invoke-Expression $command
 }
 
-Set-Alias -Name plover -Value Invoke-Plover
-Set-Alias -Name plover_console -Value Invoke-Plover
+Set-Alias -Name plover -Value Invoke-Plover -Force
+Set-Alias -Name plover_console -Value Invoke-Plover -Force
 
 function Get-PloverConfigurationDirectory
 {

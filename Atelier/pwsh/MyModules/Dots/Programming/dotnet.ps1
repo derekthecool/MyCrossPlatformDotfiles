@@ -1,5 +1,7 @@
 function Get-DotnetOutdatedPackages
 {
+    [CmdletBinding()]
+    [Alias('dotnet-GetOutdated')]
     param (
         [Parameter()]
         [switch]$Update
@@ -21,5 +23,3 @@ function Get-DotnetOutdatedPackages
 
     $packages
 }
-
-New-Alias -Name dotnet-GetOutdated -Value Get-DotnetOutdatedPackages

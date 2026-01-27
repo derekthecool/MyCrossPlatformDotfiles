@@ -44,6 +44,7 @@
 #>
 function Get-Site
 {
+    [Alias('scrape')]
     param (
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, Position = 0)]
         [string]$Url,
@@ -56,14 +57,13 @@ function Get-Site
         [string]$BasicTextFilter = ".*"
     )
 
-    $result = ConvertFrom-Html -Url $Url -Engine AngleSharp
+    $result = ConvertFrom-HTML -Url $Url -Engine AngleSharp
     $result.Children[1].Children.QuerySelectorAll($QuerySelectorFilter) | Where-Object { $_.TextContent -cmatch $BasicTextFilter }
 }
 
-New-Alias -Name 'scrape' -Value Get-Site
-
 function Get-SiteText
 {
+    [Alias('text')]
     param (
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [AngleSharp.Html.Dom.HtmlElement[]]$Items
@@ -74,5 +74,3 @@ function Get-SiteText
         $Items | Select-Object -ExpandProperty TextContent | ForEach-Object { $_.Trim() }
     }
 }
-
-New-Alias -Name 'text' -Value Get-SiteText

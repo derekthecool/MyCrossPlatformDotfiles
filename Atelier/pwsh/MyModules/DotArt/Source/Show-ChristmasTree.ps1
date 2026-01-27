@@ -3,7 +3,7 @@ using namespace Spectre.Console
 
 function Show-ChristmasTree
 {
-
+    [Alias('sct')]
     param (
         [Parameter()]
         [string]$AnimationDelayMilliseconds = 190,
@@ -137,5 +137,3 @@ function Show-ChristmasTree
         [Console]::CursorVisible = $true
     }
 }
-
-New-Alias -Name 'sct' -Value Show-ChristmasTree

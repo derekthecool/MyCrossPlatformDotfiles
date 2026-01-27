@@ -1,6 +1,7 @@
 function Use-EasyOut
 {
     [CmdletBinding()]
+    [Alias('easy')]
     param (
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [object]$InputObject,
@@ -83,17 +84,3 @@ Write-FormatView @splat
         Add-Content -Path $Path -Value "`n$EasyOutString"
     }
 }
-
-New-Alias -Name 'easy' -Value Use-EasyOut
-
-<#
-# Pretty much the same as aliases but for executables instead
-Write-FormatView `
-    -TypeName 'System.Management.Automation.ApplicationInfo' `
-    -Name DotsApplicationInfoView `
-    -Property Name, Definition, CommandType `
-    -AutoSize `
-    -StyleRow {
-    'Foreground.Yellow'
-}
-#>

@@ -1,7 +1,7 @@
 function Format-PowershellScriptFile
 {
     [CmdletBinding()]
-    [Alias("taco")]
+    [Alias('fps')]
     param (
         [string]$Path = ($PWD.Path),
         [string]$Settings = "$HOME/Atelier/pwsh/PSScriptAnalyzerSettings.psd1"
@@ -14,8 +14,6 @@ function Format-PowershellScriptFile
         $newContent | Set-Content -Path $_
     }
 }
-
-New-Alias -Name 'fps' -Value Format-PowershellScriptFile
 
 function Get-PowershellScriptFileAstDetails
 {
@@ -42,6 +40,7 @@ function Get-PowershellScriptFileAstDetails
                 }, $true) | ForEach-Object { $_.Name }
 
             # --- ALIASES (Set-Alias or New-Alias, positional or named args) ---
+            # TODO: (Derek Lomax) 1/27/2026 11:38:36 AM, need to get a way to scan for function aliases like [Alias('name')]
             $aliases += $ast.FindAll({
                     param($node)
                     $node -is [System.Management.Automation.Language.CommandAst] -and

@@ -104,6 +104,7 @@ The scriptblock is invoked for each element after filtering.
 function Get-ClipboardAsArray
 {
     [CmdletBinding(DefaultParameterSetName = 'Default')]
+    [Alias('clipped')]
     param (
         [Parameter(Position = 0, ParameterSetName = '__AllParameterSets')]
         [string]$Separator = "[`n`r`t, ]+",
@@ -172,5 +173,3 @@ function Get-ClipboardAsArray
     }
     $result
 }
-
-New-Alias -Name 'clipped' -Value Get-ClipboardAsArray

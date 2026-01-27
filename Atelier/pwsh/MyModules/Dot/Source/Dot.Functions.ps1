@@ -16,7 +16,8 @@ function dot
 }
 
 # Helpful alias for typos like: dotgit status
-New-Alias -Name dotgit -Value dot -ErrorAction SilentlyContinue
+# cannot use easy function alias [Alias('alias_name')] decorator on non-advanced functions e.g. functions that use $args
+New-Alias -Name dotgit -Value dot -ErrorAction SilentlyContinue -Force
 
 # Clone and setup the dotfiles repository with force checkout
 function Initialize-Dotfiles
@@ -66,4 +67,3 @@ function Initialize-Dotfiles
 
     Write-Host 'Dotfiles are initialized and ready.'
 }
-
