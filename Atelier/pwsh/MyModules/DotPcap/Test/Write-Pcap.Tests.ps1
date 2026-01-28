@@ -7,9 +7,15 @@ Describe 'Header tests' {
         Get-PcapFileHeader | Should -BeExactly 212, 195, 178, 161, 2, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 0, 0, 101, 0, 0, 0
     }
 
-    It 'Packet header bytes for given date and length should match' { 
-        $bytes = Get-PcapPacketHeader -Timestamp (Get-Date -Day 1 -Month 11 -Year 2025 -Hour 1 -Minute 5 -Second 7 -Millisecond 50) -CapturedLength 45 -OriginalLength 45
-        $bytes | Should -BeExactly 147, 19, 6, 105, 80, 195, 0, 0, 45, 0, 0, 0, 45, 0, 0, 0
+    It 'Packet header bytes for given date and length should match' {
+        # Using a DateTimeOffset is preferred here because DateTime uses local time and serializes differently on different computers
+        # This test failed on GitHub actions but worked on my computer
+        $timestamp = [DateTimeOffset]::new(
+            2025, 11, 1, 1, 5, 7, 50,
+            [TimeSpan]::Zero
+        )
+        $bytes = Get-PcapPacketHeader -Timestamp $timestamp -CapturedLength 45 -OriginalLength 45
+        $bytes | Should -BeExactly 195, 92, 5, 105, 80, 195, 0, 0, 45, 0, 0, 0, 45, 0, 0, 0
     }
 }
 

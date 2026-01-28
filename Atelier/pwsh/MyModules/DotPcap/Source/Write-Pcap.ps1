@@ -75,7 +75,7 @@ function Get-PcapPacketHeader
 {
     param(
         [Parameter()]
-        [datetime]$Timestamp,
+        [DateTimeOffset]$Timestamp,
 
         [Parameter(Mandatory)]
         [int]$CapturedLength,
