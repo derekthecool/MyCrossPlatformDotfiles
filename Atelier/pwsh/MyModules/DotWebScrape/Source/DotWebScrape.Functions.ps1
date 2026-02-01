@@ -40,7 +40,11 @@
 
     .EXAMPLE
     # get quotes
-    s isscrape https://quotes.toscrape.com/ 'span.text' | text
+    scrape https://quotes.toscrape.com/ 'span.text' | text
+
+    .EXAMPLE
+    # Get a list of all pokemon
+    scrape https://pokemondb.net/pokedex/national 'a.ent-name' | text
 #>
 function Get-Site
 {
