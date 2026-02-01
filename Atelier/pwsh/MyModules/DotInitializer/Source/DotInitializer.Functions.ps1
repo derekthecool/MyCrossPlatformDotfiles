@@ -8,50 +8,50 @@ function Set-PackageProviderPriority
 function Get-DotPackageList
 {
     @(
-            # # Essential
-            # Scoop
-            @{ Name = 'neovim' },
-            @{ Name = 'pwsh' },
-            @{ Name = 'wezterm' },
-            @{ Name = 'autohotkey' },
-            @{ Name = 'flutter' },
-            @{ Name = 'gh' },
-            @{ Name = 'go' },
-            @{ Name = 'nodejs' },
-            @{ Name = 'yarn' },
-            @{ Name = 'podman' },
-            @{ Name = 'docker-compose' },
-            @{ Name = 'python' },
-            @{ Name = 'starship' },
-            @{ Name = 'rust' },
-            # C and C++ build tools
-            @{ Name = 'cmake' },
-            @{ Name = 'ninja' },
+        # # Essential
+        # Scoop
+        @{ Name = 'neovim' },
+        @{ Name = 'pwsh' },
+        @{ Name = 'wezterm' },
+        @{ Name = 'autohotkey' },
+        @{ Name = 'flutter' },
+        @{ Name = 'gh' },
+        @{ Name = 'go' },
+        @{ Name = 'nodejs' },
+        @{ Name = 'yarn' },
+        @{ Name = 'podman' },
+        @{ Name = 'docker-compose' },
+        @{ Name = 'python' },
+        @{ Name = 'starship' },
+        @{ Name = 'rust' },
+        # C and C++ build tools
+        @{ Name = 'cmake' },
+        @{ Name = 'ninja' },
 
-            # Yazi https://yazi-rs.github.io/docs/installation/#windows
-            @{ Name = 'yazi' },
-            @{ Name = 'ffmpeg' },
-            @{ Name = '7zip' },
-            @{ Name = 'jq' },
-            @{ Name = 'poppler' },
-            @{ Name = 'fd' },
-            @{ Name = 'ripgrep' },
-            @{ Name = 'fzf' },
-            @{ Name = 'zoxide' },
-            @{ Name = 'imagemagick' },
+        # Yazi https://yazi-rs.github.io/docs/installation/#windows
+        @{ Name = 'yazi' },
+        @{ Name = 'ffmpeg' },
+        @{ Name = '7zip' },
+        @{ Name = 'jq' },
+        @{ Name = 'poppler' },
+        @{ Name = 'fd' },
+        @{ Name = 'ripgrep' },
+        @{ Name = 'fzf' },
+        @{ Name = 'zoxide' },
+        @{ Name = 'imagemagick' },
 
-            # Other important packages
-            @{ Name = 'curl' },
-            @{ Name = 'exercism' },
-            @{ Name = 'netcat' },
-            @{ Name = 'nmap' },
-            @{ Name = 'okular' },
-            @{ Name = 'putty' },
-            @{ Name = 'stylua' },
-            @{ Name = 'unrar' },
-            @{ Name = 'vlc' },
-            @{ Name = 'yt-dlp' },
-            @{ Name = 'mpv' }
+        # Other important packages
+        @{ Name = 'curl' },
+        @{ Name = 'exercism' },
+        @{ Name = 'netcat' },
+        @{ Name = 'nmap' },
+        @{ Name = 'okular' },
+        @{ Name = 'putty' },
+        @{ Name = 'stylua' },
+        @{ Name = 'unrar' },
+        @{ Name = 'vlc' },
+        @{ Name = 'yt-dlp' },
+        @{ Name = 'mpv' }
 
 
         # Linux only: TODO: (Derek Lomax) 3/28/2025 10:20:23 AM, This section will need to lot of work to support Ubuntu, Arch, etc.

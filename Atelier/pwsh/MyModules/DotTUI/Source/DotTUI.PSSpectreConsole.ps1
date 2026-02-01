@@ -1,4 +1,4 @@
-﻿function Show-DotTUI
+function Show-DotTUI
 {
     $layout = New-SpectreLayout -Name "root" -Rows @(
         (
@@ -77,7 +77,7 @@
         param (
             [Spectre.Console.LiveDisplayContext] $Context
         )
-        $fileList = @(@{Name = ".."; Fullname = ".."}) + (Get-ChildItem)
+        $fileList = @(@{Name = ".."; Fullname = ".." }) + (Get-ChildItem)
         $selectedFile = $fileList[0]
 
         while ($true)
@@ -95,7 +95,7 @@
                 {
                     if ($selectedFile -is [System.IO.DirectoryInfo] -or $selectedFile.Name -eq "..")
                     {
-                        $fileList = @(@{Name = ".."; Fullname = ".."}) + (Get-ChildItem -Path $selectedFile.FullName)
+                        $fileList = @(@{Name = ".."; Fullname = ".." }) + (Get-ChildItem -Path $selectedFile.FullName)
                         $selectedFile = $fileList[0]
                     } else
                     {
@@ -122,14 +122,14 @@
 function Get-DevEnvironmentInfo
 {
     $tools = @(
-        @{ Name = "PowerShell";     Command = { $PSVersionTable.PSVersion.ToString() } },
-        @{ Name = "Python";         Command = { & python --version 2>&1 } },
-        @{ Name = ".NET SDKs";      Command = { & dotnet --list-sdks 2>&1 } },
-        @{ Name = ".NET Runtimes";  Command = { & dotnet --list-runtimes 2>&1 } },
-        @{ Name = "Rust";           Command = { & rustc --version 2>&1 } },
-        @{ Name = "Cargo";          Command = { & cargo --version 2>&1 } },
-        @{ Name = "Lua";            Command = { & lua -v 2>&1 } },
-        @{ Name = "Node.js";        Command = { & node --version 2>&1 } }
+        @{ Name = "PowerShell"; Command = { $PSVersionTable.PSVersion.ToString() } },
+        @{ Name = "Python"; Command = { & python --version 2>&1 } },
+        @{ Name = ".NET SDKs"; Command = { & dotnet --list-sdks 2>&1 } },
+        @{ Name = ".NET Runtimes"; Command = { & dotnet --list-runtimes 2>&1 } },
+        @{ Name = "Rust"; Command = { & rustc --version 2>&1 } },
+        @{ Name = "Cargo"; Command = { & cargo --version 2>&1 } },
+        @{ Name = "Lua"; Command = { & lua -v 2>&1 } },
+        @{ Name = "Node.js"; Command = { & node --version 2>&1 } }
     )
 
     $results = @()

@@ -6,8 +6,8 @@ Write-FormatView `
     -Name DotsPNPDevice `
     -Property Name, Port, DeviceId, Status `
     -VirtualProperty @{
-        Port = { [Regex]::Match($_.Name, '(COM\d+)').Value }
-    } -StyleRow {
+    Port = { [Regex]::Match($_.Name, '(COM\d+)').Value }
+} -StyleRow {
     $_.Status -eq 'OK' ? 'Foreground.Green' : 'Foreground.Red'
 } `
     -AutoSize

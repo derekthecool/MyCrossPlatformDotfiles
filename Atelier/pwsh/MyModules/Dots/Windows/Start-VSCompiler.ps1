@@ -2,9 +2,9 @@
 # https://intellitect.com/blog/enter-vsdevshell-powershell/
 # The better method is to update your project and use dotnet cli
 if ($IsWindows)
-                                                                {
+{
     function Start-VSCompiler
-               {
+    {
         # First way I found. This way sources a dll then needs a unique GUID from your visual Studio
         # C:\WINDOWS\SysWOW64\WindowsPowerShell\v1.0\powershell.exe -noe -c "&{Import-Module 'C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\Microsoft.VisualStudio.DevShell.dll'; Enter-VsDevShell 0e7efad8}"
 

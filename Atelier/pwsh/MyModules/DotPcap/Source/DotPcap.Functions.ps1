@@ -33,8 +33,8 @@ function Read-Pcap
             Select-Object -ExpandProperty layers |
             ForEach-Object {
                 [PSCustomObject]@{
-                    Data = $_
-                    Time = [DateTime]::ParseExact(($_.frame.time_utc -replace '\.(\d{7})\d+','.$1'),"MMM dd, yyyy HH:mm:ss.fffffff 'UTC'",$null)
+                    Data            = $_
+                    Time            = [DateTime]::ParseExact(($_.frame.time_utc -replace '\.(\d{7})\d+', '.$1'), "MMM dd, yyyy HH:mm:ss.fffffff 'UTC'", $null)
                     HighestProtocol = $_.PSObject.Properties | Select-Object -Last 1 -ExpandProperty Name
                 }
             }

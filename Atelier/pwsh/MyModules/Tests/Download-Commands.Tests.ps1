@@ -11,10 +11,10 @@ BeforeAll {
         Select-Object -First 1 -ExpandProperty FullName
 
     if ($scriptPath)
-{
+    {
         . $scriptPath
     } else
-                     {
+    {
         Write-Error "Expected script not found for: $scriptFileName"
         Write-Error "Script base: $scriptBase"
     }

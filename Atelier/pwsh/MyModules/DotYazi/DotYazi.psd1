@@ -1,4 +1,4 @@
-﻿@{
+@{
     RootModule        = 'DotYazi.psm1'
     ModuleVersion     = '0.1.0'
     GUID              = '097023b3-18dd-41ee-864c-05d4a392ab92'

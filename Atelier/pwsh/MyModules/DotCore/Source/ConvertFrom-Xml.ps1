@@ -59,7 +59,7 @@ function ConvertFrom-Xml
 
             if ($null -eq $node)
             {
- return $null
+                return $null
             }
 
             if ($node -is [System.Xml.XmlText] -or $node -is [System.Xml.XmlCDataSection])

@@ -1,4 +1,4 @@
-﻿@{
+@{
     RootModule         = 'DotTUI.psm1'
     ModuleVersion      = '0.1.0'
     GUID               = 'fede9069-a91b-497b-8d2a-19d5bc884e6a'

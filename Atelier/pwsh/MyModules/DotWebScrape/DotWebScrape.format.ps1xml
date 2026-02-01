@@ -1,76 +1,76 @@
 <!-- Generated with EZOut 2.0.6: Install-Module EZOut or https://github.com/StartAutomating/EZOut -->
 <Configuration>
-  <ViewDefinitions>
-    <View>
-      <Name>AngleSharp_Html_Dom_HtmlHtmlElement</Name>
-      <ViewSelectedBy>
-        <TypeName>AngleSharp.Html.Dom.HtmlHtmlElement</TypeName>
-      </ViewSelectedBy>
-      <TableControl>
-        <AutoSize />
-        <TableHeaders>
-          <TableColumnHeader>
-            <Label>Items</Label>
-          </TableColumnHeader>
-          <TableColumnHeader>
-          </TableColumnHeader>
-          <TableColumnHeader>
-          </TableColumnHeader>
-        </TableHeaders>
-        <TableRowEntries>
-          <TableRowEntry>
-            <TableColumnItems>
-              <TableColumnItem>
-                <ScriptBlock> $_.Children[1].ChildElementCount </ScriptBlock>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>NamespaceUri</PropertyName>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>Language</PropertyName>
-              </TableColumnItem>
-            </TableColumnItems>
-          </TableRowEntry>
-        </TableRowEntries>
-      </TableControl>
-    </View>
-    <View>
-      <Name>HtmlElement</Name>
-      <ViewSelectedBy>
-        <TypeName>AngleSharp.Html.Dom.HtmlElement</TypeName>
-      </ViewSelectedBy>
-      <TableControl>
-        <AutoSize />
-        <TableHeaders>
-          <TableColumnHeader>
-          </TableColumnHeader>
-          <TableColumnHeader>
-          </TableColumnHeader>
-          <TableColumnHeader>
-            <Label>Html</Label>
-          </TableColumnHeader>
-          <TableColumnHeader>
-          </TableColumnHeader>
-        </TableHeaders>
-        <TableRowEntries>
-          <TableRowEntry>
-            <TableColumnItems>
-              <TableColumnItem>
-                <PropertyName>TagName</PropertyName>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>ChildElementCount</PropertyName>
-              </TableColumnItem>
-              <TableColumnItem>
-                <ScriptBlock> $_.OuterHtml -replace '\s+', ' ' </ScriptBlock>
-              </TableColumnItem>
-              <TableColumnItem>
-                <PropertyName>TextContent</PropertyName>
-              </TableColumnItem>
-            </TableColumnItems>
-          </TableRowEntry>
-        </TableRowEntries>
-      </TableControl>
-    </View>
-  </ViewDefinitions>
+<ViewDefinitions>
+<View>
+<Name>AngleSharp_Html_Dom_HtmlHtmlElement</Name>
+<ViewSelectedBy>
+<TypeName>AngleSharp.Html.Dom.HtmlHtmlElement</TypeName>
+</ViewSelectedBy>
+<TableControl>
+<AutoSize />
+<TableHeaders>
+<TableColumnHeader>
+<Label>Items</Label>
+</TableColumnHeader>
+<TableColumnHeader>
+</TableColumnHeader>
+<TableColumnHeader>
+</TableColumnHeader>
+</TableHeaders>
+<TableRowEntries>
+<TableRowEntry>
+<TableColumnItems>
+<TableColumnItem>
+<ScriptBlock> $_.Children[1].ChildElementCount </ScriptBlock>
+</TableColumnItem>
+<TableColumnItem>
+<PropertyName>NamespaceUri</PropertyName>
+</TableColumnItem>
+<TableColumnItem>
+<PropertyName>Language</PropertyName>
+</TableColumnItem>
+</TableColumnItems>
+</TableRowEntry>
+</TableRowEntries>
+</TableControl>
+</View>
+<View>
+<Name>HtmlElement</Name>
+<ViewSelectedBy>
+<TypeName>AngleSharp.Html.Dom.HtmlElement</TypeName>
+</ViewSelectedBy>
+<TableControl>
+<AutoSize />
+<TableHeaders>
+<TableColumnHeader>
+</TableColumnHeader>
+<TableColumnHeader>
+</TableColumnHeader>
+<TableColumnHeader>
+<Label>Html</Label>
+</TableColumnHeader>
+<TableColumnHeader>
+</TableColumnHeader>
+</TableHeaders>
+<TableRowEntries>
+<TableRowEntry>
+<TableColumnItems>
+<TableColumnItem>
+<PropertyName>TagName</PropertyName>
+</TableColumnItem>
+<TableColumnItem>
+<PropertyName>ChildElementCount</PropertyName>
+</TableColumnItem>
+<TableColumnItem>
+<ScriptBlock> $_.OuterHtml -replace '\s+', ' ' </ScriptBlock>
+</TableColumnItem>
+<TableColumnItem>
+<PropertyName>TextContent</PropertyName>
+</TableColumnItem>
+</TableColumnItems>
+</TableRowEntry>
+</TableRowEntries>
+</TableControl>
+</View>
+</ViewDefinitions>
 </Configuration>

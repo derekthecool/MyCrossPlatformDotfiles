@@ -1,4 +1,4 @@
-﻿function Get-ContainerRunner
+function Get-ContainerRunner
 {
     if ($Global:ContainerRunner)
     {

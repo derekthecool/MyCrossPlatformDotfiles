@@ -1,4 +1,4 @@
-﻿# https://blog.ironmansoftware.com/daily-powershell/powershell-linq/
+# https://blog.ironmansoftware.com/daily-powershell/powershell-linq/
 # this could maybe be used, but it does not contain most of the Linq I want
 
 function Format-Pairs

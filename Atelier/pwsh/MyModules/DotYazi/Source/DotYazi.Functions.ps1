@@ -1,4 +1,4 @@
-﻿# Suggested function to set path to where yazi ended upon exit
+# Suggested function to set path to where yazi ended upon exit
 function y
 {
     $tmp = [System.IO.Path]::GetTempFileName()

@@ -1,4 +1,4 @@
-﻿@{
+@{
     RootModule        = 'DotAdventOfCode.psm1'
     ModuleVersion     = '0.1.0'
     GUID              = 'c72bdc6f-2345-4895-babc-eb2bc8b79a1e'

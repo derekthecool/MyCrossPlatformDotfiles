@@ -29,21 +29,21 @@ $EDITOR = $env:EDITOR
 # A true super power of powershell is setting these default parameters!
 # They are a bit like aliases but only used if not specified.
 $PSDefaultParameterValues = @{
-    'Out-Default:OutVariable'               = 'LastResult'         # Save output to $LastResult
-    'Out-File:Encoding'                     = 'utf8'               # PS5.1 defaults to ASCII
-    'Export-Csv:NoTypeInformation'          = $true                # PS5.1 defaults to $false
-    'ConvertTo-Csv:NoTypeInformation'       = $true                # PS5.1 defaults to $false
-    'Receive-Job:Keep'                      = $true                # Prevents accidental loss of output
-    'Install-Module:AllowClobber'           = $true                # Default behavior in Install-PSResource
-    'Install-Module:Force'                  = $true                # Default behavior in Install-PSResource
-    'Install-Module:SkipPublisherCheck'     = $true                # Default behavior in Install-PSResource
-    'Find-Module:Repository'                = 'PSGallery'          # Useful if you have private test repos
-    'Install-Module:Repository'             = 'PSGallery'          # Useful if you have private test repos
-    'Find-PSResource:Repository'            = 'PSGallery'          # Useful if you have private test repos
-    'Install-PSResource:Repository'         = 'PSGallery'          # Useful if you have private test repos
-    'Import-Module:DisableNameChecking'     = $true                # To not warning me of functions or scripts not using verb-noun names
-    'Invoke-RestMethod:ContentType'         = 'application/json'   # This is almost always used
-    'ConvertTo-Json:Compress'               = $true                # Prefer compact json string formatting
+    'Out-Default:OutVariable'           = 'LastResult'         # Save output to $LastResult
+    'Out-File:Encoding'                 = 'utf8'               # PS5.1 defaults to ASCII
+    'Export-Csv:NoTypeInformation'      = $true                # PS5.1 defaults to $false
+    'ConvertTo-Csv:NoTypeInformation'   = $true                # PS5.1 defaults to $false
+    'Receive-Job:Keep'                  = $true                # Prevents accidental loss of output
+    'Install-Module:AllowClobber'       = $true                # Default behavior in Install-PSResource
+    'Install-Module:Force'              = $true                # Default behavior in Install-PSResource
+    'Install-Module:SkipPublisherCheck' = $true                # Default behavior in Install-PSResource
+    'Find-Module:Repository'            = 'PSGallery'          # Useful if you have private test repos
+    'Install-Module:Repository'         = 'PSGallery'          # Useful if you have private test repos
+    'Find-PSResource:Repository'        = 'PSGallery'          # Useful if you have private test repos
+    'Install-PSResource:Repository'     = 'PSGallery'          # Useful if you have private test repos
+    'Import-Module:DisableNameChecking' = $true                # To not warning me of functions or scripts not using verb-noun names
+    'Invoke-RestMethod:ContentType'     = 'application/json'   # This is almost always used
+    'ConvertTo-Json:Compress'           = $true                # Prefer compact json string formatting
 }
 
 #region Aliases

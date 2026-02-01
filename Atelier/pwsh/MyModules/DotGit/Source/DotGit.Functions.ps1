@@ -20,19 +20,19 @@ function Get-GitWorktree
     param()
 
     git worktree list |
-    ConvertFrom-Text '(?<Path>\S+)\s+\w+\s\[(?<Name>\w+)\]' |
-    ForEach-Object {
-        $treeDirectory = (Get-Content "$($_.Path)/.git") -split ' ' | Select-Object -Last 1
-        $LastUsed = Get-ChildItem -Recurse -File $treeDirectory |
-            Sort-Object LastWriteTime |
-            Select-Object -Last 1 -ExpandProperty LastWriteTime
-    [PSCustomObject]@{
-            Path=$_.Path
-            Name=$_.Name
-            LastUsed=$LastUsed
-        }
-    } |
-    Sort-Object LastUsed
+        ConvertFrom-Text '(?<Path>\S+)\s+\w+\s\[(?<Name>\w+)\]' |
+        ForEach-Object {
+            $treeDirectory = (Get-Content "$($_.Path)/.git") -split ' ' | Select-Object -Last 1
+            $LastUsed = Get-ChildItem -Recurse -File $treeDirectory |
+                Sort-Object LastWriteTime |
+                Select-Object -Last 1 -ExpandProperty LastWriteTime
+                [PSCustomObject]@{
+                    Path     =$_.Path
+                    Name     =$_.Name
+                    LastUsed =$LastUsed
+                }
+            } |
+            Sort-Object LastUsed
 }
 
 <#

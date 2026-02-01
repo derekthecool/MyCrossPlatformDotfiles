@@ -5,10 +5,10 @@ https://stackoverflow.com/a/58677703/9842112
 #>
 function Find-DuplicateFile
 {
-param (
-    [Parameter(Mandatory = $false, ValueFromPipeline = $false)]
-    [string]$Path = $PWD
-)
+    param (
+        [Parameter(Mandatory = $false, ValueFromPipeline = $false)]
+        [string]$Path = $PWD
+    )
     Get-ChildItem -Recurse -File -Path $Path
     | Group-Object -Property Length
     | Where-Object { $_.Count -gt 1 }

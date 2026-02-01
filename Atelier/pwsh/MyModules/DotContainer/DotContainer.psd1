@@ -1,4 +1,4 @@
-﻿@{
+@{
     RootModule        = 'DotContainer.psm1'
     ModuleVersion     = '0.1.0'
     GUID              = '738772b6-c79b-46dd-a0cd-97d90f24cecb'

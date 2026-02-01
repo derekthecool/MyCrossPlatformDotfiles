@@ -1,4 +1,4 @@
-﻿@{
+@{
     RootModule        = 'DotFinance.psm1'
     ModuleVersion     = '0.1.0'
     GUID              = 'dda5d8a0-5722-4857-916a-c839d6884911'
