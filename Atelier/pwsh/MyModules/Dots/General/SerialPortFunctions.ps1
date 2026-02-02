@@ -61,18 +61,6 @@ print(json.dumps(list(map(lambda x: vars(x),serial.tools.list_ports.comports()))
     $result | ConvertFrom-Json | ForEach-Object {
         $device = $_
         $device | Add-Member -TypeName SerialPortDevice
-        try
-        {
-            Write-Verbose "Checking to see if $($device.name) serial port can be opened"
-            $port = [IO.Ports.SerialPort]::new($device.name)
-            $port.Open()
-            $port.Close()
-            $canOpen = $true
-        } catch
-        {
-            $canOpen = $false
-        }
-        $device | Add-Member -NotePropertyName Available -NotePropertyValue $canOpen
         $device
     }
 }
