@@ -13,6 +13,7 @@
         'Get-TopMemoryProcesses'
         'Get-CombinedCPUUsagePercentage'
         'Watch-FileChange'
+        'Get-SerialPort'
     )
     AliasesToExport   = @(
         'ports'
