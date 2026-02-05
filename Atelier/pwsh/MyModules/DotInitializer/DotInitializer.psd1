@@ -15,13 +15,17 @@
     # must be explicitly set! Never use * because the module will not load if that item is called.
 
     CmdletsToExport   = @()
-    AliasesToExport   = @()
+    AliasesToExport   = @(
+        'Show-TaskBar'
+        'Hide-TaskBar'
+    )
     FunctionsToExport = @(
         'Get-DotPackageList'
         'Get-DotPackages'
         'Install-DotPackages'
         'Update-DotPackages'
         'Set-WindowsRegistrySettings'
+        'Disable-AutoHideTaskBar'
+        'Enable-AutoHideTaskBar'
     )
 }
-
