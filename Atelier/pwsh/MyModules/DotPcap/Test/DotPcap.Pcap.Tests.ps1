@@ -47,3 +47,10 @@ Describe 'Pcap processing tests' -Skip:([bool](!(Get-Command tshark -ErrorAction
             Should -BeExactly 29
     }
 }
+
+Describe 'Join-Pcap'  {
+    It 'Joining 3 single packet pcaps creates a 3 packet pcap' {
+        $single_packet_pcaps = $pcap_dictionary.GetEnumerator() | Where-Object { $_.Name -match 'dns' } | ForEach-Object { $_.Value.Path }
+        $single_packet_pcaps | Get-PcapSummary | Select-Object -ExpandProperty 'Number of packets' | Should -HaveCount 3
+    }
+}

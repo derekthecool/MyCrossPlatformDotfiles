@@ -49,6 +49,14 @@ function Find-Tshark
     }
 }
 
+function Find-Mergecap
+{
+    if (-not $(Get-Command mergecap -ErrorAction SilentlyContinue))
+    {
+        throw "The command [mergecap] not found, cannot continue program"
+    }
+}
+
 
 function Split-Pcap
 {
@@ -194,6 +202,33 @@ function Split-PcapMqtt
                 }
 
                 $summary | Add-Member -MemberType NoteProperty -Name Protocols -Value $protocols
-                $summary
+                $summary | Where-Object { $_.'Number of packets' }
+            }
+        }
+
+        function Join-Pcap
+        {
+            param(
+                [Parameter(ValueFromPipeline, Mandatory)]
+                [string[]]$Path,
+                [Parameter(Mandatory)]
+                [string]$OutputPath
+            )
+            begin
+            {
+                Find-Mergecap
+                $paths = @()
+            }
+            process
+            {
+                foreach ($item in $Path)
+                {
+                    $paths += $item
+                }
+            }
+            end
+            {
+                # mergecap command: -w $OutputPath @paths | Write-Verbose
+                & mergecap -w $OutputPath @paths
             }
         }

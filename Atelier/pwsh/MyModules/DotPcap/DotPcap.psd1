@@ -27,5 +27,6 @@
         'Get-PcapPacketHeader'
         'Format-PcapPacket'
         'Format-Pcap'
+        'Join-Pcap'
     )
 }
