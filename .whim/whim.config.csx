@@ -35,10 +35,6 @@ using Whim.Updater;
 using Whim.Yaml;
 using Windows.Win32.UI.Input.KeyboardAndMouse;
 
-/// <summary>
-/// This is what's called when Whim is loaded.
-/// </summary>
-/// <param name="context"></param>
 void DoConfig(IContext context)
 {
     context.Logger.Config = new LoggerConfig();
@@ -58,6 +54,7 @@ void DoConfig(IContext context)
     // https://github.com/formesean/configs/blob/d076ef27e74898b31e511126c9b01b0a34d2649c/whim/whim.config.csx#L4
     // https://github.com/urob/whim-config/blob/3387b154edadf384271c90d2ed75a90c10e53790/whim.config.csx#L4
 
+
     Dictionary<string, string> workspaces = new Dictionary<string, string>();
     void AddWorkspace(string name, string icon)
     {
@@ -65,27 +62,15 @@ void DoConfig(IContext context)
         context.WorkspaceManager.Add(icon);
     }
 
-    AddWorkspace("terminal", "🛠️");
-    AddWorkspace("web", "🏄");
-    AddWorkspace("chat", "💬");
-    AddWorkspace("plover", "⌨️");
-    AddWorkspace("docs", "📄");
-    AddWorkspace("device", "📞");
+    AddWorkspace("terminal", "1");
+    AddWorkspace("web", "2");
+    AddWorkspace("chat", "3");
+    AddWorkspace("plover", "4");
+    AddWorkspace("docs", "5");
+    AddWorkspace("device", "6");
     AddWorkspace("one", "7");
     AddWorkspace("two", "8");
     AddWorkspace("three", "9");
-
-    // // Set up layout engines.
-    // // TODO: (Derek Lomax) 2/11/2025 9:52:34 AM, not working from website guide
-    // context.Store.Dispatch(
-    //     new SetCreateLayoutEnginesTransform(
-    //         () => new CreateLeafLayoutEngine[]
-    //         {
-    //             (id) => SliceLayouts.CreatePrimaryStackLayout(context, sliceLayoutPlugin, id),
-    //             (id) => new TreeLayoutEngine(context, treeLayoutPlugin, id)
-    //         }
-    //     )
-    // );
 
     // Tips for finding window information:
     // Ideally you can use the workspacer debug window, however this has not
@@ -148,7 +133,7 @@ void DoConfig(IContext context)
 
     // two programs
     // KDE Connect ahk_class Qt692QWindowIcon ahk_exe kdeconnect-app.exe
-    var two_programs = new List<string> { "Wireshark", "CG Local", "Qt692QWindowIcon" };
+    var two_programs = new List<string> { "Wireshark", "CG Local", "Qt692QWindowIcon", "FLUTTERVIEW" };
     Route(two_programs, "two");
 
     // three programs
@@ -176,26 +161,76 @@ void DoConfig(IContext context)
     // The best option for teams meeting compact view is to add this filter
     context.FilterManager.AddWindowClassFilter("TeamsWebView");
 
-    /*
-    // Application development with flutter
-    context.WindowRouter.RouteWindowClass("FLUTTERVIEW", MyWorkSpaceNames.Chat);
-
-    // When debugging dotnet applications in neovim, it opens a useless external terminal
-    context.WindowRouter.RouteProcessName("dotnet", MyWorkSpaceNames.PlusThree);
-    context.WindowRouter.RouteTitle(@"C:\Program Files\dotnet\dotnet.exe", MyWorkSpaceNames.PlusThree);
-    context.WindowRouter.RouteProcessName("WindowsTerminal", MyWorkSpaceNames.PlusThree);
-
-    // Zoom and Teams video calls
-    context.WindowRouter.RouteProcessName("Zoom", MyWorkSpaceNames.PlusOne);
-
-      */
-
     // Close active window
     // https://github.com/urob/whim-config/blob/3387b154edadf384271c90d2ed75a90c10e53790/whim.commands.csx
     context.CommandManager.Add(
         identifier: "close_window",
         title: "Close focused window",
         callback: () => context.WorkspaceManager.ActiveWorkspace.LastFocusedWindow.Close()
+    );
+
+    // Activate next workspace, skipping over those that are active on other monitors
+    context.CommandManager.Add(
+        identifier: "activate_previous_workspace",
+        title: "Activate the previous inactive workspace",
+        callback: () => context.Store.Dispatch(new ActivateAdjacentWorkspaceTransform(Reverse: true, SkipActive: true))
+    );
+
+    // Activate previous workspace, skipping over those that are active on other monitors
+    context.CommandManager.Add(
+        identifier: "activate_next_workspace",
+        title: "Activate the next inactive workspace",
+        callback: () => context.Store.Dispatch(new ActivateAdjacentWorkspaceTransform(SkipActive: true))
+    );
+
+    // // Activate monitor by index
+    // var MAXIMUM_MONITORS = 4;
+    // for(int i = 1; i <= MAXIMUM_MONITORS; i++)
+    // {
+    //     context.CommandManager.Add(
+    //         identifier: $"activate_monitor_{i}",
+    //         title: $"Activate monitor {i}",
+    //         callback: () => {
+    //             if (!context.Store.Pick(Pickers.PickMonitorByIndex(0)).TryGet(out IMonitor monitor))
+    //             {
+    //                 return;
+    //             }
+    //             if (!context.Store.Pick(Pickers.PickWorkspaceByMonitor(monitor.Handle)).TryGet(out IWorkspace workspace))
+    //             {
+    //                 return;
+    //             }
+    //             context.Store.Dispatch(new FocusWorkspaceTransform(workspace.Id));
+    //         }
+    //     );
+    // }
+
+    // Loop approach didn't work?? Let's do it this way instead.
+    context.CommandManager.Add(
+        identifier: $"activate_monitor_1",
+        title: $"Activate monitor 1",
+        callback: () => {
+            if (!context.Store.Pick(Pickers.PickMonitorByIndex(0)).TryGet(out IMonitor monitor)) return;
+            if (!context.Store.Pick(Pickers.PickWorkspaceByMonitor(monitor.Handle)).TryGet(out IWorkspace workspace)) return;
+            context.Store.Dispatch(new FocusWorkspaceTransform(workspace.Id));
+        }
+    );
+    context.CommandManager.Add(
+        identifier: $"activate_monitor_2",
+        title: $"Activate monitor 2",
+        callback: () => {
+            if (!context.Store.Pick(Pickers.PickMonitorByIndex(1)).TryGet(out IMonitor monitor)) return;
+            if (!context.Store.Pick(Pickers.PickWorkspaceByMonitor(monitor.Handle)).TryGet(out IWorkspace workspace)) return;
+            context.Store.Dispatch(new FocusWorkspaceTransform(workspace.Id));
+        }
+    );
+    context.CommandManager.Add(
+        identifier: $"activate_monitor_3",
+        title: $"Activate monitor 3",
+        callback: () => {
+            if (!context.Store.Pick(Pickers.PickMonitorByIndex(2)).TryGet(out IMonitor monitor)) return;
+            if (!context.Store.Pick(Pickers.PickWorkspaceByMonitor(monitor.Handle)).TryGet(out IWorkspace workspace)) return;
+            context.Store.Dispatch(new FocusWorkspaceTransform(workspace.Id));
+        }
     );
 
     // Modifiers
@@ -213,6 +248,13 @@ void DoConfig(IContext context)
     Bind(mod1, "L", "whim.core.focus_window_in_direction.right");
     Bind(mod1, "K", "whim.core.focus_window_in_direction.up");
     Bind(mod1, "J", "whim.core.focus_window_in_direction.down");
+
+    // Monitor selection based on plover AOEU placement
+    // I like 1 based monitor indexing
+    Bind(mod1, "A", "whim.custom.activate_monitor_1");
+    Bind(mod1, "O", "whim.custom.activate_monitor_2");
+    Bind(mod1, "E", "whim.custom.activate_monitor_3");
+    // Bind(mod1, "U", "whim.custom.activate_monitor_4");
 }
 
 // We return doConfig here so that Whim can call it when it loads.

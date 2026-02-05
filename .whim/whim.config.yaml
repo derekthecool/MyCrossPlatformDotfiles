@@ -37,10 +37,12 @@ layout_engines:
 keybinds:
   entries:
     - command: whim.core.focus_next_monitor
-      keybind: Alt+a
+      keybind: Alt+n
     - command: whim.core.focus_previous_monitor
-      keybind: Alt+o
+      keybind: Alt+p
 
+    - command: whim.command_palette.move_window_to_workspace
+      keybind: Alt+g
     - command: whim.core.activate_workspace_1
       keybind: Alt+1
     - command: whim.core.activate_workspace_2
@@ -89,7 +91,7 @@ plugins:
         - type: battery_widget
         - type: active_layout_widget
         - type: date_time_widget
-          format: HH:mm:ss, dd MMM yyyy
+          format: hh:mm:ss, MMM dd
         - type: tree_layout_widget
 
   floating_window:
@@ -111,7 +113,7 @@ plugins:
   focus_indicator:
     is_enabled: true
     border_size: 2
-    is_fade_enabled: true
+    is_fade_enabled: false
     fade_timeout: 2
     color: blue_violet
 
