@@ -187,13 +187,32 @@ function Split-PcapMqtt
             )
             process
             {
-                $summary = capinfos -T -m $Path | ConvertFrom-Csv
+                # Throw away stderr with all calls to these commands
+                $summary = capinfos -T -m $Path 2>$null | ConvertFrom-Csv
                 if (-not $? -or $LASTEXITCODE -ne 0)
                 {
-                    # TODO: (Derek Lomax) 10/13/2025 4:38:46 PM, handle the error where pcap file last packet is corrupted. This entire command will fail.
-                    # this command might help to fix the error
-                    # editcap -r input.pcap trimmed.pcap 0 -2  # drop last 2 packets, for example
-                    throw "capinfos failure"
+                    Write-Verbose "capinfos failed - attempting to fix corrupted final packets of the pcap file"
+                    $packetCount = (tshark -r $Path 2>$null | Measure-Object).Count
+                    Write-Verbose "Using tshark to count packets found: $packetCount"
+                    if ($packetCount -le 0)
+                    {
+                        throw "tshark could not read the packet count"
+                    }
+
+                    # Edit the pcap in place cutting out the corrupted packets
+                    editcap $Path $Path -r 0-$($packetCount) 2>$null
+                    if (-not $? -or $LASTEXITCODE -ne 0)
+                    {
+                        throw "editcap failure"
+                    }
+                    Write-Verbose "Successfully repaired pcap file using editcap"
+
+                    # Finally rerun the initial command
+                    $summary = capinfos -T -m $Path 2>$null | ConvertFrom-Csv
+                    if (-not $? -or $LASTEXITCODE -ne 0)
+                    {
+                        throw "capinfos failure"
+                    }
                 }
                 $protocols = tshark -T fields -e _ws.col.Protocol -r "$Path" | Sort-Object -Unique
                 if (-not $? -or $LASTEXITCODE -ne 0)
