@@ -14,11 +14,15 @@
     CmdletsToExport    = @()
     AliasesToExport    = @(
         'join'
+        'ConvertTo-64'
+        'ConvertFrom-64'
     )
     FunctionsToExport  = @(
         'Join-Item'
         'ConvertFrom-Xml'
         'Find-DuplicateFile'
         'Expand-Everything'
+        'ConvertFrom-Base64'
+        'ConvertTo-Base64'
     )
 }

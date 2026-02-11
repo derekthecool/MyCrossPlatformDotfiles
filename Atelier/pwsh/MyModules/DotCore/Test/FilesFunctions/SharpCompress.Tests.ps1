@@ -1,5 +1,5 @@
 BeforeAll {
-    Import-Module $PSScriptRoot/../*.psd1
+    Import-Module $PSScriptRoot/../../*.psd1
     $Temp = [IO.Path]::GetTempPath()
 }
 
