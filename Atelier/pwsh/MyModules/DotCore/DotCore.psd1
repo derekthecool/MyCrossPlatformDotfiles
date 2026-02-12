@@ -16,6 +16,8 @@
         'join'
         'ConvertTo-64'
         'ConvertFrom-64'
+        'psed'
+        'ec'
     )
     FunctionsToExport  = @(
         'Join-Item'
@@ -24,5 +26,6 @@
         'Expand-Everything'
         'ConvertFrom-Base64'
         'ConvertTo-Base64'
+        'Edit-Content'
     )
 }

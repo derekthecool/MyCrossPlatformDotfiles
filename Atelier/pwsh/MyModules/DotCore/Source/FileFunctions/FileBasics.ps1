@@ -80,3 +80,32 @@ function ConvertTo-Base64
         [convert]::ToBase64String($AllBytes)
     }
 }
+
+function Edit-Content
+{
+    [CmdletBinding( SupportsShouldProcess, ConfirmImpact = 'High')]
+    [Alias('psed')]
+    [Alias('ec')]
+    param (
+        [Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]
+        [string[]]$Path,
+        [Parameter( Mandatory, Position = 0)]
+        [regex]$Pattern,
+        [Parameter( Mandatory, Position = 1)]
+        [string]$Replacement
+    )
+    process
+    {
+        Write-Verbose "Processing file $($_.Name)"
+        $rawContent = Get-Content -Raw -Path $_
+        $matchesFound = [regex]::Matches($rawContent, $Pattern)
+        if ($PSCmdlet.ShouldProcess("Replacing $(($matchesFound | Measure-Object).Count) occurrances in file $($_.Name) $($matchesFound | Out-String)"))
+        {
+            $updatedContent = $rawContent -replace $Pattern, $Replacement
+            Set-Content -NoNewline -Path $_ -Value $updatedContent
+        } else
+        {
+            Write-Output "Would replace $(($matchesFound | Measure-Object).Count) occurrances in file $($_.Name) $($matchesFound | Out-String)"
+        }
+    }
+}

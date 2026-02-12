@@ -49,3 +49,22 @@ Describe 'ConvertTo-Base64' {
         ConvertTo-64 -Bytes $InputBytes | Should -BeExactly $ExpectedBase64String
     }
 }
+
+Describe 'Edit-Content'  {
+    It 'Edit-Count works as expected' -TestCases @(
+        @{
+            Content= 'Hello world'
+            ReplacementArgs = @{
+            Pattern = 'Hello'
+            Replacement = 'Goodbye'
+            Confirm = $false
+                }
+                ExpectedContentAfterReplacement = 'Goodbye world'
+            }
+        ) {
+        Set-Content -Path ($tempFile = [IO.Path]::GetTempFileName()) -Value $Content -NoNewLine
+        Get-ChildItem $tempFile | Edit-Content @ReplacementArgs
+         Get-Content -Raw $tempFile | Should -BeExactly $ExpectedContentAfterReplacement
+        Remove-Item $tempFile
+}
+}
