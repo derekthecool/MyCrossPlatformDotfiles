@@ -5,7 +5,8 @@ function Use-EasyOut
     param (
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [object]$InputObject,
-        [switch]$Interactive
+        [switch]$Interactive,
+        [string]$TypePrefix = "DotFormat"
     )
 
     # I used module PSScriptTools helper function New-PSDynamicParameter to generate this dynamic param
@@ -49,7 +50,7 @@ function Use-EasyOut
         $EasyOutString = @"
 `$splat = @{
     TypeName = '$Type'
-    Name = 'DotFormat_$TypeName'
+    Name = '$TypePrefix_$TypeName'
     Property = @($PropertiesString)
     AutoSize = `$true
 };

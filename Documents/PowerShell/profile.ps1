@@ -44,6 +44,10 @@ $PSDefaultParameterValues = @{
     'Import-Module:DisableNameChecking' = $true                # To not warning me of functions or scripts not using verb-noun names
     'Invoke-RestMethod:ContentType'     = 'application/json'   # This is almost always used
     'ConvertTo-Json:Compress'           = $true                # Prefer compact json string formatting
+
+    # Commands from modules
+    # PSScriptTools
+    'ConvertTo-LocalTime:UTCOffset'     = (Get-TimeZone).BaseUtcOffset.ToString().Split(':')[0]
 }
 
 #region Aliases
