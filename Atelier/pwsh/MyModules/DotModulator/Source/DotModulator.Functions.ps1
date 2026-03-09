@@ -15,13 +15,19 @@ function Format-PowershellScriptFile
     }
 }
 
-function Get-PowershellScriptFileAstDetails
+function Get-PowershellProcessedAst
 {
-    
     param (
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [string]$Path
     )
+    begin
+    {
+        $results = [PSCustomObject]@{
+            Functions = $()
+            Aliases = $()
+        }
+    }
     process
     {
         foreach ($File in $Path)
@@ -76,11 +82,24 @@ function Get-PowershellScriptFileAstDetails
             Write-Verbose "Exporting functions: $($functions -join ', ')"
             Write-Verbose "Exporting aliases: $($aliases -join ', ')"
 
-            [PSCustomObject]@{
-                Aliases   = $aliases
-                Functions = $functions
+            foreach ($astAlias in $aliases)
+            {
+                $results.Aliases += ,$($astAlias)
             }
+            foreach ($astFunction in $functions)
+            {
+                $results.Functions += ,$($astFunction)
+            }
+            # [PSCustomObject]@{
+            #     PSTypeName = 'ProcessedScriptAst'
+            #     Aliases   = if ($alises){,@($aliases | Where-Object { $_ } )}
+            #     Functions = if ($functions){,@($functions | Where-Object { $_ } ) }
+            # }
         }
+    }
+    end
+    {
+        $results
     }
 }
 

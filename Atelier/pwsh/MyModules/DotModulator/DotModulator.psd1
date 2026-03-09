@@ -20,7 +20,7 @@
     )
     FunctionsToExport = @(
         'Format-PowershellScriptFile'
-        'Get-PowershellScriptFileAstDetails'
+        'Get-PowershellProcessedAst'
         'Get-PowershellAst'
     )
 }
