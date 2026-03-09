@@ -2,16 +2,7 @@ BeforeAll {
     . $PSScriptRoot/../Dots/TabCompletion/Flutter-Functions.ps1
 }
 
-# Check if the dotnet command is available
-$dotnetCommand = Get-Command flutter -ErrorAction SilentlyContinue
-
-# Determine if the tests should be skipped
-$skipTests = -not $dotnetCommand
-
-Describe 'Test flutter help global options' -Skip:$skipTests {
-}
-
-Describe 'Testing Get-FlutterCommandsAndNonGlobalOptions' -Skip:$skipTests {
+Describe 'Testing Get-FlutterCommandsAndNonGlobalOptions' {
     Context 'with mocked flutter' {
         Mock flutter
         {
