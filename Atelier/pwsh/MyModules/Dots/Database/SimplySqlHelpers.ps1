@@ -25,8 +25,8 @@ function Invoke-Mysql
         {
             "(insert|update|delete)"
             {
-                Invoke-SqlUpdate -ConnectionName $Name -Query $Query
-                | ForEach-Object { Write-Output "Rows affected: $_" }
+                Invoke-SqlUpdate -ConnectionName $Name -Query $Query |
+                    ForEach-Object { Write-Output "Rows affected: $_" }
             }
             default
             {

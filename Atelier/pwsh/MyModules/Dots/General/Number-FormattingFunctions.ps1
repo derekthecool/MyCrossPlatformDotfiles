@@ -24,11 +24,12 @@ function Get-BytesToSize
         # Format the size to 2 decimal places and append the appropriate unit
         return "{0:N2}{1}" -f $size, $sizeUnits[$i]
     }
-
 }
 
-function number
+function Expand-Number
 {
+    [CmdletBinding()]
+    [Alias('number')]
     param (
         [Parameter(Mandatory, ValueFromPipeline)]
         [int[]]$Number

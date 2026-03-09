@@ -1,4 +1,4 @@
-function Get-DotnetOutdatedPackages
+function Get-DotnetOutdatedPackage
 {
     [CmdletBinding()]
     [Alias('dotnet-GetOutdated')]
@@ -8,18 +8,25 @@ function Get-DotnetOutdatedPackages
     )
 
     $packages = dotnet list package --outdated --format json
-    | ConvertFrom-Json
-    | Select-Object -ExpandProperty projects
-    | Select-Object -ExpandProperty frameworks
-    | Select-Object -ExpandProperty topLevelPackages
+
+    if (-not $packages)
+    {
+        throw "running dotnet list package --outdated --format json failed with code $LASTEXITCODE"
+    }
+
+    $parsedPackages = $packages |
+        ConvertFrom-Json |
+        Select-Object -ExpandProperty projects |
+        Select-Object -ExpandProperty frameworks |
+        Select-Object -ExpandProperty topLevelPackages
 
     if ($Update)
     {
-        $packages | ForEach-Object {
+        $parsedPackages | ForEach-Object {
             dotnet remove package $_.id
             dotnet add package $_.id
         }
     }
 
-    $packages
+    $parsedPackages
 }
