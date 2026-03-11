@@ -65,6 +65,12 @@ keybinds:
       keybind: Alt+Shift+q
     - command: whim.core.restart_whim
       keybind: Alt+q
+    - command: whim.core.focus_layout.toggle_maximized
+      keybind: Alt+z
+    - command: whim.core.cycle_layout_engine.next
+      keybind: Alt+Shift+n
+    - command: whim.core.cycle_layout_engine.previous
+      keybind: Alt+Shift+p
 
   unify_key_modifiers: true
 
