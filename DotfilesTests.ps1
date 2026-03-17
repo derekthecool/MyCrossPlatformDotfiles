@@ -11,7 +11,7 @@ $config = New-PesterConfiguration -Hashtable @{
 }
 $results = Invoke-Pester -Configuration $config
 $results
-if ($results.Failed -gt 0)
+if (@($results.Failed).Length -gt 0)
 {
     $results.Failed | Select-Object Name, Block, ErrorRecord | Format-List | Out-Host
     exit 1
