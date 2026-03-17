@@ -10,6 +10,7 @@
         }
     }
     VariablesToExport = ''
+    FormatsToProcess  = @('DotWebScrape.format.ps1xml')
 
     # For best lazy load performance CmdletsToExport, AliasesToExport, and FunctionsToExport.
     # must be explicitly set! Never use * because the module will not load if that item is called.
@@ -24,4 +25,3 @@
         'Get-SiteText'
     )
 }
-
