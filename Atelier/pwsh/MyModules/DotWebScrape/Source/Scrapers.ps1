@@ -70,6 +70,10 @@ function Get-Site
     [Alias('scrape')]
     param (
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, Position = 0)]
+        [ValidateScript(
+            { [uri]::IsWellFormedUriString($_, 'Absolute') },
+            ErrorMessage = "{0} is not a properly formatted url"
+        )]
         [string]$Url,
 
         # Default to using * for the query filter to select everything recursively
@@ -80,8 +84,21 @@ function Get-Site
         [string]$BasicTextFilter = ".*"
     )
 
-    $result = ConvertFrom-HTML -Url $Url -Engine AngleSharp
-    $result.Children[1].Children.QuerySelectorAll($QuerySelectorFilter) | Where-Object { $_.TextContent -cmatch $BasicTextFilter }
+    process
+    {
+        Write-Verbose "Url: $Url"
+        Write-Verbose "QuerySelectorFilter: $QuerySelectorFilter"
+        Write-Verbose "BasicTextFilter: $BasicTextFilter"
+        $result = ConvertFrom-HTML -Url $Url -Engine AngleSharp
+        if (-not $result)
+        {
+            Write-Error "No results found"
+            return
+        }
+
+        $result.Children[1].Children.QuerySelectorAll($QuerySelectorFilter) |
+            Where-Object { $_.TextContent -cmatch $BasicTextFilter }
+    }
 }
 
 function Get-SiteText
