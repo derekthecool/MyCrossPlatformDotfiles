@@ -17,11 +17,19 @@
 
     CmdletsToExport   = @()
     AliasesToExport   = @(
+        # Scrapers
         'scrape'
         'text'
+
+        # Scrapes
+        'cga'
     )
     FunctionsToExport = @(
+        # Scrapers
         'Get-Site'
         'Get-SiteText'
+
+        # Scrapes
+        'Get-ClassicalGuitarAlive'
     )
 }
