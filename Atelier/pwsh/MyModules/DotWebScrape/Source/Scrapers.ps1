@@ -14,12 +14,31 @@
     - https://crawler-test.com/
     - https://books.toscrape.com/
     - https://quotes.toscrape.com/
+    - https://www.zenrows.com/blog/anglesharp#extract-all-matching-elements-from-a-page
+
 
     .PARAMETER Url
     Link to site to scrape
 
     .PARAMETER QuerySelectorFilter
     CSS query selector to filter, defaults to using * which will show all children recursively
+
+    These queries are very powerful but hard to remember, here is a list of query examples
+
+    * Query all <a> tags
+    -QuerySelectorFilter "a"
+
+    * Query all <a> tags with data-category="navigation"
+    -QuerySelectorFilter "a[data-category='navigation']"
+
+    * Select all list items within the unordered list
+    -QuerySelectorFilter "ul li"
+
+    * Query all li within the <ul> with class 'products'
+    -QuerySelectorFilter ".products li"
+
+    * Query all <a> links from div with class="title"
+    -QuerySelectorFilter "div.title a"
 
     .EXAMPLE
     # Get all Zelda games from this oxylabs demo game page
