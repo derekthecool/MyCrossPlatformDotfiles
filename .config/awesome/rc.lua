@@ -706,6 +706,15 @@ WM_CLASS(STRING) = "minecraft-launcher", "Minecraft Launcher"
     },
 
     -- Third tag: chat
+    -- {
+    --     callback = function(c)
+    --         if c:match('minecraft %d+') then
+    --
+    --         end
+    --
+    --     end,
+    --     properties = { tag = 'Web' },
+    -- },
 
     -- Forth tag: Plover stenography. Send everything except Plover lookup to Plover tag
     {
