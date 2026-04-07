@@ -8,4 +8,5 @@ bin
 
 **/*.pcap
 
+.claude/settings.json
 **/settings.local.json
