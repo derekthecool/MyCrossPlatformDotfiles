@@ -77,3 +77,7 @@
 #        fetch = "+refs/heads/*:refs/remotes/origin/*"
 # However, this works well enough for most other repositories but fails when
 # to clone with a command like 'git clone --recurse-submodules'
+
+# LSS-specific git config (includes gh credential helpers)
+[includeIf "gitdir:~/LSS/"]
+    path = "~/LSS/.gitconfig"
