@@ -24,6 +24,9 @@ local naughty = require('naughty')
 local menubar = require('menubar')
 local hotkeys_popup = require('awful.hotkeys_popup')
 
+-- Multi-monitor support
+local xrandr = require('xrandr')
+
 local function do_if_directory_not_found(dir, action)
     if not gears.filesystem.is_dir(dir) then
         action()
@@ -454,6 +457,14 @@ Globalkeys = gears.table.join(
     awful.key({ ModKey }, 'i', function()
         awful.spawn('rofi -show combi -modes combi -combi-modes "window,drun,run"')
     end, { description = 'run rofi', group = 'launcher' }),
+
+    -- Multi-monitor configuration
+    awful.key({ ModKey }, 'XF86Display', function()
+        xrandr.xrandr()
+    end, { description = 'cycle monitor configuration', group = 'screen' }),
+    awful.key({ ModKey, 'Control' }, 'x', function()
+        xrandr.xrandr()
+    end, { description = 'cycle monitor configuration', group = 'screen' }),
 
     -- TODO: find why Plover key SKWHUFRB and SKWHEFRB are not working
     awful.key({}, 'XF86AudioRaiseVolume', function()
