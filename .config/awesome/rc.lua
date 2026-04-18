@@ -521,6 +521,14 @@ ClientKeys = gears.table.join(
         c:move_to_screen()
     end, { description = 'move to screen', group = 'client' }),
 
+    awful.key({ ModKey, 'Control' }, 'Right', function(c)
+        c:move_to_screen(c.screen.index + 1)
+    end, { description = 'move to next monitor', group = 'client' }),
+
+    awful.key({ ModKey, 'Control' }, 'Left', function(c)
+        c:move_to_screen(c.screen.index - 1)
+    end, { description = 'move to previous monitor', group = 'client' }),
+
     awful.key({ ModKey }, 't', function(c)
         c.ontop = not c.ontop
     end, { description = 'toggle keep on top', group = 'client' }),
