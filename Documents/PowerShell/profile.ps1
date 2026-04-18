@@ -157,6 +157,15 @@ Set-PSReadLineKeyHandler -Chord Ctrl+Alt+w `
 #endregion
 
 #region Linux permanent environment variable processor
+$environment_file = "~/Documents/PowerShell/environment.json"
+if (Test-Path $environment_file)
+{
+    $env_vars = Get-Content $environment_file | ConvertFrom-Json -AsHashtable
+    $env_vars.GetEnumerator() | ForEach-Object {
+        [environment]::SetEnvironmentVariable($_.Name, $_.Value)
+    }
+}
+
 if ($IsLinux)
 {
     $CurrentPath = $env:PATH -split [IO.Path]::PathSeparator
