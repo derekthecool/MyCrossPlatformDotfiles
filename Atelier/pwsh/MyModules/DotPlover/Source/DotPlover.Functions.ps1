@@ -21,7 +21,7 @@ function Get-PloverPath
         }
         { $IsLinux }
         {
-            throw 'TODO support Linux appimage path search'
+            which plover
         }
         { $IsMacOS }
         {
@@ -42,13 +42,51 @@ function Invoke-Plover
         throw 'Could not find plover_console'
     }
 
+    Push-Location .
     $command = "& '$ploverPath' $args"
+    Set-Location (Split-Path (Get-PloverPath))
     Write-Host "Running plover command: $command" -ForegroundColor Green
     Invoke-Expression $command
+    Pop-Location
 }
 
 Set-Alias -Name plover -Value Invoke-Plover -Force
 Set-Alias -Name plover_console -Value Invoke-Plover -Force
+
+function Install-PloverPlugin
+{
+    param(
+        [Parameter(ValueFromPipeline, Mandatory)]
+        [string[]]$Plugins
+    )
+
+    process
+    {
+        foreach($plugin in $Plugins)
+        {
+            Write-Host "Installing plover plugin $_"
+            Invoke-Plover -s plover_plugins install $plugin
+            Start-Sleep 5
+        }
+    }
+}
+
+function Install-PloverSavedPlugins
+{
+    $plugins = @(
+        "plover-markdown-dictionary"
+        "spectra-lexer"
+        "plover-emoji"
+        "plover-fancytext"
+        "plover-python-dictionary"
+        "plover-tapey-tape"
+        "plover-current-time"
+        "plover-delay"
+        "pyperclip"
+    )
+
+    $plugins | Install-PloverPlugin
+}
 
 function Get-PloverConfigurationDirectory
 {
