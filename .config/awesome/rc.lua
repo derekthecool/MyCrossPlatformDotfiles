@@ -291,6 +291,12 @@ awful.screen.connect_for_each_screen(function(s)
     -- Volume widget, requires amixer from alsa-utils package
     volume_widget = require('awesome-wm-widgets.volume-widget.volume')
 
+    -- CPU widget
+    local cpu_widget = require('awesome-wm-widgets.cpu-widget.cpu-widget')
+
+    -- RAM widget
+    local ram_widget = require('awesome-wm-widgets.ram-widget.ram-widget')
+
     -- Create a textclock widget
     mytextclock = wibox.widget.textclock('%Y-%m-%d')
     mytextclock:connect_signal('button::press', function(_, _, _, button)
@@ -350,6 +356,10 @@ awful.screen.connect_for_each_screen(function(s)
                 mute_color = beautiful.fg_urgent,
                 bg_color = 0xFFFFFF,
             }),
+            vert_sep,
+            ram_widget(),
+            vert_sep,
+            cpu_widget(),
             vert_sep,
             mytextclock,
             s.mylayoutbox,
