@@ -65,11 +65,18 @@ theme.taglist_bg_occupied = color_scheme.background_dim
 -- Do not show application titles, just the icon
 -- theme.tasklist_disable_task_name = true
 
--- Variables set for theming notifications:
--- notification_font
--- notification_[bg|fg]
--- notification_[width|height|margin]
--- notification_[border_color|border_width|shape|opacity]
+-- Notification styling (Darker blue for better readability)
+theme.notification_font = 'HackNerdFontMono 15'
+theme.notification_bg = color_scheme.background_dim     -- #0c1332 (very dark blue)
+theme.notification_fg = color_scheme.foreground_dim     -- #8389a0 (darker gray text)
+theme.notification_border_color = color_scheme.selection_bg -- #5e6687
+theme.notification_border_width = dpi(1)
+theme.notification_opacity = 0.9
+theme.notification_margin = dpi(10)
+theme.notification_width = dpi(300)
+-- Critical notifications (errors) - muted cyan instead of red/orange
+theme.notification_crit_bg = '#22a2c9'  -- Muted cyan (from accents)
+theme.notification_crit_fg = color_scheme.background_dim -- #0c1332 (very dark blue, not white)
 
 -- Variables set for theming the menu:
 -- menu_[bg|fg]_[normal|focus]

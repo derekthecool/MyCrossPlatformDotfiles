@@ -446,12 +446,42 @@ Globalkeys = gears.table.join(
     end, { description = 'select previous', group = 'layout' }),
 
     awful.key({ ModKey, 'Control' }, 'n', function()
-        local c = awful.client.restore()
-        -- Focus restored client
-        if c then
-            c:emit_signal('request::activate', 'key.unminimize', { raise = true })
-        end
-    end, { description = 'restore minimized', group = 'client' }),
+        -- Test all notification types
+        naughty.notify({
+            preset = naughty.config.presets.normal,
+            title = 'Normal Notification Test',
+            text = 'This is a normal notification - dark blue background with dark text',
+            timeout = 5,
+        })
+
+        naughty.notify({
+            preset = naughty.config.presets.critical,
+            title = 'Critical/Error Notification Test',
+            text = 'This is a critical notification - cyan background with dark text',
+            timeout = 5,
+        })
+
+        naughty.notify({
+            preset = naughty.config.presets.ok,
+            title = 'OK Notification Test',
+            text = 'This is an OK notification preset',
+            timeout = 5,
+        })
+
+        naughty.notify({
+            preset = naughty.config.presets.info,
+            title = 'Info Notification Test',
+            text = 'This is an info notification preset',
+            timeout = 5,
+        })
+
+        naughty.notify({
+            preset = naughty.config.presets.warn,
+            title = 'Warning Notification Test',
+            text = 'This is a warning notification preset',
+            timeout = 5,
+        })
+    end, { description = 'test all notification types', group = 'awesome' }),
 
     -- Rofi program launcher
     awful.key({ ModKey }, 'i', function()
