@@ -1,0 +1,101 @@
+---
+name: Test Whim window manager configuration
+
+# Only run workflow if whim files have been changed
+on:
+  push:
+    paths:
+      - .whim/**
+  pull_request:
+    paths:
+      - .whim/**
+
+permissions: read-all
+
+jobs:
+  test-yaml:
+    name: Validate Whim YAML configuration
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Install yamllint
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y yamllint
+
+      - name: Validate YAML syntax
+        run: |
+          yamllint ./.whim/whim.config.yaml
+
+  test-csharp-patterns:
+    name: Validate Whim C# script patterns
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Validate C# script patterns
+        shell: pwsh
+        run: |
+          # Check for anti-patterns in the C# script
+          $scriptPath = "./.whim/whim.config.csx"
+
+          if (-not (Test-Path $scriptPath)) {
+            Write-Host "::error::whim.config.csx not found"
+            exit 1
+          }
+
+          Write-Host "Checking for hardcoded username paths..."
+
+          # Read the script content
+          $content = Get-Content $scriptPath -Raw
+
+          # Look for C:\Users\<username>\ patterns (anti-pattern)
+          if ($content -match 'C:\\Users\\[^\\]+\\') {
+            Write-Host "::error::Found hardcoded username path in C# script."
+            Write-Host "Please use environment variables like `$env:ProgramFiles or `$env:LOCALAPPDATA"
+            exit 1
+          }
+
+          Write-Host "✓ No hardcoded username paths found"
+
+          # Check that DLL references use Program Files or environment variables
+          Write-Host "Checking DLL reference patterns..."
+
+          # Extract and check all #r directives
+          $dllReferences = [regex]::Matches($content, '^#r\s+"([^"]+)"')
+
+          if ($dllReferences.Count -eq 0) {
+            Write-Host "::warning::No DLL references found in script"
+          } else {
+            Write-Host "Found $($dllReferences.Count) DLL references"
+
+            foreach ($match in $dllReferences) {
+              $dllPath = $match.Groups[1].Value
+
+              # Check if using C:\Users\ pattern
+              if ($dllPath -match '^C:\\Users\\') {
+                Write-Host "::error::DLL reference uses hardcoded username: $dllPath"
+                Write-Host "Use C:\Program Files\ or environment variables instead"
+                exit 1
+              }
+
+              Write-Host "✓ $dllPath"
+            }
+          }
+
+          Write-Host "✓ DLL reference patterns look good"
+
+          # Basic syntax check - ensure file isn't empty and has structure
+          $lineCount = (Get-Content $scriptPath).Count
+          if ($lineCount -lt 10) {
+            Write-Host "::error::C# script appears too short ($lineCount lines)"
+            exit 1
+          }
+
+          Write-Host "✓ C# script has reasonable length ($lineCount lines)"
+          Write-Host "All pattern validation passed!"
