@@ -30,10 +30,10 @@ jobs:
           case ${{ matrix.container }} in
             archlinux*)
               pacman -Sy --noconfirm wget git base-devel sudo awesome
-              # Install Lua testing tools
+              # Install Lua testing tools globally (container is disposable)
               pacman -S --noconfirm luarocks
-              luarocks install --local busted
-              luarocks install --local luacheck
+              luarocks install busted
+              luarocks install luacheck
               ;;
           esac
 
@@ -43,13 +43,11 @@ jobs:
 
       - name: Run Lua unit tests
         run: |
-          export PATH=$HOME/.local/bin:$PATH
           cd ./.config/awesome
           busted --output=terminal tests/
 
       - name: Run Lua linting
         run: |
-          export PATH=$HOME/.local/bin:$PATH
           luacheck .config/awesome/rc.lua .config/awesome/custom-theme.lua .config/awesome/color-schemes.lua
 
       - name: Validate theme files
