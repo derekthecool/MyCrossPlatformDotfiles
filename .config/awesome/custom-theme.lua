@@ -20,7 +20,7 @@ theme.bg_systray = theme.bg_normal
 
 theme.fg_normal = color_scheme.foreground
 theme.fg_focus = color_scheme.foreground
-theme.fg_urgent = color_scheme.foreground
+theme.fg_urgent = '#c94922'
 theme.fg_minimize = color_scheme.foreground
 
 theme.useless_gap = dpi(5)

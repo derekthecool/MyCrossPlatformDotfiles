@@ -299,10 +299,46 @@ awful.screen.connect_for_each_screen(function(s)
 
     -- Create a textclock widget
     mytextclock = wibox.widget.textclock('%Y-%m-%d')
-    mytextclock:connect_signal('button::press', function(_, _, _, button)
-        if button == 1 then
-            require('awesome-wm-widgets.calendar-widget.calendar').toggle()
+
+    -- Battery percentage widget
+    local battery_text = wibox.widget.textbox()
+    local function update_battery()
+        local f = io.open('/sys/class/power_supply/BAT1/capacity', 'r')
+        local ac_f = io.open('/sys/class/power_supply/ACAD/online', 'r')
+
+        if f and ac_f then
+            local charge = f:read('*all')
+            local ac_online = ac_f:read('*all')
+            f:close()
+            ac_f:close()
+
+            charge = tonumber(charge)
+            ac_online = tonumber(ac_online)
+            if charge then
+                local color
+                if charge >= 100 then
+                    color = '#43a047'  -- Green for 100%
+                elseif charge < 15 then
+                    color = '#e53935'  -- Red for low
+                elseif charge < 40 then
+                    color = '#c0ca33'  -- Yellow for medium
+                else
+                    color = '#c94922'  -- Orange for normal
+                end
+
+                -- Add + icon if plugged in to AC
+                local icon = (ac_online == 1) and '+' or ''
+                battery_text:set_markup('<span color="' .. color .. '">' .. icon .. charge .. '%</span>')
+            else
+                battery_text:set_text('N/A')
+            end
+        else
+            battery_text:set_text('N/A')
         end
+    end
+    update_battery()
+    awful.widget.watch('cat /sys/class/power_supply/BAT1/capacity', 10, function()
+        update_battery()
     end)
     -- End custom widgets
 
@@ -313,16 +349,16 @@ awful.screen.connect_for_each_screen(function(s)
         shape = gears.shape.rounded_rect,
 
         -- Set bar opacity via explicit opacity and also through the bg color
-        opacity = 0.90,
+        opacity = 0.99,
         bg = '#00000060',
     })
 
-    local vert_sep = wibox.widget({
+    local vert_sep = wibox.container.margin(wibox.widget({
         widget = wibox.widget.separator,
         orientation = 'vertical',
         forced_width = 2,
         color = beautiful.bg_focus,
-    })
+    }), 6, 6)
 
     -- Add widgets to the wibox
     s.mywibox:setup({
@@ -342,7 +378,6 @@ awful.screen.connect_for_each_screen(function(s)
         {
             layout = wibox.layout.fixed.horizontal,
             wibox.widget.systray(),
-            battery_widget(),
             vert_sep,
             -- wibox.widget.separator,
             volume_widget({
@@ -362,6 +397,8 @@ awful.screen.connect_for_each_screen(function(s)
             cpu_widget(),
             vert_sep,
             mytextclock,
+            vert_sep,
+            battery_text,
             s.mylayoutbox,
         },
     })
