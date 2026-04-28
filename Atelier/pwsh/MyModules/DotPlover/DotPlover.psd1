@@ -1,9 +1,10 @@
 @{
     RootModule        = 'DotPlover.psm1'
-    ModuleVersion     = '0.1.0'
+    ModuleVersion     = '0.2.0'
     GUID              = '57a53bc4-e79f-48d3-b6c5-2ad83ba6052b'
     Author            = 'Derek Lomax'
-    Description       = 'Helpful module to run plover_console commands more easily'
+    Description       = 'Helpful module to run plover_console commands, check for updates, and install Plover'
+    RequiredModules   = @('DotGit')
     PrivateData       = @{
         PSData = @{
             Tags = @('dots')
@@ -26,6 +27,8 @@
         'Get-PloverConfigurationDirectory'
         'Install-PloverPlugin'
         'Install-PloverSavedPlugins'
+        'Get-PloverLatestRelease'
+        'Install-PloverLatestRelease'
     )
 }
 

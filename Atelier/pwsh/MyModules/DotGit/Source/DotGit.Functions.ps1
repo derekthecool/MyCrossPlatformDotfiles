@@ -116,12 +116,53 @@ function Get-GitIgnore
 
 function Get-LatestGithubRelease
 {
+    <#
+    .SYNOPSIS
+    Gets the latest release information from a GitHub repository.
+
+    .DESCRIPTION
+    Fetches the latest release from a GitHub repository and returns a rich object
+    with version information, assets, and release metadata. Maintains backward
+    compatibility via the DownloadUrls property.
+
+    .PARAMETER Repo
+    The GitHub repository in 'owner/repo' format.
+
+    .EXAMPLE
+    Get-LatestGithubRelease -Repo 'opensteno/plover'
+
+    .EXAMPLE
+    # Backward compatible - get just download URLs
+    $urls = (Get-LatestGithubRelease -Repo 'opensteno/plover').DownloadUrls
+
+    .EXAMPLE
+    # New usage - get rich release data
+    $release = Get-LatestGithubRelease -Repo 'opensteno/plover'
+    Write-Host "Latest version: $($release.TagName)"
+    Write-Host "Assets: $($release.Assets.Count)"
+    #>
     param (
         [Parameter(Mandatory = $true)]
         [ValidatePattern('\w+/\w+')]
         [string]$Repo
     )
-    Invoke-RestMethod "https://api.github.com/repos/${Repo}/releases/latest"
-    | Select-Object -ExpandProperty assets
-    | Select-Object -ExpandProperty browser_download_url
+
+    $release = Invoke-RestMethod "https://api.github.com/repos/${Repo}/releases/latest"
+
+    [PSCustomObject]@{
+        TagName      = $release.tag_name           # Version (e.g., "v5.3.0")
+        Name         = $release.name                # Release name
+        HtmlUrl      = $release.html_url            # Release page URL
+        PublishedAt  = $release.published_at        # Release date
+        Body         = $release.body                # Release notes
+        Assets       = $release.assets | ForEach-Object {
+            [PSCustomObject]@{
+                Name               = $_.name
+                BrowserDownloadUrl = $_.browser_download_url
+                Size               = $_.size
+                ContentType        = $_.content_type
+            }
+        }
+        DownloadUrls = $release.assets.browser_download_url  # Legacy property (backward compat)
+    }
 }
