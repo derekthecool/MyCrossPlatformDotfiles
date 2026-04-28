@@ -6,6 +6,10 @@ $config = New-PesterConfiguration -Hashtable @{
     Debug    = @{
         WriteDebugMessages = $true
     }
+    CodeCoverage = @{
+        Enabled = $true
+        Path     = './Atelier/pwsh/MyModules'
+    }
     Output   = @{Verbosity = 'Detailed' }
     PassThru = $true
 }

@@ -10,3 +10,5 @@ bin
 
 .claude/settings.json
 **/settings.local.json
+
+coverage.xml
