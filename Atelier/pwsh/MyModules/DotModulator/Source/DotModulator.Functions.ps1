@@ -25,7 +25,7 @@ function Get-PowershellProcessedAst
     {
         $results = [PSCustomObject]@{
             Functions = $()
-            Aliases = $()
+            Aliases   = $()
         }
     }
     process
@@ -84,11 +84,11 @@ function Get-PowershellProcessedAst
 
             foreach ($astAlias in $aliases)
             {
-                $results.Aliases += ,$($astAlias)
+                $results.Aliases += , $($astAlias)
             }
             foreach ($astFunction in $functions)
             {
-                $results.Functions += ,$($astFunction)
+                $results.Functions += , $($astFunction)
             }
             # [PSCustomObject]@{
             #     PSTypeName = 'ProcessedScriptAst'

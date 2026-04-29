@@ -12,48 +12,48 @@ Import-Module /path/to/DotFunctional.psd1
 
 ### Core Functions
 
-| Function | Aliases | Description |
-|----------|---------|-------------|
-| `Format-Pairs` | `Zip` | Creates pairs from consecutive elements |
-| `Reduce-Object` | `Reduce`, `Sum` | Reduces a collection to a single value |
-| `Map-Object` | `Map` | Transforms each element using a script block |
-| `Filter-Object` | `Filter` | Filters elements based on a predicate |
-| `Fold-Object` | `Fold` | Reduces collection with explicit initial value |
-| `Flatten-Object` | `Flatten` | Flattens nested arrays one level deep |
-| `FlatMap-Object` | `FlatMap`, `Collect` | Maps then flattens results |
+| Function         | Aliases              | Description                                    |
+|------------------|----------------------|------------------------------------------------|
+| `Format-Pairs`   | `Zip`                | Creates pairs from consecutive elements        |
+| `Reduce-Object`  | `Reduce`, `Sum`      | Reduces a collection to a single value         |
+| `Map-Object`     | `Map`                | Transforms each element using a script block   |
+| `Filter-Object`  | `Filter`             | Filters elements based on a predicate          |
+| `Fold-Object`    | `Fold`               | Reduces collection with explicit initial value |
+| `Flatten-Object` | `Flatten`            | Flattens nested arrays one level deep          |
+| `FlatMap-Object` | `FlatMap`, `Collect` | Maps then flattens results                     |
 
 ### Sequence Functions
 
-| Function | Aliases | Description |
-|----------|---------|-------------|
-| `Take-Object` | `Take` | Takes first n elements |
+| Function           | Aliases     | Description                            |
+|--------------------|-------------|----------------------------------------|
+| `Take-Object`      | `Take`      | Takes first n elements                 |
 | `Take-WhileObject` | `TakeWhile` | Takes elements while predicate is true |
-| `Skip-Object` | `Skip` | Skips first n elements |
+| `Skip-Object`      | `Skip`      | Skips first n elements                 |
 | `Skip-WhileObject` | `SkipWhile` | Skips elements while predicate is true |
-| `Reverse-Object` | `Reverse` | Reverses the order of elements |
+| `Reverse-Object`   | `Reverse`   | Reverses the order of elements         |
 
 ### Query Functions
 
-| Function | Aliases | Description |
-|----------|---------|-------------|
-| `Group-ObjectBy` | `GroupBy` | Groups elements by a key function |
-| `Confirm-AnyObject` | - | Tests if any element satisfies a predicate |
-| `Confirm-AllObject` | - | Tests if all elements satisfy a predicate |
-| `Count-ObjectWhere` | `Count` | Count elements matching a predicate |
+| Function            | Aliases   | Description                                |
+|---------------------|-----------|--------------------------------------------|
+| `Group-ObjectBy`    | `GroupBy` | Groups elements by a key function          |
+| `Confirm-AnyObject` | -         | Tests if any element satisfies a predicate |
+| `Confirm-AllObject` | -         | Tests if all elements satisfy a predicate  |
+| `Count-ObjectWhere` | `Count`   | Count elements matching a predicate        |
 
 ### Selection Functions
 
-| Function | Aliases | Description |
-|----------|---------|-------------|
+| Function             | Aliases         | Description                          |
+|----------------------|-----------------|--------------------------------------|
 | `Select-FirstObject` | `First`, `Find` | Returns first element or first match |
-| `Select-LastObject` | `Last` | Returns last element |
-| `Select-HeadObject` | `Head` | Returns first element safely |
-| `Select-TailObject` | `Tail` | Returns all except first element |
+| `Select-LastObject`  | `Last`          | Returns last element                 |
+| `Select-HeadObject`  | `Head`          | Returns first element safely         |
+| `Select-TailObject`  | `Tail`          | Returns all except first element     |
 
 ### Utility Functions
 
-| Function | Aliases | Description |
-|----------|---------|-------------|
+| Function              | Aliases | Description                    |
+|-----------------------|---------|--------------------------------|
 | `Initialize-Sequence` | `Range` | Generates sequences of numbers |
 
 ## Usage Examples

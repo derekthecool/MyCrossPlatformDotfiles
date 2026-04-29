@@ -62,8 +62,7 @@ Describe 'Get-PloverLatestRelease' {
 
             $result.InstalledVersion | Should -Not -BeNullOrEmpty
             $result.InstalledVersion | Should -Match '^\d+\.\d+\.\d+$'
-        }
-        catch
+        } catch
         {
             Set-TestInconclusive -Message 'Plover not installed, skipping installed version test'
         }
@@ -180,8 +179,7 @@ Describe 'Get-PloverPath on Linux' {
 
             $result = Get-PloverPath
             $result | Should -Be $tempAppImage
-        }
-        finally
+        } finally
         {
             # Clean up
             if (Test-Path $tempAppImage)
@@ -204,8 +202,7 @@ Describe 'Get-PloverPath on Linux' {
             try
             {
                 { Get-PloverPath } | Should -Throw '*Install-PloverLatestRelease*'
-            }
-            finally
+            } finally
             {
                 # Restore backup
                 if (Test-Path $backupPath)
@@ -213,8 +210,7 @@ Describe 'Get-PloverPath on Linux' {
                     Move-Item -Path $backupPath -Destination $tempAppImage -Force
                 }
             }
-        }
-        else
+        } else
         {
             { Get-PloverPath } | Should -Throw '*Install-PloverLatestRelease*'
         }

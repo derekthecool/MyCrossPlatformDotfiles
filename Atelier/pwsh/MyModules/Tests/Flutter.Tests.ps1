@@ -8,7 +8,7 @@ Describe 'Testing Get-FlutterCommandsAndNonGlobalOptions' {
         {
             if ($args.Length -eq 1)
             {
-            return @"
+                return @"
 Manage your Flutter app development.
 
 Common commands:
@@ -67,8 +67,7 @@ Tools & Devices
 Run "flutter help <command>" for more information about a command.
 Run "flutter help -v" for verbose help output, including less commonly used options.
 "@
-            }
-            elseif($args.Length -gt 1 -and $args[1] -eq 'run')
+            } elseif ($args.Length -gt 1 -and $args[1] -eq 'run')
             {
                 return @"
 Run your Flutter app on an attached device.

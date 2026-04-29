@@ -1,17 +1,17 @@
 $config = New-PesterConfiguration -Hashtable @{
-    Run      = @{
+    Run          = @{
         PassThru = $true
         Path     = './Atelier/pwsh/MyModules'
     }
-    Debug    = @{
+    Debug        = @{
         WriteDebugMessages = $true
     }
     CodeCoverage = @{
         Enabled = $true
-        Path     = './Atelier/pwsh/MyModules'
+        Path    = './Atelier/pwsh/MyModules'
     }
-    Output   = @{Verbosity = 'Detailed' }
-    PassThru = $true
+    Output       = @{Verbosity = 'Detailed' }
+    PassThru     = $true
 }
 $results = Invoke-Pester -Configuration $config
 $results

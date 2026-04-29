@@ -1,4 +1,4 @@
-﻿# Build module with 'dotnet publish` only as needed
+# Build module with 'dotnet publish` only as needed
 $BuildExists = Test-Path $PSScriptRoot/bin -ErrorAction SilentlyContinue
 
 Set-Variable -Name Lang -Option ReadOnly -Value 'C#'

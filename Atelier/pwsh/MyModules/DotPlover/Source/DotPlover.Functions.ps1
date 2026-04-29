@@ -62,7 +62,7 @@ function Install-PloverPlugin
 
     process
     {
-        foreach($plugin in $Plugins)
+        foreach ($plugin in $Plugins)
         {
             Write-Host "Installing plover plugin $_"
             Invoke-Plover -s plover_plugins install $plugin
@@ -150,8 +150,7 @@ function Get-PloverLatestRelease
         {
             $installedVersion = $matches[1]
         }
-    }
-    catch
+    } catch
     {
         # Plover not installed, leave $installedVersion as $null
     }
@@ -161,8 +160,7 @@ function Get-PloverLatestRelease
     $updateAvailable = if ($installedVersion)
     {
         $latestVersionClean -ne $installedVersion
-    }
-    else
+    } else
     {
         $true  # Not installed, so update is available
     }
@@ -280,8 +278,7 @@ function Install-PloverLatestRelease
         {
             Invoke-WebRequest -Uri $assetUrl -OutFile $destinationPath -UseBasicParsing
             Write-Host 'Download completed successfully.' -ForegroundColor Green
-        }
-        catch
+        } catch
         {
             throw "Failed to download Plover: $_"
         }
@@ -343,8 +340,7 @@ function Install-PloverLatestRelease
 
                     Write-Host 'Plover installed to /Applications.' -ForegroundColor Green
                     Write-Host 'You can now launch Plover from Finder or Spotlight.' -ForegroundColor Yellow
-                }
-                finally
+                } finally
                 {
                     # Unmount DMG
                     bash -c "hdiutil detach '/Volumes/Plover' 2>/dev/null"

@@ -1,4 +1,4 @@
-﻿@{
+@{
     RootModule        = 'DotNetwork.psm1'
     ModuleVersion     = '0.1.0'
     GUID              = '40265736-48bb-454a-918d-5b6732763859'

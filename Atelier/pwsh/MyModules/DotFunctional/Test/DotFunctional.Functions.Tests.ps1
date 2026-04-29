@@ -129,7 +129,7 @@ Describe 'FlatMap-Object' {
     }
 
     It 'FlatMap-Object with empty results' {
-        1 .. 3 | FlatMap-Object { if ($_ -gt 2) { ,@($_) } } | Should -Be @(3)
+        1 .. 3 | FlatMap-Object { if ($_ -gt 2) { , @($_) } } | Should -Be @(3)
     }
 }
 

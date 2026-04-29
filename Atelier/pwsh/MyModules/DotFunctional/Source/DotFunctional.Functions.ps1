@@ -127,7 +127,7 @@ function Map-Object
 
     process
     {
-        ,$InputObject | ForEach-Object $ScriptBlock
+        , $InputObject | ForEach-Object $ScriptBlock
     }
 }
 
@@ -165,7 +165,7 @@ function Filter-Object
 
     process
     {
-        ,$InputObject | Where-Object $Predicate
+        , $InputObject | Where-Object $Predicate
     }
 }
 
@@ -202,15 +202,13 @@ function Flatten-Object
             {
                 if ($item -is [System.Collections.IEnumerable] -and $item -isnot [string] -and $item.GetType().IsArray)
                 {
-                    ,$item
-                }
-                else
+                    , $item
+                } else
                 {
                     $item
                 }
             }
-        }
-        else
+        } else
         {
             $InputObject
         }
@@ -249,15 +247,14 @@ function FlatMap-Object
 
     process
     {
-        $result = ,$InputObject | ForEach-Object $ScriptBlock
+        $result = , $InputObject | ForEach-Object $ScriptBlock
         if ($result -is [System.Collections.IEnumerable] -and $result -isnot [string])
         {
             foreach ($item in $result)
             {
                 $item
             }
-        }
-        else
+        } else
         {
             $result
         }
@@ -344,12 +341,11 @@ function Take-WhileObject
     {
         if ($taking)
         {
-            $result = ,$InputObject | ForEach-Object $Predicate
+            $result = , $InputObject | ForEach-Object $Predicate
             if ($result)
             {
                 $InputObject
-            }
-            else
+            } else
             {
                 $taking = $false
             }
@@ -395,8 +391,7 @@ function Skip-Object
         if ($skipped -ge $Count)
         {
             $InputObject
-        }
-        else
+        } else
         {
             $skipped++
         }
@@ -441,14 +436,13 @@ function Skip-WhileObject
     {
         if ($skipping)
         {
-            $result = ,$InputObject | ForEach-Object $Predicate
+            $result = , $InputObject | ForEach-Object $Predicate
             if (!$result)
             {
                 $skipping = $false
                 $InputObject
             }
-        }
-        else
+        } else
         {
             $InputObject
         }
@@ -534,7 +528,7 @@ function Group-ObjectBy
 
     process
     {
-        $key = ,$InputObject | ForEach-Object $KeySelector
+        $key = , $InputObject | ForEach-Object $KeySelector
         if ($null -eq $key)
         {
             $key = [guid]::Empty
@@ -552,7 +546,7 @@ function Group-ObjectBy
         foreach ($kvp in $groups.GetEnumerator())
         {
             [PSCustomObject]@{
-                Key = $kvp.Key
+                Key   = $kvp.Key
                 Group = $kvp.Value
             }
         }
@@ -602,13 +596,12 @@ function Confirm-AnyObject
         {
             if ($Predicate)
             {
-                $result = ,$InputObject | ForEach-Object $Predicate
+                $result = , $InputObject | ForEach-Object $Predicate
                 if ($result)
                 {
                     $found = $true
                 }
-            }
-            else
+            } else
             {
                 $found = $true
             }
@@ -664,7 +657,7 @@ function Confirm-AllObject
         $hasElements = $true
         if ($all)
         {
-            $result = ,$InputObject | ForEach-Object $Predicate
+            $result = , $InputObject | ForEach-Object $Predicate
             if (-not $result)
             {
                 $all = $false
@@ -727,14 +720,13 @@ function Select-FirstObject
         {
             if ($Predicate)
             {
-                $result = ,$InputObject | ForEach-Object $Predicate
+                $result = , $InputObject | ForEach-Object $Predicate
                 if ($result)
                 {
                     $InputObject
                     $found = $true
                 }
-            }
-            else
+            } else
             {
                 $InputObject
                 $found = $true
@@ -859,8 +851,7 @@ function Select-TailObject
         if ($firstSkipped)
         {
             $InputObject
-        }
-        else
+        } else
         {
             $firstSkipped = $true
         }
@@ -953,12 +944,11 @@ function Count-ObjectWhere
     {
         if ($Predicate)
         {
-            if (,$InputObject | ForEach-Object $Predicate)
+            if (, $InputObject | ForEach-Object $Predicate)
             {
                 $count++
             }
-        }
-        else
+        } else
         {
             $count++
         }
@@ -1023,8 +1013,7 @@ function Initialize-Sequence
             {
                 $result.Add($i)
             }
-        }
-        else
+        } else
         {
             if ($Step -eq 0)
             {
@@ -1037,8 +1026,7 @@ function Initialize-Sequence
                 {
                     $result.Add($i)
                 }
-            }
-            else
+            } else
             {
                 for ($i = $Start; $i -ge $End; $i += $Step)
                 {
