@@ -48,7 +48,7 @@ Describe 'Get-PcapSummary' -Skip:([bool](!(Get-Command tshark -ErrorAction Silen
             Should -BeExactly 29
     }
 
-    It 'Corrupted final packets should not mess up running capinfos' { 
+    It 'Corrupted final packets should not mess up running capinfos' -Skip:([bool](!(Get-Command capinfos -ErrorAction SilentlyContinue))) {
         {
             $pcap_dictionary['mqtt_chopped_final_packet'].Path |
                 Get-PcapSummary
@@ -56,7 +56,7 @@ Describe 'Get-PcapSummary' -Skip:([bool](!(Get-Command tshark -ErrorAction Silen
         }
     }
 
-    Describe 'Join-Pcap' {
+    Describe 'Join-Pcap' -Skip:([bool](!(Get-Command capinfos -ErrorAction SilentlyContinue))) {
         It 'Joining 3 single packet pcaps creates a 3 packet pcap' {
             $single_packet_pcaps = $pcap_dictionary.GetEnumerator() | Where-Object { $_.Name -match 'dns' } | ForEach-Object { $_.Value.Path }
             $single_packet_pcaps | Get-PcapSummary | Select-Object -ExpandProperty 'Number of packets' | Should -HaveCount 3
