@@ -1,0 +1,72 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(~/LSS/**)",
+      "Read(~/repos/**)",
+      "Read(/tmp/**)",
+      "Bash(flutter:*)",
+      "Bash(ls:*)",
+      "Bash(grep:*)",
+      "Bash(cat:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(pwd:*)",
+      "Bash(cd:*)",
+      "Bash(dotnet:*)",
+      "Bash(find:*)",
+      "Bash(git status:*)",
+      "Bash(git log:*)",
+      "Bash(git diff:*)",
+      "Bash(git show:*)",
+      "Bash(git branch:*)",
+      "Bash(git branch --show-current:*)",
+      "Bash(git remote:*)",
+      "Bash(git ls-remote:*)",
+      "Bash(git cat-file:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(git ls-files:*)",
+      "Bash(gh issue list:*)",
+      "Bash(gh issue view:*)",
+      "Bash(gh pr list:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr diff:*)",
+      "Bash(gh pr checks:*)",
+      "Bash(gh repo view:*)",
+      "Bash(gh release list:*)",
+      "Bash(gh run list:*)",
+      "Bash(gh run view:*)",
+      "Bash(az boards workitem show:*)",
+      "Bash(az boards workitem query:*)",
+      "Bash(az repos pr list:*)",
+      "Bash(az repos pr show:*)",
+      "Bash(az repos pr diff:*)"
+    ],
+    "block": [
+      "Bash(find:* -exec rm *)",
+      "Bash(find:* -exec rmdir *)",
+      "Bash(find:* -exec shred *)",
+      "Bash(find:* -exec delete *)",
+      "Bash(find:* -exec mv *)",
+      "Bash(find:* -exec cp *)",
+      "Bash(find:* -exec touch *)",
+      "Bash(find:* -exec mkdir *)",
+      "Bash(find:* -exec chmod *)",
+      "Bash(find:* -exec chown *)",
+      "Bash(find:* -exec dd *)",
+      "Bash(find:* -exec sed *)",
+      "Bash(find:* -exec awk *)"
+    ]
+  },
+  "enabledPlugins": {
+    "very-good-ai-flutter-plugin@very-good-claude-code-marketplace": true,
+    "ralph-loop@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "very-good-claude-code-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "VeryGoodOpenSource/very_good_claude_marketplace"
+      }
+    }
+  }
+}
