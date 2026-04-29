@@ -967,20 +967,27 @@ function Initialize-Sequence
         Generates a sequence of numbers.
 
     .DESCRIPTION
-        Initialize-Sequence creates a sequence of integers from start to end,
-        optionally with a custom step. Can also generate a specific count of numbers.
+        Initialize-Sequence creates a sequence of integers with intuitive defaults:
+        - Range 5 → 1, 2, 3, 4, 5 (count mode, single arg = count from 1)
+        - Range 1 5 → 1, 2, 3, 4, 5 (start and end)
+        - Range 1 5 2 → 1, 3, 5 (start, end, step)
+        - Range 5 1 → 5, 4, 3, 2, 1 (reverse range)
 
     .EXAMPLE
-        Initialize-Sequence -Start 1 -End 5
-        # Returns 1, 2, 3, 4, 5
+        Range 5
+        # Returns: 1, 2, 3, 4, 5
 
     .EXAMPLE
-        Initialize-Sequence -Start 1 -End 10 -Step 2
-        # Returns 1, 3, 5, 7, 9
+        Range 1 5
+        # Returns: 1, 2, 3, 4, 5
 
     .EXAMPLE
-        Initialize-Sequence -Start 1 -Count 5
-        # Returns 1, 2, 3, 4, 5
+        Range 1 5 2
+        # Returns: 1, 3, 5
+
+    .EXAMPLE
+        Range 5 1
+        # Returns: 5, 4, 3, 2, 1
     #>
     [CmdletBinding()]
     [Alias("Range")]
@@ -989,32 +996,27 @@ function Initialize-Sequence
         [Parameter(Mandatory, Position = 0)]
         [int]$Start,
 
-        [Parameter(ParameterSetName = 'End', Position = 1)]
-        [int]$End,
+        [Parameter(Position = 1)]
+        [Nullable[int]]$End,
 
-        [Parameter(ParameterSetName = 'Step')]
-        [Parameter(ParameterSetName = 'End')]
-        [int]$Step = 1,
-
-        [Parameter(ParameterSetName = 'Count', Mandatory)]
-        [int]$Count
+        [Parameter(Position = 2)]
+        [int]$Step = 1
     )
 
-    begin
+    end
     {
         $result = [System.Collections.Generic.List[int]]::new()
-    }
 
-    process
-    {
-        if ($Count)
+        # If End is not provided, treat Start as count (generate from 1 to Start)
+        if ($null -eq $End)
         {
-            for ($i = $Start; $i -lt $Start + $Count; $i++)
+            for ($i = 1; $i -le $Start; $i++)
             {
                 $result.Add($i)
             }
         } else
         {
+            # Range mode: Start to End
             if ($Step -eq 0)
             {
                 throw "Step cannot be zero"
@@ -1034,10 +1036,8 @@ function Initialize-Sequence
                 }
             }
         }
-    }
 
-    end
-    {
         $result.ToArray()
     }
 }
+

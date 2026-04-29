@@ -59,7 +59,9 @@ Import-Module /path/to/DotFunctional.psd1
 ## Usage Examples
 
 ### Map-Object (Map)
+
 Transform each element in a collection:
+
 ```powershell
 1 .. 5 | Map-Object { $_ * 2 }
 # Returns: 2, 4, 6, 8, 10
@@ -69,7 +71,9 @@ Transform each element in a collection:
 ```
 
 ### Filter-Object (Filter)
+
 Filter elements based on a condition:
+
 ```powershell
 1 .. 10 | Filter-Object { $_ % 2 -eq 0 }
 # Returns: 2, 4, 6, 8, 10
@@ -79,7 +83,9 @@ Get-Service | Filter { $_.Status -eq 'Running' }
 ```
 
 ### Reduce-Object (Reduce, Sum)
+
 Reduce collection to a single value:
+
 ```powershell
 1 .. 10 | Reduce-Object { $args[0] + $args[1] }
 # Returns: 55 (sum)
@@ -89,21 +95,27 @@ Reduce collection to a single value:
 ```
 
 ### Fold-Object (Fold)
+
 Reduce with explicit initial value:
+
 ```powershell
 1 .. 5 | Fold-Object { $args[0] + $args[1] } -InitialValue 10
 # Returns: 25 (10 + 1 + 2 + 3 + 4 + 5)
 ```
 
 ### Flatten-Object (Flatten)
+
 Flatten nested arrays:
+
 ```powershell
 @(1, @(2, 3), 4) | Flatten-Object
 # Returns: 1, 2, 3, 4
 ```
 
 ### Take-Object & Skip-Object
+
 Take or skip elements:
+
 ```powershell
 1 .. 10 | Take-Object 3
 # Returns: 1, 2, 3
@@ -113,7 +125,9 @@ Take or skip elements:
 ```
 
 ### Group-ObjectBy (GroupBy)
+
 Group elements by key:
+
 ```powershell
 1 .. 6 | Group-ObjectBy { $_ % 2 }
 # Returns two groups: evens and odds
@@ -123,21 +137,27 @@ Group elements by key:
 ```
 
 ### Initialize-Sequence (Range)
+
 Generate sequences:
+
 ```powershell
-Initialize-Sequence -Start 1 -End 5
+Range 5
 # Returns: 1, 2, 3, 4, 5
 
-Initialize-Sequence -Start 1 -End 10 -Step 2
+Range 1 5
+# Returns: 1, 2, 3, 4, 5
+
+Range 1 10 2
 # Returns: 1, 3, 5, 7, 9
 
-Range -Start 1 -Count 5
-# Returns: 1, 2, 3, 4, 5
+Range 5 1 -1
+# Returns: 5, 4, 3, 2, 1
 ```
 
 ## Pipeline-Based Design
 
 All functions are designed to work seamlessly with PowerShell's pipeline:
+
 ```powershell
 1 .. 100 |
   Filter { $_ % 3 -eq 0 } |
@@ -149,6 +169,7 @@ All functions are designed to work seamlessly with PowerShell's pipeline:
 ## Testing
 
 Run the test suite with Pester:
+
 ```powershell
 Invoke-Pester ./Test/
 ```

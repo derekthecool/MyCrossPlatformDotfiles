@@ -63,23 +63,31 @@ Describe 'Initialize-Sequence' {
         Get-Alias Range | Should -Be -Not $null
     }
 
-    It 'Initialize-Sequence generates simple range' {
+    It 'Range with single argument generates 1 to N' {
+        Range 5 | Should -Be @(1, 2, 3, 4, 5)
+    }
+
+    It 'Range with start and end' {
+        Range 1 5 | Should -Be @(1, 2, 3, 4, 5)
+    }
+
+    It 'Range with step' {
+        Range 1 10 2 | Should -Be @(1, 3, 5, 7, 9)
+    }
+
+    It 'Range counts down with reverse bounds' {
+        Range 5 1 -1 | Should -Be @(5, 4, 3, 2, 1)
+    }
+
+    It 'Range with explicit step parameter name' {
+        Range 1 5 -Step 2 | Should -Be @(1, 3, 5)
+    }
+
+    It 'Initialize-Sequence -Start -End generates simple range' {
         Initialize-Sequence -Start 1 -End 5 | Should -Be @(1, 2, 3, 4, 5)
     }
 
-    It 'Initialize-Sequence with step' {
+    It 'Initialize-Sequence with step parameter name' {
         Initialize-Sequence -Start 1 -End 10 -Step 2 | Should -Be @(1, 3, 5, 7, 9)
-    }
-
-    It 'Initialize-Sequence counts down with negative step' {
-        Initialize-Sequence -Start 5 -End 1 -Step -1 | Should -Be @(5, 4, 3, 2, 1)
-    }
-
-    It 'Initialize-Sequence with count' {
-        Initialize-Sequence -Start 1 -Count 5 | Should -Be @(1, 2, 3, 4, 5)
-    }
-
-    It 'Range works as alias' {
-        Range -Start 1 -End 3 | Should -Be @(1, 2, 3)
     }
 }
