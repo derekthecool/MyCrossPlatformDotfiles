@@ -343,8 +343,7 @@ function Start-GitBisect
                     {
                         Write-Verbose 'Executing SkipScriptBlock'
                         $shouldSkip = & $SkipScriptBlock $capturedOutput $global:GitBisectExitCodes
-                    }
-                    elseif ($SkipRegex -and $capturedOutput -match $SkipRegex)
+                    } elseif ($SkipRegex -and $capturedOutput -match $SkipRegex)
                     {
                         Write-Verbose "SkipRegex matched: $SkipRegex"
                         $shouldSkip = $true
@@ -355,8 +354,7 @@ function Start-GitBisect
                     {
                         Write-Verbose 'Skipping commit'
                         & git bisect skip 2>&1 | Out-Null
-                    }
-                    elseif ($global:GitBisectExitCodes.Count -gt 0)
+                    } elseif ($global:GitBisectExitCodes.Count -gt 0)
                     {
                         # User provided exit codes
                         Write-Verbose "Evaluating exit codes: $($global:GitBisectExitCodes -join ', ')"
@@ -375,22 +373,19 @@ function Start-GitBisect
                         {
                             Write-Verbose 'Marking as bad'
                             & git bisect bad 2>&1 | Out-Null
-                        }
-                        else
+                        } else
                         {
                             Write-Verbose 'Marking as good'
                             & git bisect good 2>&1 | Out-Null
                         }
-                    }
-                    else
+                    } else
                     {
                         # No exit codes, use PowerShell status
                         if ($?)
                         {
                             Write-Verbose 'Marking as good (PowerShell succeeded)'
                             & git bisect good 2>&1 | Out-Null
-                        }
-                        else
+                        } else
                         {
                             Write-Verbose 'Marking as bad (PowerShell failed)'
                             & git bisect bad 2>&1 | Out-Null
@@ -405,13 +400,11 @@ function Start-GitBisect
                         Write-Host "Bisect complete: First bad commit is $expectedRev"
                         break
                     }
-                }
-                catch
+                } catch
                 {
                     Write-Verbose "Scriptblock threw exception, marking as bad"
                     & git bisect bad 2>&1 | Out-Null
-                }
-                finally
+                } finally
                 {
                     # Clean up global variable
                     if (Test-Path variable:global:GitBisectExitCodes)

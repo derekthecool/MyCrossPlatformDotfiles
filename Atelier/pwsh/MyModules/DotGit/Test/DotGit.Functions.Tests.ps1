@@ -170,8 +170,7 @@ function Get-Value {
                 . ./MyFunction.ps1
                 $result = Get-Value -x 10
                 $global:GitBisectExitCodes = @(0)  # Success
-            }
-            catch
+            } catch
             {
                 # Function threw error - bad commit
                 $global:GitBisectExitCodes = @(1)
@@ -203,14 +202,12 @@ throw 'Missing required module'
                 . ./MyFunction.ps1
                 Get-Value -x 10
                 $global:GitBisectExitCodes = @(0)
-            }
-            catch
+            } catch
             {
                 if ($_ -match 'Missing required module')
                 {
                     $global:GitBisectExitCodes = @(125)
-                }
-                else
+                } else
                 {
                     $global:GitBisectExitCodes = @(1)
                 }
@@ -244,14 +241,12 @@ throw 'Missing required module'
                 if (-not (Get-Command Get-Value -ErrorAction SilentlyContinue))
                 {
                     $global:GitBisectExitCodes = @(125)
-                }
-                else
+                } else
                 {
                     Get-Value -x 10
                     $global:GitBisectExitCodes = @(0)
                 }
-            }
-            catch
+            } catch
             {
                 $global:GitBisectExitCodes = @(1)
             }
