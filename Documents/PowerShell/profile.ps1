@@ -1,10 +1,21 @@
 # PowerShell 7 (pwsh) profile
 
+#region Profile Timing
+if (-not $env:DOTS_PWSH_TIMING) {
+    $profileTimings = [ordered]@{}
+    $profileTimings['Start'] = Get-Date
+}
+#endregion
+
 #region Basic Settings
 # Set output encoding for pwsh spectre console
 $OutputEncoding = [console]::InputEncoding = [console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
 
+# PowerShell performance optimizations
 $env:POWERSHELL_TELEMETRY_OPTOUT = $true
+$env:POWERSHELL_UPDATECHECK = 'Off'
+# Disable module analysis (experimental - may have side effects)
+# $env:POWERSHELL_MODULEANALYSIS_DISABLE = $true
 
 # Add my custom powershell modules to the psmodulepath
 # Make sure to use PathSeparator because windows uses ';' and Linux uses ':'
@@ -28,6 +39,7 @@ $EDITOR = $env:EDITOR
 #region PSDefaultParameterValues
 # A true super power of powershell is setting these default parameters!
 # They are a bit like aliases but only used if not specified.
+# Optimized: defer PSScriptTools default to avoid Get-TimeZone call during startup
 $PSDefaultParameterValues = @{
     'Out-Default:OutVariable'           = 'LastResult'         # Save output to $LastResult
     'Out-File:Encoding'                 = 'utf8'               # PS5.1 defaults to ASCII
@@ -44,11 +56,8 @@ $PSDefaultParameterValues = @{
     'Import-Module:DisableNameChecking' = $true                # To not warning me of functions or scripts not using verb-noun names
     'Invoke-RestMethod:ContentType'     = 'application/json'   # This is almost always used
     'ConvertTo-Json:Compress'           = $true                # Prefer compact json string formatting
-
-    # Commands from modules
-    # PSScriptTools
-    'ConvertTo-LocalTime:UTCOffset'     = (Get-TimeZone).BaseUtcOffset.ToString().Split(':')[0]
 }
+if (-not $env:DOTS_PWSH_TIMING) { $profileTimings['AfterPSDefaults'] = Get-Date }
 
 #region Aliases
 # Alias with args require functions
@@ -76,6 +85,7 @@ Set-Alias -Name clear -Value Clear-Host -Option AllScope -Force -Description 'Do
 Set-Alias -Name mv -Value Move-Item -Option AllScope -Force -Description 'DotAlias for Move-Item'
 Set-Alias -Name tee -Value Tee-Object -Option AllScope -Force -Description 'DotAlias for Tee-Object'
 #endregion
+if (-not $env:DOTS_PWSH_TIMING) { $profileTimings['AfterAliases'] = Get-Date }
 
 #region PSReadLine
 # Configure PSReadLine. Does not like to be loaded from another script with dot sourcing.
@@ -146,15 +156,11 @@ Set-PSReadLineKeyHandler -Chord Ctrl+w `
     [Microsoft.PowerShell.PSConsoleReadLine]::AcceptLine()
 }
 
-Set-PSReadLineKeyHandler -Chord Ctrl+Alt+w `
-    -BriefDescription UpOneDirectory `
-    -LongDescription 'Move back one directory' `
-    -ScriptBlock {
-    [Microsoft.PowerShell.PSConsoleReadLine]::RevertLine()
-    Pop-Location -StackName PSReadLine
-    [Microsoft.PowerShell.PSConsoleReadLine]::AcceptLine()
-}
+# DANGEROUS: Ctrl+Alt+w conflicts with window manager "close window" shortcut
+# REMOVED to prevent accidental terminal closure
+# If you need to navigate back in directory stack, use: Pop-Location -StackName PSReadLine
 #endregion
+if (-not $env:DOTS_PWSH_TIMING) { $profileTimings['AfterPSReadLine'] = Get-Date }
 
 #region Linux permanent environment variable processor
 $environment_file = "~/Documents/PowerShell/environment.json"
@@ -178,15 +184,12 @@ if ($IsLinux)
     }
 }
 #endregion
+if (-not $env:DOTS_PWSH_TIMING) { $profileTimings['AfterEnvironment'] = Get-Date }
 
 #region Starship
-# Roughly 1000 ms load time for this
-try
-{
-    # Fail fast if starship is not found - do not run the recommended double Invoke-Expression
-    # website shows this: Invoke-Expression (&starship init powershell)
-    # 200 ms
+try {
     $init = starship init powershell
+    Invoke-Expression ($init)
 
     # Set Starship prompt
     # Config file is located: ~/.config/starship.toml
@@ -203,13 +206,11 @@ try
         }
         $host.ui.Write($prompt)
     }
-    # 800 ms
-    Invoke-Expression ($init)
-} catch
-{
+} catch {
     Write-Host "starship not found" -ForegroundColor Yellow
 }
 #endregion
+if (-not $env:DOTS_PWSH_TIMING) { $profileTimings['AfterStarship'] = Get-Date }
 
 #region PSFzf
 try
@@ -227,6 +228,7 @@ try
     Write-Host "PSFzf or fzf not found" -ForegroundColor Yellow
 }
 #endregion
+if (-not $env:DOTS_PWSH_TIMING) { $profileTimings['AfterPSFzf'] = Get-Date }
 
 #region Zoxide
 # Init Zoxide and set cd alias
@@ -241,6 +243,7 @@ try
     Write-Host "zoxide not found" -ForegroundColor Yellow
 }
 #endregion
+if (-not $env:DOTS_PWSH_TIMING) { $profileTimings['AfterZoxide'] = Get-Date }
 
 
 # Load git related powershell modules upon first call to git, then remove this function
@@ -252,7 +255,27 @@ function git
 
     Invoke-Expression "git $args"
 }
+if (-not $env:DOTS_PWSH_TIMING) { $profileTimings['AfterGitFunction'] = Get-Date }
 
 Import-Module Posh
+if (-not $env:DOTS_PWSH_TIMING) { $profileTimings['AfterPosh'] = Get-Date }
 
-Write-Host "Profile load: $([int]((Get-Date) - (Get-Process -Id $PID).StartTime).TotalMilliseconds) ms" -ForegroundColor Cyan
+# Display detailed timing breakdown (only if DOTS_PWSH_TIMING is not set)
+if (-not $env:DOTS_PWSH_TIMING) {
+    Write-Host "`nProfile Load Time Breakdown:" -ForegroundColor Magenta
+    $prevKey = $null
+    foreach ($key in $profileTimings.Keys) {
+        if ($prevKey) {
+            $duration = ($profileTimings[$key] - $profileTimings[$prevKey]).TotalMilliseconds
+            $color = if ($duration -gt 500) { 'Red' } elseif ($duration -gt 200) { 'Yellow' } else { 'Green' }
+            Write-Host "  [$prevKey → $key] " -NoNewline -ForegroundColor Cyan
+            Write-Host "${duration}ms" -ForegroundColor $color
+        }
+        $prevKey = $key
+    }
+    $profileTimings['End'] = Get-Date
+    $totalTime = ($profileTimings['End'] - $profileTimings['Start']).TotalMilliseconds
+    Write-Host "  [TOTAL] $totalTimems`n" -ForegroundColor Magenta
+
+    Write-Host "Profile load: $([int]((Get-Date) - (Get-Process -Id $PID).StartTime).TotalMilliseconds) ms" -ForegroundColor Cyan
+}
