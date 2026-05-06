@@ -81,3 +81,5 @@
 # LSS-specific git config (includes gh credential helpers)
 [includeIf "gitdir:~/LSS/"]
     path = "~/LSS/.gitconfig"
+[alias]
+	sync = !git pull && git push
