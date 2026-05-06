@@ -5,7 +5,7 @@ function Get-AdbImages
         [string]$DirectoryToSaveFilesTo = './'
     )
 
-    $devices = Adb-Devices
+    $devices = Get-AdbDevices
     if ($devices -eq $null)
     {
         return

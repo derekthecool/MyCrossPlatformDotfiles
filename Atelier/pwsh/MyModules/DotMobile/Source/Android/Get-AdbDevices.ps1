@@ -23,6 +23,12 @@ class AdbDevice
 
 function Get-AdbDevices
 {
+    # Check if adb command is available
+    if (-not (Get-Command adb -ErrorAction SilentlyContinue))
+    {
+        throw 'adb command not found. Please install Android SDK Platform Tools.'
+    }
+
     try
     {
         # Attempt to run `adb get-state` to see if adb is accessible

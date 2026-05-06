@@ -15,8 +15,6 @@
         'Add-MasonToolsToPath'
         'Get-DotnetOutdatedPackage'
         'CustomSortOrder'
-        'Get-FlutterCommandsAndNonGlobalOptions'
-        'Get-FlutterGlobalOptions'
         'Get-GeneralCompletion'
         'Use-Kroger'
         'Use-SpoonacularApi'

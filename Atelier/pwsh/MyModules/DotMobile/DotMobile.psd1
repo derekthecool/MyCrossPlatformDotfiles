@@ -1,12 +1,12 @@
 @{
-    RootModule        = 'DotAndroid.psm1'
+    RootModule        = 'DotMobile.psm1'
     ModuleVersion     = '0.1.0'
-    GUID              = '48382495-3092-44a6-b6c4-e3731d59e802'
+    GUID              = 'a7b8c9d0-e1f2-4a5b-8c9d-0e1f2a3b4c5d'
     Author            = 'Derek Lomax'
-    Description       = 'Android adb automation functions'
+    Description       = 'Cross-platform mobile development automation functions for Android, Flutter, and iOS'
     PrivateData       = @{
         PSData = @{
-            Tags = @('dots')
+            Tags = @('mobile', 'android', 'flutter', 'ios')
         }
     }
     VariablesToExport = ''
@@ -15,11 +15,15 @@
     # For maximum lazy load module performance list every function here.
     # Do not use '*', mainly because it pwsh will not autoload the module for unlisted functions.
     FunctionsToExport = @(
+        # Android functions
         'Get-AdbDevices'
-        'Get-AdbImages'
         'New-AdbScreenshot'
+        'Get-AdbImages'
         'Update-AndroidApplications'
         'Get-AdbLogCode'
+        # Flutter functions
+        'Get-FlutterGlobalOptions'
+        'Get-FlutterCommandsAndNonGlobalOptions'
+        'Invoke-FlutterBuild'
     )
 }
-
