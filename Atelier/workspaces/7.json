@@ -1,0 +1,5 @@
+[
+  { "app": "wsl-usb-gui", "type": "process" },
+  { "app": "mmc", "type": "process" },
+  { "app": "mstsc", "type": "process" }
+]

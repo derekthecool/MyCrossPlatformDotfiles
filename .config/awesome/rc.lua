@@ -698,6 +698,11 @@ root.keys(Globalkeys)
 
 -- {{{ Rules
 -- Rules to apply to new clients (through the "manage" signal).
+
+-- Load window routes and filters from JSON configuration
+-- Manages routes from ~/Atelier/workspaces/*.json
+local json_routes = require("json_routes")
+
 awful.rules.rules = {
     -- All clients will match this rule.
     {
@@ -714,112 +719,30 @@ awful.rules.rules = {
         },
     },
 
-    -- Floating clients.
-    --[[
-  minecraft windows
-  WM_ICON_NAME(STRING) = "Minecraft Launcher"
-_NET_WM_ICON_NAME(UTF8_STRING) = "Minecraft Launcher"
-WM_NAME(STRING) = "Minecraft Launcher"
-_NET_WM_NAME(UTF8_STRING) = "Minecraft Launcher"
-_NET_WM_ICON(CARDINAL) =
-_NET_WM_STATE(ATOM) =
-WM_CLASS(STRING) = "minecraft-launcher", "Minecraft Launcher"
-
-sign in window which looks really bad
-WM_ICON_NAME(STRING) = "Sign in to Minecraft"
-_NET_WM_ICON_NAME(UTF8_STRING) = "Sign in to Minecraft"
-WM_NAME(STRING) = "Sign in to Minecraft"
-_NET_WM_NAME(UTF8_STRING) = "Sign in to Minecraft"
-_NET_WM_ICON(CARDINAL) =
-_NET_WM_STATE(ATOM) =
-WM_CLASS(STRING) = "minecraft-launcher", "Minecraft Launcher"
-
-  --]]
-    {
-        rule_any = {
-            instance = {
-                'DTA', -- Firefox addon DownThemAll.
-                'copyq', -- Includes session name in class.
-                'pinentry',
-            },
-            class = {
-                'Arandr',
-                'Blueman-manager',
-                'Gpick',
-                'Kruler',
-                'MessageWin', -- kalarm.
-                'Sxiv',
-                'Tor Browser', -- Needs a fixed window size to avoid fingerprinting by screen size.
-                'Wpa_gui',
-                'veromix',
-                'xtightvncviewer',
-                'minecraft-launcher',
-            },
-
-            -- Note that the name property shown in xprop might be set slightly after creation of the client
-            -- and the name shown there might not match defined rules here.
-            name = {
-                'Event Tester', -- xev.
-                -- 'Sign in to Minecraft',
-            },
-            role = {
-                'AlarmWindow', -- Thunderbird's calendar.
-                'ConfigManager', -- Thunderbird's about:config.
-                'pop-up', -- e.g. Google Chrome's (detached) Developer Tools.
-            },
-        },
-        properties = { floating = true },
-    },
-
     -- Disable titlebars
     {
         rule_any = { type = { 'normal', 'dialog' } },
         properties = { titlebars_enabled = false },
     },
 
-    -- Use xprop terminal command and then click on the window you are interested in finding
-    -- class and program information on. Results will be printed in the terminal you ran the command from.
-
-    -- First tag: terminal
-    {
-        rule = { class = 'Alacritty' },
-        properties = { tag = 'Terminal' },
-    },
-    {
-        rule = { class = 'Wezterm' },
-        properties = { tag = 'Terminal' },
-    },
-
-    -- Second tag: web
-
-    {
-        rule_any = { class = { 'Firefox', 'firefox', 'Navigator' } },
-        properties = { tag = 'Web' },
-    },
-    {
-        rule = { class = 'Vieb' },
-        properties = { tag = 'Web' },
-    },
-
-    -- Third tag: chat
-    -- {
-    --     callback = function(c)
-    --         if c:match('minecraft %d+') then
-    --
-    --         end
-    --
-    --     end,
-    --     properties = { tag = 'Web' },
-    -- },
-
-    -- Forth tag: Plover stenography. Send everything except Plover lookup to Plover tag
-    {
-        rule_any = { class = { 'Plover' } },
-        except_any = { name = { 'Plover: Lookup', 'Plover: Add Translation' } },
-        properties = { tag = 'Plover' },
-    },
+    -- Routes and filters are now managed via JSON configuration
+    -- See ~/Atelier/workspaces/ for configuration files
+    -- Use PowerShell Add-WMRoute and Add-WMFilter to manage
 }
 -- }}}
+
+-- Add JSON-based routes and filters after rules table is defined
+-- Routes are now applied via signal handler, not rules table
+json_routes.load_routes()  -- Load routes into memory
+
+-- Add JSON-based floating window filters
+local filters = json_routes.load_filters()
+if filters.instance or filters.class or filters.name or filters.role then
+    table.insert(awful.rules.rules, {
+        rule_any = filters,
+        properties = { floating = true }
+    })
+end
 
 -- {{{ Signals
 -- Signal function to execute when a new client appears.
@@ -834,6 +757,9 @@ client.connect_signal('manage', function(c)
         -- Prevent clients from being unreachable after screen count changes.
         awful.placement.no_offscreen(c)
     end
+
+    -- Apply JSON routes for tag assignment
+    json_routes.apply_routes(c)
 end)
 
 -- Add a titlebar if titlebars_enabled is set to true in the rules.

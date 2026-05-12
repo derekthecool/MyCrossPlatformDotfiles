@@ -1,0 +1,4 @@
+[
+  { "app": "pythonw", "type": "process" },
+  { "app": "Plover", "type": "class" }
+]

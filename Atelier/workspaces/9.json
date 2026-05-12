@@ -1,0 +1,14 @@
+[
+  {
+    "app": "ConsoleWindowClass",
+    "type": "class"
+  },
+  {
+    "app": "WindowsTerminal",
+    "type": "class"
+  },
+  {
+    "type": "class",
+    "app": "terminal"
+  }
+]

@@ -48,6 +48,10 @@ void DoConfig(IContext context)
     // YAML config. It's best to load this first so that you can use it in your C# config.
     YamlLoader.Load(context);
 
+    // Load window routes and filters from JSON configuration
+    // Manages routes from ~/Atelier/workspaces/*.json
+    #load ".whim/json_routes.csx"
+
     // Customize your config in C# here.
     // For more, see https://dalyisaac.github.io/Whim/script/scripting.html
     // Example configs
@@ -73,93 +77,9 @@ void DoConfig(IContext context)
     AddWorkspace("three", "9");
 
     // Tips for finding window information:
-    // Ideally you can use the workspacer debug window, however this has not
-    // been working for me lately as of 2023.
-    // There is AHK window spy as well
-    // Or you can use an application named winspy, 'scoop install winspy' to get it
-
-    void Route(List<string> programs, string workspace)
-    {
-        foreach (var program in programs)
-        {
-            context.RouterManager.AddProcessFileNameRoute($"{program}.exe", workspaces[workspace]);
-            context.RouterManager.AddWindowClassRoute($"{program}", workspaces[workspace]);
-        }
-    }
-
-    // Terminal
-    Route(new List<string> { "wezterm-gui", "alacritty", "devenv" }, "terminal");
-
-    // Web
-    Route(new List<string> { "firefox", "brave" }, "web");
-
-    // Plover
-    Route(new List<string> { "pythonw" }, "plover");
-
-    // Docs and music
-    var docs_programs = new List<string>
-    {
-        "vcxsrv",
-        "love",
-        "Obsidian",
-        "WINWORD",
-        "EXCEL",
-        "POWERPNT",
-        "ONENOTE",
-        "VISIO",
-        "explorer",
-        "okular",
-        "MusicBee",
-    };
-    Route(docs_programs, "docs");
-
-    var device_programs = new List<string>
-    {
-        // Internal python applications
-        "Qt650QWindowIcon",
-        "Qt690QWindowIcon",
-    };
-    Route(device_programs, "device");
-
-    var one_programs = new List<string>
-    {
-        "wsl-usb-gui",
-        // Windows device manager
-        "mmc",
-        // Remote desktop
-        "mstsc",
-    };
-    Route(one_programs, "one");
-
-    // two programs
-    // KDE Connect ahk_class Qt692QWindowIcon ahk_exe kdeconnect-app.exe
-    var two_programs = new List<string> { "Wireshark", "CG Local", "Qt692QWindowIcon", "FLUTTERVIEW" };
-    Route(two_programs, "two");
-
-    // three programs
-    var three_programs = new List<string> { "ConsoleWindowClass", "WindowsTerminal" };
-    Route(three_programs, "three");
-
-    // https://dalyisaac.github.io/Whim/script/core/filtering.html?q=filter
-    new List<string>
-    {
-        "keypirinha_wndcls_run",
-        ".*Plover: Lookup.*",
-        ".*Plover: Add Translation.*",
-        "Upgrade_tool.exe",
-        @"teams\.microsoft.com is sharing your.*",
-    }.ForEach(program =>
-    {
-        // Normal case insensitive string
-        context.FilterManager.AddTitleMatchFilter(program);
-        // Regex input
-        context.FilterManager.AddWindowClassFilter(program);
-        // Normal case insensitive string
-        context.FilterManager.AddProcessFileNameFilter(program);
-    });
-
-    // The best option for teams meeting compact view is to add this filter
-    context.FilterManager.AddWindowClassFilter("TeamsWebView");
+    // Routes and filters are now managed via JSON configuration
+    // See ~/Atelier/workspaces/ for configuration files
+    // Use PowerShell Add-WMRoute and Add-WMFilter to manage
 
     // Close active window
     // https://github.com/urob/whim-config/blob/3387b154edadf384271c90d2ed75a90c10e53790/whim.commands.csx

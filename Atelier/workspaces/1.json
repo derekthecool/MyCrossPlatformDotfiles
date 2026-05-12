@@ -1,0 +1,7 @@
+[
+  { "app": "wezterm-gui", "type": "class" },
+  { "app": "alacritty", "type": "class" },
+  { "app": "devenv", "type": "class" },
+  { "app": "Wezterm", "type": "class" },
+  { "app": "Alacritty", "type": "class" }
+]

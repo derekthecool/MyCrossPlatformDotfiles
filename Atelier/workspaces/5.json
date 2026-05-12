@@ -1,0 +1,13 @@
+[
+  { "app": "vcxsrv", "type": "class" },
+  { "app": "love", "type": "class" },
+  { "app": "Obsidian", "type": "class" },
+  { "app": "WINWORD", "type": "class" },
+  { "app": "EXCEL", "type": "class" },
+  { "app": "POWERPNT", "type": "class" },
+  { "app": "ONENOTE", "type": "class" },
+  { "app": "VISIO", "type": "class" },
+  { "app": "explorer", "type": "process" },
+  { "app": "okular", "type": "class" },
+  { "app": "MusicBee", "type": "class" }
+]

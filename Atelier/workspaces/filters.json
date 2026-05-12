@@ -1,0 +1,102 @@
+[
+  {
+    "app": "keypirinha_wndcls_run",
+    "type": "class"
+  },
+  {
+    "app": ".*Plover: Lookup.*",
+    "type": "title"
+  },
+  {
+    "app": ".*Plover: Add Translation.*",
+    "type": "title"
+  },
+  {
+    "app": "Upgrade_tool",
+    "type": "process"
+  },
+  {
+    "app": "teams\\.microsoft.com is sharing your.*",
+    "type": "title"
+  },
+  {
+    "app": "TeamsWebView",
+    "type": "class"
+  },
+  {
+    "app": "copyq",
+    "type": "instance"
+  },
+  {
+    "app": "pinentry",
+    "type": "instance"
+  },
+  {
+    "app": "Arandr",
+    "type": "class"
+  },
+  {
+    "app": "Blueman-manager",
+    "type": "class"
+  },
+  {
+    "app": "Gpick",
+    "type": "class"
+  },
+  {
+    "app": "Kruler",
+    "type": "class"
+  },
+  {
+    "app": "MessageWin",
+    "type": "class"
+  },
+  {
+    "app": "Sxiv",
+    "type": "class"
+  },
+  {
+    "app": "Tor Browser",
+    "type": "class"
+  },
+  {
+    "app": "Wpa_gui",
+    "type": "class"
+  },
+  {
+    "app": "veromix",
+    "type": "class"
+  },
+  {
+    "app": "xtightvncviewer",
+    "type": "class"
+  },
+  {
+    "app": "minecraft-launcher",
+    "type": "class"
+  },
+  {
+    "app": "Event Tester",
+    "type": "name"
+  },
+  {
+    "app": "AlarmWindow",
+    "type": "role"
+  },
+  {
+    "app": "ConfigManager",
+    "type": "role"
+  },
+  {
+    "app": "pop-up",
+    "type": "role"
+  },
+  {
+    "type": "process",
+    "app": "blender"
+  },
+  {
+    "type": "process",
+    "app": "gimp"
+  }
+]
