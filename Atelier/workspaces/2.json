@@ -1,7 +1,26 @@
 [
-  { "app": "firefox", "type": "class" },
-  { "app": "Firefox", "type": "class" },
-  { "app": "brave", "type": "class" },
-  { "app": "Navigator", "type": "class" },
-  { "app": "Vieb", "type": "class" }
+  {
+    "app": "firefox",
+    "type": "class"
+  },
+  {
+    "app": "Firefox",
+    "type": "class"
+  },
+  {
+    "app": "brave",
+    "type": "class"
+  },
+  {
+    "app": "Navigator",
+    "type": "class"
+  },
+  {
+    "app": "Vieb",
+    "type": "class"
+  },
+  {
+    "app": "brave-browser",
+    "type": "class"
+  }
 ]
