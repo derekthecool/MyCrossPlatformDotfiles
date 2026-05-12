@@ -200,6 +200,10 @@ function Get-LatestGithubRelease
         Mutually exclusive with SkipRegex. Advanced skip logic that receives collected output and exit codes.
         Should return $true to skip or $false to continue.
 
+    .PARAMETER PassThru
+        Only return the final result object, suppressing iteration object output. Use this when you only
+        care about the final result and don't need progress information.
+
     .EXAMPLE
         # Initialize bisect with good and bad commits
         Start-GitBisect -Good abc123 -Bad def456
@@ -239,6 +243,14 @@ function Get-LatestGithubRelease
     .EXAMPLE
         # Skip commits that match a regex pattern
         Start-GitBisect -ScriptBlock { ./build.sh } -SkipRegex 'compilation failed'
+
+    .EXAMPLE
+        # Only get final result, suppress iteration output
+        $result = Start-GitBisect -Good HEAD~10 -Bad HEAD -ScriptBlock {
+            npm test
+            $LASTEXITCODE
+        } -PassThru
+        $result.FirstBadCommit
 #>
 function Start-GitBisect
 {
@@ -262,7 +274,10 @@ function Start-GitBisect
         [string]$SkipRegex,
 
         [Parameter(ParameterSetName = 'Run')]
-        [scriptblock]$SkipScriptBlock
+        [scriptblock]$SkipScriptBlock,
+
+        [Parameter(ParameterSetName = 'Run')]
+        [switch]$PassThru
     )
 
     begin
@@ -517,7 +532,9 @@ function Start-GitBisect
                             FirstBadCommit = $firstBadCommit
                         }
 
-                        Write-Output $iterationResult
+                        if (-not $PassThru) {
+                            Write-Output $iterationResult
+                        }
 
                         # Get short hash for display
                         $shortHashResult = git log --format=%h -1 $firstBadCommit
@@ -541,7 +558,9 @@ function Start-GitBisect
                             Duration       = $duration
                         }
 
-                        Write-Output $iterationResult
+                        if (-not $PassThru) {
+                            Write-Output $iterationResult
+                        }
                     }
                 } catch
                 {
@@ -573,7 +592,9 @@ function Start-GitBisect
                             FirstBadCommit = $firstBadCommit
                         }
 
-                        Write-Output $iterationResult
+                        if (-not $PassThru) {
+                            Write-Output $iterationResult
+                        }
                         break
                         }
                     }
