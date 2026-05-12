@@ -173,12 +173,18 @@ function Get-LatestGithubRelease
 
     .DESCRIPTION
         Start-GitBisect simplifies the git bisect workflow by initializing bisect with good/bad commits
-        and optionally running automated validation scriptblocks to test each commit. The function handles
-        exit codes properly (0=good, 1=bad, 125=skip) and supports skip detection via regex or advanced scriptblock logic.
+        and optionally running automated validation scriptblocks to test each commit. The scriptblock return
+        value determines the bisect result: integers (0=good, non-zero=bad, 125=skip), booleans ($false=good,
+        $true=bad), or the string 'skip' to skip untestable commits.
 
     .PARAMETER ScriptBlock
-        The scriptblock to execute for each commit being tested. Should contain validation steps to test the commit.
-        Users should populate $global:GitBisectExitCodes with exit codes from external commands.
+        The scriptblock to execute for each commit being tested. Return values determine bisect action:
+        - Integer: 0 = good, non-zero = bad, 125 = skip
+        - Boolean: $false = good, $true = bad
+        - String 'skip' = skip
+        - Exception = bad
+
+        For backward compatibility, you can still set $global:GitBisectExitCodes instead of returning a value.
 
     .PARAMETER GoodCommitHash
         The known-good commit hash. If not provided, assumes bisect is already started.
@@ -188,33 +194,51 @@ function Get-LatestGithubRelease
 
     .PARAMETER SkipRegex
         Mutually exclusive with SkipScriptBlock. Regex pattern to match against stdout/stderr from all commands.
-        If match found, the commit is skipped (exit 125).
+        If match found, the commit is skipped.
 
     .PARAMETER SkipScriptBlock
         Mutually exclusive with SkipRegex. Advanced skip logic that receives collected output and exit codes.
-        Should return $true to skip (exit 125) or $false to continue.
+        Should return $true to skip or $false to continue.
 
     .EXAMPLE
         # Initialize bisect with good and bad commits
         Start-GitBisect -Good abc123 -Bad def456
 
     .EXAMPLE
-        # Run automated bisect with scriptblock
+        # Boolean return (PowerShell-idiomatic)
+        Start-GitBisect -Good HEAD~10 -Bad HEAD -ScriptBlock {
+            [int](Get-Content file.txt) -ge 14  # true = bad, false = good
+        }
+
+    .EXAMPLE
+        # Integer return (exit code style)
         Start-GitBisect -Good HEAD~10 -Bad HEAD -ScriptBlock {
             npm test
-            $global:GitBisectExitCodes += $LASTEXITCODE
+            $LASTEXITCODE  # 0 = good, non-zero = bad
+        }
+
+    .EXAMPLE
+        # Skip untestable commits
+        Start-GitBisect -Good HEAD~10 -Bad HEAD -ScriptBlock {
+            if (-not (Test-Path config.json)) { return 125 }  # Skip
+            npm test
+            $LASTEXITCODE
+        }
+
+    .EXAMPLE
+        # Backward compatible (global variable)
+        Start-GitBisect -Good HEAD~10 -Bad HEAD -ScriptBlock {
+            try {
+                npm test
+                $global:GitBisectExitCodes = @(0)
+            } catch {
+                $global:GitBisectExitCodes = @(1)
+            }
         }
 
     .EXAMPLE
         # Skip commits that match a regex pattern
         Start-GitBisect -ScriptBlock { ./build.sh } -SkipRegex 'compilation failed'
-
-    .EXAMPLE
-        # Skip commits with custom logic
-        Start-GitBisect -ScriptBlock { ./test.sh } -SkipScriptBlock {
-            param($Output, $ExitCodes)
-            $Output -match 'no tests in commit'
-        }
 #>
 function Start-GitBisect
 {
@@ -313,52 +337,42 @@ function Start-GitBisect
                 {
                     Write-Error "Git bisect exceeded maximum iteration count ($maxIterations). Resetting bisect state."
                     git bisect reset | Out-Null
-                    return $false
+                    return [PSCustomObject]@{ Success = $false; Error = "Exceeded maximum iteration count ($maxIterations)" }
                 }
 
-                Write-Verbose "Git bisect iteration $iterationCount"
+                $iterationStart = Get-Date
                 $currentCommit = git log --format=%H -1
-                Write-Verbose "Testing commit: $currentCommit"
+                $shortHash = git log --format=%h -1
+                $commitSubject = git log --format=%s -1
+                $commitAuthor = git log --format=%an -1
+                $commitDate = git log --format=%ai -1
+
+                Write-Verbose "Git bisect iteration $iterationCount - $shortHash - $commitSubject"
 
                 # Initialize for this iteration
                 $global:GitBisectExitCodes = @()
                 $outputBuilder = [System.Text.StringBuilder]::new()
-                $powerShellError = $false
+                $scriptblockResult = $null
 
                 try
                 {
-                    # Execute scriptblock and capture output
-                    Invoke-Command -ScriptBlock $ScriptBlock 2>&1 |
-                        ForEach-Object {
-                            $outputBuilder.AppendLine($_.ToString()) | Out-Null
-                            $_
-                        } | Out-Null
+                    # Execute scriptblock and capture output and return value
+                    $output = Invoke-Command -ScriptBlock $ScriptBlock 2>&1
+                    $capturedOutput = ($output | ForEach-Object {
+                        $outputBuilder.AppendLine($_.ToString()) | Out-Null
+                        $_
+                    }) -join "`n"
 
-                    $capturedOutput = $outputBuilder.ToString()
+                    # The return value is the last object in the pipeline
+                    $scriptblockResult = if ($output.Count -gt 0) { $output[-1] } else { $null }
 
-                    # Check skip detection
-                    $shouldSkip = $false
+                    # Determine bisect action from return value or global variable
+                    $bisectAction = $null
 
-                    if ($SkipScriptBlock)
+                    # Backward compatibility: check if global variable was set
+                    if ($global:GitBisectExitCodes.Count -gt 0)
                     {
-                        Write-Verbose 'Executing SkipScriptBlock'
-                        $shouldSkip = & $SkipScriptBlock $capturedOutput $global:GitBisectExitCodes
-                    } elseif ($SkipRegex -and $capturedOutput -match $SkipRegex)
-                    {
-                        Write-Verbose "SkipRegex matched: $SkipRegex"
-                        $shouldSkip = $true
-                    }
-
-                    # Determine git bisect result
-                    if ($shouldSkip)
-                    {
-                        Write-Verbose 'Skipping commit'
-                        & git bisect skip 2>&1 | Out-Null
-                    } elseif ($global:GitBisectExitCodes.Count -gt 0)
-                    {
-                        # User provided exit codes
-                        Write-Verbose "Evaluating exit codes: $($global:GitBisectExitCodes -join ', ')"
-
+                        Write-Verbose "Using global GitBisectExitCodes (deprecated, use return value instead)"
                         $hasNonZero = $false
                         foreach ($code in $global:GitBisectExitCodes)
                         {
@@ -371,39 +385,198 @@ function Start-GitBisect
 
                         if ($hasNonZero)
                         {
-                            Write-Verbose 'Marking as bad'
-                            & git bisect bad 2>&1 | Out-Null
+                            # Check for 125 (skip code)
+                            $has125 = $false
+                            foreach ($code in $global:GitBisectExitCodes)
+                            {
+                                if ($code -eq 125)
+                                {
+                                    $has125 = $true
+                                    break
+                                }
+                            }
+
+                            if ($has125)
+                            {
+                                $bisectAction = 'skip'
+                            } else
+                            {
+                                $bisectAction = 'bad'
+                            }
                         } else
                         {
-                            Write-Verbose 'Marking as good'
-                            & git bisect good 2>&1 | Out-Null
+                            $bisectAction = 'good'
                         }
-                    } else
+                    }
+                    # Use return value if global variable wasn't set
+                    elseif ($null -ne $scriptblockResult)
                     {
-                        # No exit codes, use PowerShell status
-                        if ($?)
+                        Write-Verbose "Evaluating scriptblock return value: $($scriptblockResult.GetType().Name)"
+
+                        if ($scriptblockResult -is [int])
                         {
-                            Write-Verbose 'Marking as good (PowerShell succeeded)'
-                            & git bisect good 2>&1 | Out-Null
-                        } else
+                            if ($scriptblockResult -eq 0)
+                            {
+                                $bisectAction = 'good'
+                            } elseif ($scriptblockResult -eq 125)
+                            {
+                                $bisectAction = 'skip'
+                            } else
+                            {
+                                $bisectAction = 'bad'
+                            }
+                        }
+                        elseif ($scriptblockResult -is [bool])
                         {
-                            Write-Verbose 'Marking as bad (PowerShell failed)'
-                            & git bisect bad 2>&1 | Out-Null
+                            $bisectAction = if ($scriptblockResult) { 'bad' } else { 'good' }
+                        }
+                        elseif ($scriptblockResult -is [string] -and $scriptblockResult -eq 'skip')
+                        {
+                            $bisectAction = 'skip'
+                        }
+                        else
+                        {
+                            throw "ScriptBlock returned unexpected type: $($scriptblockResult.GetType().Name). Expected int, bool, or 'skip'."
+                        }
+                    }
+                    # No return value and no global variable - warn user
+                    else
+                    {
+                        Write-Warning "ScriptBlock did not return a value and did not set `$global:GitBisectExitCodes. Assuming good. Use explicit return (0/1 or `$false/`$true) or set `$global:GitBisectExitCodes."
+                        $bisectAction = 'good'
+                    }
+
+                    # Check skip detection via parameters (backward compatibility)
+                    if ($bisectAction -ne 'skip')
+                    {
+                        if ($SkipScriptBlock)
+                        {
+                            Write-Verbose 'Executing SkipScriptBlock'
+                            $shouldSkip = & $SkipScriptBlock $capturedOutput $global:GitBisectExitCodes
+                            if ($shouldSkip) { $bisectAction = 'skip' }
+                        } elseif ($SkipRegex -and $capturedOutput -match $SkipRegex)
+                        {
+                            Write-Verbose "SkipRegex matched: $SkipRegex"
+                            $bisectAction = 'skip'
                         }
                     }
 
-                    # Check if bisect is complete
-                    # Git bisect creates BISECT_EXPECTED_REV when it has identified the first bad commit
-                    if (Test-Path '.git/BISECT_EXPECTED_REV')
+                    # Determine git bisect result and capture output
+                    $bisectOutput = switch ($bisectAction)
                     {
-                        $expectedRev = Get-Content '.git/BISECT_EXPECTED_REV' -Raw
-                        Write-Host "Bisect complete: First bad commit is $expectedRev"
+                        'skip'
+                        {
+                            Write-Verbose 'Skipping commit'
+                            & git bisect skip 2>&1
+                        }
+                        'bad'
+                        {
+                            Write-Verbose 'Marking as bad'
+                            & git bisect bad 2>&1
+                        }
+                        'good'
+                        {
+                            Write-Verbose 'Marking as good'
+                            & git bisect good 2>&1
+                        }
+                    }
+
+                    # Determine test result for the iteration object
+                    $testResult = $bisectAction
+
+                    # Check for completion message in output
+                    $firstBadCommit = $null
+                    if ($bisectOutput -match '([a-f0-9]{40}) is the first bad commit')
+                    {
+                        # Use explicit regex matching to avoid $matches scoping issues
+                        $match = [regex]::Match($bisectOutput, '([a-f0-9]{40}) is the first bad commit')
+                        if ($match.Success)
+                        {
+                            $firstBadCommit = $match.Groups[1].Value
+                        }
+                    }
+
+                    if ($firstBadCommit)
+                    {
+
+                        # Create final iteration object
+                        $duration = (Get-Date) - $iterationStart
+                        $iterationResult = [PSCustomObject]@{
+                            Iteration      = $iterationCount
+                            CommitHash     = $currentCommit
+                            ShortHash      = $shortHash
+                            CommitSubject  = $commitSubject
+                            CommitAuthor   = $commitAuthor
+                            CommitDate     = $commitDate
+                            TestResult     = $testResult
+                            TestOutput     = $capturedOutput.Trim()
+                            ReturnValue    = if ($null -ne $scriptblockResult) { $scriptblockResult } else { $global:GitBisectExitCodes }
+                            ExitCodes      = if ($global:GitBisectExitCodes) { $global:GitBisectExitCodes.Clone() } else { @() }
+                            Duration       = $duration
+                            IsComplete     = $true
+                            FirstBadCommit = $firstBadCommit
+                        }
+
+                        Write-Output $iterationResult
+
+                        # Get short hash for display
+                        $shortHashResult = git log --format=%h -1 $firstBadCommit
+                        Write-Host "✓ Bisect complete: First bad commit is $shortHashResult"
                         break
+                    } else
+                    {
+                        # Not complete yet, create iteration object
+                        $duration = (Get-Date) - $iterationStart
+                        $iterationResult = [PSCustomObject]@{
+                            Iteration      = $iterationCount
+                            CommitHash     = $currentCommit
+                            ShortHash      = $shortHash
+                            CommitSubject  = $commitSubject
+                            CommitAuthor   = $commitAuthor
+                            CommitDate     = $commitDate
+                            TestResult     = $testResult
+                            TestOutput     = $capturedOutput.Trim()
+                            ReturnValue    = if ($null -ne $scriptblockResult) { $scriptblockResult } else { $global:GitBisectExitCodes }
+                            ExitCodes      = if ($global:GitBisectExitCodes) { $global:GitBisectExitCodes.Clone() } else { @() }
+                            Duration       = $duration
+                        }
+
+                        Write-Output $iterationResult
                     }
                 } catch
                 {
                     Write-Verbose "Scriptblock threw exception, marking as bad"
-                    & git bisect bad 2>&1 | Out-Null
+                    $bisectOutput = & git bisect bad 2>&1
+
+                    # Check if exception triggered completion
+                    if ($bisectOutput -match '([a-f0-9]{40}) is the first bad commit')
+                    {
+                        # Use explicit regex matching to avoid $matches scoping issues
+                        $match = [regex]::Match($bisectOutput, '([a-f0-9]{40}) is the first bad commit')
+                        if ($match.Success)
+                        {
+                            $firstBadCommit = $match.Groups[1].Value
+                            $duration = (Get-Date) - $iterationStart
+
+                        $iterationResult = [PSCustomObject]@{
+                            Iteration      = $iterationCount
+                            CommitHash     = $currentCommit
+                            ShortHash      = $shortHash
+                            CommitSubject  = $commitSubject
+                            CommitAuthor   = $commitAuthor
+                            CommitDate     = $commitDate
+                            TestResult     = 'bad'
+                            TestOutput     = "Exception: $_"
+                            ExitCodes      = @()
+                            Duration       = $duration
+                            IsComplete     = $true
+                            FirstBadCommit = $firstBadCommit
+                        }
+
+                        Write-Output $iterationResult
+                        break
+                        }
+                    }
                 } finally
                 {
                     # Clean up global variable
@@ -414,7 +587,25 @@ function Start-GitBisect
                 }
             }
 
-            return $true
+            # Create and return final result object
+            if (Test-Path '.git/BISECT_LOG')
+            {
+                $currentCommit = git log --format=%H -1
+                $result = [PSCustomObject]@{
+                    Success        = $true
+                    FirstBadCommit = $currentCommit
+                    ShortHash      = git log --format=%h -1
+                    CommitSubject  = git log --format=%s -1
+                    CommitAuthor   = git log --format=%an -1
+                    CommitDate     = git log --format=%ai -1
+                    Iterations     = $iterationCount
+                    BisectLog      = git bisect log 2>&1
+                }
+
+                return $result
+            }
+
+            return [PSCustomObject]@{ Success = $false; Error = 'Bisect did not complete successfully' }
         }
     }
 }

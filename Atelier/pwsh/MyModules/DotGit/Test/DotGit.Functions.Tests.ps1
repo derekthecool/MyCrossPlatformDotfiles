@@ -155,15 +155,15 @@ function Get-Value {
         $commitsReverse = git log --reverse --format=%H | Select-Object -First 10
         $commit1 = $commitsReverse[0]
         $commit10 = git log --format=%H | Select-Object -First 1
-        $commit6 = $commitsReverse[5]
+        $commit6Subject = 'Commit 6: BUG INTRODUCED - division by zero'
 
         # Verify we got the expected commits
         $commit1 | Should -Not -BeNullOrEmpty
         $commit10 | Should -Not -BeNullOrEmpty
-        $commit6 | Should -Not -BeNullOrEmpty
 
         # Start bisect: commit 1 is good, commit 10 is bad
-        Start-GitBisect -Good $commit1 -Bad $commit10 -ScriptBlock {
+        $iterations = @()
+        $result = Start-GitBisect -Good $commit1 -Bad $commit10 -ScriptBlock {
             # Test the function
             try
             {
@@ -175,18 +175,90 @@ function Get-Value {
                 # Function threw error - bad commit
                 $global:GitBisectExitCodes = @(1)
             }
-        }
+        } | ForEach-Object {
+            # Collect iteration objects
+            if ($_.PSObject.Properties.Match('Iteration').Count -gt 0)
+            {
+                $iterations += $_
+            }
+            # Return all objects for final result
+            $_
+        } | Select-Object -Last 1
+
+        # Verify result object structure
+        $result | Should -Not -BeNullOrEmpty
+        $result.Success | Should -Be $true
+        $result.CommitSubject | Should -Be $commit6Subject
+        $result.Iterations | Should -BeGreaterThan 0
+        $result.PSObject.Properties.Name | Should -Contain 'ShortHash'
+        $result.PSObject.Properties.Name | Should -Contain 'CommitSubject'
+        $result.PSObject.Properties.Name | Should -Contain 'CommitAuthor'
+
+        # Verify iteration objects were output
+        $iterations.Count | Should -BeGreaterThan 0
+        $iterations[0].PSObject.Properties.Name | Should -Contain 'CommitHash'
+        $iterations[0].PSObject.Properties.Name | Should -Contain 'ShortHash'
+        $iterations[0].PSObject.Properties.Name | Should -Contain 'TestResult'
+        $iterations[0].PSObject.Properties.Name | Should -Contain 'Duration'
 
         # Verify git bisect found commit 6
-        $currentCommit = git log --format=%H | Select-Object -First 1
-        $currentCommit | Should -Be $commit6
+        $currentCommitSubject = git log --format=%s -1
+        $currentCommitSubject | Should -Be $commit6Subject
+    }
+
+    It 'Should output rich iteration objects with all expected properties' {
+        # Get commit hashes
+        $commitsReverse = git log --reverse --format=%H | Select-Object -First 10
+        $commit1 = $commitsReverse[0]
+        $commit10 = git log --format=%H | Select-Object -First 1
+
+        # Collect iteration objects
+        $iterations = @()
+        Start-GitBisect -Good $commit1 -Bad $commit10 -ScriptBlock {
+            try
+            {
+                . ./MyFunction.ps1
+                Get-Value -x 10 | Out-Null
+                $global:GitBisectExitCodes = @(0)
+            } catch
+            {
+                $global:GitBisectExitCodes = @(1)
+            }
+        } | ForEach-Object {
+            if ($_.PSObject.Properties.Match('Iteration').Count -gt 0)
+            {
+                $iterations += $_
+            }
+        }
+
+        # Verify we got iterations
+        $iterations.Count | Should -BeGreaterThan 0
+
+        # Check first iteration has all required properties
+        $firstIteration = $iterations[0]
+        $firstIteration.Iteration | Should -BeGreaterThan 0
+        $firstIteration.CommitHash | Should -Not -BeNullOrEmpty
+        $firstIteration.ShortHash | Should -Not -BeNullOrEmpty
+        $firstIteration.CommitSubject | Should -Not -BeNullOrEmpty
+        $firstIteration.CommitAuthor | Should -Not -BeNullOrEmpty
+        $firstIteration.CommitDate | Should -Not -BeNullOrEmpty
+        $firstIteration.TestResult | Should -BeIn @('good', 'bad', 'skip')
+        $firstIteration.Duration | Should -Not -BeNullOrEmpty
+        $firstIteration.ExitCodes | Should -Not -BeNullOrEmpty
+
+        # Check that completion marker exists on final iteration
+        $finalIteration = $iterations | Select-Object -Last 1
+        $finalIteration.PSObject.Properties.Name | Should -Contain 'IsComplete'
+        $finalIteration.IsComplete | Should -Be $true
+        $finalIteration.PSObject.Properties.Name | Should -Contain 'FirstBadCommit'
+        $finalIteration.FirstBadCommit | Should -Not -BeNullOrEmpty
     }
 
     It 'Should handle untestable commits with SkipRegex' {
         # Get commit hashes in the test (before adding new commits)
         $commitsReverse = git log --reverse --format=%H | Select-Object -First 10
         $commit1 = $commitsReverse[0]
-        $commit6 = $commitsReverse[5]
+        $commit6Subject = 'Commit 6: BUG INTRODUCED - division by zero'
 
         # Add an untestable commit (missing dependency)
         @'
@@ -196,7 +268,7 @@ throw 'Missing required module'
         git add './MyFunction.ps1'
         git commit -m 'Commit 11: Untestable - missing dependency' | Out-Null
 
-        Start-GitBisect -Good $commit1 -Bad HEAD -ScriptBlock {
+        $result = Start-GitBisect -Good $commit1 -Bad HEAD -ScriptBlock {
             try
             {
                 . ./MyFunction.ps1
@@ -212,18 +284,22 @@ throw 'Missing required module'
                     $global:GitBisectExitCodes = @(1)
                 }
             }
-        } -SkipRegex 'Missing required module'
+        } -SkipRegex 'Missing required module' | Select-Object -Last 1
+
+        # Verify result
+        $result.Success | Should -Be $true
+        $result.CommitSubject | Should -Be $commit6Subject
 
         # Should skip commit 11 and find commit 6
-        $currentCommit = git log --format=%H | Select-Object -First 1
-        $currentCommit | Should -Be $commit6
+        $currentCommit = git log --format=%s -1
+        $currentCommit | Should -Be $commit6Subject
     }
 
     It 'Should handle untestable commits with SkipScriptBlock' {
         # Get commit hashes in the test (before adding new commits)
         $commitsReverse = git log --reverse --format=%H | Select-Object -First 10
         $commit1 = $commitsReverse[0]
-        $commit6 = $commitsReverse[5]
+        $commit6Subject = 'Commit 6: BUG INTRODUCED - division by zero'
 
         # Add an untestable commit (no tests to run)
         @'
@@ -232,7 +308,7 @@ throw 'Missing required module'
         git add './MyFunction.ps1'
         git commit -m 'Commit 12: Untestable - no tests' | Out-Null
 
-        Start-GitBisect -Good $commit1 -Bad HEAD -ScriptBlock {
+        $result = Start-GitBisect -Good $commit1 -Bad HEAD -ScriptBlock {
             try
             {
                 . ./MyFunction.ps1
@@ -254,11 +330,140 @@ throw 'Missing required module'
             param($Output, $ExitCodes)
             # Skip if exit code 125 was set
             $ExitCodes -contains 125
-        }
+        } | Select-Object -Last 1
+
+        # Verify result
+        $result.Success | Should -Be $true
+        $result.CommitSubject | Should -Be $commit6Subject
 
         # Should find commit 6 (skipping commit 12)
-        $currentCommit = git log --format=%H | Select-Object -First 1
-        $currentCommit | Should -Be $commit6
+        $currentCommitSubject = git log --format=%s -1
+        $currentCommitSubject | Should -Be $commit6Subject
+    }
+
+    It 'Should support boolean return values (false=good, true=bad)' {
+        # Get existing commits (1-10 with bug at 6)
+        $commitsReverse = git log --reverse --format=%H | Select-Object -First 10
+        $commit1 = $commitsReverse[0]
+        $commit10 = git log --format=%H | Select-Object -First 1
+        $commit6Subject = 'Commit 6: BUG INTRODUCED - division by zero'
+
+        $result = Start-GitBisect -Good $commit1 -Bad $commit10 -ScriptBlock {
+            try {
+                . ./MyFunction.ps1
+                Get-Value -x 10 | Out-Null
+                $false  # Good (no error)
+            } catch {
+                $true  # Bad (error occurred)
+            }
+        } | Select-Object -Last 1
+
+        $result.Success | Should -Be $true
+        $result.CommitSubject | Should -Be $commit6Subject
+    }
+
+    It 'Should support integer return values (0=good, non-zero=bad)' {
+        $commitsReverse = git log --reverse --format=%H | Select-Object -First 10
+        $commit1 = $commitsReverse[0]
+        $commit10 = git log --format=%H | Select-Object -First 1
+        $commit6Subject = 'Commit 6: BUG INTRODUCED - division by zero'
+
+        $result = Start-GitBisect -Good $commit1 -Bad $commit10 -ScriptBlock {
+            try {
+                . ./MyFunction.ps1
+                Get-Value -x 10 | Out-Null
+                0  # Good
+            } catch {
+                1  # Bad
+            }
+        } | Select-Object -Last 1
+
+        $result.Success | Should -Be $true
+        $result.CommitSubject | Should -Be $commit6Subject
+    }
+
+    It 'Should handle sequential commit scenario (like /tmp/bisect)' {
+        # Create 19 commits with sequential numbers
+        for ($i = 1; $i -le 19; $i++) {
+            "$i" | Set-Content './numbers.txt'
+            git add './numbers.txt'
+            $null = git commit -m "$i commit" 2>&1
+        }
+
+        $commitsReverse = git log --reverse --format=%H | Select-Object -First 19
+        $commit1 = $commitsReverse[0]
+        $commit19 = git log --format=%H | Select-Object -First 1
+        $expectedBad = '14 commit'
+
+        $result = Start-GitBisect -Good $commit1 -Bad $commit19 -ScriptBlock {
+            $num = [int](Get-Content './numbers.txt')
+            $num -ge 14  # true = bad (14+), false = good (1-13)
+        } | Select-Object -Last 1
+
+        $result.Success | Should -Be $true
+        $result.CommitSubject | Should -Be $expectedBad
+        $result.Iterations | Should -BeGreaterThan 0
+    }
+
+    It 'Should support skip via return value 125' {
+        # Create a simple test scenario
+        # Commits 1-5 good, 6-10 bad (similar to existing setup)
+        for ($i = 11; $i -le 12; $i++) {
+            if ($i -eq 11) {
+                # Untestable commit
+                'MISSING' | Set-Content './skip-test.txt'
+            } else {
+                # Bad commit (after untestable)
+                'bad' | Set-Content './skip-test.txt'
+            }
+            git add './skip-test.txt'
+            $null = git commit -m "Skip test commit $i" 2>&1
+        }
+
+        $commitsReverse = git log --reverse --format=%H | Select-Object -First 12
+        $commit1 = $commitsReverse[0]
+        $commit12 = git log --format=%H | Select-Object -First 1
+        $commit6Subject = 'Commit 6: BUG INTRODUCED - division by zero'
+
+        $result = Start-GitBisect -Good $commit1 -Bad $commit12 -ScriptBlock {
+            # Check if we're testing commit 11 (untestable)
+            $subject = git log --format=%s -1
+            if ($subject -match 'Skip test commit 11') {
+                return 125  # Skip this commit
+            }
+
+            # Normal test logic
+            try {
+                . ./MyFunction.ps1
+                Get-Value -x 10 | Out-Null
+                0  # Good
+            } catch {
+                1  # Bad
+            }
+        } | Select-Object -Last 1
+
+        $result.Success | Should -Be $true
+        $result.CommitSubject | Should -Be $commit6Subject
+    }
+
+    It 'Should maintain backward compatibility with GitBisectExitCodes' {
+        $commitsReverse = git log --reverse --format=%H | Select-Object -First 10
+        $commit1 = $commitsReverse[0]
+        $commit10 = git log --format=%H | Select-Object -First 1
+        $commit6Subject = 'Commit 6: BUG INTRODUCED - division by zero'
+
+        $result = Start-GitBisect -Good $commit1 -Bad $commit10 -ScriptBlock {
+            try {
+                . ./MyFunction.ps1
+                Get-Value -x 10 | Out-Null
+                $global:GitBisectExitCodes = @(0)  # Good
+            } catch {
+                $global:GitBisectExitCodes = @(1)  # Bad
+            }
+        } | Select-Object -Last 1
+
+        $result.Success | Should -Be $true
+        $result.CommitSubject | Should -Be $commit6Subject
     }
 
     AfterEach {
