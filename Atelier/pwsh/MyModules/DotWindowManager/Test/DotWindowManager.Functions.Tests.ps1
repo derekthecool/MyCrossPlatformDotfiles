@@ -48,7 +48,7 @@ Describe 'Get-WM' {
     }
 
     It 'Returns multiple workspaces when array specified' {
-        $result = Get-WM -Workspace 1,2,3
+        $result = Get-WM -Workspace 1, 2, 3
         $result.Workspace | Select-Object -Unique | Should -HaveCount 3
     }
 
@@ -124,7 +124,7 @@ Describe 'Add-WMRoute' {
     }
 
     It 'Adds route from hashtable input' {
-        @{Name='hash-app'; Type='class'} | Add-WMRoute -Workspace 9
+        @{Name = 'hash-app'; Type = 'class' } | Add-WMRoute -Workspace 9
 
         $result = Get-WM -Workspace 9
         $result.App | Should -Contain 'hash-app'
@@ -132,7 +132,7 @@ Describe 'Add-WMRoute' {
     }
 
     It 'Adds route from PSCustomObject input' {
-        [PSCustomObject]@{Name='custom-app'; Type='title'} | Add-WMRoute -Workspace 9
+        [PSCustomObject]@{Name = 'custom-app'; Type = 'title' } | Add-WMRoute -Workspace 9
 
         $result = Get-WM -Workspace 9
         $result.App | Should -Contain 'custom-app'
@@ -172,8 +172,7 @@ Describe 'Add-WMRoute' {
         {
             'new-workspace-app' | Add-WMRoute -Workspace 8
             Test-Path $nonExistentPath | Should -Be $true
-        }
-        finally
+        } finally
         {
             # Restore
             if (Test-Path $backupPath)
@@ -232,7 +231,7 @@ Describe 'Add-WMFilter' {
     }
 
     It 'Adds filter from hashtable input' {
-        @{Name='hash-filter'; Type='instance'} | Add-WMFilter
+        @{Name = 'hash-filter'; Type = 'instance' } | Add-WMFilter
 
         $result = Get-WM -Filters
         $result.App | Should -Contain 'hash-filter'
@@ -324,8 +323,8 @@ Describe 'Get-WindowDetails' {
         # All functions have common parameters, but Get-WindowDetails should have no custom ones
         # Filter out common parameters
         $commonParams = @('Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction',
-                         'ProgressAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable',
-                         'OutVariable', 'OutBuffer', 'PipelineVariable')
+            'ProgressAction', 'ErrorVariable', 'WarningVariable', 'InformationVariable',
+            'OutVariable', 'OutBuffer', 'PipelineVariable')
         $customParams = $function.Parameters.Keys | Where-Object { $_ -notin $commonParams }
         $customParams | Should -BeNullOrEmpty
     }
@@ -339,13 +338,16 @@ Describe 'Get-WindowDetails' {
 
         # Simulate what Add-WMRoute does with this input
         $results = @()
-        foreach ($item in $mockOutput) {
+        foreach ($item in $mockOutput)
+        {
             $hash = @{}
-            foreach ($prop in $item.PSObject.Properties) {
+            foreach ($prop in $item.PSObject.Properties)
+            {
                 $hash[$prop.Name.ToLower()] = $prop.Value
             }
             # Normalize 'name' to 'app'
-            if ($hash.ContainsKey('name') -and -not $hash.ContainsKey('app')) {
+            if ($hash.ContainsKey('name') -and -not $hash.ContainsKey('app'))
+            {
                 $hash['app'] = $hash['name']
                 $hash.Remove('name') | Out-Null
             }

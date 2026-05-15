@@ -12,12 +12,15 @@ $short_cwd = if ($cwd) { Split-Path $cwd -Leaf } else { '' }
 
 # Git branch and status
 $git_info = ''
-if ($cwd -and (git -C $cwd rev-parse --git-dir 2>$null)) {
+if ($cwd -and (git -C $cwd rev-parse --git-dir 2>$null))
+{
     $branch = git -C $cwd --no-optional-locks symbolic-ref --short HEAD 2>$null
-    if (-not $branch) {
+    if (-not $branch)
+    {
         $branch = git -C $cwd --no-optional-locks rev-parse --short HEAD 2>$null
     }
-    if ($branch) {
+    if ($branch)
+    {
         $git_flags = ''
         git -C $cwd --no-optional-locks diff --quiet 2>$null
         if ($LASTEXITCODE -ne 0) { $git_flags += 'M' }
@@ -26,12 +29,15 @@ if ($cwd -and (git -C $cwd rev-parse --git-dir 2>$null)) {
         $untracked = git -C $cwd --no-optional-locks ls-files --others --exclude-standard 2>$null
         if ($untracked) { $git_flags += '?' }
 
-        if ($git_flags) {
+        if ($git_flags)
+        {
             $git_info = " [$branch $git_flags]"
-        } else {
+        } else
+        {
             $git_info = " [$branch]"
         }
-        if ($git_worktree) {
+        if ($git_worktree)
+        {
             $git_info += " {$git_worktree}"
         }
     }
@@ -39,7 +45,8 @@ if ($cwd -and (git -C $cwd rev-parse --git-dir 2>$null)) {
 
 # Context usage indicator
 $ctx_info = ''
-if ($null -ne $used -and "$used" -ne '') {
+if ($null -ne $used -and "$used" -ne '')
+{
     $ctx_used = [math]::Round([double]$used)
     $ctx_info = " ctx:${ctx_used}%"
 }
@@ -47,14 +54,16 @@ if ($null -ne $used -and "$used" -ne '') {
 # Session cost
 $cost_info = ''
 $session_cost = $data.cost.total_cost_usd
-if ($null -ne $session_cost -and "$session_cost" -ne '') {
+if ($null -ne $session_cost -and "$session_cost" -ne '')
+{
     $cost_formatted = '$' + ([math]::Round([double]$session_cost, 2)).ToString('F2')
     $cost_info = " $cost_formatted"
 }
 
 # Model info
 $model_info = ''
-if ($model) {
+if ($model)
+{
     $model_info = " | $model"
 }
 

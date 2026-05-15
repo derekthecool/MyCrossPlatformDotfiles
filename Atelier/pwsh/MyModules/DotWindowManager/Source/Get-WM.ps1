@@ -72,8 +72,7 @@ function Get-WM
     if ($PSBoundParameters.ContainsKey('Workspace'))
     {
         $workspaces = $Workspace
-    }
-    else
+    } else
     {
         $workspaces = 1..9
     }
@@ -91,8 +90,7 @@ function Get-WM
                 Workspace = $ws
                 Routes    = $routes
             }
-        }
-        else
+        } else
         {
             foreach ($route in $routes)
             {

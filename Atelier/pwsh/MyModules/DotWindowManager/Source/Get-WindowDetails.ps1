@@ -1,4 +1,5 @@
-function Get-WindowDetails {
+function Get-WindowDetails
+{
     <#
     .SYNOPSIS
     Gets window details by inspecting a clicked window.
@@ -28,7 +29,8 @@ function Get-WindowDetails {
     Write-Host "=== Get Window Details ===" -ForegroundColor Cyan
     Write-Host ""
 
-    if ($IsLinux) {
+    if ($IsLinux)
+    {
         Write-Host "Platform: Linux (using xprop)" -ForegroundColor Yellow
         Write-Host ""
         Write-Host "INSTRUCTIONS:" -ForegroundColor White
@@ -38,7 +40,8 @@ function Get-WindowDetails {
         # Use xprop to select window and get properties
         $xpropOutput = & xprop 2>&1
 
-        if ($LASTEXITCODE -ne 0 -or -not $xpropOutput) {
+        if ($LASTEXITCODE -ne 0 -or -not $xpropOutput)
+        {
             Write-Host "Error: Failed to get window details. Make sure xprop is installed." -ForegroundColor Red
             Write-Host "Install with: sudo apt install x11-utils xdotool" -ForegroundColor Yellow
             return
@@ -46,21 +49,25 @@ function Get-WindowDetails {
 
         # Parse xprop output
         $details = [PSCustomObject]@{
-            Name    = $null
-            Class   = $null
+            Name     = $null
+            Class    = $null
             Instance = $null
-            Role    = $null
+            Role     = $null
         }
 
-        foreach ($line in $xpropOutput) {
-            if ($line -match 'WM_NAME\(STRING\) = "(.*)"') {
+        foreach ($line in $xpropOutput)
+        {
+            if ($line -match 'WM_NAME\(STRING\) = "(.*)"')
+            {
                 $details.Name = $matches[1]
             }
-            if ($line -match 'WM_CLASS\(STRING\) = "(.*)", "(.*)"') {
+            if ($line -match 'WM_CLASS\(STRING\) = "(.*)", "(.*)"')
+            {
                 $details.Instance = $matches[1]
                 $details.Class = $matches[2]
             }
-            if ($line -match 'WM_WINDOW_ROLE\(STRING\) = "(.*)"') {
+            if ($line -match 'WM_WINDOW_ROLE\(STRING\) = "(.*)"')
+            {
                 $details.Role = $matches[1]
             }
         }
@@ -76,33 +83,37 @@ function Get-WindowDetails {
         # Output as custom object with Add-WMRoute/Add-WMFilter compatible format
         $results = [System.Collections.ArrayList]::new()
 
-        if ($details.Class) {
+        if ($details.Class)
+        {
             $results.Add([PSCustomObject]@{
-                Name = $details.Class
-                Type = "class"
-                Source = "WM_CLASS"
-            }) | Out-Null
+                    Name   = $details.Class
+                    Type   = "class"
+                    Source = "WM_CLASS"
+                }) | Out-Null
         }
 
-        if ($details.Instance) {
+        if ($details.Instance)
+        {
             $results.Add([PSCustomObject]@{
-                Name = $details.Instance
-                Type = "instance"
-                Source = "WM_CLASS instance"
-            }) | Out-Null
+                    Name   = $details.Instance
+                    Type   = "instance"
+                    Source = "WM_CLASS instance"
+                }) | Out-Null
         }
 
-        if ($details.Role) {
+        if ($details.Role)
+        {
             $results.Add([PSCustomObject]@{
-                Name = $details.Role
-                Type = "role"
-                Source = "WM_WINDOW_ROLE"
-            }) | Out-Null
+                    Name   = $details.Role
+                    Type   = "role"
+                    Source = "WM_WINDOW_ROLE"
+                }) | Out-Null
         }
 
         return $results
 
-    } elseif ($IsWindows) {
+    } elseif ($IsWindows)
+    {
         Write-Host "Platform: Windows (using AutoHotkey Window Spy)" -ForegroundColor Yellow
         Write-Host ""
         Write-Host "INSTRUCTIONS:" -ForegroundColor White
@@ -125,9 +136,11 @@ function Get-WindowDetails {
 
         $windowSpy = $ahkPaths | Where-Object { Test-Path $_ } | Select-Object -First 1
 
-        if ($windowSpy) {
+        if ($windowSpy)
+        {
             Start-Process "autohotkey.exe" -ArgumentList $windowSpy
-        } else {
+        } else
+        {
             Write-Host "Error: AutoHotkey Window Spy not found." -ForegroundColor Red
             Write-Host "Please install AutoHotkey from: https://www.autohotkey.com/" -ForegroundColor Yellow
             Write-Host ""
@@ -140,7 +153,8 @@ function Get-WindowDetails {
         Write-Host "Manually add routes using the values shown in Window Spy." -ForegroundColor Gray
         return
 
-    } else {
+    } else
+    {
         Write-Host "Platform: macOS" -ForegroundColor Yellow
         Write-Host ""
         Write-Host "TODO: No easy CLI method for macOS window inspection yet." -ForegroundColor Red

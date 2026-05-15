@@ -374,9 +374,9 @@ function Start-GitBisect
                     # Execute scriptblock and capture output and return value
                     $output = Invoke-Command -ScriptBlock $ScriptBlock 2>&1
                     $capturedOutput = ($output | ForEach-Object {
-                        $outputBuilder.AppendLine($_.ToString()) | Out-Null
-                        $_
-                    }) -join "`n"
+                            $outputBuilder.AppendLine($_.ToString()) | Out-Null
+                            $_
+                        }) -join "`n"
 
                     # The return value is the last object in the pipeline
                     $scriptblockResult = if ($output.Count -gt 0) { $output[-1] } else { $null }
@@ -440,16 +440,13 @@ function Start-GitBisect
                             {
                                 $bisectAction = 'bad'
                             }
-                        }
-                        elseif ($scriptblockResult -is [bool])
+                        } elseif ($scriptblockResult -is [bool])
                         {
                             $bisectAction = if ($scriptblockResult) { 'bad' } else { 'good' }
-                        }
-                        elseif ($scriptblockResult -is [string] -and $scriptblockResult -eq 'skip')
+                        } elseif ($scriptblockResult -is [string] -and $scriptblockResult -eq 'skip')
                         {
                             $bisectAction = 'skip'
-                        }
-                        else
+                        } else
                         {
                             throw "ScriptBlock returned unexpected type: $($scriptblockResult.GetType().Name). Expected int, bool, or 'skip'."
                         }
@@ -532,7 +529,8 @@ function Start-GitBisect
                             FirstBadCommit = $firstBadCommit
                         }
 
-                        if (-not $PassThru) {
+                        if (-not $PassThru)
+                        {
                             Write-Output $iterationResult
                         }
 
@@ -545,20 +543,21 @@ function Start-GitBisect
                         # Not complete yet, create iteration object
                         $duration = (Get-Date) - $iterationStart
                         $iterationResult = [PSCustomObject]@{
-                            Iteration      = $iterationCount
-                            CommitHash     = $currentCommit
-                            ShortHash      = $shortHash
-                            CommitSubject  = $commitSubject
-                            CommitAuthor   = $commitAuthor
-                            CommitDate     = $commitDate
-                            TestResult     = $testResult
-                            TestOutput     = $capturedOutput.Trim()
-                            ReturnValue    = if ($null -ne $scriptblockResult) { $scriptblockResult } else { $global:GitBisectExitCodes }
-                            ExitCodes      = if ($global:GitBisectExitCodes) { $global:GitBisectExitCodes.Clone() } else { @() }
-                            Duration       = $duration
+                            Iteration     = $iterationCount
+                            CommitHash    = $currentCommit
+                            ShortHash     = $shortHash
+                            CommitSubject = $commitSubject
+                            CommitAuthor  = $commitAuthor
+                            CommitDate    = $commitDate
+                            TestResult    = $testResult
+                            TestOutput    = $capturedOutput.Trim()
+                            ReturnValue   = if ($null -ne $scriptblockResult) { $scriptblockResult } else { $global:GitBisectExitCodes }
+                            ExitCodes     = if ($global:GitBisectExitCodes) { $global:GitBisectExitCodes.Clone() } else { @() }
+                            Duration      = $duration
                         }
 
-                        if (-not $PassThru) {
+                        if (-not $PassThru)
+                        {
                             Write-Output $iterationResult
                         }
                     }
@@ -577,25 +576,26 @@ function Start-GitBisect
                             $firstBadCommit = $match.Groups[1].Value
                             $duration = (Get-Date) - $iterationStart
 
-                        $iterationResult = [PSCustomObject]@{
-                            Iteration      = $iterationCount
-                            CommitHash     = $currentCommit
-                            ShortHash      = $shortHash
-                            CommitSubject  = $commitSubject
-                            CommitAuthor   = $commitAuthor
-                            CommitDate     = $commitDate
-                            TestResult     = 'bad'
-                            TestOutput     = "Exception: $_"
-                            ExitCodes      = @()
-                            Duration       = $duration
-                            IsComplete     = $true
-                            FirstBadCommit = $firstBadCommit
-                        }
+                            $iterationResult = [PSCustomObject]@{
+                                Iteration      = $iterationCount
+                                CommitHash     = $currentCommit
+                                ShortHash      = $shortHash
+                                CommitSubject  = $commitSubject
+                                CommitAuthor   = $commitAuthor
+                                CommitDate     = $commitDate
+                                TestResult     = 'bad'
+                                TestOutput     = "Exception: $_"
+                                ExitCodes      = @()
+                                Duration       = $duration
+                                IsComplete     = $true
+                                FirstBadCommit = $firstBadCommit
+                            }
 
-                        if (-not $PassThru) {
-                            Write-Output $iterationResult
-                        }
-                        break
+                            if (-not $PassThru)
+                            {
+                                Write-Output $iterationResult
+                            }
+                            break
                         }
                     }
                 } finally

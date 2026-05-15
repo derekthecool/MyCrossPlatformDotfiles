@@ -349,11 +349,13 @@ throw 'Missing required module'
         $commit6Subject = 'Commit 6: BUG INTRODUCED - division by zero'
 
         $result = Start-GitBisect -Good $commit1 -Bad $commit10 -ScriptBlock {
-            try {
+            try
+            {
                 . ./MyFunction.ps1
                 Get-Value -x 10 | Out-Null
                 $false  # Good (no error)
-            } catch {
+            } catch
+            {
                 $true  # Bad (error occurred)
             }
         } | Select-Object -Last 1
@@ -369,11 +371,13 @@ throw 'Missing required module'
         $commit6Subject = 'Commit 6: BUG INTRODUCED - division by zero'
 
         $result = Start-GitBisect -Good $commit1 -Bad $commit10 -ScriptBlock {
-            try {
+            try
+            {
                 . ./MyFunction.ps1
                 Get-Value -x 10 | Out-Null
                 0  # Good
-            } catch {
+            } catch
+            {
                 1  # Bad
             }
         } | Select-Object -Last 1
@@ -384,7 +388,8 @@ throw 'Missing required module'
 
     It 'Should handle sequential commit scenario (like /tmp/bisect)' {
         # Create 19 commits with sequential numbers
-        for ($i = 1; $i -le 19; $i++) {
+        for ($i = 1; $i -le 19; $i++)
+        {
             "$i" | Set-Content './numbers.txt'
             git add './numbers.txt'
             $null = git commit -m "$i commit" 2>&1
@@ -408,11 +413,14 @@ throw 'Missing required module'
     It 'Should support skip via return value 125' {
         # Create a simple test scenario
         # Commits 1-5 good, 6-10 bad (similar to existing setup)
-        for ($i = 11; $i -le 12; $i++) {
-            if ($i -eq 11) {
+        for ($i = 11; $i -le 12; $i++)
+        {
+            if ($i -eq 11)
+            {
                 # Untestable commit
                 'MISSING' | Set-Content './skip-test.txt'
-            } else {
+            } else
+            {
                 # Bad commit (after untestable)
                 'bad' | Set-Content './skip-test.txt'
             }
@@ -428,16 +436,19 @@ throw 'Missing required module'
         $result = Start-GitBisect -Good $commit1 -Bad $commit12 -ScriptBlock {
             # Check if we're testing commit 11 (untestable)
             $subject = git log --format=%s -1
-            if ($subject -match 'Skip test commit 11') {
+            if ($subject -match 'Skip test commit 11')
+            {
                 return 125  # Skip this commit
             }
 
             # Normal test logic
-            try {
+            try
+            {
                 . ./MyFunction.ps1
                 Get-Value -x 10 | Out-Null
                 0  # Good
-            } catch {
+            } catch
+            {
                 1  # Bad
             }
         } | Select-Object -Last 1
@@ -453,11 +464,13 @@ throw 'Missing required module'
         $commit6Subject = 'Commit 6: BUG INTRODUCED - division by zero'
 
         $result = Start-GitBisect -Good $commit1 -Bad $commit10 -ScriptBlock {
-            try {
+            try
+            {
                 . ./MyFunction.ps1
                 Get-Value -x 10 | Out-Null
                 $global:GitBisectExitCodes = @(0)  # Good
-            } catch {
+            } catch
+            {
                 $global:GitBisectExitCodes = @(1)  # Bad
             }
         } | Select-Object -Last 1

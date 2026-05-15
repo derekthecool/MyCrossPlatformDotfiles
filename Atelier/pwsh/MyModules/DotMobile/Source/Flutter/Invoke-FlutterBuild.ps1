@@ -79,13 +79,11 @@ function Invoke-FlutterBuild
         if ($flavors.Count -eq 0)
         {
             Write-Verbose 'No flavors found, building default'
-        }
-        elseif ($flavors.Count -eq 1)
+        } elseif ($flavors.Count -eq 1)
         {
             $Flavor = $flavors[0]
             Write-Verbose "Auto-selected flavor: $Flavor"
-        }
-        else
+        } else
         {
             Write-Host 'Available flavors:'
             $flavors | ForEach-Object { Write-Host "  - $_" }

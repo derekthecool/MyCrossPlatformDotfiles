@@ -22,10 +22,12 @@ Describe 'Android ADB Functions Tests' {
         It 'Returns AdbDevice objects when devices are connected' -Skip:([bool](!(Get-Command adb -ErrorAction SilentlyContinue))) {
             Mock adb {
                 param($args)
-                if ($args -eq 'get-state') {
+                if ($args -eq 'get-state')
+                {
                     return 'device'
                 }
-                if ($args -eq 'devices') {
+                if ($args -eq 'devices')
+                {
                     return @(
                         'List of devices attached',
                         'emulator-5554	device',
@@ -44,10 +46,12 @@ Describe 'Android ADB Functions Tests' {
         It 'Detects unauthorized devices' -Skip:([bool](!(Get-Command adb -ErrorAction SilentlyContinue))) {
             Mock adb {
                 param($args)
-                if ($args -eq 'get-state') {
+                if ($args -eq 'get-state')
+                {
                     return 'device'
                 }
-                if ($args -eq 'devices') {
+                if ($args -eq 'devices')
+                {
                     return @(
                         'List of devices attached',
                         'emulator-5554	unauthorized'
@@ -62,10 +66,12 @@ Describe 'Android ADB Functions Tests' {
         It 'Detects offline devices' -Skip:([bool](!(Get-Command adb -ErrorAction SilentlyContinue))) {
             Mock adb {
                 param($args)
-                if ($args -eq 'get-state') {
+                if ($args -eq 'get-state')
+                {
                     return 'device'
                 }
-                if ($args -eq 'devices') {
+                if ($args -eq 'devices')
+                {
                     return @(
                         'List of devices attached',
                         'emulator-5554	offline'
@@ -228,10 +234,12 @@ Describe 'Android ADB Functions Tests' {
         It 'Extracts numeric code from log file' -Skip:([bool](!(Get-Command adb -ErrorAction SilentlyContinue))) {
             Mock adb {
                 param($args)
-                if ($args -contains 'wait-for-device') {
+                if ($args -contains 'wait-for-device')
+                {
                     return ''
                 }
-                if ($args -contains 'cat') {
+                if ($args -contains 'cat')
+                {
                     return 'Login code: 123456'
                 }
             }
@@ -244,10 +252,12 @@ Describe 'Android ADB Functions Tests' {
         It 'Returns nothing when log file is empty' -Skip:([bool](!(Get-Command adb -ErrorAction SilentlyContinue))) {
             Mock adb {
                 param($args)
-                if ($args -contains 'wait-for-device') {
+                if ($args -contains 'wait-for-device')
+                {
                     return ''
                 }
-                if ($args -contains 'cat') {
+                if ($args -contains 'cat')
+                {
                     return ''
                 }
             }
@@ -260,10 +270,12 @@ Describe 'Android ADB Functions Tests' {
         It 'Copies code to clipboard when found' -Skip:([bool](!(Get-Command adb -ErrorAction SilentlyContinue))) {
             Mock adb {
                 param($args)
-                if ($args -contains 'wait-for-device') {
+                if ($args -contains 'wait-for-device')
+                {
                     return ''
                 }
-                if ($args -contains 'cat') {
+                if ($args -contains 'cat')
+                {
                     return 'Your code is 789012'
                 }
             }

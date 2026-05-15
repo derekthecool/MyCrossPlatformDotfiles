@@ -303,13 +303,11 @@ function Get-WorkspaceConfiguration
         if ($content -is [array])
         {
             return , $content
-        }
-        else
+        } else
         {
             return @($content)
         }
-    }
-    catch
+    } catch
     {
         Write-Error "Failed to parse workspace configuration from $path : $_"
         return New-WorkspaceConfig
@@ -350,8 +348,7 @@ function Save-WorkspaceConfiguration
     {
         $Routes | ConvertTo-Json -Depth 10 | Set-Content $path -Encoding UTF8
         Write-Verbose "Saved workspace configuration to $path"
-    }
-    catch
+    } catch
     {
         Write-Error "Failed to save workspace configuration to $path : $_"
     }
@@ -395,13 +392,11 @@ function Get-FiltersConfiguration
         if ($content -is [array])
         {
             return , $content
-        }
-        else
+        } else
         {
             return @($content)
         }
-    }
-    catch
+    } catch
     {
         Write-Error "Failed to parse filters configuration from $path : $_"
         return New-WorkspaceConfig
@@ -435,8 +430,7 @@ function Save-FiltersConfiguration
     {
         $Filters | ConvertTo-Json -Depth 10 | Set-Content $path -Encoding UTF8
         Write-Verbose "Saved filters configuration to $path"
-    }
-    catch
+    } catch
     {
         Write-Error "Failed to save filters configuration to $path : $_"
     }

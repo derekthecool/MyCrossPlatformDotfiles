@@ -1,7 +1,8 @@
 # PowerShell 7 (pwsh) profile
 
 #region Profile Timing
-if (-not $env:DOTS_PWSH_TIMING) {
+if (-not $env:DOTS_PWSH_TIMING)
+{
     $profileTimings = [ordered]@{}
     $profileTimings['Start'] = Get-Date
 }
@@ -187,7 +188,8 @@ if ($IsLinux)
 if (-not $env:DOTS_PWSH_TIMING) { $profileTimings['AfterEnvironment'] = Get-Date }
 
 #region Starship
-try {
+try
+{
     $init = starship init powershell
     Invoke-Expression ($init)
 
@@ -206,7 +208,8 @@ try {
         }
         $host.ui.Write($prompt)
     }
-} catch {
+} catch
+{
     Write-Host "starship not found" -ForegroundColor Yellow
 }
 #endregion
@@ -261,11 +264,14 @@ Import-Module Posh
 if (-not $env:DOTS_PWSH_TIMING) { $profileTimings['AfterPosh'] = Get-Date }
 
 # Display detailed timing breakdown (only if DOTS_PWSH_TIMING is not set)
-if (-not $env:DOTS_PWSH_TIMING) {
+if (-not $env:DOTS_PWSH_TIMING)
+{
     Write-Host "`nProfile Load Time Breakdown:" -ForegroundColor Magenta
     $prevKey = $null
-    foreach ($key in $profileTimings.Keys) {
-        if ($prevKey) {
+    foreach ($key in $profileTimings.Keys)
+    {
+        if ($prevKey)
+        {
             $duration = ($profileTimings[$key] - $profileTimings[$prevKey]).TotalMilliseconds
             $color = if ($duration -gt 500) { 'Red' } elseif ($duration -gt 200) { 'Yellow' } else { 'Green' }
             Write-Host "  [$prevKey → $key] " -NoNewline -ForegroundColor Cyan
