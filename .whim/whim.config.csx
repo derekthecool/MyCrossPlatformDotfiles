@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Markup;
 using Microsoft.UI.Xaml.Media;
@@ -48,10 +49,6 @@ void DoConfig(IContext context)
     // YAML config. It's best to load this first so that you can use it in your C# config.
     YamlLoader.Load(context);
 
-    // Load window routes and filters from JSON configuration
-    // Manages routes from ~/Atelier/workspaces/*.json
-    #load ".whim/json_routes.csx"
-
     // Customize your config in C# here.
     // For more, see https://dalyisaac.github.io/Whim/script/scripting.html
     // Example configs
@@ -76,10 +73,74 @@ void DoConfig(IContext context)
     AddWorkspace("two", "8");
     AddWorkspace("three", "9");
 
-    // Tips for finding window information:
-    // Routes and filters are now managed via JSON configuration
-    // See ~/Atelier/workspaces/ for configuration files
-    // Use PowerShell Add-WMRoute and Add-WMFilter to manage
+    // Load routes and filters from ~/Atelier/workspaces/*.json
+    var workspacePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Atelier", "workspaces");
+    var workspaceNames = new Dictionary<int, string>
+    {
+        { 1, "terminal" }, { 2, "web" }, { 3, "chat" }, { 4, "plover" }, { 5, "docs" },
+        { 6, "device" }, { 7, "one" }, { 8, "two" }, { 9, "three" }
+    };
+
+    for (int i = 1; i <= 9; i++)
+    {
+        var jsonFile = Path.Combine(workspacePath, $"{i}.json");
+        if (!File.Exists(jsonFile)) continue;
+        try
+        {
+            var routes = JsonSerializer.Deserialize<JsonElement>(File.ReadAllText(jsonFile));
+            if (routes.ValueKind != JsonValueKind.Array) continue;
+            foreach (var route in routes.EnumerateArray())
+            {
+                string app = route.GetProperty("app").GetString();
+                string wsName = workspaceNames[i];
+                switch (route.GetProperty("type").GetString())
+                {
+                    case "process":
+                        context.RouterManager.AddProcessFileNameRoute(app.EndsWith(".exe") ? app : $"{app}.exe", workspaces[wsName]);
+                        break;
+                    case "class":
+                        context.RouterManager.AddWindowClassRoute(app, workspaces[wsName]);
+                        break;
+                    case "title":
+                        context.RouterManager.AddTitleMatchRoute(app, workspaces[wsName]);
+                        break;
+                }
+            }
+        }
+        catch (Exception ex) { Console.WriteLine($"Error loading routes from {jsonFile}: {ex.Message}"); }
+    }
+
+    var filtersFile = Path.Combine(workspacePath, "filters.json");
+    if (File.Exists(filtersFile))
+    {
+        try
+        {
+            var filters = JsonSerializer.Deserialize<JsonElement>(File.ReadAllText(filtersFile));
+            if (filters.ValueKind == JsonValueKind.Array)
+            {
+                foreach (var filter in filters.EnumerateArray())
+                {
+                    string app = filter.GetProperty("app").GetString();
+                    switch (filter.GetProperty("type").GetString())
+                    {
+                        case "process":
+                            string pn = app.EndsWith(".exe") ? app : $"{app}.exe";
+                            context.FilterManager.AddTitleMatchFilter(pn);
+                            context.FilterManager.AddWindowClassFilter(pn);
+                            context.FilterManager.AddProcessFileNameFilter(pn);
+                            break;
+                        case "class":
+                        case "title":
+                            context.FilterManager.AddTitleMatchFilter(app);
+                            context.FilterManager.AddWindowClassFilter(app);
+                            context.FilterManager.AddProcessFileNameFilter(app);
+                            break;
+                    }
+                }
+            }
+        }
+        catch (Exception ex) { Console.WriteLine($"Error loading filters from {filtersFile}: {ex.Message}"); }
+    }
 
     // Close active window
     // https://github.com/urob/whim-config/blob/3387b154edadf384271c90d2ed75a90c10e53790/whim.commands.csx
