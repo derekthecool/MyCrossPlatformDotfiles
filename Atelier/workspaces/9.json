@@ -5,7 +5,7 @@
   },
   {
     "app": "WindowsTerminal",
-    "type": "class"
+    "type": "process"
   },
   {
     "type": "class",

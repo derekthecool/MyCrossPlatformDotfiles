@@ -9,7 +9,7 @@
   },
   {
     "app": "brave",
-    "type": "class"
+    "type": "process"
   },
   {
     "app": "Navigator",

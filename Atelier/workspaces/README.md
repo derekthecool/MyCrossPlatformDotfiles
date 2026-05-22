@@ -39,6 +39,7 @@ Each file contains an array of route objects:
 ```
 
 **Identifier Types:**
+
 - `process` - Process name (no `.exe` suffix, Whim adds it automatically)
 - `class` - Window class name
 - `title` - Window title (supports regex)
@@ -75,11 +76,13 @@ Each file contains an array of route objects:
 **Configuration**: `~/.whim/whim.config.csx`
 
 The JSON routes are loaded automatically via:
+
 ```csharp
 #load ".whim/json_routes.csx"
 ```
 
 This file:
+
 - Reads all workspace JSON files (1-9.json)
 - Reads filters.json
 - Maps JSON types to Whim's routing system
@@ -90,6 +93,7 @@ This file:
 **Configuration**: `~/.config/awesome/rc.lua`
 
 The JSON routes are loaded automatically via:
+
 ```lua
 local json_routes = require("json_routes")
 
@@ -117,6 +121,7 @@ Invoke-Pester ~/Atelier/pwsh/MyModules/DotWindowManager/Test/
 ## Workflow
 
 1. **Add routes/filters** using PowerShell:
+
    ```powershell
    'new-app' | Add-WMRoute -Workspace 2
    'floating-app' | Add-WMFilter
