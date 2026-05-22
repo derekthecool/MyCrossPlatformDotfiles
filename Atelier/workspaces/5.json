@@ -1,13 +1,46 @@
 [
-  { "app": "vcxsrv", "type": "class" },
-  { "app": "love", "type": "class" },
-  { "app": "Obsidian", "type": "class" },
-  { "app": "WINWORD", "type": "class" },
-  { "app": "EXCEL", "type": "class" },
-  { "app": "POWERPNT", "type": "class" },
-  { "app": "ONENOTE", "type": "class" },
-  { "app": "VISIO", "type": "class" },
-  { "app": "explorer", "type": "process" },
-  { "app": "okular", "type": "class" },
-  { "app": "MusicBee", "type": "class" }
+    {
+        "app": "vcxsrv",
+        "type": "process"
+    },
+    {
+        "app": "love",
+        "type": "process"
+    },
+    {
+        "app": "Obsidian",
+        "type": "process"
+    },
+    {
+        "app": "WINWORD",
+        "type": "process"
+    },
+    {
+        "app": "EXCEL",
+        "type": "process"
+    },
+    {
+        "app": "POWERPNT",
+        "type": "process"
+    },
+    {
+        "app": "ONENOTE",
+        "type": "process"
+    },
+    {
+        "app": "VISIO",
+        "type": "process"
+    },
+    {
+        "app": "explorer",
+        "type": "process"
+    },
+    {
+        "app": "okular",
+        "type": "process"
+    },
+    {
+        "app": "MusicBee",
+        "type": "process"
+    }
 ]

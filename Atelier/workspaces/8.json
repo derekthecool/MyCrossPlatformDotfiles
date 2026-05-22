@@ -1,6 +1,22 @@
 [
-  { "app": "Wireshark", "type": "class" },
-  { "app": "CG Local", "type": "class" },
-  { "app": "Qt692QWindowIcon", "type": "class" },
-  { "app": "FLUTTERVIEW", "type": "class" }
+    {
+        "app": "Wireshark",
+        "type": "process"
+    },
+    {
+        "app": "CG Local",
+        "type": "class"
+    },
+    {
+        "app": "Qt692QWindowIcon",
+        "type": "class"
+    },
+    {
+        "app": "FLUTTERVIEW",
+        "type": "class"
+    },
+    {
+        "type": "process",
+        "app": "PhoneExperienceHost"
+    }
 ]
