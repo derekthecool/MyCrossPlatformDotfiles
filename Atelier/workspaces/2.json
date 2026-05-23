@@ -1,26 +1,26 @@
 [
-    {
-        "app": "firefox",
-        "type": "class"
-    },
-    {
-        "app": "Firefox",
-        "type": "class"
-    },
-    {
-        "app": "brave",
-        "type": "process"
-    },
-    {
-        "app": "Navigator",
-        "type": "class"
-    },
-    {
-        "app": "Vieb",
-        "type": "class"
-    },
-    {
-        "app": "Brave-browser",
-        "type": "class"
-    }
+  {
+    "app": "firefox",
+    "type": "class"
+  },
+  {
+    "app": "Firefox",
+    "type": "class"
+  },
+  {
+    "app": "brave",
+    "type": "process"
+  },
+  {
+    "app": "Navigator",
+    "type": "class"
+  },
+  {
+    "app": "Vieb",
+    "type": "class"
+  },
+  {
+    "app": "Brave-browser",
+    "type": "class"
+  }
 ]
