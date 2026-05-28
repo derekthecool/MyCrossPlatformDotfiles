@@ -42,5 +42,9 @@
   {
     "app": "MusicBee",
     "type": "process"
+  },
+  {
+    "app": "claude",
+    "type": "process"
   }
 ]
