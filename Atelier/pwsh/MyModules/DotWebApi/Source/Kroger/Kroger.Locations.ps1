@@ -41,13 +41,16 @@ function Find-KrogerStore {
         [string]$Chain,
 
         [Parameter()]
+        [string[]]$Scope = @('product.compact'),
+
+        [Parameter()]
         [switch]$Raw
     )
 
     begin {
         # Get authentication token
         Write-Verbose "Authenticating with Kroger API"
-        $token = Connect-KrogerApi -Scope @('cart.basic')
+        $token = Connect-KrogerApi -Scope $Scope
 
         # Build API request headers
         $headers = @{
