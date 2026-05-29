@@ -55,4 +55,7 @@
         # Spoonacular functions (existing)
         'Use-SpoonacularApi'
     )
+    FormatsToProcess = @(
+        'DotWebApi.format.ps1xml'
+    )
 }
