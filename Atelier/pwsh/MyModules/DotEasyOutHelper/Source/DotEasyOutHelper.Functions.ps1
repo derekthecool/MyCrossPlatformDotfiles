@@ -75,10 +75,59 @@ function Use-EasyOut {
     process {
     }
     end {
-        $Type = Menu -MenuItems $($InputObject.PSObject.TypeNames)
-        Write-Verbose "Type: $Type"
+        # Get type names and select the most specific one automatically if Menu doesn't work
+        $typeNames = $InputObject.PSObject.TypeNames
+        Write-Verbose "Available TypeNames: $($typeNames -join ', ')"
 
-        $Properties = Menu -MenuItems $($InputObject.PSObject.Properties) -MenuItemFormatter { $args | Select-Object -ExpandProperty Name } -MultiSelect
+        # Try to use Menu for interactive selection, but fall back to automatic selection
+        try {
+            $Type = Menu -MenuItems $typeNames -ErrorAction Stop
+            if (-not $Type) {
+                throw "Menu returned null"
+            }
+            Write-Verbose "Selected type via Menu: $Type"
+        }
+        catch {
+            # Fallback: automatically select the most specific type name
+            Write-Verbose "Menu selection failed, using automatic type detection"
+            $Type = $typeNames | Where-Object { $_ -ne 'System.Management.Automation.PSCustomObject' -and $_ -ne 'System.Object' } |
+                     Select-Object -First 1
+
+            if (-not $Type) {
+                $Type = $typeNames | Select-Object -First 1
+            }
+
+            Write-Verbose "Auto-selected type: $Type"
+        }
+
+        if (-not $Type) {
+            throw "Unable to determine type name from object"
+        }
+
+        # Get properties with similar fallback logic
+        try {
+            $Properties = Menu -MenuItems $($InputObject.PSObject.Properties) -MenuItemFormatter { $args | Select-Object -ExpandProperty Name } -MultiSelect -ErrorAction Stop
+            if (-not $Properties -or $Properties.Count -eq 0) {
+                throw "Menu returned no properties"
+            }
+            Write-Verbose "Selected properties via Menu: $($Properties.Count)"
+        }
+        catch {
+            Write-Verbose "Menu selection failed, using default properties"
+            # Fallback: select common display properties
+            $allProperties = $InputObject.PSObject.Properties | Select-Object -ExpandProperty Name
+            $Properties = $allProperties | Where-Object { $_ -notlike 'PS*' -and $_ -notlike 'ApiData' } |
+                          Select-Object -First 5
+
+            if (-not $Properties) {
+                $Properties = $allProperties | Select-Object -First 5
+            }
+
+            # Convert back to objects for compatibility
+            $Properties = $Properties | ForEach-Object { [PSCustomObject]@{ Name = $_ } }
+            Write-Verbose "Auto-selected properties: $($Properties.Count)"
+        }
+
         Write-Verbose "Properties: $Properties"
 
         $PropertiesString = $Properties | Select-Object -ExpandProperty Name | ForEach-Object { "'$_'" } | Join-String -Separator ', '
@@ -109,11 +158,27 @@ Write-FormatView @splat
         }
         else {
             # Default to ./Formatting/[TypeName].format.ps1
-            $cleanTypeName = $Type -replace '[^\w\d]', '_'
+            $cleanTypeName = if ($Type) {
+                $Type -replace '[^\w\d]', '_'
+            } else {
+                'CustomType'
+            }
+
+            # Ensure we don't have empty type names
+            if ([string]::IsNullOrWhiteSpace($cleanTypeName)) {
+                $cleanTypeName = 'CustomType'
+                Write-Warning "Type name was empty, using 'CustomType' instead"
+            }
+
             "./Formatting/$cleanTypeName.format.ps1"
         }
 
         Write-Verbose "Output path: $resolvedPath"
+
+        # Double-check we don't have an invalid filename
+        if ($resolvedPath -match '\.\/Formatting\/\.format\.ps1$') {
+            throw "Invalid path generated: $resolvedPath. Type name may be empty."
+        }
 
         # Create directory if it doesn't exist
         $directory = [System.IO.Path]::GetDirectoryName($resolvedPath)
