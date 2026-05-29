@@ -58,6 +58,7 @@ function Get-KrogerCart {
         $headers = @{
             Authorization = "Bearer $($token.access_token)"
             'Accept'      = 'application/json'
+            'Content-Type' = 'application/json'
         }
     }
 
@@ -127,22 +128,49 @@ function Add-KrogerCartItem {
     begin {
         Write-Verbose "Starting to add items to Kroger cart"
 
-        # Check for user session first
-        $userSession = Get-KrogerUserSession
+        # Check if we were called right after Connect-KrogerPkce (session in memory)
+        if ($null -ne $Script:KrogerUserSession) {
+            $sessionAge = (Get-Date) - $Script:KrogerUserSession.authenticatedAt
+            if ($sessionAge.TotalMinutes -lt 5) {
+                Write-Verbose "Using fresh in-memory session from recent Connect-KrogerPkce"
+                $userSession = $Script:KrogerUserSession
+            }
+            else {
+                Write-Verbose "In-memory session is too old ($($sessionAge.TotalMinutes) minutes old)"
+                $userSession = $null
+            }
+        }
 
-        if ($userSession -and -not (Test-WebApiTokenExpired -Token $userSession.token)) {
-            Write-Verbose "Using user authentication"
-            $token = $userSession.token
+        # Try to get saved session
+        if (-not $userSession) {
+            Write-Verbose "Loading saved session from file"
+            $userSession = Get-KrogerUserSession
         }
-        else {
-            # Fall back to API credentials
-            Write-Verbose "No user session, using API credentials"
-            $token = Connect-KrogerApi -Scope @('cart.basic:write')
+
+        if (-not $userSession) {
+            throw "Cart operations require user authentication. Please run Connect-KrogerPkce to authenticate."
         }
+
+        if (Test-WebApiTokenExpired -Token $userSession.token) {
+            Write-Verbose "User token expired, attempting refresh..."
+            if (Update-KrogerUserToken) {
+                $userSession = Get-KrogerUserSession
+                if (-not $userSession) {
+                    throw "Token refresh failed. Please run Connect-KrogerPkce to re-authenticate."
+                }
+            }
+            else {
+                throw "Token refresh failed. Please run Connect-KrogerPkce to re-authenticate."
+            }
+        }
+
+        Write-Verbose "Using user authentication"
+        $token = $userSession.token
 
         $headers = @{
             Authorization = "Bearer $($token.access_token)"
             'Accept'      = 'application/json'
+            'Content-Type' = 'application/json'
         }
 
         $addedItems = [System.Collections.Generic.List[object]]::new()
@@ -154,10 +182,12 @@ function Add-KrogerCartItem {
                 # Check if token needs refresh before each API call
                 if ($userSession -and (Test-WebApiTokenExpired -Token $userSession.token)) {
                     Write-Verbose "Token expired during processing, refreshing..."
-                    $userSession = Get-KrogerUserSession
-                    if ($userSession) {
-                        $token = $userSession.token
-                        $headers.Authorization = "Bearer $($token.access_token)"
+                    $refreshedSession = Get-KrogerUserSession
+                    if ($refreshedSession) {
+                        # Update the parent scope variables
+                        Set-Variable -Name 'userSession' -Value $refreshedSession -Scope 1
+                        Set-Variable -Name 'token' -Value $refreshedSession.token -Scope 1
+                        $headers.Authorization = "Bearer $($refreshedSession.token.access_token)"
                     }
                     else {
                         Write-Warning "Token refresh failed, cannot continue adding items"
@@ -166,30 +196,32 @@ function Add-KrogerCartItem {
                 }
 
                 # Determine product ID from different input types
-                $productId = switch ($item) {
+                if ($item -is [string]) {
                     # String input (UPC or product ID)
-                    { $_ -is [string] } {
-                        $item
-                    }
-                    # Kroger.Product object
-                    { $_.PSTypeName -eq 'Kroger.Product' } {
-                        $item.Upc
-                    }
-                    # Object with upc property
-                    { $_.upc } {
-                        $_.upc
-                    }
+                    $productId = $item
+                }
+                elseif ($item.PSTypeName -eq 'Kroger.Product') {
+                    # Kroger.Product object - use Upc property
+                    $productId = $item.Upc
+                }
+                elseif ($item.PSTypeName -eq 'Kroger.CartItem') {
+                    # Kroger.CartItem object - use Upc property
+                    $productId = $item.Upc
+                }
+                elseif ($null -ne $item.upc -and $item.PSTypeName -notlike 'Kroger.*') {
+                    # Object with upc property (but not a Kroger typed object)
+                    $productId = $item.upc
+                }
+                elseif ($null -ne $item.ProductId) {
                     # Object with ProductId property
-                    { $_.ProductId } {
-                        $_.ProductId
-                    }
+                    $productId = $item.ProductId
+                }
+                elseif ($null -ne $item.id) {
                     # Object with id property
-                    { $_.id } {
-                        $_.id
-                    }
-                    default {
-                        throw "Cannot determine product ID from input: $item"
-                    }
+                    $productId = $item.id
+                }
+                else {
+                    throw "Cannot determine product ID from input: $item"
                 }
 
                 $itemDescription = if ($item.PSTypeName -eq 'Kroger.Product') {
@@ -291,6 +323,7 @@ function Remove-KrogerCartItem {
         $headers = @{
             Authorization = "Bearer $($token.access_token)"
             'Accept'      = 'application/json'
+            'Content-Type' = 'application/json'
         }
 
         $itemsToRemove = [System.Collections.Generic.List[string]]::new()
@@ -299,11 +332,18 @@ function Remove-KrogerCartItem {
     process {
         if ($PSCmdlet.ParameterSetName -eq 'PipelineInput') {
             foreach ($item in $InputObject) {
-                $itemId = switch ($item) {
-                    { $_.PSTypeName -eq 'Kroger.CartItem' } { $item.CartItemId }
-                    { $_.CartItemId } { $_.CartItemId }
-                    { $_.id } { $_.id }
-                    default { $item }
+                # Extract cart item ID using if-elseif for mutual exclusivity
+                if ($item.PSTypeName -eq 'Kroger.CartItem') {
+                    $itemId = $item.CartItemId
+                }
+                elseif ($null -ne $item.CartItemId) {
+                    $itemId = $item.CartItemId
+                }
+                elseif ($null -ne $item.id) {
+                    $itemId = $item.id
+                }
+                else {
+                    $itemId = $item
                 }
 
                 if ($itemId) {
@@ -382,6 +422,7 @@ function Clear-KrogerCart {
         $headers = @{
             Authorization = "Bearer $($token.access_token)"
             'Accept'      = 'application/json'
+            'Content-Type' = 'application/json'
         }
     }
 
@@ -480,6 +521,7 @@ function Update-KrogerCartItem {
         $headers = @{
             Authorization = "Bearer $($token.access_token)"
             'Accept'      = 'application/json'
+            'Content-Type' = 'application/json'
         }
     }
 
@@ -487,11 +529,18 @@ function Update-KrogerCartItem {
         try {
             if ($PSCmdlet.ParameterSetName -eq 'PipelineInput') {
                 foreach ($item in $InputObject) {
-                    $itemId = switch ($item) {
-                        { $_.PSTypeName -eq 'Kroger.CartItem' } { $item.CartItemId }
-                        { $_.CartItemId } { $_.CartItemId }
-                        { $_.id } { $_.id }
-                        default { throw "Cannot determine cart item ID" }
+                    # Extract cart item ID using if-elseif for mutual exclusivity
+                    if ($item.PSTypeName -eq 'Kroger.CartItem') {
+                        $itemId = $item.CartItemId
+                    }
+                    elseif ($null -ne $item.CartItemId) {
+                        $itemId = $item.CartItemId
+                    }
+                    elseif ($null -ne $item.id) {
+                        $itemId = $item.id
+                    }
+                    else {
+                        throw "Cannot determine cart item ID"
                     }
 
                     $itemQuantity = if ($item.Quantity) {

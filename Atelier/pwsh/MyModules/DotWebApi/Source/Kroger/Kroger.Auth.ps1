@@ -146,11 +146,11 @@ function Disconnect-KrogerUser {
 
     process {
         try {
-            # Clear user session
+            # Clear user session from file
             $sessionPath = Get-KrogerSessionPath
             if (Test-Path $sessionPath) {
                 Remove-Item $sessionPath -Force
-                Write-Verbose "User session cleared"
+                Write-Verbose "User session file deleted"
             }
 
             # Clear in-memory cache
@@ -196,16 +196,17 @@ function Get-KrogerUserSession {
 
     process {
         try {
+            # Try to get session from file
             $sessionPath = Get-KrogerSessionPath
             if (Test-Path $sessionPath) {
-                $sessionData = Get-Content $sessionPath -Raw | ConvertFrom-Json
+                $sessionData = Import-Clixml -Path $sessionPath
 
                 # Check if token is expired
                 if (Test-WebApiTokenExpired -Token $sessionData.token) {
                     Write-Verbose "User session token expired, attempting refresh..."
                     if (Update-KrogerUserToken) {
                         # Reload session after refresh
-                        $sessionData = Get-Content $sessionPath -Raw | ConvertFrom-Json
+                        $sessionData = Import-Clixml -Path $sessionPath
                     }
                     else {
                         Write-Warning "Token refresh failed, please re-authenticate"
@@ -249,13 +250,15 @@ function Update-KrogerUserToken {
     param()
 
     begin {
+        # Try to get session from file
         $sessionPath = Get-KrogerSessionPath
         if (-not (Test-Path $sessionPath)) {
             Write-Warning "No session file found"
             return $false
         }
 
-        $sessionData = Get-Content $sessionPath -Raw | ConvertFrom-Json
+        $sessionData = Import-Clixml -Path $sessionPath
+
         if (-not $sessionData.token.refresh_token) {
             Write-Warning "No refresh token available"
             return $false
@@ -307,7 +310,8 @@ function Update-KrogerUserToken {
         }
         catch {
             Write-Error "Failed to refresh token: $_"
-            # Remove expired session
+            # Remove expired session file
+            $sessionPath = Get-KrogerSessionPath
             if (Test-Path $sessionPath) {
                 Remove-Item $sessionPath -Force
             }
@@ -638,17 +642,29 @@ function Get-KrogerUserProfile {
             'Accept'      = 'application/json'
         }
 
-        $response = Invoke-WebApi -Method GET -Uri 'https://api.kroger.com/v1/profile' -Headers $headers
+        $response = Invoke-WebRequest -Uri 'https://api.kroger.com/v1/profile' -Method Get -Headers $headers -ErrorAction Stop
 
-        return @{
-            id    = $response.id
-            name  = $response.name
-            email = $response.email
+        if ($response.StatusCode -eq 200) {
+            $profileData = $response.Content | ConvertFrom-Json
+            return @{
+                id    = $profileData.id
+                name  = $profileData.name
+                email = $profileData.email
+            }
+        }
+        else {
+            # Profile endpoint not available, return default
+            return @{
+                id    = $null
+                name  = 'Kroger User'
+                email = $null
+            }
         }
     }
     catch {
-        # Profile endpoint not available, return default
-        Write-Verbose "Profile endpoint not available: $_"
+        # Profile endpoint not available or unauthorized - return default profile silently
+        # This is not critical for cart functionality
+        Write-Verbose "Profile API not available, using default profile"
         return @{
             id    = $null
             name  = 'Kroger User'
@@ -660,10 +676,11 @@ function Get-KrogerUserProfile {
 function Save-KrogerUserSession {
     <#
     .SYNOPSIS
-    Saves the user session to disk.
+    Saves the user session to a secure file (avoiding SecretStore JSON issues).
 
     .DESCRIPTION
     Persists the user session including tokens and profile to a secure file.
+    Uses file-based storage to avoid SecretStore serialization issues with complex objects.
 
     .PARAMETER Session
     Session object to save.
@@ -678,6 +695,7 @@ function Save-KrogerUserSession {
     )
 
     try {
+        # Use file-based storage to avoid SecretStore serialization issues
         $sessionPath = Get-KrogerSessionPath
         $sessionDir = Split-Path $sessionPath
 
@@ -685,13 +703,13 @@ function Save-KrogerUserSession {
             New-Item -Path $sessionDir -ItemType Directory -Force | Out-Null
         }
 
-        $sessionJson = $session | ConvertTo-Json -Depth 10
-        $sessionJson | Out-File -FilePath $sessionPath -Force
+        # Save as CLIXML to preserve object types
+        Export-Clixml -InputObject $Session -Path $sessionPath -Force
 
         # Update in-memory cache
         $Script:KrogerUserSession = $session
 
-        Write-Verbose "User session saved to $sessionPath"
+        Write-Verbose "User session saved to file"
         return $true
     }
     catch {
