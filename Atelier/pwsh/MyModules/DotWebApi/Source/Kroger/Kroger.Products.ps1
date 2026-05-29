@@ -127,6 +127,9 @@ function Search-KrogerProduct {
         [string]$LocationId,
 
         [Parameter()]
+        [switch]$UseDefaultLocation,
+
+        [Parameter()]
         [ValidateRange(1, 100)]
         [int]$PageSize = 25,
 
@@ -139,6 +142,19 @@ function Search-KrogerProduct {
     )
 
     begin {
+        # Handle default location logic
+        if ($UseDefaultLocation -and -not $LocationId) {
+            $defaultLocation = Get-KrogerDefaultLocation
+            if ($defaultLocation) {
+                $LocationId = $defaultLocation
+                Write-Verbose "Using default location: $LocationId"
+                Write-Host "Using default Kroger location" -ForegroundColor Cyan
+            }
+            else {
+                Write-Warning "No default location set. Use Set-KrogerDefaultLocation to set one."
+            }
+        }
+
         # Get authentication token
         Write-Verbose "Authenticating with Kroger API"
         $token = Connect-KrogerApi -Scope @('product.compact')

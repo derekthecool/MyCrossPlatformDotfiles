@@ -47,6 +47,10 @@
         'Remove-KrogerCartItem'
         'Clear-KrogerCart'
         'Update-KrogerCartItem'
+        'Find-KrogerStore'
+        'Set-KrogerDefaultLocation'
+        'Get-KrogerDefaultLocation'
+        'Clear-KrogerDefaultLocation'
 
         # Spoonacular functions (existing)
         'Use-SpoonacularApi'
