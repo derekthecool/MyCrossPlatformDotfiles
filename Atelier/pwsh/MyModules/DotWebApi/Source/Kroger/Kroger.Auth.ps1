@@ -201,16 +201,22 @@ function Get-KrogerUserSession {
                 $sessionData = Get-Content $sessionPath -Raw | ConvertFrom-Json
 
                 # Check if token is expired
-                if (-not (Test-WebApiTokenExpired -Token $sessionData.token)) {
-                    # Cache in memory
-                    $Script:KrogerUserSession = $sessionData
-                    return $sessionData
+                if (Test-WebApiTokenExpired -Token $sessionData.token) {
+                    Write-Verbose "User session token expired, attempting refresh..."
+                    if (Update-KrogerUserToken) {
+                        # Reload session after refresh
+                        $sessionData = Get-Content $sessionPath -Raw | ConvertFrom-Json
+                    }
+                    else {
+                        Write-Warning "Token refresh failed, please re-authenticate"
+                        Remove-Item $sessionPath -Force -ErrorAction SilentlyContinue
+                        return $null
+                    }
                 }
-                else {
-                    Write-Verbose "User session token expired"
-                    Remove-Item $sessionPath -Force
-                    return $null
-                }
+
+                # Cache in memory
+                $Script:KrogerUserSession = $sessionData
+                return $sessionData
             }
             else {
                 Write-Verbose "No user session found"
@@ -220,6 +226,92 @@ function Get-KrogerUserSession {
         catch {
             Write-Error "Failed to retrieve user session: $_"
             return $null
+        }
+    }
+}
+
+function Update-KrogerUserToken {
+    <#
+    .SYNOPSIS
+    Refreshes the expired user token using the refresh token.
+
+    .DESCRIPTION
+    Uses the refresh token from the user session to obtain a new access token.
+
+    .EXAMPLE
+    Update-KrogerUserToken
+
+    .OUTPUTS
+    Boolean indicating success.
+    #>
+    [CmdletBinding()]
+    [OutputType([bool])]
+    param()
+
+    begin {
+        $sessionPath = Get-KrogerSessionPath
+        if (-not (Test-Path $sessionPath)) {
+            Write-Warning "No session file found"
+            return $false
+        }
+
+        $sessionData = Get-Content $sessionPath -Raw | ConvertFrom-Json
+        if (-not $sessionData.token.refresh_token) {
+            Write-Warning "No refresh token available"
+            return $false
+        }
+    }
+
+    process {
+        try {
+            Write-Verbose "Refreshing user token..."
+
+            # Use client_id from session if available
+            $clientId = if ($sessionData.clientId) {
+                $sessionData.clientId
+            }
+            else {
+                Write-Verbose "No client_id in session, may need to re-authenticate"
+            }
+
+            # Build refresh request (PKCE public client - no client_secret needed)
+            $body = @{
+                grant_type    = 'refresh_token'
+                refresh_token = $sessionData.token.refresh_token
+            }
+
+            if ($clientId) {
+                $body['client_id'] = $clientId
+            }
+
+            # Request new token
+            $response = Invoke-RestMethod -Uri 'https://api.kroger.com/v1/connect/oauth2/token' -Method Post -Body $body -ErrorAction Stop
+
+            # Add expiration timestamp
+            $response | Add-Member -NotePropertyName 'expires_at' -NotePropertyValue (Get-Date).AddSeconds($response.expires_in) -Force
+
+            # Update session (preserve client_id and other fields)
+            $previousClientId = $sessionData.clientId
+            $previousProfile = $sessionData.profile
+            $previousAuthTime = $sessionData.authenticatedAt
+
+            $sessionData.token = $response
+            $sessionData.clientId = $previousClientId
+            $sessionData.profile = $previousProfile
+            $sessionData.authenticatedAt = $previousAuthTime
+
+            Save-KrogerUserSession -Session $sessionData
+
+            Write-Verbose "Token refreshed successfully"
+            return $true
+        }
+        catch {
+            Write-Error "Failed to refresh token: $_"
+            # Remove expired session
+            if (Test-Path $sessionPath) {
+                Remove-Item $sessionPath -Force
+            }
+            return $false
         }
     }
 }
@@ -361,6 +453,7 @@ function Invoke-KrogerPasswordGrant {
             token  = $token
             profile = $profile
             authenticatedAt = Get-Date
+            clientId = $ClientId
         }
 
         # Save session
@@ -469,6 +562,7 @@ function Set-KrogerUserToken {
             token  = $token
             profile = $profile
             authenticatedAt = Get-Date
+            clientId = $ClientId
         }
 
         # Save session
@@ -553,7 +647,8 @@ function Get-KrogerUserProfile {
         }
     }
     catch {
-        Write-Warning "Failed to get user profile: $_"
+        # Profile endpoint not available, return default
+        Write-Verbose "Profile endpoint not available: $_"
         return @{
             id    = $null
             name  = 'Kroger User'

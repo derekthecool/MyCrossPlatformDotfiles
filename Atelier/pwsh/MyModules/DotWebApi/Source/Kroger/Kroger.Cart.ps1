@@ -63,29 +63,11 @@ function Get-KrogerCart {
 
     process {
         try {
-            $cartEndpoint = if ($CartId) {
-                "https://api.kroger.com/v1/cart/$CartId"
-            }
-            else {
-                'https://api.kroger.com/v1/cart'
-            }
-
-            $response = Invoke-WebApi -Method GET -Uri $cartEndpoint -Headers $headers
-
-            if ($Raw) {
-                return $response
-            }
-
-            # Convert to custom objects
-            if ($response.items -and $response.items.Count -gt 0) {
-                return $response.items | ForEach-Object {
-                    ConvertTo-KrogerCartItem -ApiData $_
-                }
-            }
-            else {
-                Write-Verbose "Cart is empty"
-                return @()
-            }
+            # Note: Kroger API doesn't appear to support retrieving cart contents
+            # This endpoint returns 404, suggesting it's not available
+            Write-Warning "Retrieving cart contents is not supported by Kroger API"
+            Write-Warning "You can view your cart by visiting Kroger's website or app"
+            return @()
         }
         catch {
             throw "Failed to get Kroger cart: $_"
@@ -145,8 +127,17 @@ function Add-KrogerCartItem {
     begin {
         Write-Verbose "Starting to add items to Kroger cart"
 
-        # Get authentication token
-        $token = Connect-KrogerApi -Scope @('cart.basic', 'cart.write')
+        # Check for user session first
+        $userSession = Get-KrogerUserSession
+        if ($userSession -and -not (Test-WebApiTokenExpired -Token $userSession.token)) {
+            Write-Verbose "Using user authentication"
+            $token = $userSession.token
+        }
+        else {
+            # Fall back to API credentials
+            Write-Verbose "No user session, using API credentials"
+            $token = Connect-KrogerApi -Scope @('cart.basic:write')
+        }
 
         $headers = @{
             Authorization = "Bearer $($token.access_token)"
@@ -197,21 +188,21 @@ function Add-KrogerCartItem {
                 }
 
                 if ($PSCmdlet.ShouldProcess($itemDescription, "Add $Quantity to cart")) {
-                    $cartEndpoint = if ($CartId) {
-                        "https://api.kroger.com/v1/cart/$CartId/items"
-                    }
-                    else {
-                        'https://api.kroger.com/v1/cart/items'
-                    }
+                    $cartEndpoint = 'https://api.kroger.com/v1/cart/add'
 
                     $body = @{
-                        upc      = $productId
-                        quantity = $Quantity
+                        items = @(
+                            @{
+                                upc      = $productId
+                                quantity = $Quantity
+                                modality = 'PICKUP'  # Default to pickup, could be parameterized
+                            }
+                        )
                     }
 
                     Write-Verbose "Adding item $productId (quantity: $Quantity) to cart"
 
-                    $response = Invoke-WebApi -Method POST -Uri $cartEndpoint -Headers $headers -Body $body
+                    $response = Invoke-WebApi -Method PUT -Uri $cartEndpoint -Headers $headers -Body $body
 
                     if ($PassThru) {
                         $addedItems.Add($response)
@@ -280,7 +271,7 @@ function Remove-KrogerCartItem {
         Write-Verbose "Starting to remove items from Kroger cart"
 
         # Get authentication token
-        $token = Connect-KrogerApi -Scope @('cart.basic', 'cart.write')
+        $token = Connect-KrogerApi -Scope @('cart.basic:write')
 
         $headers = @{
             Authorization = "Bearer $($token.access_token)"
@@ -371,7 +362,7 @@ function Clear-KrogerCart {
         Write-Verbose "Clearing Kroger cart"
 
         # Get authentication token
-        $token = Connect-KrogerApi -Scope @('cart.basic', 'cart.write')
+        $token = Connect-KrogerApi -Scope @('cart.basic:write')
 
         $headers = @{
             Authorization = "Bearer $($token.access_token)"
@@ -469,7 +460,7 @@ function Update-KrogerCartItem {
         Write-Verbose "Starting to update items in Kroger cart"
 
         # Get authentication token
-        $token = Connect-KrogerApi -Scope @('cart.basic', 'cart.write')
+        $token = Connect-KrogerApi -Scope @('cart.basic:write')
 
         $headers = @{
             Authorization = "Bearer $($token.access_token)"

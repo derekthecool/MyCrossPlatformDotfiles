@@ -34,9 +34,12 @@
         # Kroger functions
         'Connect-KrogerApi'
         'Connect-KrogerUser'
+        'Connect-KrogerPkce'
         'Disconnect-KrogerUser'
         'Get-KrogerUserSession'
+        'Update-KrogerUserToken'
         'Get-KrogerCartId'
+        'Get-KrogerCorrectScopes'
         'Search-KrogerProduct'
         'Get-KrogerProductDetails'
         'Add-KrogerCartItem'
