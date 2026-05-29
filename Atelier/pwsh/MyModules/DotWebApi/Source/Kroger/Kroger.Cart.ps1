@@ -129,6 +129,7 @@ function Add-KrogerCartItem {
 
         # Check for user session first
         $userSession = Get-KrogerUserSession
+
         if ($userSession -and -not (Test-WebApiTokenExpired -Token $userSession.token)) {
             Write-Verbose "Using user authentication"
             $token = $userSession.token
@@ -150,6 +151,20 @@ function Add-KrogerCartItem {
     process {
         foreach ($item in $InputObject) {
             try {
+                # Check if token needs refresh before each API call
+                if ($userSession -and (Test-WebApiTokenExpired -Token $userSession.token)) {
+                    Write-Verbose "Token expired during processing, refreshing..."
+                    $userSession = Get-KrogerUserSession
+                    if ($userSession) {
+                        $token = $userSession.token
+                        $headers.Authorization = "Bearer $($token.access_token)"
+                    }
+                    else {
+                        Write-Warning "Token refresh failed, cannot continue adding items"
+                        break
+                    }
+                }
+
                 # Determine product ID from different input types
                 $productId = switch ($item) {
                     # String input (UPC or product ID)

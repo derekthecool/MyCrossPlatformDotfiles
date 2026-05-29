@@ -82,7 +82,7 @@ function Invoke-WebApi {
     if ($Body) {
         # Convert body to JSON for methods that support it
         if ($Method -in @('POST', 'PUT', 'PATCH')) {
-            $requestParams.Body = $Body | ConvertTo-Json -Compress
+            $requestParams.Body = $Body | ConvertTo-Json -Depth 10 -Compress
         }
         else {
             # For GET requests, add as query parameters
