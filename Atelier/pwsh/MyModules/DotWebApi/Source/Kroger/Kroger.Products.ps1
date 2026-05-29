@@ -13,11 +13,20 @@ function Connect-KrogerApi {
     .PARAMETER ForceRefresh
     Force token refresh even if cached token is valid.
 
+    .PARAMETER ClientId
+    OAuth2 client ID. Defaults to retrieving from secret store.
+
+    .PARAMETER ClientSecret
+    OAuth2 client secret. Defaults to retrieving from secret store.
+
     .EXAMPLE
     Connect-KrogerApi
 
     .EXAMPLE
     Connect-KrogerApi -Scope 'cart.basic cart.write' -ForceRefresh
+
+    .EXAMPLE
+    Connect-KrogerApi -ClientId 'test_client' -ClientSecret 'test_secret'
 
     .OUTPUTS
     PSObject with token information.
@@ -28,13 +37,19 @@ function Connect-KrogerApi {
         [string[]]$Scope = @('product.compact'),
 
         [Parameter()]
-        [switch]$ForceRefresh
+        [switch]$ForceRefresh,
+
+        [Parameter()]
+        [string]$ClientId = (Get-Secret -Name 'KrogerClientId' -AsPlainText -ErrorAction SilentlyContinue),
+
+        [Parameter()]
+        [string]$ClientSecret = (Get-Secret -Name 'KrogerApiKey' -AsPlainText -ErrorAction SilentlyContinue)
     )
 
     $tokenEndpoint = 'https://api.kroger.com/v1/connect/oauth2/token'
 
     try {
-        $token = Get-WebApiToken -ServiceName 'Kroger' -TokenEndpoint $tokenEndpoint -Scope $Scope -ForceRefresh:$ForceRefresh
+        $token = Get-WebApiToken -ServiceName 'Kroger' -TokenEndpoint $tokenEndpoint -Scope $Scope -ForceRefresh:$ForceRefresh -ClientId $ClientId -ClientSecret $ClientSecret
         Write-Verbose "Successfully connected to Kroger API"
         return $token
     }

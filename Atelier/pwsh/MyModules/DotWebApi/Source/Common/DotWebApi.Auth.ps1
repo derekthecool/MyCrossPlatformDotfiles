@@ -22,8 +22,17 @@ function Get-WebApiToken {
     .PARAMETER ForceRefresh
     Force token refresh even if cached token is valid.
 
+    .PARAMETER ClientId
+    OAuth2 client ID. Defaults to retrieving from secret store.
+
+    .PARAMETER ClientSecret
+    OAuth2 client secret. Defaults to retrieving from secret store.
+
     .EXAMPLE
     Get-WebApiToken -ServiceName 'Kroger' -TokenEndpoint 'https://api.kroger.com/v1/connect/oauth2/token' -Scope 'product.compact'
+
+    .EXAMPLE
+    Get-WebApiToken -ServiceName 'Kroger' -TokenEndpoint 'https://api.kroger.com/v1/connect/oauth2/token' -Scope 'product.compact' -ClientId 'test_id' -ClientSecret 'test_secret'
 
     .OUTPUTS
     PSObject with token information including access_token, expires_in, etc.
@@ -40,7 +49,13 @@ function Get-WebApiToken {
         [string[]]$Scope,
 
         [Parameter()]
-        [switch]$ForceRefresh
+        [switch]$ForceRefresh,
+
+        [Parameter()]
+        [string]$ClientId = (Get-Secret -Name "${ServiceName}ClientId" -AsPlainText -ErrorAction SilentlyContinue),
+
+        [Parameter()]
+        [string]$ClientSecret = (Get-Secret -Name "${ServiceName}ApiKey" -AsPlainText -ErrorAction SilentlyContinue)
     )
 
     # Check cache first
@@ -54,20 +69,16 @@ function Get-WebApiToken {
 
     Write-Verbose "Fetching new token for $ServiceName"
 
-    # Get credentials from secret store
-    try {
-        $apiKey = Get-Secret -Name "${ServiceName}ApiKey" -AsPlainText -ErrorAction Stop
-        $clientId = Get-Secret -Name "${ServiceName}ClientId" -AsPlainText -ErrorAction Stop
-    }
-    catch {
-        throw "Failed to retrieve credentials for $ServiceName`: $_. Please store secrets using: Set-Secret -Name '${ServiceName}ApiKey' -Secret 'your-key'"
+    # Validate we have credentials
+    if (-not $ClientId -or -not $ClientSecret) {
+        throw "Failed to retrieve credentials for $ServiceName. Please store secrets using: Set-Secret -Name '${ServiceName}ClientId' -Secret 'your-client-id' and Set-Secret -Name '${ServiceName}ApiKey' -Secret 'your-api-key'"
     }
 
     # Build OAuth2 token request
     $tokenParams = @{
         grant_type    = 'client_credentials'
-        client_id     = $clientId
-        client_secret = $apiKey
+        client_id     = $ClientId
+        client_secret = $ClientSecret
         scope         = $Scope -join ' '
     }
 

@@ -27,6 +27,18 @@ function Connect-KrogerUser {
     .PARAMETER ForceReauth
     Force re-authentication even if existing session exists.
 
+    .PARAMETER ClientId
+    OAuth2 client ID. Defaults to retrieving from secret store.
+
+    .PARAMETER ClientSecret
+    OAuth2 client secret. Defaults to retrieving from secret store.
+
+    .PARAMETER SavedUsername
+    Saved username from secret store (for testing).
+
+    .PARAMETER SavedPassword
+    Saved password from secret store (for testing).
+
     .EXAMPLE
     Connect-KrogerUser -UseSavedCredentials
 
@@ -35,6 +47,9 @@ function Connect-KrogerUser {
 
     .EXAMPLE
     Connect-KrogerUser -AccessToken 'your_access_token'
+
+    .EXAMPLE
+    Connect-KrogerUser -ClientId 'test_client' -ClientSecret 'test_secret' -Username 'user@test.com' -Password 'pass123'
 
     .OUTPUTS
     PSObject with user authentication token and profile information.
@@ -57,7 +72,19 @@ function Connect-KrogerUser {
         [string]$RefreshToken,
 
         [Parameter()]
-        [switch]$ForceReauth
+        [switch]$ForceReauth,
+
+        [Parameter()]
+        [string]$ClientId = (Get-Secret -Name 'KrogerClientId' -AsPlainText -ErrorAction SilentlyContinue),
+
+        [Parameter()]
+        [string]$ClientSecret = (Get-Secret -Name 'KrogerApiKey' -AsPlainText -ErrorAction SilentlyContinue),
+
+        [Parameter()]
+        [string]$SavedUsername = (Get-Secret -Name 'KrogerUsername' -AsPlainText -ErrorAction SilentlyContinue),
+
+        [Parameter()]
+        [string]$SavedPassword = (Get-Secret -Name 'KrogerPassword' -AsPlainText -ErrorAction SilentlyContinue)
     )
 
     begin {
@@ -73,31 +100,25 @@ function Connect-KrogerUser {
             }
         }
 
-        # Get API credentials (required for OAuth2)
-        try {
-            $clientId = Get-Secret -Name 'KrogerClientId' -AsPlainText -ErrorAction Stop
-            $clientSecret = Get-Secret -Name 'KrogerApiKey' -AsPlainText -ErrorAction Stop
-        }
-        catch {
+        # Validate we have API credentials
+        if (-not $ClientId -or -not $ClientSecret) {
             throw "Kroger API credentials not found. Please set them using Set-Secret."
         }
     }
 
     process {
         if ($UseSavedCredentials -or ($PSCmdlet.ParameterSetName -eq 'Auto' -and -not $ForceReauth)) {
-            # Load credentials from secrets
-            try {
-                $savedUsername = Get-Secret -Name 'KrogerUsername' -AsPlainText -ErrorAction Stop
-                $savedPassword = Get-Secret -Name 'KrogerPassword' -AsPlainText -ErrorAction Stop
-
-                Write-Host "Loading saved credentials for: $savedUsername" -ForegroundColor Cyan
-                return Invoke-KrogerPasswordGrant -Username $savedUsername -Password $savedPassword -ClientId $clientId -ClientSecret $clientSecret
+            # Load credentials from parameters (which default to secrets)
+            if ($SavedUsername -and $SavedPassword) {
+                Write-Host "Loading saved credentials for: $SavedUsername" -ForegroundColor Cyan
+                return Invoke-KrogerPasswordGrant -Username $SavedUsername -Password $SavedPassword -ClientId $ClientId -ClientSecret $ClientSecret
             }
-            catch {
-                Write-Host "✗ Authentication failed: $_" -ForegroundColor Red
+            else {
+                Write-Host "✗ No saved credentials found" -ForegroundColor Red
                 Write-Host ""
                 Write-Host "Troubleshooting:" -ForegroundColor Yellow
-                Write-Host "1. Check your credentials are correct" -ForegroundColor White
+                Write-Host "1. Set saved credentials: Set-Secret -Name 'KrogerUsername' -Secret 'your-email'" -ForegroundColor White
+                Write-Host "2. Set saved password: Set-Secret -Name 'KrogerPassword' -Secret 'your-password'" -ForegroundColor White
                 Write-Host "2. Your OAuth2 app may not support password grant" -ForegroundColor White
                 Write-Host "3. Try: Connect-KrogerUser -AccessToken 'manual_token'" -ForegroundColor White
                 Write-Host ""
