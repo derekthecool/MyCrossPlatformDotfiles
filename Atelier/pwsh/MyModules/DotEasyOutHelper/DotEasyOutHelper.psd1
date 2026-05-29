@@ -20,6 +20,8 @@
     )
     FunctionsToExport = @(
         'Use-EasyOut'
+        'Show-PropertySelector'
+        'Select-PropertiesFallback'
     )
 }
 

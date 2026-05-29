@@ -1,10 +1,13 @@
+# Property selector functions are in DotEasyOutHelper.PropertySelector.ps1
+
 function Use-EasyOut {
     <#
     .SYNOPSIS
-    Interactive EZOut formatting helper with smart defaults.
+    Interactive EZOut formatting helper with custom property selection.
 
     .DESCRIPTION
     Simplifies creating EZOut format views by automatically detecting types and properties.
+    Uses custom property selector with value preview in table format.
     Automatically creates formatting directory structure and checks for EZOut build files.
 
     .PARAMETER InputObject
@@ -75,45 +78,32 @@ function Use-EasyOut {
     process {
     }
     end {
-        # Get type names and select the most specific one automatically if Menu doesn't work
+        # Get type names and select the most specific one
         $typeNames = $InputObject.PSObject.TypeNames
         Write-Verbose "Available TypeNames: $($typeNames -join ', ')"
 
-        # Try to use Menu for interactive selection, but fall back to automatic selection
-        try {
-            $Type = Menu -MenuItems $typeNames -ErrorAction Stop
-            if (-not $Type) {
-                throw "Menu returned null"
-            }
-            Write-Verbose "Selected type via Menu: $Type"
-        }
-        catch {
-            # Fallback: automatically select the most specific type name
-            Write-Verbose "Menu selection failed, using automatic type detection"
-            $Type = $typeNames | Where-Object { $_ -ne 'System.Management.Automation.PSCustomObject' -and $_ -ne 'System.Object' } |
-                     Select-Object -First 1
+        # Auto-select the most specific type name
+        $Type = $typeNames | Where-Object {
+            $_ -ne 'System.Management.Automation.PSCustomObject' -and
+            $_ -ne 'System.Object' -and
+            $_ -ne 'System.Management.Automation.PSCustomObject'
+        } | Select-Object -First 1
 
-            if (-not $Type) {
-                $Type = $typeNames | Select-Object -First 1
-            }
-
-            Write-Verbose "Auto-selected type: $Type"
+        if (-not $Type) {
+            $Type = $typeNames | Select-Object -First 1
         }
+
+        Write-Verbose "Auto-selected type: $Type"
 
         if (-not $Type) {
             throw "Unable to determine type name from object"
         }
 
-        # Get properties with similar fallback logic
-        try {
-            $Properties = Menu -MenuItems $($InputObject.PSObject.Properties) -MenuItemFormatter { $args | Select-Object -ExpandProperty Name } -MultiSelect -ErrorAction Stop
-            if (-not $Properties -or $Properties.Count -eq 0) {
-                throw "Menu returned no properties"
-            }
-            Write-Verbose "Selected properties via Menu: $($Properties.Count)"
-        }
-        catch {
-            Write-Verbose "Menu selection failed, using default properties"
+        # Get properties using custom property selector
+        $Properties = Show-PropertySelector -InputObject $InputObject
+
+        if (-not $Properties -or $Properties.Count -eq 0) {
+            Write-Warning "No properties selected. Using default properties."
             # Fallback: select common display properties
             $allProperties = $InputObject.PSObject.Properties | Select-Object -ExpandProperty Name
             $Properties = $allProperties | Where-Object { $_ -notlike 'PS*' -and $_ -notlike 'ApiData' } |
@@ -125,10 +115,9 @@ function Use-EasyOut {
 
             # Convert back to objects for compatibility
             $Properties = $Properties | ForEach-Object { [PSCustomObject]@{ Name = $_ } }
-            Write-Verbose "Auto-selected properties: $($Properties.Count)"
         }
 
-        Write-Verbose "Properties: $Properties"
+        Write-Verbose "Selected properties: $($Properties.Count)"
 
         $PropertiesString = $Properties | Select-Object -ExpandProperty Name | ForEach-Object { "'$_'" } | Join-String -Separator ', '
         $TypeName = $Type -replace '\.', '_'
