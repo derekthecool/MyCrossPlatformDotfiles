@@ -75,10 +75,10 @@ function Use-EasyOut {
     process {
     }
     end {
-        $Type = Show-Menu -MenuItems $($InputObject.PSObject.TypeNames)
+        $Type = Menu -MenuItems $($InputObject.PSObject.TypeNames)
         Write-Verbose "Type: $Type"
 
-        $Properties = Show-Menu -MenuItems $($InputObject.PSObject.Properties) -MenuItemFormatter { $args | Select-Object -ExpandProperty Name } -MultiSelect
+        $Properties = Menu -MenuItems $($InputObject.PSObject.Properties) -MenuItemFormatter { $args | Select-Object -ExpandProperty Name } -MultiSelect
         Write-Verbose "Properties: $Properties"
 
         $PropertiesString = $Properties | Select-Object -ExpandProperty Name | ForEach-Object { "'$_'" } | Join-String -Separator ', '

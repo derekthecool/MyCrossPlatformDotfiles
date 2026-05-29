@@ -59,8 +59,8 @@ Describe 'Use-EasyOut Function Tests' {
             Remove-Item $ezoutFile -Force
         }
 
-        # Mock Show-Menu to return test values
-        Mock Show-Menu {
+        # Mock Menu to return test values
+        Mock Menu {
             return @('Test.CustomType')
         }
 
@@ -72,8 +72,8 @@ Describe 'Use-EasyOut Function Tests' {
     }
 
     It 'Creates Formatting directory when using default path' {
-        # Mock Show-Menu to avoid interactive prompts
-        Mock Show-Menu {
+        # Mock Menu to avoid interactive prompts
+        Mock Menu {
             if ($Args[0] -match 'TypeNames') {
                 return 'Test.CustomType'
             }
@@ -101,8 +101,8 @@ Describe 'Use-EasyOut Function Tests' {
     It 'Uses custom path when specified' {
         $customPath = './CustomLocation/custom.format.ps1'
 
-        # Mock Show-Menu
-        Mock Show-Menu {
+        # Mock Menu
+        Mock Menu {
             if ($Args[0] -match 'TypeNames') {
                 return 'Test.CustomType'
             }
@@ -129,8 +129,8 @@ Describe 'Use-EasyOut Function Tests' {
     }
 
     It 'Generates correct EZOut format syntax' {
-        # Mock Show-Menu
-        Mock Show-Menu {
+        # Mock Menu
+        Mock Menu {
             if ($Args[0] -match 'TypeNames') {
                 return 'Test.CustomType'
             }
@@ -167,8 +167,8 @@ Describe 'Use-EasyOut Function Tests' {
         # Test that special characters in type names are handled properly
         $complexType = 'Namespace.With.Dots-And_Dashes.Type'
 
-        # Mock Show-Menu
-        Mock Show-Menu {
+        # Mock Menu
+        Mock Menu {
             if ($Args[0] -match 'TypeNames') {
                 return $complexType
             }
@@ -201,8 +201,8 @@ Describe 'Use-EasyOut Interactive Mode Tests' {
     }
 
     It 'Returns input object in interactive mode' {
-        # Mock Show-Menu and Invoke-Expression
-        Mock Show-Menu {
+        # Mock Menu and Invoke-Expression
+        Mock Menu {
             if ($Args[0] -match 'TypeNames') {
                 return 'Test.CustomType'
             }
