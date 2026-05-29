@@ -126,11 +126,11 @@ function Invoke-WebApi {
 function ConvertTo-KrogerProduct {
     <#
     .SYNOPSIS
-    Converts Kroger API product data to custom KrogerProduct object.
+    Converts Kroger API product data to KrogerProduct object with TypeName.
 
     .DESCRIPTION
-    Transforms raw Kroger API response data into a standardized custom object
-    with consistent properties for pipeline operations.
+    Preserves raw Kroger API response data structure and adds TypeName
+    for custom formatting and type recognition.
 
     .PARAMETER ApiData
     Raw product data from Kroger API.
@@ -139,7 +139,7 @@ function ConvertTo-KrogerProduct {
     $apiProduct | ConvertTo-KrogerProduct
 
     .OUTPUTS
-    Custom PSCustomObject with Kroger.Product type.
+    PSCustomObject with Kroger.Product type and raw API data structure.
     #>
     [CmdletBinding()]
     param(
@@ -148,40 +148,25 @@ function ConvertTo-KrogerProduct {
     )
 
     process {
-        # Handle different API response formats
-        $productItem = if ($ApiData.items -and $ApiData.items.Count -gt 0) {
-            $ApiData.items[0]
-        }
-        else {
-            $ApiData
-        }
+        # Preserve raw API data structure
+        $product = [PSCustomObject]$ApiData
 
-        [PSCustomObject]@{
-            PSTypeName = 'Kroger.Product'
-            ProductId  = $ApiData.productId
-            Upc        = $ApiData.upc
-            Name       = $ApiData.description
-            Brand      = $ApiData.brand
-            Category   = if ($ApiData.categories) { $ApiData.categories -join ' > ' } else { $null }
-            Size       = if ($ApiData.size) { $ApiData.size } else { $null }
-            Price      = if ($productItem.price) { $productItem.price.regular } else { $null }
-            OnSale     = if ($productItem.price) { $productItem.price.promo -gt 0 } else { $false }
-            SalePrice  = if ($productItem.price -and $productItem.price.promo -gt 0) { $productItem.price.promo } else { $null }
-            InStock    = if ($productItem.stock) { $productItem.stock.level -eq 'IN_STOCK' } else { $false }
-            Location   = if ($productItem.location) { $productItem.location } else { $null }
-            ImageUrl   = if ($ApiData.images -and $ApiData.images.Count -gt 0) { $ApiData.images[0].size.medium } else { $null }
-            ApiData    = $ApiData
-        }
+        # Add TypeName for custom formatting and type recognition
+        $product.PSObject.TypeNames.Insert(0, 'Kroger.Product')
+
+        # Return the preserved API data with TypeName
+        return $product
     }
 }
 
 function ConvertTo-KrogerCartItem {
     <#
     .SYNOPSIS
-    Converts Kroger API cart data to custom KrogerCartItem object.
+    Converts Kroger API cart data to KrogerCartItem object with TypeName.
 
     .DESCRIPTION
-    Transforms raw Kroger API cart response data into a standardized custom object.
+    Preserves raw Kroger API cart response data structure and adds TypeName
+    for custom formatting and type recognition.
 
     .PARAMETER ApiData
     Raw cart item data from Kroger API.
@@ -190,7 +175,7 @@ function ConvertTo-KrogerCartItem {
     $apiCartItem | ConvertTo-KrogerCartItem
 
     .OUTPUTS
-    Custom PSCustomObject with Kroger.CartItem type.
+    PSCustomObject with Kroger.CartItem type and raw API data structure.
     #>
     [CmdletBinding()]
     param(
@@ -199,16 +184,13 @@ function ConvertTo-KrogerCartItem {
     )
 
     process {
-        [PSCustomObject]@{
-            PSTypeName  = 'Kroger.CartItem'
-            CartItemId  = $ApiData.id
-            ProductId   = $ApiData.productId
-            Upc         = $ApiData.upc
-            Name        = $ApiData.description
-            Quantity    = $ApiData.quantity
-            Price       = $ApiData.price.regular
-            Total       = $ApiData.price.regular * $ApiData.quantity
-            ApiData     = $ApiData
-        }
+        # Preserve raw API data structure
+        $cartItem = [PSCustomObject]$ApiData
+
+        # Add TypeName for custom formatting and type recognition
+        $cartItem.PSObject.TypeNames.Insert(0, 'Kroger.CartItem')
+
+        # Return the preserved API data with TypeName
+        return $cartItem
     }
 }
