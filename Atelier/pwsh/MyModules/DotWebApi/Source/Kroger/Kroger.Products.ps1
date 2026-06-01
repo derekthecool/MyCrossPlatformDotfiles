@@ -142,8 +142,8 @@ function Search-KrogerProduct {
     )
 
     begin {
-        # Handle default location logic
-        if ($UseDefaultLocation -and -not $LocationId) {
+        # Auto-use default location if no explicit LocationId provided
+        if (-not $LocationId) {
             $defaultLocation = Get-KrogerDefaultLocation
             if ($defaultLocation) {
                 $LocationId = $defaultLocation
@@ -151,7 +151,8 @@ function Search-KrogerProduct {
                 Write-Host "Using default Kroger location" -ForegroundColor Cyan
             }
             else {
-                Write-Warning "No default location set. Use Set-KrogerDefaultLocation to set one."
+                Write-Warning "No default Kroger location set. Stock information will not be available."
+                Write-Warning "Set a default location: Find-KrogerStore -ZipCode '<ZIP>' | Set-KrogerDefaultLocation"
             }
         }
 
@@ -301,5 +302,52 @@ function Get-KrogerProductDetails {
     }
     elseif ($Upc) {
         Search-KrogerProduct -Upc $Upc -Raw:$Raw
+    }
+}
+
+function Test-KrogerProductStock {
+    <#
+    .SYNOPSIS
+    Checks if a Kroger product is in stock at your default location.
+
+    .DESCRIPTION
+    Checks stock status from product data returned by Search-KrogerProduct.
+    Requires product data from a location-aware search (automatic with default location).
+
+    .PARAMETER Product
+    Product object from Search-KrogerProduct.
+
+    .EXAMPLE
+    $product = Search-KrogerProduct -SearchTerm 'milk' | Select-Object -First 1
+    Test-KrogerProductStock -Product $product
+
+    .EXAMPLE
+    # Pipeline usage
+    Search-KrogerProduct -SearchTerm 'bread' |
+        Where-Object { Test-KrogerProductStock -Product $_ }
+
+    .OUTPUTS
+    Boolean indicating if product is in stock, or $null if no location data available.
+    #>
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory, ValueFromPipeline)]
+        [object]$Product
+    )
+
+    process {
+        # Check if product has items array (location-specific data)
+        if (-not $Product.items -or $Product.items.Count -eq 0) {
+            Write-Warning "Product has no location data. Search with default location for stock information."
+            return $null
+        }
+
+        # Get first item's stock status from fulfillment.inStore
+        $inStock = $Product.items[0].fulfillment.inStore -eq $true
+
+        Write-Verbose "In-store availability: $inStock"
+
+        # Return stock status
+        return $inStock
     }
 }

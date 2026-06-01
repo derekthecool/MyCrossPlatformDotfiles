@@ -51,6 +51,7 @@
         'Set-KrogerDefaultLocation'
         'Get-KrogerDefaultLocation'
         'Clear-KrogerDefaultLocation'
+        'Test-KrogerProductStock'
 
         # Spoonacular functions (existing)
         'Use-SpoonacularApi'
