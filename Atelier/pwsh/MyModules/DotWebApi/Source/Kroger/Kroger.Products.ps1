@@ -1,4 +1,5 @@
-function Connect-KrogerApi {
+function Connect-KrogerApi
+{
     <#
     .SYNOPSIS
     Connects to Kroger API and obtains OAuth2 token.
@@ -48,17 +49,19 @@ function Connect-KrogerApi {
 
     $tokenEndpoint = 'https://api.kroger.com/v1/connect/oauth2/token'
 
-    try {
+    try
+    {
         $token = Get-WebApiToken -ServiceName 'Kroger' -TokenEndpoint $tokenEndpoint -Scope $Scope -ForceRefresh:$ForceRefresh -ClientId $ClientId -ClientSecret $ClientSecret
         Write-Verbose "Successfully connected to Kroger API"
         return $token
-    }
-    catch {
+    } catch
+    {
         throw "Failed to connect to Kroger API: $_"
     }
 }
 
-function Search-KrogerProduct {
+function Search-KrogerProduct
+{
     <#
     .SYNOPSIS
     Searches for products in the Kroger API.
@@ -141,16 +144,19 @@ function Search-KrogerProduct {
         [switch]$Raw
     )
 
-    begin {
+    begin
+    {
         # Auto-use default location if no explicit LocationId provided
-        if (-not $LocationId) {
+        if (-not $LocationId)
+        {
             $defaultLocation = Get-KrogerDefaultLocation
-            if ($defaultLocation) {
+            if ($defaultLocation)
+            {
                 $LocationId = $defaultLocation
                 Write-Verbose "Using default location: $LocationId"
                 Write-Host "Using default Kroger location" -ForegroundColor Cyan
-            }
-            else {
+            } else
+            {
                 Write-Warning "No default Kroger location set. Stock information will not be available."
                 Write-Warning "Set a default location: Find-KrogerStore -ZipCode '<ZIP>' | Set-KrogerDefaultLocation"
             }
@@ -172,38 +178,45 @@ function Search-KrogerProduct {
         # Build filter parameters
         $filters = @()
 
-        switch ($PSCmdlet.ParameterSetName) {
-            'SearchTerm' {
+        switch ($PSCmdlet.ParameterSetName)
+        {
+            'SearchTerm'
+            {
                 $filters += "term:$SearchTerm"
-                if ($Brand) {
+                if ($Brand)
+                {
                     $filters += "brand:$Brand"
                 }
-                if ($Category) {
+                if ($Category)
+                {
                     $filters += "category:$Category"
                 }
             }
-            'ProductId' {
+            'ProductId'
+            {
                 $filters += "productId: $($ProductId -join ',')"
             }
-            'Upc' {
+            'Upc'
+            {
                 $filters += "upc: $($Upc -join ',')"
             }
         }
 
-        if ($LocationId) {
+        if ($LocationId)
+        {
             $filters += "locationId:$LocationId"
         }
 
         # Build query parameters
         $queryParams = @{
-            'filter.term'        = if ($PSCmdlet.ParameterSetName -eq 'SearchTerm') { $SearchTerm } else { $null }
-            'filter.brand'       = $Brand
-            'filter.category'    = $Category
-            'filter.locationId'  = $LocationId
-            'filter.productId'   = if ($PSCmdlet.ParameterSetName -eq 'ProductId') { $ProductId -join ',' } else { $null }
-            'filter.upc'         = if ($PSCmdlet.ParameterSetName -eq 'Upc') { $Upc -join ',' } else { $null }
-            'pageSize'           = $PageSize
-            'pageNumber'         = $Page
+            'filter.term'       = if ($PSCmdlet.ParameterSetName -eq 'SearchTerm') { $SearchTerm } else { $null }
+            'filter.brand'      = $Brand
+            'filter.category'   = $Category
+            'filter.locationId' = $LocationId
+            'filter.productId'  = if ($PSCmdlet.ParameterSetName -eq 'ProductId') { $ProductId -join ',' } else { $null }
+            'filter.upc'        = if ($PSCmdlet.ParameterSetName -eq 'Upc') { $Upc -join ',' } else { $null }
+            'pageSize'          = $PageSize
+            'pageNumber'        = $Page
         }
 
         # Remove null values
@@ -212,17 +225,20 @@ function Search-KrogerProduct {
         Write-Verbose "Searching Kroger products with filters: $($filters -join ', ')"
     }
 
-    process {
-        try {
+    process
+    {
+        try
+        {
             # Build full URL with query parameters
             $queryString = ($queryParams.GetEnumerator() | ForEach-Object {
-                "$($_.Key)=$([System.Web.HttpUtility]::UrlEncode($_.Value))"
-            }) -join '&'
+                    "$($_.Key)=$([System.Web.HttpUtility]::UrlEncode($_.Value))"
+                }) -join '&'
 
-            $fullUrl = if ($queryString) {
+            $fullUrl = if ($queryString)
+            {
                 "$baseUrl`?$queryString"
-            }
-            else {
+            } else
+            {
                 $baseUrl
             }
 
@@ -231,35 +247,39 @@ function Search-KrogerProduct {
             # Make API request using Invoke-WebApi
             $response = Invoke-WebApi -Method GET -Uri $fullUrl -Headers $headers
 
-            if ($Raw) {
+            if ($Raw)
+            {
                 return $response
             }
 
             # Convert API response to custom objects
-            if ($response.data -and $response.data.Count -gt 0) {
+            if ($response.data -and $response.data.Count -gt 0)
+            {
                 $results = $response.data | ForEach-Object {
                     ConvertTo-KrogerProduct -ApiData $_
                 }
 
                 Write-Verbose "Found $($results.Count) products"
                 return $results
-            }
-            else {
+            } else
+            {
                 Write-Verbose "No products found"
                 return @()
             }
-        }
-        catch {
+        } catch
+        {
             throw "Failed to search Kroger products: $_"
         }
     }
 
-    end {
+    end
+    {
         # Clean up if needed
     }
 }
 
-function Get-KrogerProductDetails {
+function Get-KrogerProductDetails
+{
     <#
     .SYNOPSIS
     Gets detailed information for specific Kroger products.
@@ -297,15 +317,17 @@ function Get-KrogerProductDetails {
         [switch]$Raw
     )
 
-    if ($ProductId) {
+    if ($ProductId)
+    {
         Search-KrogerProduct -ProductId $ProductId -Raw:$Raw
-    }
-    elseif ($Upc) {
+    } elseif ($Upc)
+    {
         Search-KrogerProduct -Upc $Upc -Raw:$Raw
     }
 }
 
-function Test-KrogerProductStock {
+function Test-KrogerProductStock
+{
     <#
     .SYNOPSIS
     Checks if a Kroger product is in stock at your default location.
@@ -335,9 +357,11 @@ function Test-KrogerProductStock {
         [object]$Product
     )
 
-    process {
+    process
+    {
         # Check if product has items array (location-specific data)
-        if (-not $Product.items -or $Product.items.Count -eq 0) {
+        if (-not $Product.items -or $Product.items.Count -eq 0)
+        {
             Write-Warning "Product has no location data. Search with default location for stock information."
             return $null
         }

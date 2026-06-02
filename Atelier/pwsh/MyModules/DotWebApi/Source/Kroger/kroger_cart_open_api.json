@@ -23,17 +23,13 @@
   ],
   "security": [
     {
-      "CustomerContext": [
-        "cart.basic:write"
-      ]
+      "CustomerContext": ["cart.basic:write"]
     }
   ],
   "paths": {
     "/v1/cart/add": {
       "put": {
-        "tags": [
-          "Carts"
-        ],
+        "tags": ["Carts"],
         "summary": "Add to cart",
         "description": "Provides access to add items to an authenticated customer's cart. \n<br><br> **Note**: the customer must be authenticated using the\nOAuth2 Authorization Code grant type.\n",
         "operationId": "putCarts",
@@ -108,9 +104,7 @@
         },
         "security": [
           {
-            "CustomerContext": [
-              "cart.basic:write"
-            ]
+            "CustomerContext": ["cart.basic:write"]
           }
         ],
         "x-code-samples": [
@@ -213,10 +207,7 @@
         }
       },
       "cart.cartItemModel": {
-        "required": [
-          "quantity",
-          "upc"
-        ],
+        "required": ["quantity", "upc"],
         "type": "object",
         "properties": {
           "quantity": {
@@ -232,10 +223,7 @@
           "modality": {
             "type": "string",
             "description": "An optional value representing a modality including: DELIVERY, PICKUP.",
-            "enum": [
-              "DELIVERY",
-              "PICKUP"
-            ],
+            "enum": ["DELIVERY", "PICKUP"],
             "default": "PICKUP"
           }
         }
@@ -323,9 +311,7 @@
   "x-tagGroups": [
     {
       "name": "API Reference",
-      "tags": [
-        "Carts"
-      ]
+      "tags": ["Carts"]
     }
   ]
 }

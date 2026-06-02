@@ -24,9 +24,7 @@
   "paths": {
     "/v1/connect/oauth2/authorize": {
       "get": {
-        "tags": [
-          "OAuth2"
-        ],
+        "tags": ["OAuth2"],
         "summary": "Authorization Code",
         "description": "This endpoint is used when the end user must approve access to a protected resource (such as a cart) before a service can act on the user's behalf. Here's how it works:\n\n* Your service or application calls this endpoint and includes the redirect URL (what the end user should see after this service executes) and scopes (defines the actions your application or service can take on behalf of the user).\n* This endpoint displays a login screen, where the end user enters their email address and password.\n* The end user is then asked to give the application permission to access the resource on their behalf.\n* When the user agrees, this service returns the redirect URL with an authorization `code` as a parameter.\n\nAfter this endpoint returns, your service or application must call the `/token` endpoint with the `authorization_code` grant type and `code` value to get an access token. The access token is then sent to the endpoint being called to prove that your service or application is authorized to act on a user's behalf.\n",
         "operationId": "authorizationCode",
@@ -93,9 +91,7 @@
             "schema": {
               "type": "string",
               "default": "S256",
-              "enum": [
-                "S256"
-              ]
+              "enum": ["S256"]
             }
           },
           {
@@ -166,9 +162,7 @@
     },
     "/v1/connect/oauth2/token": {
       "post": {
-        "tags": [
-          "OAuth2"
-        ],
+        "tags": ["OAuth2"],
         "summary": "Access Token",
         "description": "All Oauth2 applications are issued \"client credentials\" in the form of a unique client_id and client_secret after registration. The credentials are used to authorize the application.\n<br/><br/>\nThere are 3 grant type flows that the token endpoint offers:\n1. `authorization_code` - Uses the `code` returned from the `/authorize` endpoint to get a token, allowing your service or application to make API requests on an end user's behalf, including accessing personal data. The service is only able to perform the actions specified in the approved scopes.\n2. `client_credentials` - Uses the client credentials to provide a token that allows your service or application to call endpoints that do not require user approval.\n3. `refresh_token`\t- Allows the application to \"refresh\" an access token that has expired. Refresh tokens are only granted when using the Authorization Code grant type. Using the refresh token eliminates the need to re-authenticate the customer when the access token expires.\n\nThe `access_token` received from this step is sent to the endpoint being called to prove that your service or application is authorized to call the API. The `token_type` field indicates what type of token it is so that you can correctly pass it to the API.\n",
         "operationId": "accessToken",
@@ -313,11 +307,7 @@
         }
       },
       "authorization_code": {
-        "required": [
-          "code",
-          "grant_type",
-          "redirect_uri"
-        ],
+        "required": ["code", "grant_type", "redirect_uri"],
         "type": "object",
         "properties": {
           "grant_type": {
@@ -373,9 +363,7 @@
         }
       },
       "client_credentials": {
-        "required": [
-          "grant_type"
-        ],
+        "required": ["grant_type"],
         "type": "object",
         "properties": {
           "grant_type": {
@@ -521,10 +509,7 @@
         "example": "https://YourRedirectUri.com/callback?code=zWrT1GkdshSadIowJW0Rm4w2kKhOzv1W"
       },
       "refresh_token": {
-        "required": [
-          "refresh_token",
-          "grant_type"
-        ],
+        "required": ["refresh_token", "grant_type"],
         "type": "object",
         "properties": {
           "grant_type": {
@@ -569,9 +554,7 @@
   "x-tagGroups": [
     {
       "name": "Authorization Endpoints",
-      "tags": [
-        "OAuth2"
-      ]
+      "tags": ["OAuth2"]
     }
   ]
 }

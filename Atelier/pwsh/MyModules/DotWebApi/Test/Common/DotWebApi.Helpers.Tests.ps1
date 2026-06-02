@@ -1,10 +1,10 @@
 BeforeAll {
     # Mock API response data
     $MockApiResponse = @{
-        id         = '12345'
-        name       = 'Test Product'
-        status     = 'active'
-        created    = '2024-01-01'
+        id      = '12345'
+        name    = 'Test Product'
+        status  = 'active'
+        created = '2024-01-01'
     }
 
     # Setup mock API override BEFORE importing module
@@ -26,11 +26,11 @@ BeforeAll {
         size        = '1 gal'
         items       = @(
             @{
-                price = @{
+                price    = @{
                     regular = 3.49
                     promo   = 2.99
                 }
-                stock  = @{
+                stock    = @{
                     level = 'IN_STOCK'
                 }
                 location = 'A1-2'
@@ -46,11 +46,11 @@ BeforeAll {
     }
 
     $MockKrogerCartItemData = @{
-        id         = 'cart_item_1'
-        productId  = '0011200000562'
-        upc        = '0011200000562'
-        quantity   = 2
-        price      = @{
+        id          = 'cart_item_1'
+        productId   = '0011200000562'
+        upc         = '0011200000562'
+        quantity    = 2
+        price       = @{
             regular = 3.49
         }
         description = 'Kroger Whole Milk'
@@ -236,8 +236,8 @@ Describe 'ConvertTo-KrogerProduct' {
             size        = '1 lb'
             items       = @(
                 @{
-                    price = @{ regular = 1.99; promo = 0 }
-                    stock  = @{ level = 'IN_STOCK' }
+                    price    = @{ regular = 1.99; promo = 0 }
+                    stock    = @{ level = 'IN_STOCK' }
                     location = 'B1'
                 }
             )
@@ -260,8 +260,8 @@ Describe 'ConvertTo-KrogerProduct' {
             size        = '1 lb'
             items       = @(
                 @{
-                    price = @{ regular = 2.99; promo = 0 }
-                    stock  = @{ level = 'IN_STOCK' }
+                    price    = @{ regular = 2.99; promo = 0 }
+                    stock    = @{ level = 'IN_STOCK' }
                     location = 'C1'
                 }
             )
@@ -327,11 +327,11 @@ Describe 'ConvertTo-KrogerCartItem' {
 
     It 'Handles cart item with different quantity' {
         $cartItem = @{
-            id         = 'cart_item_2'
-            productId  = '0011200000563'
-            upc        = '0011200000563'
-            quantity   = 5
-            price      = @{ regular = 1.99 }
+            id          = 'cart_item_2'
+            productId   = '0011200000563'
+            upc         = '0011200000563'
+            quantity    = 5
+            price       = @{ regular = 1.99 }
             description = 'Another Product'
         }
 

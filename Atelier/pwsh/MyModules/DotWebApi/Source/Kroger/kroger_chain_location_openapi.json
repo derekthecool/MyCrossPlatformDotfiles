@@ -23,17 +23,13 @@
   ],
   "security": [
     {
-      "ClientContext": [
-        "any"
-      ]
+      "ClientContext": ["any"]
     }
   ],
   "paths": {
     "/v1/locations": {
       "get": {
-        "tags": [
-          "Locations"
-        ],
+        "tags": ["Locations"],
         "summary": "Location list",
         "description": "Provides access to a list of locations. If the parameter `filter.chain` is not provided, the results include all locations and chains owned by The Kroger Co.<br>You may include one of the following parameters to narrow search results within a geographic area:<br><br> <ul> <li> <code>filter.zipCode.near</code></li> <li> <code>filter.latLong.near</code></li> <li> <code>filter.lat.near</code> and <code>filter.lon.near</code></li> </ul>",
         "operationId": "SearchLocations",
@@ -204,9 +200,7 @@
         },
         "security": [
           {
-            "ClientContext": [
-              "N/A"
-            ]
+            "ClientContext": ["N/A"]
           }
         ],
         "x-code-samples": [
@@ -231,9 +225,7 @@
     },
     "/v1/locations/{locationId}": {
       "get": {
-        "tags": [
-          "Locations"
-        ],
+        "tags": ["Locations"],
         "summary": "Location details",
         "description": "Provides access to the details of a specific location by using the `locationId`.",
         "operationId": "LocationsGetByID",
@@ -312,9 +304,7 @@
         },
         "security": [
           {
-            "ClientContext": [
-              "N/A"
-            ]
+            "ClientContext": ["N/A"]
           }
         ],
         "x-code-samples": [
@@ -337,9 +327,7 @@
         ]
       },
       "head": {
-        "tags": [
-          "Locations"
-        ],
+        "tags": ["Locations"],
         "summary": "Location query",
         "description": "Determines if a specific location exists by using the `locationId`.",
         "operationId": "LocationsExistsByID",
@@ -418,9 +406,7 @@
         },
         "security": [
           {
-            "ClientContext": [
-              "N/A"
-            ]
+            "ClientContext": ["N/A"]
           }
         ],
         "x-code-samples": [
@@ -445,9 +431,7 @@
     },
     "/v1/chains": {
       "get": {
-        "tags": [
-          "Locations"
-        ],
+        "tags": ["Locations"],
         "summary": "Chain list",
         "description": "Provides access to a list of all chains owned by The Kroger Co.",
         "operationId": "ListChains",
@@ -485,9 +469,7 @@
         },
         "security": [
           {
-            "ClientContext": [
-              "N/A"
-            ]
+            "ClientContext": ["N/A"]
           }
         ],
         "x-code-samples": [
@@ -512,9 +494,7 @@
     },
     "/v1/chains/{name}": {
       "get": {
-        "tags": [
-          "Locations"
-        ],
+        "tags": ["Locations"],
         "summary": "Chain details",
         "description": "Provides access to the details of a specific chian by using the chain `name`.",
         "operationId": "GetChain",
@@ -574,9 +554,7 @@
         },
         "security": [
           {
-            "ClientContext": [
-              "N/A"
-            ]
+            "ClientContext": ["N/A"]
           }
         ],
         "x-code-samples": [
@@ -599,9 +577,7 @@
         ]
       },
       "head": {
-        "tags": [
-          "Locations"
-        ],
+        "tags": ["Locations"],
         "summary": "Chain query",
         "description": "Determine if a specific chain exists by using the chain `name`.",
         "operationId": "ChainExists",
@@ -661,9 +637,7 @@
         },
         "security": [
           {
-            "ClientContext": [
-              "N/A"
-            ]
+            "ClientContext": ["N/A"]
           }
         ],
         "x-code-samples": [
@@ -688,9 +662,7 @@
     },
     "/v1/departments": {
       "get": {
-        "tags": [
-          "Locations"
-        ],
+        "tags": ["Locations"],
         "summary": "Department list",
         "description": "Provides access to a list of all departments, including departments of chains owned by The Kroger Co.",
         "operationId": "ListDepartments",
@@ -738,9 +710,7 @@
         },
         "security": [
           {
-            "ClientContext": [
-              "N/A"
-            ]
+            "ClientContext": ["N/A"]
           }
         ],
         "x-code-samples": [
@@ -765,9 +735,7 @@
     },
     "/v1/departments/{id}": {
       "get": {
-        "tags": [
-          "Locations"
-        ],
+        "tags": ["Locations"],
         "summary": "Department details",
         "description": "Provides access to the details of a specific department by using the `departmentId`. ",
         "operationId": "GetDepartment",
@@ -839,9 +807,7 @@
         },
         "security": [
           {
-            "ClientContext": [
-              "N/A"
-            ]
+            "ClientContext": ["N/A"]
           }
         ],
         "x-code-samples": [
@@ -864,9 +830,7 @@
         ]
       },
       "head": {
-        "tags": [
-          "Locations"
-        ],
+        "tags": ["Locations"],
         "summary": "Department query",
         "description": "Determine if a specific department exists by using the `departmentId`. ",
         "operationId": "DepartmentExists",
@@ -938,9 +902,7 @@
         },
         "security": [
           {
-            "ClientContext": [
-              "N/A"
-            ]
+            "ClientContext": ["N/A"]
           }
         ],
         "x-code-samples": [
@@ -1094,10 +1056,7 @@
           "divisionNumbers": {
             "type": "array",
             "description": "A list of all management division numbers within the brand.",
-            "example": [
-              "01",
-              "02"
-            ],
+            "example": ["01", "02"],
             "items": {
               "type": "string"
             }
@@ -1589,9 +1548,7 @@
   "x-tagGroups": [
     {
       "name": "API Reference",
-      "tags": [
-        "Locations"
-      ]
+      "tags": ["Locations"]
     }
   ]
 }

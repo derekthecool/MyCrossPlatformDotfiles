@@ -1,4 +1,5 @@
-function Connect-KrogerUser {
+function Connect-KrogerUser
+{
     <#
     .SYNOPSIS
     Authenticates a user with Kroger API for personal cart access.
@@ -87,13 +88,16 @@ function Connect-KrogerUser {
         [string]$SavedPassword = (Get-Secret -Name 'KrogerPassword' -AsPlainText -ErrorAction SilentlyContinue)
     )
 
-    begin {
+    begin
+    {
         Write-Verbose "Starting Kroger user authentication"
 
         # Check for existing session (only for default case)
-        if ($PSCmdlet.ParameterSetName -eq 'Auto' -and -not $ForceReauth -and -not $UseSavedCredentials) {
+        if ($PSCmdlet.ParameterSetName -eq 'Auto' -and -not $ForceReauth -and -not $UseSavedCredentials)
+        {
             $existingSession = Get-KrogerUserSession
-            if ($existingSession -and -not (Test-WebApiTokenExpired -Token $existingSession.token)) {
+            if ($existingSession -and -not (Test-WebApiTokenExpired -Token $existingSession.token))
+            {
                 Write-Verbose "Using existing user session"
                 Write-Host "✓ Already signed in as $($existingSession.profile.name)" -ForegroundColor Green
                 return $existingSession
@@ -101,19 +105,23 @@ function Connect-KrogerUser {
         }
 
         # Validate we have API credentials
-        if (-not $ClientId -or -not $ClientSecret) {
+        if (-not $ClientId -or -not $ClientSecret)
+        {
             throw "Kroger API credentials not found. Please set them using Set-Secret."
         }
     }
 
-    process {
-        if ($UseSavedCredentials -or ($PSCmdlet.ParameterSetName -eq 'Auto' -and -not $ForceReauth)) {
+    process
+    {
+        if ($UseSavedCredentials -or ($PSCmdlet.ParameterSetName -eq 'Auto' -and -not $ForceReauth))
+        {
             # Load credentials from parameters (which default to secrets)
-            if ($SavedUsername -and $SavedPassword) {
+            if ($SavedUsername -and $SavedPassword)
+            {
                 Write-Host "Loading saved credentials for: $SavedUsername" -ForegroundColor Cyan
                 return Invoke-KrogerPasswordGrant -Username $SavedUsername -Password $SavedPassword -ClientId $ClientId -ClientSecret $ClientSecret
-            }
-            else {
+            } else
+            {
                 Write-Host "✗ No saved credentials found" -ForegroundColor Red
                 Write-Host ""
                 Write-Host "Troubleshooting:" -ForegroundColor Yellow
@@ -124,27 +132,29 @@ function Connect-KrogerUser {
                 Write-Host ""
                 throw "Authentication failed: $_"
             }
-        }
-        elseif ($Username -and $Password) {
+        } elseif ($Username -and $Password)
+        {
             # Password grant type (direct login)
             return Invoke-KrogerPasswordGrant -Username $Username -Password $Password -ClientId $clientId -ClientSecret $clientSecret
-        }
-        elseif ($AccessToken) {
+        } elseif ($AccessToken)
+        {
             # Manual token entry
             return Set-KrogerUserToken -AccessToken $AccessToken -RefreshToken $RefreshToken
-        }
-        else {
+        } else
+        {
             # Show authentication instructions
             Show-KrogerAuthInstructions
         }
     }
 
-    end {
+    end
+    {
         Write-Verbose "Kroger user authentication completed"
     }
 }
 
-function Disconnect-KrogerUser {
+function Disconnect-KrogerUser
+{
     <#
     .SYNOPSIS
     Signs out the current Kroger user and clears session.
@@ -161,15 +171,19 @@ function Disconnect-KrogerUser {
     [CmdletBinding()]
     param()
 
-    begin {
+    begin
+    {
         Write-Verbose "Signing out Kroger user"
     }
 
-    process {
-        try {
+    process
+    {
+        try
+        {
             # Clear user session from file
             $sessionPath = Get-KrogerSessionPath
-            if (Test-Path $sessionPath) {
+            if (Test-Path $sessionPath)
+            {
                 Remove-Item $sessionPath -Force
                 Write-Verbose "User session file deleted"
             }
@@ -178,19 +192,21 @@ function Disconnect-KrogerUser {
             $Script:KrogerUserSession = $null
 
             return $true
-        }
-        catch {
+        } catch
+        {
             Write-Error "Failed to sign out: $_"
             return $false
         }
     }
 
-    end {
+    end
+    {
         Write-Verbose "User sign-out completed"
     }
 }
 
-function Get-KrogerUserSession {
+function Get-KrogerUserSession
+{
     <#
     .SYNOPSIS
     Retrieves the current Kroger user session.
@@ -208,28 +224,35 @@ function Get-KrogerUserSession {
     [OutputType([object])]
     param()
 
-    begin {
+    begin
+    {
         # Check in-memory cache first
-        if ($null -ne $Script:KrogerUserSession) {
+        if ($null -ne $Script:KrogerUserSession)
+        {
             return $Script:KrogerUserSession
         }
     }
 
-    process {
-        try {
+    process
+    {
+        try
+        {
             # Try to get session from file
             $sessionPath = Get-KrogerSessionPath
-            if (Test-Path $sessionPath) {
+            if (Test-Path $sessionPath)
+            {
                 $sessionData = Import-Clixml -Path $sessionPath
 
                 # Check if token is expired
-                if (Test-WebApiTokenExpired -Token $sessionData.token) {
+                if (Test-WebApiTokenExpired -Token $sessionData.token)
+                {
                     Write-Verbose "User session token expired, attempting refresh..."
-                    if (Update-KrogerUserToken) {
+                    if (Update-KrogerUserToken)
+                    {
                         # Reload session after refresh
                         $sessionData = Import-Clixml -Path $sessionPath
-                    }
-                    else {
+                    } else
+                    {
                         Write-Warning "Kroger authentication expired. Please re-run: Connect-KrogerPkce"
                         Remove-Item $sessionPath -Force -ErrorAction SilentlyContinue
                         return $null
@@ -239,20 +262,21 @@ function Get-KrogerUserSession {
                 # Cache in memory
                 $Script:KrogerUserSession = $sessionData
                 return $sessionData
-            }
-            else {
+            } else
+            {
                 Write-Verbose "No user session found"
                 return $null
             }
-        }
-        catch {
+        } catch
+        {
             Write-Error "Failed to retrieve user session: $_"
             return $null
         }
     }
 }
 
-function Update-KrogerUserToken {
+function Update-KrogerUserToken
+{
     <#
     .SYNOPSIS
     Refreshes the expired user token using the refresh token.
@@ -270,31 +294,37 @@ function Update-KrogerUserToken {
     [OutputType([bool])]
     param()
 
-    begin {
+    begin
+    {
         # Try to get session from file
         $sessionPath = Get-KrogerSessionPath
-        if (-not (Test-Path $sessionPath)) {
+        if (-not (Test-Path $sessionPath))
+        {
             Write-Warning "No session file found"
             return $false
         }
 
         $sessionData = Import-Clixml -Path $sessionPath
 
-        if (-not $sessionData.token.refresh_token) {
+        if (-not $sessionData.token.refresh_token)
+        {
             Write-Warning "No refresh token available"
             return $false
         }
     }
 
-    process {
-        try {
+    process
+    {
+        try
+        {
             Write-Verbose "Refreshing user token..."
 
             # Use client_id from session if available
-            $clientId = if ($sessionData.clientId) {
+            $clientId = if ($sessionData.clientId)
+            {
                 $sessionData.clientId
-            }
-            else {
+            } else
+            {
                 Write-Verbose "No client_id in session, may need to re-authenticate"
             }
 
@@ -304,7 +334,8 @@ function Update-KrogerUserToken {
                 refresh_token = $sessionData.token.refresh_token
             }
 
-            if ($clientId) {
+            if ($clientId)
+            {
                 $body['client_id'] = $clientId
             }
 
@@ -328,12 +359,13 @@ function Update-KrogerUserToken {
 
             Write-Verbose "Token refreshed successfully"
             return $true
-        }
-        catch {
+        } catch
+        {
             Write-Verbose "Token refresh failed: $_"
             # Remove expired session file
             $sessionPath = Get-KrogerSessionPath
-            if (Test-Path $sessionPath) {
+            if (Test-Path $sessionPath)
+            {
                 Remove-Item $sessionPath -Force
             }
             return $false
@@ -341,7 +373,8 @@ function Update-KrogerUserToken {
     }
 }
 
-function Get-KrogerCartId {
+function Get-KrogerCartId
+{
     <#
     .SYNOPSIS
     Gets the cart ID for the authenticated user.
@@ -360,17 +393,21 @@ function Get-KrogerCartId {
     [OutputType([string])]
     param()
 
-    begin {
+    begin
+    {
         $session = Get-KrogerUserSession
-        if (-not $session) {
+        if (-not $session)
+        {
             throw "Not authenticated. Please run Connect-KrogerUser first."
         }
 
         $token = $session.token
     }
 
-    process {
-        try {
+    process
+    {
+        try
+        {
             # Try to get existing cart
             $headers = @{
                 Authorization = "Bearer $($token.access_token)"
@@ -379,28 +416,30 @@ function Get-KrogerCartId {
 
             $response = Invoke-WebApi -Method GET -Uri 'https://api.kroger.com/v1/cart' -Headers $headers
 
-            if ($response -and $response.id) {
+            if ($response -and $response.id)
+            {
                 Write-Verbose "Found existing cart: $($response.id)"
                 return $response.id
-            }
-            else {
+            } else
+            {
                 # Create new cart
                 Write-Verbose "Creating new cart"
                 $newCart = Invoke-WebApi -Method POST -Uri 'https://api.kroger.com/v1/cart' -Headers $headers
 
-                if ($newCart -and $newCart.id) {
+                if ($newCart -and $newCart.id)
+                {
                     # Save cart ID to session
                     $session.cartId = $newCart.id
                     Save-KrogerUserSession -Session $session
 
                     return $newCart.id
-                }
-                else {
+                } else
+                {
                     throw "Failed to create cart"
                 }
             }
-        }
-        catch {
+        } catch
+        {
             throw "Failed to get cart ID: $_"
         }
     }
@@ -408,7 +447,8 @@ function Get-KrogerCartId {
 
 # Helper functions
 
-function Invoke-KrogerPasswordGrant {
+function Invoke-KrogerPasswordGrant
+{
     <#
     .SYNOPSIS
     Performs OAuth2 password grant for direct user authentication.
@@ -447,7 +487,8 @@ function Invoke-KrogerPasswordGrant {
         [string]$ClientSecret
     )
 
-    try {
+    try
+    {
         Write-Host "=== Kroger User Authentication ===" -ForegroundColor Green
         Write-Host ""
         Write-Verbose "Attempting password grant authentication"
@@ -475,10 +516,10 @@ function Invoke-KrogerPasswordGrant {
 
         # Create session
         $session = @{
-            token  = $token
-            profile = $profile
+            token           = $token
+            profile         = $profile
             authenticatedAt = Get-Date
-            clientId = $ClientId
+            clientId        = $ClientId
         }
 
         # Save session
@@ -489,19 +530,24 @@ function Invoke-KrogerPasswordGrant {
         Write-Host ""
 
         return $session
-    }
-    catch {
-        $errorDetails = if ($_.ErrorDetails) {
-            try {
+    } catch
+    {
+        $errorDetails = if ($_.ErrorDetails)
+        {
+            try
+            {
                 $_.ErrorDetails.Message | ConvertFrom-Json
-            } catch {
+            } catch
+            {
                 @{ error = 'unknown'; error_description = $_.Exception.Message }
             }
-        } else {
+        } else
+        {
             @{ error = 'unknown'; error_description = $_.Exception.Message }
         }
 
-        if ($errorDetails.error -eq 'unsupported_grant_type') {
+        if ($errorDetails.error -eq 'unsupported_grant_type')
+        {
             Write-Host "✗ Password grant not supported by your Kroger OAuth2 app" -ForegroundColor Red
             Write-Host ""
             Write-Host "What you can still do:" -ForegroundColor Yellow
@@ -512,8 +558,8 @@ function Invoke-KrogerPasswordGrant {
             Write-Host "1. Use Kroger's OAuth2 playground to get a token" -ForegroundColor White
             Write-Host "2. Or check if your OAuth2 app supports authorization code flow" -ForegroundColor White
             Write-Host ""
-        }
-        elseif ($errorDetails.error -eq 'invalid_scope') {
+        } elseif ($errorDetails.error -eq 'invalid_scope')
+        {
             Write-Host "✗ Your OAuth2 app doesn't have permission for user authentication" -ForegroundColor Red
             Write-Host ""
             Write-Host "What you can still do:" -ForegroundColor Yellow
@@ -523,16 +569,16 @@ function Invoke-KrogerPasswordGrant {
             Write-Host "The Kroger API limits what OAuth2 apps can access." -ForegroundColor Yellow
             Write-Host "Most apps only support product search, not personal cart access." -ForegroundColor Yellow
             Write-Host ""
-        }
-        elseif ($errorDetails.error -eq 'invalid_grant') {
+        } elseif ($errorDetails.error -eq 'invalid_grant')
+        {
             Write-Host "✗ Invalid username or password" -ForegroundColor Red
             Write-Host ""
             Write-Host "Please check:" -ForegroundColor Yellow
             Write-Host "• Your Kroger email and password are correct" -ForegroundColor White
             Write-Host "• You're using the same credentials as kroger.com" -ForegroundColor White
             Write-Host ""
-        }
-        else {
+        } else
+        {
             Write-Host "✗ Authentication failed: $($errorDetails.error_description)" -ForegroundColor Red
             Write-Host ""
         }
@@ -541,7 +587,8 @@ function Invoke-KrogerPasswordGrant {
     }
 }
 
-function Set-KrogerUserToken {
+function Set-KrogerUserToken
+{
     <#
     .SYNOPSIS
     Sets the user authentication token manually.
@@ -567,7 +614,8 @@ function Set-KrogerUserToken {
         [string]$RefreshToken
     )
 
-    try {
+    try
+    {
         Write-Verbose "Setting user authentication token"
 
         # Create token object
@@ -584,10 +632,10 @@ function Set-KrogerUserToken {
 
         # Create session
         $session = @{
-            token  = $token
-            profile = $profile
+            token           = $token
+            profile         = $profile
             authenticatedAt = Get-Date
-            clientId = $ClientId
+            clientId        = $ClientId
         }
 
         # Save session
@@ -598,13 +646,14 @@ function Set-KrogerUserToken {
         Write-Host ""
 
         return $session
-    }
-    catch {
+    } catch
+    {
         throw "Failed to set user token: $_"
     }
 }
 
-function Show-KrogerAuthInstructions {
+function Show-KrogerAuthInstructions
+{
     <#
     .SYNOPSIS
     Displays instructions for manual OAuth2 authentication.
@@ -616,7 +665,8 @@ function Show-KrogerAuthInstructions {
     [CmdletBinding()]
     param()
 
-    process {
+    process
+    {
         Write-Host "=== Kroger User Authentication ===" -ForegroundColor Green
         Write-Host ""
         Write-Host "To access your personal Kroger cart, you need to authenticate." -ForegroundColor Yellow
@@ -637,7 +687,8 @@ function Show-KrogerAuthInstructions {
     }
 }
 
-function Get-KrogerUserProfile {
+function Get-KrogerUserProfile
+{
     <#
     .SYNOPSIS
     Gets the user profile information using the access token.
@@ -657,7 +708,8 @@ function Get-KrogerUserProfile {
         [object]$Token
     )
 
-    try {
+    try
+    {
         $headers = @{
             Authorization = "Bearer $($Token.access_token)"
             'Accept'      = 'application/json'
@@ -665,15 +717,16 @@ function Get-KrogerUserProfile {
 
         $response = Invoke-WebRequest -Uri 'https://api.kroger.com/v1/profile' -Method Get -Headers $headers -ErrorAction Stop
 
-        if ($response.StatusCode -eq 200) {
+        if ($response.StatusCode -eq 200)
+        {
             $profileData = $response.Content | ConvertFrom-Json
             return @{
                 id    = $profileData.id
                 name  = $profileData.name
                 email = $profileData.email
             }
-        }
-        else {
+        } else
+        {
             # Profile endpoint not available, return default
             return @{
                 id    = $null
@@ -681,8 +734,8 @@ function Get-KrogerUserProfile {
                 email = $null
             }
         }
-    }
-    catch {
+    } catch
+    {
         # Profile endpoint not available or unauthorized - return default profile silently
         # This is not critical for cart functionality
         Write-Verbose "Profile API not available, using default profile"
@@ -694,7 +747,8 @@ function Get-KrogerUserProfile {
     }
 }
 
-function Save-KrogerUserSession {
+function Save-KrogerUserSession
+{
     <#
     .SYNOPSIS
     Saves the user session to a secure file (avoiding SecretStore JSON issues).
@@ -715,12 +769,14 @@ function Save-KrogerUserSession {
         [object]$Session
     )
 
-    try {
+    try
+    {
         # Use file-based storage to avoid SecretStore serialization issues
         $sessionPath = Get-KrogerSessionPath
         $sessionDir = Split-Path $sessionPath
 
-        if (-not (Test-Path $sessionDir)) {
+        if (-not (Test-Path $sessionDir))
+        {
             New-Item -Path $sessionDir -ItemType Directory -Force | Out-Null
         }
 
@@ -732,14 +788,15 @@ function Save-KrogerUserSession {
 
         Write-Verbose "User session saved to file"
         return $true
-    }
-    catch {
+    } catch
+    {
         Write-Error "Failed to save user session: $_"
         return $false
     }
 }
 
-function Get-KrogerSessionPath {
+function Get-KrogerSessionPath
+{
     <#
     .SYNOPSIS
     Gets the path to the user session file.
@@ -755,15 +812,17 @@ function Get-KrogerSessionPath {
     param()
 
     # Use XDG cache directory on Linux/Mac, LocalAppData on Windows
-    if ($IsWindows) {
+    if ($IsWindows)
+    {
         $cacheDir = Join-Path $env:LOCALAPPDATA 'DotWebApi'
-    }
-    else {
+    } else
+    {
         # XDG cache directory
-        $cacheDir = if ($env:XDG_CACHE_HOME) {
+        $cacheDir = if ($env:XDG_CACHE_HOME)
+        {
             Join-Path $env:XDG_CACHE_HOME 'dotwebapi'
-        }
-        else {
+        } else
+        {
             Join-Path $HOME '.cache' 'dotwebapi'
         }
     }

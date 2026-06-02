@@ -185,14 +185,14 @@ Clear-WebApiTokenCache
 
 ## API vs User Access
 
-| Feature | API Credentials | User Authentication |
-|---------|----------------|-------------------|
-| Product Search | ✅ | ✅ |
-| Anonymous Cart | ✅ | ❌ |
-| Personal Cart | ❌ | ✅ |
-| Order History | ❌ | ✅ |
-| Saved Lists | ❌ | ✅ |
-| Profile Management | ❌ | ✅ |
+| Feature            | API Credentials | User Authentication |
+|--------------------|-----------------|---------------------|
+| Product Search     | ✅               | ✅                   |
+| Anonymous Cart     | ✅               | ❌                   |
+| Personal Cart      | ❌               | ✅                   |
+| Order History      | ❌               | ✅                   |
+| Saved Lists        | ❌               | ✅                   |
+| Profile Management | ❌               | ✅                   |
 
 ## Getting Help
 

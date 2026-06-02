@@ -1,4 +1,5 @@
-function Get-KrogerCart {
+function Get-KrogerCart
+{
     <#
     .SYNOPSIS
     Retrieves the current Kroger shopping cart.
@@ -30,53 +31,60 @@ function Get-KrogerCart {
         [switch]$Raw
     )
 
-    begin {
+    begin
+    {
         Write-Verbose "Retrieving Kroger cart"
 
         # Check for user session first
         $userSession = Get-KrogerUserSession
-        if ($userSession -and -not (Test-WebApiTokenExpired -Token $userSession.token)) {
+        if ($userSession -and -not (Test-WebApiTokenExpired -Token $userSession.token))
+        {
             Write-Verbose "Using user authentication"
             $token = $userSession.token
 
             # Use user's cart if no specific cart ID provided
-            if (-not $CartId -and $userSession.cartId) {
+            if (-not $CartId -and $userSession.cartId)
+            {
                 $CartId = $userSession.cartId
                 Write-Verbose "Using user's cart: $CartId"
             }
-        }
-        else {
+        } else
+        {
             # Fall back to API credentials for anonymous cart
             Write-Verbose "No user session, creating anonymous cart"
             $token = Connect-KrogerApi -Scope @('cart.basic')
 
-            if (-not $CartId) {
+            if (-not $CartId)
+            {
                 Write-Host "Note: Creating anonymous cart (requires manual token for personal cart)" -ForegroundColor Yellow
             }
         }
 
         $headers = @{
-            Authorization = "Bearer $($token.access_token)"
-            'Accept'      = 'application/json'
+            Authorization  = "Bearer $($token.access_token)"
+            'Accept'       = 'application/json'
             'Content-Type' = 'application/json'
         }
     }
 
-    process {
-        try {
+    process
+    {
+        try
+        {
             # Note: Kroger API doesn't appear to support retrieving cart contents
             # This endpoint returns 404, suggesting it's not available
             Write-Warning "Retrieving cart contents is not supported by Kroger API"
             Write-Warning "You can view your cart by visiting Kroger's website or app"
             return @()
-        }
-        catch {
+        } catch
+        {
             throw "Failed to get Kroger cart: $_"
         }
     }
 }
 
-function Add-KrogerCartItem {
+function Add-KrogerCartItem
+{
     <#
     .SYNOPSIS
     Adds items to the Kroger shopping cart.
@@ -125,41 +133,49 @@ function Add-KrogerCartItem {
         [switch]$PassThru
     )
 
-    begin {
+    begin
+    {
         Write-Verbose "Starting to add items to Kroger cart"
 
         # Check if we were called right after Connect-KrogerPkce (session in memory)
-        if ($null -ne $Script:KrogerUserSession) {
+        if ($null -ne $Script:KrogerUserSession)
+        {
             $sessionAge = (Get-Date) - $Script:KrogerUserSession.authenticatedAt
-            if ($sessionAge.TotalMinutes -lt 5) {
+            if ($sessionAge.TotalMinutes -lt 5)
+            {
                 Write-Verbose "Using fresh in-memory session from recent Connect-KrogerPkce"
                 $userSession = $Script:KrogerUserSession
-            }
-            else {
+            } else
+            {
                 Write-Verbose "In-memory session is too old ($($sessionAge.TotalMinutes) minutes old)"
                 $userSession = $null
             }
         }
 
         # Try to get saved session
-        if (-not $userSession) {
+        if (-not $userSession)
+        {
             Write-Verbose "Loading saved session from file"
             $userSession = Get-KrogerUserSession
         }
 
-        if (-not $userSession) {
+        if (-not $userSession)
+        {
             throw "Cart operations require authentication. Please run: Connect-KrogerPkce"
         }
 
-        if (Test-WebApiTokenExpired -Token $userSession.token) {
+        if (Test-WebApiTokenExpired -Token $userSession.token)
+        {
             Write-Verbose "User token expired, attempting refresh..."
-            if (Update-KrogerUserToken) {
+            if (Update-KrogerUserToken)
+            {
                 $userSession = Get-KrogerUserSession
-                if (-not $userSession) {
+                if (-not $userSession)
+                {
                     throw "Authentication expired. Please re-run: Connect-KrogerPkce"
                 }
-            }
-            else {
+            } else
+            {
                 throw "Authentication expired. Please re-run: Connect-KrogerPkce"
             }
         }
@@ -168,73 +184,81 @@ function Add-KrogerCartItem {
         $token = $userSession.token
 
         $headers = @{
-            Authorization = "Bearer $($token.access_token)"
-            'Accept'      = 'application/json'
+            Authorization  = "Bearer $($token.access_token)"
+            'Accept'       = 'application/json'
             'Content-Type' = 'application/json'
         }
 
         $addedItems = [System.Collections.Generic.List[object]]::new()
     }
 
-    process {
-        foreach ($item in $InputObject) {
-            try {
+    process
+    {
+        foreach ($item in $InputObject)
+        {
+            try
+            {
                 # Check if token needs refresh before each API call
-                if ($userSession -and (Test-WebApiTokenExpired -Token $userSession.token)) {
+                if ($userSession -and (Test-WebApiTokenExpired -Token $userSession.token))
+                {
                     Write-Verbose "Token expired during processing, refreshing..."
                     $refreshedSession = Get-KrogerUserSession
-                    if ($refreshedSession) {
+                    if ($refreshedSession)
+                    {
                         # Update the parent scope variables
                         Set-Variable -Name 'userSession' -Value $refreshedSession -Scope 1
                         Set-Variable -Name 'token' -Value $refreshedSession.token -Scope 1
                         $headers.Authorization = "Bearer $($refreshedSession.token.access_token)"
-                    }
-                    else {
+                    } else
+                    {
                         Write-Warning "Token refresh failed, cannot continue adding items"
                         break
                     }
                 }
 
                 # Determine product ID from different input types
-                if ($item -is [string]) {
+                if ($item -is [string])
+                {
                     # String input (UPC or product ID)
                     $productId = $item
-                }
-                elseif ($item.PSTypeName -eq 'Kroger.Product') {
+                } elseif ($item.PSTypeName -eq 'Kroger.Product')
+                {
                     # Kroger.Product object - use Upc property
                     $productId = $item.Upc
-                }
-                elseif ($item.PSTypeName -eq 'Kroger.CartItem') {
+                } elseif ($item.PSTypeName -eq 'Kroger.CartItem')
+                {
                     # Kroger.CartItem object - use Upc property
                     $productId = $item.Upc
-                }
-                elseif ($null -ne $item.upc -and $item.PSTypeName -notlike 'Kroger.*') {
+                } elseif ($null -ne $item.upc -and $item.PSTypeName -notlike 'Kroger.*')
+                {
                     # Object with upc property (but not a Kroger typed object)
                     $productId = $item.upc
-                }
-                elseif ($null -ne $item.ProductId) {
+                } elseif ($null -ne $item.ProductId)
+                {
                     # Object with ProductId property
                     $productId = $item.ProductId
-                }
-                elseif ($null -ne $item.id) {
+                } elseif ($null -ne $item.id)
+                {
                     # Object with id property
                     $productId = $item.id
-                }
-                else {
+                } else
+                {
                     throw "Cannot determine product ID from input: $item"
                 }
 
-                $itemDescription = if ($item.PSTypeName -eq 'Kroger.Product') {
+                $itemDescription = if ($item.PSTypeName -eq 'Kroger.Product')
+                {
                     $item.Name
-                }
-                elseif ($item -is [string]) {
+                } elseif ($item -is [string])
+                {
                     $item
-                }
-                else {
+                } else
+                {
                     $productId
                 }
 
-                if ($PSCmdlet.ShouldProcess($itemDescription, "Add $Quantity to cart")) {
+                if ($PSCmdlet.ShouldProcess($itemDescription, "Add $Quantity to cart"))
+                {
                     $cartEndpoint = 'https://api.kroger.com/v1/cart/add'
 
                     $body = @{
@@ -251,32 +275,36 @@ function Add-KrogerCartItem {
 
                     $response = Invoke-WebApi -Method PUT -Uri $cartEndpoint -Headers $headers -Body $body
 
-                    if ($PassThru) {
+                    if ($PassThru)
+                    {
                         $addedItems.Add($response)
                     }
 
                     Write-Verbose "Successfully added item to cart"
                 }
-            }
-            catch {
+            } catch
+            {
                 Write-Warning "Failed to add item '$item' to cart: $_"
             }
         }
     }
 
-    end {
+    end
+    {
         Write-Verbose "Completed adding items to cart"
 
-        if ($PassThru) {
+        if ($PassThru)
+        {
             return $addedItems
-        }
-        else {
+        } else
+        {
             return $true
         }
     }
 }
 
-function Remove-KrogerCartItem {
+function Remove-KrogerCartItem
+{
     <#
     .SYNOPSIS
     Removes items from the Kroger shopping cart.
@@ -314,59 +342,71 @@ function Remove-KrogerCartItem {
         [object[]]$InputObject
     )
 
-    begin {
+    begin
+    {
         Write-Verbose "Starting to remove items from Kroger cart"
 
         # Get authentication token
         $token = Connect-KrogerApi -Scope @('cart.basic:write')
 
         $headers = @{
-            Authorization = "Bearer $($token.access_token)"
-            'Accept'      = 'application/json'
+            Authorization  = "Bearer $($token.access_token)"
+            'Accept'       = 'application/json'
             'Content-Type' = 'application/json'
         }
 
         $itemsToRemove = [System.Collections.Generic.List[string]]::new()
     }
 
-    process {
-        if ($PSCmdlet.ParameterSetName -eq 'PipelineInput') {
-            foreach ($item in $InputObject) {
+    process
+    {
+        if ($PSCmdlet.ParameterSetName -eq 'PipelineInput')
+        {
+            foreach ($item in $InputObject)
+            {
                 # Extract cart item ID using if-elseif for mutual exclusivity
-                if ($item.PSTypeName -eq 'Kroger.CartItem') {
+                if ($item.PSTypeName -eq 'Kroger.CartItem')
+                {
                     $itemId = $item.CartItemId
-                }
-                elseif ($null -ne $item.CartItemId) {
+                } elseif ($null -ne $item.CartItemId)
+                {
                     $itemId = $item.CartItemId
-                }
-                elseif ($null -ne $item.id) {
+                } elseif ($null -ne $item.id)
+                {
                     $itemId = $item.id
-                }
-                else {
+                } else
+                {
                     $itemId = $item
                 }
 
-                if ($itemId) {
+                if ($itemId)
+                {
                     $itemsToRemove.Add($itemId)
                 }
             }
-        }
-        else {
+        } else
+        {
             # CartItemId parameter set
-            foreach ($itemId in $CartItemId) {
+            foreach ($itemId in $CartItemId)
+            {
                 $itemsToRemove.Add($itemId)
             }
         }
     }
 
-    end {
-        try {
-            foreach ($itemId in $itemsToRemove) {
-                if ($PSCmdlet.ShouldProcess($itemId, "Remove from cart")) {
-                    $cartEndpoint = if ($CartId) {
+    end
+    {
+        try
+        {
+            foreach ($itemId in $itemsToRemove)
+            {
+                if ($PSCmdlet.ShouldProcess($itemId, "Remove from cart"))
+                {
+                    $cartEndpoint = if ($CartId)
+                    {
                         "https://api.kroger.com/v1/cart/$CartId/items/$itemId"
-                    }
-                    else {
+                    } else
+                    {
                         "https://api.kroger.com/v1/cart/items/$itemId"
                     }
 
@@ -380,14 +420,15 @@ function Remove-KrogerCartItem {
 
             Write-Verbose "Completed removing items from cart"
             return $true
-        }
-        catch {
+        } catch
+        {
             throw "Failed to remove items from Kroger cart: $_"
         }
     }
 }
 
-function Clear-KrogerCart {
+function Clear-KrogerCart
+{
     <#
     .SYNOPSIS
     Clears all items from the Kroger shopping cart.
@@ -413,40 +454,47 @@ function Clear-KrogerCart {
         [string]$CartId
     )
 
-    begin {
+    begin
+    {
         Write-Verbose "Clearing Kroger cart"
 
         # Get authentication token
         $token = Connect-KrogerApi -Scope @('cart.basic:write')
 
         $headers = @{
-            Authorization = "Bearer $($token.access_token)"
-            'Accept'      = 'application/json'
+            Authorization  = "Bearer $($token.access_token)"
+            'Accept'       = 'application/json'
             'Content-Type' = 'application/json'
         }
     }
 
-    process {
-        try {
-            $cartEndpoint = if ($CartId) {
+    process
+    {
+        try
+        {
+            $cartEndpoint = if ($CartId)
+            {
                 "https://api.kroger.com/v1/cart/$CartId"
-            }
-            else {
+            } else
+            {
                 'https://api.kroger.com/v1/cart'
             }
 
-            if ($PSCmdlet.ShouldProcess($CartId ?? "default cart", "Clear all items")) {
+            if ($PSCmdlet.ShouldProcess($CartId ?? "default cart", "Clear all items"))
+            {
                 Write-Verbose "Clearing cart"
 
                 # First get all items
                 $cartItems = Get-KrogerCart -CartId $CartId
 
                 # Remove each item individually
-                foreach ($item in $cartItems) {
-                    $itemEndpoint = if ($CartId) {
+                foreach ($item in $cartItems)
+                {
+                    $itemEndpoint = if ($CartId)
+                    {
                         "https://api.kroger.com/v1/cart/$CartId/items/$($item.CartItemId)"
-                    }
-                    else {
+                    } else
+                    {
                         "https://api.kroger.com/v1/cart/items/$($item.CartItemId)"
                     }
 
@@ -456,14 +504,15 @@ function Clear-KrogerCart {
                 Write-Verbose "Successfully cleared cart"
                 return $true
             }
-        }
-        catch {
+        } catch
+        {
             throw "Failed to clear Kroger cart: $_"
         }
     }
 }
 
-function Update-KrogerCartItem {
+function Update-KrogerCartItem
+{
     <#
     .SYNOPSIS
     Updates quantity of items in the Kroger shopping cart.
@@ -512,49 +561,58 @@ function Update-KrogerCartItem {
         [int]$UpdateQuantity = 1
     )
 
-    begin {
+    begin
+    {
         Write-Verbose "Starting to update items in Kroger cart"
 
         # Get authentication token
         $token = Connect-KrogerApi -Scope @('cart.basic:write')
 
         $headers = @{
-            Authorization = "Bearer $($token.access_token)"
-            'Accept'      = 'application/json'
+            Authorization  = "Bearer $($token.access_token)"
+            'Accept'       = 'application/json'
             'Content-Type' = 'application/json'
         }
     }
 
-    process {
-        try {
-            if ($PSCmdlet.ParameterSetName -eq 'PipelineInput') {
-                foreach ($item in $InputObject) {
+    process
+    {
+        try
+        {
+            if ($PSCmdlet.ParameterSetName -eq 'PipelineInput')
+            {
+                foreach ($item in $InputObject)
+                {
                     # Extract cart item ID using if-elseif for mutual exclusivity
-                    if ($item.PSTypeName -eq 'Kroger.CartItem') {
+                    if ($item.PSTypeName -eq 'Kroger.CartItem')
+                    {
                         $itemId = $item.CartItemId
-                    }
-                    elseif ($null -ne $item.CartItemId) {
+                    } elseif ($null -ne $item.CartItemId)
+                    {
                         $itemId = $item.CartItemId
-                    }
-                    elseif ($null -ne $item.id) {
+                    } elseif ($null -ne $item.id)
+                    {
                         $itemId = $item.id
-                    }
-                    else {
+                    } else
+                    {
                         throw "Cannot determine cart item ID"
                     }
 
-                    $itemQuantity = if ($item.Quantity) {
+                    $itemQuantity = if ($item.Quantity)
+                    {
                         $item.Quantity
-                    }
-                    else {
+                    } else
+                    {
                         $UpdateQuantity
                     }
 
-                    if ($PSCmdlet.ShouldProcess($itemId, "Update quantity to $itemQuantity")) {
-                        $cartEndpoint = if ($CartId) {
+                    if ($PSCmdlet.ShouldProcess($itemId, "Update quantity to $itemQuantity"))
+                    {
+                        $cartEndpoint = if ($CartId)
+                        {
                             "https://api.kroger.com/v1/cart/$CartId/items/$itemId"
-                        }
-                        else {
+                        } else
+                        {
                             "https://api.kroger.com/v1/cart/items/$itemId"
                         }
 
@@ -569,14 +627,16 @@ function Update-KrogerCartItem {
                         Write-Verbose "Successfully updated item $itemId"
                     }
                 }
-            }
-            else {
+            } else
+            {
                 # CartItemId parameter set
-                if ($PSCmdlet.ShouldProcess($CartItemId, "Update quantity to $Quantity")) {
-                    $cartEndpoint = if ($CartId) {
+                if ($PSCmdlet.ShouldProcess($CartItemId, "Update quantity to $Quantity"))
+                {
+                    $cartEndpoint = if ($CartId)
+                    {
                         "https://api.kroger.com/v1/cart/$CartId/items/$CartItemId"
-                    }
-                    else {
+                    } else
+                    {
                         "https://api.kroger.com/v1/cart/items/$CartItemId"
                     }
 
@@ -594,8 +654,8 @@ function Update-KrogerCartItem {
 
             Write-Verbose "Completed updating items in cart"
             return $true
-        }
-        catch {
+        } catch
+        {
             throw "Failed to update items in Kroger cart: $_"
         }
     }

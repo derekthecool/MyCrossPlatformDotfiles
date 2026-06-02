@@ -1,4 +1,5 @@
-function Show-PropertySelector {
+function Show-PropertySelector
+{
     <#
     .SYNOPSIS
     Interactive property selector using PwshSpectreConsole.
@@ -22,9 +23,11 @@ function Show-PropertySelector {
         [object]$InputObject
     )
 
-    process {
+    process
+    {
         # Check if PwshSpectreConsole is available
-        if (-not (Get-Module -ListAvailable -Name PwshSpectreConsole)) {
+        if (-not (Get-Module -ListAvailable -Name PwshSpectreConsole))
+        {
             Write-Warning "PwshSpectreConsole module not found. Using fallback selection."
             return Select-PropertiesFallback -InputObject $InputObject
         }
@@ -33,57 +36,63 @@ function Show-PropertySelector {
         Import-Module PwshSpectreConsole -ErrorAction Stop
 
         # Get all properties and their values
-        $propertyList = foreach ($prop in $InputObject.PSObject.Properties) {
+        $propertyList = foreach ($prop in $InputObject.PSObject.Properties)
+        {
             $propValue = $prop.Value
-            $propType = if ($null -eq $propValue) {
+            $propType = if ($null -eq $propValue)
+            {
                 "Null"
-            }
-            else {
+            } else
+            {
                 $propValue.GetType().Name
             }
 
-            $displayValue = if ($null -eq $propValue) {
+            $displayValue = if ($null -eq $propValue)
+            {
                 "<null>"
-            }
-            elseif ($propValue -is [array]) {
+            } elseif ($propValue -is [array])
+            {
                 "[Array: $($propValue.Count) items]"
-            }
-            elseif ($propValue.GetType().Name -like 'List*') {
+            } elseif ($propValue.GetType().Name -like 'List*')
+            {
                 "[List: $($propValue.Count) items]"
-            }
-            elseif ($propValue -is [hashtable] -or $propValue -is [System.Collections.Specialized.OrderedDictionary]) {
+            } elseif ($propValue -is [hashtable] -or $propValue -is [System.Collections.Specialized.OrderedDictionary])
+            {
                 "[Hashtable: $($propValue.Count) keys]"
-            }
-            elseif ($propValue -is [bool]) {
+            } elseif ($propValue -is [bool])
+            {
                 if ($propValue) { "True" } else { "False" }
-            }
-            elseif ($propValue -is [string]) {
-                if ($propValue.Length -gt 50) {
+            } elseif ($propValue -is [string])
+            {
+                if ($propValue.Length -gt 50)
+                {
                     $propValue.Substring(0, 47) + "..."
-                }
-                else {
+                } else
+                {
                     $propValue
                 }
-            }
-            else {
-                try {
+            } else
+            {
+                try
+                {
                     $stringVal = $propValue.ToString()
-                    if ($stringVal.Length -gt 50) {
+                    if ($stringVal.Length -gt 50)
+                    {
                         $stringVal.Substring(0, 47) + "..."
-                    }
-                    else {
+                    } else
+                    {
                         $stringVal
                     }
-                }
-                catch {
+                } catch
+                {
                     "<$propType>"
                 }
             }
 
             [PSCustomObject]@{
-                Name = $prop.Name
-                Value = $displayValue
-                Type = $propType
+                Name           = $prop.Name
+                Value          = $displayValue
+                Type           = $propType
                 OriginalObject = $prop  # Store reference for easy access
             }
         }
@@ -91,13 +100,15 @@ function Show-PropertySelector {
         # Convert to array and filter out internal PowerShell properties
         $propertyArray = @($propertyList) | Where-Object { $_.Name -notlike 'PS*' -and $_.Name -ne 'ApiData' }
 
-        if ($propertyArray.Count -eq 0) {
+        if ($propertyArray.Count -eq 0)
+        {
             Write-Warning "No properties found on object."
             return @()
         }
 
         # Use Read-SpectreMultiSelection for interactive selection
-        try {
+        try
+        {
             # Create display labels that show property name, value, and type
             $choices = $propertyArray | ForEach-Object {
                 $displayValue = $_.Value
@@ -108,14 +119,16 @@ function Show-PropertySelector {
             # Use Read-SpectreMultiSelection with proper syntax
             $selectedLabels = Read-SpectreMultiSelection -Message "Select properties for formatting" -Choices $choices -PageSize 10
 
-            if ($null -eq $selectedLabels -or $selectedLabels.Count -eq 0) {
+            if ($null -eq $selectedLabels -or $selectedLabels.Count -eq 0)
+            {
                 Write-Warning "No properties selected. Using default selection (first 5 properties)."
                 $defaultProps = $propertyArray | Select-Object -First 5
                 return $defaultProps | ForEach-Object { [PSCustomObject]@{ Name = $_.Name } }
             }
 
             # Map selected labels back to property objects
-            $selectedProperties = foreach ($label in $selectedLabels) {
+            $selectedProperties = foreach ($label in $selectedLabels)
+            {
                 $propertyArray | Where-Object {
                     $displayValue = $_.Value
                     $typeInfo = "<$($_.Type)>"
@@ -128,15 +141,16 @@ function Show-PropertySelector {
 
             # Return selected properties as compatibility objects
             return $selectedProperties | ForEach-Object { [PSCustomObject]@{ Name = $_.Name } }
-        }
-        catch {
+        } catch
+        {
             Write-Warning "Read-SpectreMultiSelection failed: $_. Using fallback selection."
             return Select-PropertiesFallback -InputObject $InputObject
         }
     }
 }
 
-function Select-PropertiesFallback {
+function Select-PropertiesFallback
+{
     <#
     .SYNOPSIS
     Fallback property selection when interactive selection is not desired.
@@ -153,10 +167,12 @@ function Select-PropertiesFallback {
         [int]$Top = 5
     )
 
-    process {
+    process
+    {
         $propertyList = $InputObject.PSObject.Properties | Where-Object { $_.Name -notlike 'PS*' -and $_.Name -ne 'ApiData' }
 
-        if ($propertyList.Count -eq 0) {
+        if ($propertyList.Count -eq 0)
+        {
             Write-Warning "No properties found on object."
             return @()
         }

@@ -3,11 +3,11 @@ BeforeAll {
 
     # Mock token response
     $MockKrogerToken = @{
-        access_token  = 'mock_token_integration_12345'
-        token_type    = 'Bearer'
-        expires_in    = 3600
-        expires_at    = (Get-Date).AddHours(1)
-        scope         = 'product.compact cart.basic cart.write'
+        access_token = 'mock_token_integration_12345'
+        token_type   = 'Bearer'
+        expires_in   = 3600
+        expires_at   = (Get-Date).AddHours(1)
+        scope        = 'product.compact cart.basic cart.write'
     }
 
     # Mock product search response with multiple products
@@ -22,11 +22,11 @@ BeforeAll {
                 size        = '1 gal'
                 items       = @(
                     @{
-                        price = @{
+                        price    = @{
                             regular = 3.49
                             promo   = 0
                         }
-                        stock  = @{
+                        stock    = @{
                             level = 'IN_STOCK'
                         }
                         location = 'A1-2'
@@ -43,11 +43,11 @@ BeforeAll {
                 size        = '0.5 gal'
                 items       = @(
                     @{
-                        price = @{
+                        price    = @{
                             regular = 4.99
                             promo   = 3.99
                         }
-                        stock  = @{
+                        stock    = @{
                             level = 'IN_STOCK'
                         }
                         location = 'B2-3'
@@ -64,11 +64,11 @@ BeforeAll {
                 size        = '1 gal'
                 items       = @(
                     @{
-                        price = @{
+                        price    = @{
                             regular = 3.29
                             promo   = 0
                         }
-                        stock  = @{
+                        stock    = @{
                             level = 'OUT_OF_STOCK'
                         }
                         location = 'A1-3'
@@ -81,13 +81,13 @@ BeforeAll {
 
     # Mock cart responses
     $MockCartResponse = @{
-        items = @(
+        items    = @(
             @{
-                id         = 'cart_item_1'
-                productId  = '0011200000562'
-                upc        = '0011200000562'
-                quantity   = 2
-                price      = @{
+                id          = 'cart_item_1'
+                productId   = '0011200000562'
+                upc         = '0011200000562'
+                quantity    = 2
+                price       = @{
                     regular = 3.49
                 }
                 description = 'Kroger Whole Milk'
@@ -99,7 +99,7 @@ BeforeAll {
     }
 
     $MockEmptyCartResponse = @{
-        items = @()
+        items    = @()
         metaData = @{
             total = 0
         }
@@ -110,39 +110,45 @@ BeforeAll {
         param($Method, $Uri, $Body, $ContentType, $TimeoutSec)
 
         # Mock token endpoint
-        if ($Uri -match 'oauth2/token') {
+        if ($Uri -match 'oauth2/token')
+        {
             return $MockKrogerToken
         }
 
         # Mock product search endpoint
-        if ($Uri -match '/products' -and $Method -eq 'GET') {
+        if ($Uri -match '/products' -and $Method -eq 'GET')
+        {
             return $MockProductSearchResponse
         }
 
         # Mock cart GET endpoint
-        if ($Uri -match '/cart' -and $Method -eq 'GET') {
+        if ($Uri -match '/cart' -and $Method -eq 'GET')
+        {
             return $MockCartResponse
         }
 
         # Mock cart POST endpoint (add item)
-        if ($Uri -match '/cart.*?/items' -and $Method -eq 'POST') {
+        if ($Uri -match '/cart.*?/items' -and $Method -eq 'POST')
+        {
             return @{
-                id         = 'new_cart_item_' + (Get-Random -Minimum 1000 -Maximum 9999)
-                quantity   = $Body.quantity
-                upc        = $Body.upc
+                id       = 'new_cart_item_' + (Get-Random -Minimum 1000 -Maximum 9999)
+                quantity = $Body.quantity
+                upc      = $Body.upc
             }
         }
 
         # Mock cart DELETE endpoint
-        if ($Uri -match '/cart.*?/items/' -and $Method -eq 'DELETE') {
+        if ($Uri -match '/cart.*?/items/' -and $Method -eq 'DELETE')
+        {
             return @{ success = $true }
         }
 
         # Mock cart PUT endpoint (update quantity)
-        if ($Uri -match '/cart.*?/items/' -and $Method -eq 'PUT') {
+        if ($Uri -match '/cart.*?/items/' -and $Method -eq 'PUT')
+        {
             return @{
-                id         = 'updated_cart_item'
-                quantity   = $Body.quantity
+                id       = 'updated_cart_item'
+                quantity = $Body.quantity
             }
         }
 
@@ -180,11 +186,12 @@ Describe 'Integration Tests: Complete Shopping Workflow' {
         $saleProducts = $products | Where-Object { $_.OnSale }
 
         # Add all sale items to cart
-        if ($saleProducts) {
+        if ($saleProducts)
+        {
             $result = $saleProducts | Add-KrogerCartItem -WhatIf
             $result | Should -Be $true
-        }
-        else {
+        } else
+        {
             # No sale items in mock data, test should still pass
             $true | Should -Be $true
         }
@@ -228,7 +235,8 @@ Describe 'Integration Tests: Search and Filter Workflows' {
         $sortedProducts | Should -Not -BeNullOrEmpty
 
         # Verify sorting
-        for ($i = 0; $i -lt $sortedProducts.Count - 1; $i++) {
+        for ($i = 0; $i -lt $sortedProducts.Count - 1; $i++)
+        {
             $sortedProducts[$i].Price | Should -BeLessOrEqual $sortedProducts[$i + 1].Price
         }
     }
@@ -250,11 +258,12 @@ Describe 'Integration Tests: Cart Management Workflows' {
     It 'Can view cart and calculate total' {
         $cart = Get-KrogerCart
 
-        if ($cart) {
+        if ($cart)
+        {
             $total = ($cart | Measure-Object -Property Total -Sum).Sum
             $total | Should -BeGreaterOrEqual 0
-        }
-        else {
+        } else
+        {
             $true | Should -Be $true
         }
     }
@@ -262,7 +271,8 @@ Describe 'Integration Tests: Cart Management Workflows' {
     It 'Can update cart item quantities' {
         $cart = Get-KrogerCart
 
-        if ($cart) {
+        if ($cart)
+        {
             $result = $cart | Select-Object -First 1 | Update-KrogerCartItem -UpdateQuantity 5 -WhatIf
             $result | Should -Be $true
         }
@@ -271,7 +281,8 @@ Describe 'Integration Tests: Cart Management Workflows' {
     It 'Can remove specific items from cart' {
         $cart = Get-KrogerCart
 
-        if ($cart) {
+        if ($cart)
+        {
             $result = $cart | Select-Object -First 1 | Remove-KrogerCartItem -WhatIf
             $result | Should -Be $true
         }
@@ -289,11 +300,13 @@ Describe 'Integration Tests: Error Handling' {
         $emptySearchMock = {
             param($Method, $Uri, $Body, $ContentType, $TimeoutSec)
 
-            if ($Uri -match 'oauth2/token') {
+            if ($Uri -match 'oauth2/token')
+            {
                 return $MockKrogerToken
             }
 
-            if ($Uri -match '/products' -and $Method -eq 'GET') {
+            if ($Uri -match '/products' -and $Method -eq 'GET')
+            {
                 return @{ data = @() }
             }
 
@@ -309,34 +322,40 @@ Describe 'Integration Tests: Error Handling' {
         $Script:MockWebApiOverride = {
             param($Method, $Uri, $Body, $ContentType, $TimeoutSec)
 
-            if ($Uri -match 'oauth2/token') {
+            if ($Uri -match 'oauth2/token')
+            {
                 return $MockKrogerToken
             }
 
-            if ($Uri -match '/products' -and $Method -eq 'GET') {
+            if ($Uri -match '/products' -and $Method -eq 'GET')
+            {
                 return $MockProductSearchResponse
             }
 
-            if ($Uri -match '/cart' -and $Method -eq 'GET') {
+            if ($Uri -match '/cart' -and $Method -eq 'GET')
+            {
                 return $MockCartResponse
             }
 
-            if ($Uri -match '/cart.*?/items' -and $Method -eq 'POST') {
+            if ($Uri -match '/cart.*?/items' -and $Method -eq 'POST')
+            {
                 return @{
-                    id         = 'new_cart_item_' + (Get-Random -Minimum 1000 -Maximum 9999)
-                    quantity   = $Body.quantity
-                    upc        = $Body.upc
+                    id       = 'new_cart_item_' + (Get-Random -Minimum 1000 -Maximum 9999)
+                    quantity = $Body.quantity
+                    upc      = $Body.upc
                 }
             }
 
-            if ($Uri -match '/cart.*?/items/' -and $Method -eq 'DELETE') {
+            if ($Uri -match '/cart.*?/items/' -and $Method -eq 'DELETE')
+            {
                 return @{ success = $true }
             }
 
-            if ($Uri -match '/cart.*?/items/' -and $Method -eq 'PUT') {
+            if ($Uri -match '/cart.*?/items/' -and $Method -eq 'PUT')
+            {
                 return @{
-                    id         = 'updated_cart_item'
-                    quantity   = $Body.quantity
+                    id       = 'updated_cart_item'
+                    quantity = $Body.quantity
                 }
             }
 

@@ -1,4 +1,5 @@
-function Find-KrogerStore {
+function Find-KrogerStore
+{
     <#
     .SYNOPSIS
     Finds Kroger stores near a location.
@@ -47,7 +48,8 @@ function Find-KrogerStore {
         [switch]$Raw
     )
 
-    begin {
+    begin
+    {
         # Get authentication token
         Write-Verbose "Authenticating with Kroger API"
         $token = Connect-KrogerApi -Scope $Scope
@@ -63,23 +65,26 @@ function Find-KrogerStore {
 
         # Build query parameters
         $queryParams = @{
-            'filter.zipCode.near' = $ZipCode
+            'filter.zipCode.near'  = $ZipCode
             'filter.radiusInMiles' = $Radius
         }
 
-        if ($Chain) {
+        if ($Chain)
+        {
             $queryParams['filter.chain'] = $Chain
         }
 
         Write-Verbose "Searching for Kroger stores near $ZipCode (radius: $Radius miles)"
     }
 
-    process {
-        try {
+    process
+    {
+        try
+        {
             # Build full URL with query parameters
             $queryString = ($queryParams.GetEnumerator() | ForEach-Object {
-                "$($_.Key)=$([System.Web.HttpUtility]::UrlEncode($_.Value))"
-            }) -join '&'
+                    "$($_.Key)=$([System.Web.HttpUtility]::UrlEncode($_.Value))"
+                }) -join '&'
 
             $fullUrl = "$baseUrl`?$queryString"
 
@@ -88,43 +93,46 @@ function Find-KrogerStore {
             # Make API request
             $response = Invoke-WebApi -Method GET -Uri $fullUrl -Headers $headers
 
-            if ($Raw) {
+            if ($Raw)
+            {
                 return $response
             }
 
             # Convert API response to location objects
-            if ($response.data -and $response.data.Count -gt 0) {
+            if ($response.data -and $response.data.Count -gt 0)
+            {
                 $results = $response.data | ForEach-Object {
                     [PSCustomObject]@{
-                        PSTypeName  = 'Kroger.Location'
-                        LocationId  = $_.locationId
-                        Chain       = $_.chain
-                        Name        = $_.name
-                        Address     = $_.addressLine1
-                        City        = $_.city
-                        State       = $_.state
-                        ZipCode     = $_.zipCode
-                        Phone       = $_.phoneNumber
-                        Department  = $_.departments -join ', '
-                        Hours       = if ($_.hours) { $_.hours } else { $null }
+                        PSTypeName = 'Kroger.Location'
+                        LocationId = $_.locationId
+                        Chain      = $_.chain
+                        Name       = $_.name
+                        Address    = $_.addressLine1
+                        City       = $_.city
+                        State      = $_.state
+                        ZipCode    = $_.zipCode
+                        Phone      = $_.phoneNumber
+                        Department = $_.departments -join ', '
+                        Hours      = if ($_.hours) { $_.hours } else { $null }
                     }
                 }
 
                 Write-Verbose "Found $($results.Count) stores"
                 return $results
-            }
-            else {
+            } else
+            {
                 Write-Verbose "No stores found"
                 return @()
             }
-        }
-        catch {
+        } catch
+        {
             throw "Failed to find Kroger stores: $_"
         }
     }
 }
 
-function Set-KrogerDefaultLocation {
+function Set-KrogerDefaultLocation
+{
     <#
     .SYNOPSIS
     Sets the default Kroger location for product searches.
@@ -157,21 +165,25 @@ function Set-KrogerDefaultLocation {
         [object]$InputObject
     )
 
-    process {
-        try {
+    process
+    {
+        try
+        {
             # Handle pipeline input
-            $targetLocationId = if ($PSCmdlet.ParameterSetName -eq 'InputObject') {
-                if ($InputObject.LocationId) {
+            $targetLocationId = if ($PSCmdlet.ParameterSetName -eq 'InputObject')
+            {
+                if ($InputObject.LocationId)
+                {
                     $InputObject.LocationId
-                }
-                elseif ($InputObject.locationId) {
+                } elseif ($InputObject.locationId)
+                {
                     $InputObject.locationId
-                }
-                else {
+                } else
+                {
                     throw "InputObject does not contain a LocationId property"
                 }
-            }
-            else {
+            } else
+            {
                 $LocationId
             }
 
@@ -189,14 +201,15 @@ function Set-KrogerDefaultLocation {
 
             Write-Verbose "Default Kroger location set to: $targetLocationId"
             Write-Host "Default Kroger location saved: $targetLocationId" -ForegroundColor Green
-        }
-        catch {
+        } catch
+        {
             throw "Failed to set default Kroger location: $_"
         }
     }
 }
 
-function Get-KrogerDefaultLocation {
+function Get-KrogerDefaultLocation
+{
     <#
     .SYNOPSIS
     Gets the default Kroger location.
@@ -213,13 +226,16 @@ function Get-KrogerDefaultLocation {
     [CmdletBinding()]
     param()
 
-    process {
-        try {
+    process
+    {
+        try
+        {
             # Configuration storage path
             $configPath = Join-Path -Path $HOME -ChildPath '.kroger_config.xml'
 
             # Check if configuration exists
-            if (-not (Test-Path $configPath)) {
+            if (-not (Test-Path $configPath))
+            {
                 Write-Verbose "No default Kroger location configured"
                 return $null
             }
@@ -227,23 +243,25 @@ function Get-KrogerDefaultLocation {
             # Load configuration
             $config = Import-Clixml -Path $configPath
 
-            if ($config.DefaultLocationId) {
+            if ($config.DefaultLocationId)
+            {
                 Write-Verbose "Default Kroger location: $($config.DefaultLocationId)"
                 return $config.DefaultLocationId
-            }
-            else {
+            } else
+            {
                 Write-Verbose "No default location ID found in configuration"
                 return $null
             }
-        }
-        catch {
+        } catch
+        {
             Write-Verbose "Failed to get default Kroger location: $_"
             return $null
         }
     }
 }
 
-function Clear-KrogerDefaultLocation {
+function Clear-KrogerDefaultLocation
+{
     <#
     .SYNOPSIS
     Clears the default Kroger location.
@@ -260,22 +278,25 @@ function Clear-KrogerDefaultLocation {
     [CmdletBinding()]
     param()
 
-    process {
-        try {
+    process
+    {
+        try
+        {
             # Configuration storage path
             $configPath = Join-Path -Path $HOME -ChildPath '.kroger_config.xml'
 
             # Check if configuration exists
-            if (Test-Path $configPath) {
+            if (Test-Path $configPath)
+            {
                 Remove-Item -Path $configPath -Force
                 Write-Verbose "Default Kroger location cleared"
                 Write-Host "Default Kroger location removed" -ForegroundColor Yellow
-            }
-            else {
+            } else
+            {
                 Write-Verbose "No default Kroger location to clear"
             }
-        }
-        catch {
+        } catch
+        {
             throw "Failed to clear default Kroger location: $_"
         }
     }

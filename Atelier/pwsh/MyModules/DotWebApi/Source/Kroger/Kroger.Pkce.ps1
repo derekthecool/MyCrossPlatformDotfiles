@@ -1,4 +1,5 @@
-function Connect-KrogerPkce {
+function Connect-KrogerPkce
+{
     <#
     .SYNOPSIS
     Authenticates using PKCE authorization code flow (recommended method).
@@ -38,31 +39,38 @@ function Connect-KrogerPkce {
         [string]$ClientSecret
     )
 
-    begin {
+    begin
+    {
         Write-Verbose "Starting PKCE authentication"
 
         # Get API credentials if not provided
-        if (-not $ClientId) {
-            try {
+        if (-not $ClientId)
+        {
+            try
+            {
                 $ClientId = Get-Secret -Name 'KrogerClientId' -AsPlainText -ErrorAction Stop
-            }
-            catch {
+            } catch
+            {
                 throw "Kroger ClientId not found. Please set it using Set-Secret."
             }
         }
 
-        if (-not $ClientSecret) {
-            try {
+        if (-not $ClientSecret)
+        {
+            try
+            {
                 $ClientSecret = Get-Secret -Name 'KrogerApiKey' -AsPlainText -ErrorAction Stop
-            }
-            catch {
+            } catch
+            {
                 throw "Kroger ApiKey (ClientSecret) not found. Please set it using Set-Secret."
             }
         }
     }
 
-    process {
-        try {
+    process
+    {
+        try
+        {
             Write-Host "=== Kroger PKCE Authentication ===" -ForegroundColor Green
             Write-Host ""
 
@@ -80,13 +88,13 @@ function Connect-KrogerPkce {
             # Build authorization URL with CORRECT scope format
             $scopes = "cart.basic:write profile.compact"
             $authUrl = "https://api.kroger.com/v1/connect/oauth2/authorize?" +
-                "client_id=$ClientId&" +
-                "redirect_uri=$([System.Web.HttpUtility]::UrlEncode($RedirectUri))&" +
-                "response_type=code&" +
-                "scope=$([System.Web.HttpUtility]::UrlEncode($scopes))&" +
-                "state=$state&" +
-                "code_challenge=$codeChallenge&" +
-                "code_challenge_method=S256"
+            "client_id=$ClientId&" +
+            "redirect_uri=$([System.Web.HttpUtility]::UrlEncode($RedirectUri))&" +
+            "response_type=code&" +
+            "scope=$([System.Web.HttpUtility]::UrlEncode($scopes))&" +
+            "state=$state&" +
+            "code_challenge=$codeChallenge&" +
+            "code_challenge_method=S256"
 
             Write-Host "Opening browser for authentication..." -ForegroundColor Cyan
             Write-Host ""
@@ -101,7 +109,8 @@ function Connect-KrogerPkce {
             $listener = [System.Net.HttpListener]::new()
             $listener.Prefixes.Add('http://localhost:8080/')
 
-            try {
+            try
+            {
                 $listener.Start()
 
                 # Open browser
@@ -116,7 +125,8 @@ function Connect-KrogerPkce {
                 $query = $request.Url.Query
                 $params = [System.Web.HttpUtility]::ParseQueryString($query)
 
-                if ($params['error']) {
+                if ($params['error'])
+                {
                     $error = $params['error']
                     $errorDesc = if ($params['error_description']) { $params['error_description'] } else { $error }
 
@@ -130,12 +140,14 @@ function Connect-KrogerPkce {
                     throw "Authentication failed: $errorDesc"
                 }
 
-                if ($params['code']) {
+                if ($params['code'])
+                {
                     $authCode = $params['code']
                     $returnedState = $params['state']
 
                     # Verify state
-                    if ($returnedState -ne $state) {
+                    if ($returnedState -ne $state)
+                    {
                         throw "State mismatch - possible CSRF attack"
                     }
 
@@ -169,10 +181,10 @@ function Connect-KrogerPkce {
 
                     # Create session
                     $session = @{
-                        token  = $token
-                        profile = $profile
+                        token           = $token
+                        profile         = $profile
                         authenticatedAt = Get-Date
-                        clientId = $ClientId  # Store for token refresh
+                        clientId        = $ClientId  # Store for token refresh
                     }
 
                     # Save session
@@ -183,26 +195,27 @@ function Connect-KrogerPkce {
                     Write-Host ""
 
                     return $session
-                }
-                else {
+                } else
+                {
                     throw "No authorization code received"
                 }
-            }
-            finally {
+            } finally
+            {
                 $listener.Stop()
                 $listener.Close()
             }
 
             Write-Verbose "PKCE authentication completed"
-        }
-        catch {
+        } catch
+        {
             Write-Host "✗ PKCE authentication failed: $_" -ForegroundColor Red
             throw
         }
     }
 }
 
-function Get-KrogerCorrectScopes {
+function Get-KrogerCorrectScopes
+{
     <#
     .SYNOPSIS
     Returns the correct OAuth2 scope format for Kroger API.
@@ -220,7 +233,8 @@ function Get-KrogerCorrectScopes {
     [CmdletBinding()]
     param()
 
-    process {
+    process
+    {
         # The CORRECT scope format discovered from CupOfOwls/kroger-api
         return "cart.basic:write profile.compact"
     }

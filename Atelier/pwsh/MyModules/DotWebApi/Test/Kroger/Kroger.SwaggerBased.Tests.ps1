@@ -13,14 +13,16 @@ BeforeAll {
 
     # Check if we have API credentials
     $hasApiCredentials = $false
-    try {
+    try
+    {
         $clientId = Get-Secret -Name 'KrogerClientId' -AsPlainText -ErrorAction Stop
         $clientSecret = Get-Secret -Name 'KrogerApiKey' -AsPlainText -ErrorAction Stop
-        if ($clientId -and $clientSecret) {
+        if ($clientId -and $clientSecret)
+        {
             $hasApiCredentials = $true
         }
-    }
-    catch {
+    } catch
+    {
         $hasApiCredentials = $false
     }
 
@@ -85,9 +87,9 @@ Describe 'Kroger API Authentication Endpoints' -Skip:(-not $hasApiCredentials -o
         }
 
         $response = Invoke-RestMethod -Uri 'https://api.kroger.com/v1/connect/oauth2/token' `
-                                       -Method Post `
-                                       -Body $body `
-                                       -ErrorAction Stop
+            -Method Post `
+            -Body $body `
+            -ErrorAction Stop
 
         # Validate response matches swagger schema
         $response.access_token | Should -Not -BeNullOrEmpty
@@ -123,23 +125,24 @@ Describe 'Kroger Products API Endpoints' -Skip:(-not $hasApiCredentials -or $isC
         }
 
         $params = @{
-            'filter.term'  = 'milk'
-            pageSize       = 5
-            pageNumber     = 1
+            'filter.term' = 'milk'
+            pageSize      = 5
+            pageNumber    = 1
         }
 
         $response = Invoke-RestMethod -Uri 'https://api.kroger.com/v1/products' `
-                                     -Method Get `
-                                     -Headers $headers `
-                                     -Body $params `
-                                     -ErrorAction Stop
+            -Method Get `
+            -Headers $headers `
+            -Body $params `
+            -ErrorAction Stop
 
         # Response should have data array
         $response.data | Should -Not -BeNullOrEmpty
         $response.data | Should -BeOfType System.Array
 
         # If results exist, they should match Product schema
-        if ($response.data.Count -gt 0) {
+        if ($response.data.Count -gt 0)
+        {
             $firstProduct = $response.data[0]
             $firstProduct.PSObject.Properties.Name | Should -Contain 'productId'
             $firstProduct.PSObject.Properties.Name | Should -Contain 'upc'
@@ -155,21 +158,22 @@ Describe 'Kroger Products API Endpoints' -Skip:(-not $hasApiCredentials -or $isC
 
         # Test with a common UPC
         $params = @{
-            'filter.upc'  = '0001111007790'  # Common milk UPC
-            pageSize      = 10
+            'filter.upc' = '0001111007790'  # Common milk UPC
+            pageSize     = 10
         }
 
         $response = Invoke-RestMethod -Uri 'https://api.kroger.com/v1/products' `
-                                     -Method Get `
-                                     -Headers $headers `
-                                     -Body $params `
-                                     -ErrorAction Stop
+            -Method Get `
+            -Headers $headers `
+            -Body $params `
+            -ErrorAction Stop
 
         # Response should contain products
         $response.data | Should -Not -BeNullOrEmpty
 
         # Products should have UPC matching search
-        foreach ($product in $response.data) {
+        foreach ($product in $response.data)
+        {
             $product.upc | Should -Be '0001111007790'
         }
     }
@@ -181,16 +185,16 @@ Describe 'Kroger Products API Endpoints' -Skip:(-not $hasApiCredentials -or $isC
         }
 
         $params = @{
-            'filter.term'  = 'bread'
-            pageSize       = 2
-            pageNumber     = 1
+            'filter.term' = 'bread'
+            pageSize      = 2
+            pageNumber    = 1
         }
 
         $response = Invoke-RestMethod -Uri 'https://api.kroger.com/v1/products' `
-                                     -Method Get `
-                                     -Headers $headers `
-                                     -Body $params `
-                                     -ErrorAction Stop
+            -Method Get `
+            -Headers $headers `
+            -Body $params `
+            -ErrorAction Stop
 
         # Should respect page size
         $response.data.Count | Should -BeLessOrEqual 2
@@ -208,20 +212,22 @@ Describe 'Kroger Products API Endpoints' -Skip:(-not $hasApiCredentials -or $isC
         }
 
         $params = @{
-            'filter.term'   = 'milk'
-            'filter.brand'  = 'Kroger'
-            pageSize        = 5
+            'filter.term'  = 'milk'
+            'filter.brand' = 'Kroger'
+            pageSize       = 5
         }
 
         $response = Invoke-RestMethod -Uri 'https://api.kroger.com/v1/products' `
-                                     -Method Get `
-                                     -Headers $headers `
-                                     -Body $params `
-                                     -ErrorAction Stop
+            -Method Get `
+            -Headers $headers `
+            -Body $params `
+            -ErrorAction Stop
 
         # If results exist, they should be Kroger brand
-        if ($response.data.Count -gt 0) {
-            foreach ($product in $response.data) {
+        if ($response.data.Count -gt 0)
+        {
+            foreach ($product in $response.data)
+            {
                 $product.brand | Should -Be 'Kroger'
             }
         }
@@ -240,8 +246,8 @@ Describe 'Kroger Cart API Endpoints' -Skip:(-not $hasApiCredentials -or $isCI) {
         $token = Connect-KrogerApi -Scope @('cart.basic')
 
         $headers = @{
-            Authorization = "Bearer $($token.access_token)"
-            'Accept'      = 'application/json'
+            Authorization  = "Bearer $($token.access_token)"
+            'Accept'       = 'application/json'
             'Content-Type' = 'application/json'
         }
 
@@ -257,9 +263,9 @@ Describe 'Kroger Cart API Endpoints' -Skip:(-not $hasApiCredentials -or $isCI) {
 
         # Should fail without proper user authentication
         { Invoke-RestMethod -Uri 'https://api.kroger.com/v1/cart/add' `
-                           -Method Put `
-                           -Headers $headers `
-                           -Body $body } | Should -Throw
+                -Method Put `
+                -Headers $headers `
+                -Body $body } | Should -Throw
     }
 
     It 'Cart endpoint follows swagger error response schema' -Skip:(-not $hasUserAuth) {
@@ -268,21 +274,23 @@ Describe 'Kroger Cart API Endpoints' -Skip:(-not $hasApiCredentials -or $isCI) {
         $token = $userSession.token
 
         $headers = @{
-            Authorization = "Bearer $($token.access_token)"
-            'Accept'      = 'application/json'
+            Authorization  = "Bearer $($token.access_token)"
+            'Accept'       = 'application/json'
             'Content-Type' = 'application/json'
         }
 
         # Try to get cart contents (should fail with proper error format)
-        try {
+        try
+        {
             $response = Invoke-RestMethod -Uri 'https://api.kroger.com/v1/cart' `
-                                         -Method Get `
-                                         -Headers $headers `
-                                         -ErrorAction Stop
-        }
-        catch {
+                -Method Get `
+                -Headers $headers `
+                -ErrorAction Stop
+        } catch
+        {
             # Error response should match Error schema
-            if ($_.ErrorDetails) {
+            if ($_.ErrorDetails)
+            {
                 $errorResponse = $_.ErrorDetails.Message | ConvertFrom-Json
                 $errorResponse.PSObject.Properties.Name | Should -Contain 'error'
             }
@@ -307,9 +315,9 @@ Describe 'Kroger Profile API Endpoints' -Skip:(-not $hasApiCredentials -or $isCI
         }
 
         $response = Invoke-RestMethod -Uri 'https://api.kroger.com/v1/profile' `
-                                     -Method Get `
-                                     -Headers $headers `
-                                     -ErrorAction Stop
+            -Method Get `
+            -Headers $headers `
+            -ErrorAction Stop
 
         # Response should match UserProfile schema
         $response.PSObject.Properties.Name | Should -Contain 'id'
@@ -327,8 +335,8 @@ Describe 'Kroger Profile API Endpoints' -Skip:(-not $hasApiCredentials -or $isCI
         }
 
         { Invoke-RestMethod -Uri 'https://api.kroger.com/v1/profile' `
-                           -Method Get `
-                           -Headers $headers } | Should -Throw
+                -Method Get `
+                -Headers $headers } | Should -Throw
     }
 }
 
@@ -352,7 +360,8 @@ Describe 'Kroger PowerShell API Functions' -Skip:(-not $hasApiCredentials -or $i
         $results | Should -BeOfType System.Array
 
         # Products should have required fields from Product schema
-        if ($results.Count -gt 0) {
+        if ($results.Count -gt 0)
+        {
             $firstProduct = $results[0]
             $firstProduct.PSObject.Properties.Name | Should -Contain 'productId'
             $firstProduct.PSObject.Properties.Name | Should -Contain 'upc'
@@ -365,7 +374,8 @@ Describe 'Kroger PowerShell API Functions' -Skip:(-not $hasApiCredentials -or $i
 
         # Should return products with matching UPC
         $results | Should -Not -BeNullOrEmpty
-        foreach ($product in $results) {
+        foreach ($product in $results)
+        {
             $product.upc | Should -Be '0001111007790'
         }
     }
@@ -391,15 +401,17 @@ Describe 'Kroger API Error Handling' -Skip:(-not $hasApiCredentials -or $isCI) {
             client_secret = 'invalid_secret'
         }
 
-        try {
+        try
+        {
             $response = Invoke-RestMethod -Uri 'https://api.kroger.com/v1/connect/oauth2/token' `
-                                         -Method Post `
-                                         -Body $body `
-                                         -ErrorAction Stop
-        }
-        catch {
+                -Method Post `
+                -Body $body `
+                -ErrorAction Stop
+        } catch
+        {
             # Error response should match Error schema
-            if ($_.ErrorDetails) {
+            if ($_.ErrorDetails)
+            {
                 $errorResponse = $_.ErrorDetails.Message | ConvertFrom-Json
                 $errorResponse.PSObject.Properties.Name | Should -Contain 'error'
                 $errorResponse.PSObject.Properties.Name | Should -Contain 'error_description'
@@ -421,10 +433,10 @@ Describe 'Kroger API Error Handling' -Skip:(-not $hasApiCredentials -or $isCI) {
         }
 
         $response = Invoke-RestMethod -Uri 'https://api.kroger.com/v1/products' `
-                                     -Method Get `
-                                     -Headers $headers `
-                                     -Body $params `
-                                     -ErrorAction Stop
+            -Method Get `
+            -Headers $headers `
+            -Body $params `
+            -ErrorAction Stop
 
         # Should return empty array for no results
         $response.data | Should -BeNullOrEmpty -or $response.data.Count | Should -Be 0
@@ -438,10 +450,11 @@ AfterAll {
     Write-Host "Running in CI: $isCI" -ForegroundColor $(if ($isCI) { 'Yellow' } else { 'Green' })
     Write-Host ""
 
-    if ($isCI) {
+    if ($isCI)
+    {
         Write-Host "Note: Real API tests were skipped in CI environment" -ForegroundColor Yellow
-    }
-    elseif (-not $hasApiCredentials) {
+    } elseif (-not $hasApiCredentials)
+    {
         Write-Host "Note: Real API tests were skipped due to missing credentials" -ForegroundColor Yellow
         Write-Host "Set KrogerClientId and KrogerApiKey secrets to enable real API testing" -ForegroundColor Yellow
     }

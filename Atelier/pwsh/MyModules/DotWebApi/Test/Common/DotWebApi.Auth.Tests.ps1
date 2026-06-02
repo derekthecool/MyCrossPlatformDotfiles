@@ -3,29 +3,29 @@ BeforeAll {
 
     # Mock valid token response
     $MockValidToken = @{
-        access_token  = 'test_token_12345'
-        token_type    = 'Bearer'
-        expires_in    = 3600
-        expires_at    = (Get-Date).AddHours(1)
-        scope         = 'test.scope'
+        access_token = 'test_token_12345'
+        token_type   = 'Bearer'
+        expires_in   = 3600
+        expires_at   = (Get-Date).AddHours(1)
+        scope        = 'test.scope'
     }
 
     # Mock expired token response
     $MockExpiredToken = @{
-        access_token  = 'expired_token_12345'
-        token_type    = 'Bearer'
-        expires_in    = 3600
-        expires_at    = (Get-Date).AddHours(-2) # Expired 2 hours ago
-        scope         = 'test.scope'
+        access_token = 'expired_token_12345'
+        token_type   = 'Bearer'
+        expires_in   = 3600
+        expires_at   = (Get-Date).AddHours(-2) # Expired 2 hours ago
+        scope        = 'test.scope'
     }
 
     # Mock token about to expire (within buffer time)
     $MockExpiringToken = @{
-        access_token  = 'expiring_token_12345'
-        token_type    = 'Bearer'
-        expires_in    = 3600
-        expires_at    = (Get-Date).AddMinutes(2) # Expires in 2 minutes
-        scope         = 'test.scope'
+        access_token = 'expiring_token_12345'
+        token_type   = 'Bearer'
+        expires_in   = 3600
+        expires_at   = (Get-Date).AddMinutes(2) # Expires in 2 minutes
+        scope        = 'test.scope'
     }
 
     # Mock API override for token requests
@@ -33,7 +33,8 @@ BeforeAll {
         param($Method, $Uri, $Body, $ContentType, $TimeoutSec)
 
         # Mock token endpoint
-        if ($Uri -match 'oauth2/token') {
+        if ($Uri -match 'oauth2/token')
+        {
             return $MockValidToken
         }
 
@@ -82,17 +83,18 @@ Describe 'Get-WebApiToken' {
 
         # Mock new token for second call
         $newToken = @{
-            access_token  = 'new_token_67890'
-            token_type    = 'Bearer'
-            expires_in    = 3600
-            expires_at    = (Get-Date).AddHours(1)
-            scope         = 'test.scope'
+            access_token = 'new_token_67890'
+            token_type   = 'Bearer'
+            expires_in   = 3600
+            expires_at   = (Get-Date).AddHours(1)
+            scope        = 'test.scope'
         }
 
         $refreshMock = {
             param($Method, $Uri, $Body, $ContentType, $TimeoutSec)
 
-            if ($Uri -match 'oauth2/token') {
+            if ($Uri -match 'oauth2/token')
+            {
                 return $newToken
             }
 
@@ -111,7 +113,8 @@ Describe 'Get-WebApiToken' {
         $Script:MockWebApiOverride = {
             param($Method, $Uri, $Body, $ContentType, $TimeoutSec)
 
-            if ($Uri -match 'oauth2/token') {
+            if ($Uri -match 'oauth2/token')
+            {
                 return $MockValidToken
             }
 
@@ -124,7 +127,8 @@ Describe 'Get-WebApiToken' {
         $krogerMock = {
             param($Method, $Uri, $Body, $ContentType, $TimeoutSec)
 
-            if ($Uri -match 'kroger') {
+            if ($Uri -match 'kroger')
+            {
                 return @{
                     access_token = 'kroger_token'
                     expires_in   = 3600
@@ -145,7 +149,8 @@ Describe 'Get-WebApiToken' {
         $Script:MockWebApiOverride = {
             param($Method, $Uri, $Body, $ContentType, $TimeoutSec)
 
-            if ($Uri -match 'oauth2/token') {
+            if ($Uri -match 'oauth2/token')
+            {
                 return $MockValidToken
             }
 
@@ -259,7 +264,8 @@ Describe 'Token Cache Integration' {
         $sequentialMock = {
             param($Method, $Uri, $Body, $ContentType, $TimeoutSec)
 
-            if ($Uri -match 'oauth2/token') {
+            if ($Uri -match 'oauth2/token')
+            {
                 $script:callCount++
                 return $tokenMocks[$script:callCount - 1]
             }
@@ -284,7 +290,8 @@ Describe 'Token Cache Integration' {
         $Script:MockWebApiOverride = {
             param($Method, $Uri, $Body, $ContentType, $TimeoutSec)
 
-            if ($Uri -match 'oauth2/token') {
+            if ($Uri -match 'oauth2/token')
+            {
                 return $MockValidToken
             }
 
@@ -313,7 +320,8 @@ Describe 'Token Cache Integration' {
         $refreshMock = {
             param($Method, $Uri, $Body, $ContentType, $TimeoutSec)
 
-            if ($Uri -match 'oauth2/token') {
+            if ($Uri -match 'oauth2/token')
+            {
                 return $refreshedToken
             }
 
@@ -330,7 +338,8 @@ Describe 'Token Cache Integration' {
         $Script:MockWebApiOverride = {
             param($Method, $Uri, $Body, $ContentType, $TimeoutSec)
 
-            if ($Uri -match 'oauth2/token') {
+            if ($Uri -match 'oauth2/token')
+            {
                 return $MockValidToken
             }
 

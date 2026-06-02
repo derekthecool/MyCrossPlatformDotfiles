@@ -19,11 +19,11 @@ Write-Host "1. Testing conversion functions..." -ForegroundColor Yellow
     size        = '1 gal'
     items       = @(
         @{
-            price = @{
+            price    = @{
                 regular = 3.49
                 promo   = 2.99
             }
-            stock  = @{
+            stock    = @{
                 level = 'IN_STOCK'
             }
             location = 'A1-2'
@@ -44,9 +44,9 @@ Write-Host ""
 Write-Host "2. Pipeline workflow example..." -ForegroundColor Yellow
 
 \$mockProducts = @(
-    @{ productId='0011200000562'; upc='0011200000562'; description='Kroger Milk'; brand='Kroger'; categories=@('Dairy'); size='1 gal'; items=@(@{price=@{regular=3.49;promo=0};stock=@{level='IN_STOCK'};location='A1'});images=@() },
-    @{ productId='0011200000563'; upc='0011200000563'; description='Generic Milk'; brand='Generic'; categories=@('Dairy'); size='1 gal'; items=@(@{price=@{regular=2.99;promo=0};stock=@{level='OUT_OF_STOCK'};location='A2'});images=@() },
-    @{ productId='0011200000564'; upc='0011200000564'; description='Premium Milk'; brand='Premium'; categories=@('Dairy'); size='1 gal'; items=@(@{price=@{regular=5.99;promo=4.99};stock=@{level='IN_STOCK'};location='B1'});images=@() }
+    @{ productId = '0011200000562'; upc = '0011200000562'; description = 'Kroger Milk'; brand = 'Kroger'; categories = @('Dairy'); size = '1 gal'; items = @(@{price = @{regular = 3.49; promo = 0 }; stock = @{level = 'IN_STOCK' }; location = 'A1' }); images = @() },
+    @{ productId = '0011200000563'; upc = '0011200000563'; description = 'Generic Milk'; brand = 'Generic'; categories = @('Dairy'); size = '1 gal'; items = @(@{price = @{regular = 2.99; promo = 0 }; stock = @{level = 'OUT_OF_STOCK' }; location = 'A2' }); images = @() },
+    @{ productId = '0011200000564'; upc = '0011200000564'; description = 'Premium Milk'; brand = 'Premium'; categories = @('Dairy'); size = '1 gal'; items = @(@{price = @{regular = 5.99; promo = 4.99 }; stock = @{level = 'IN_STOCK' }; location = 'B1' }); images = @() }
 )
 
 Write-Host "   All products:" -ForegroundColor Cyan
@@ -55,7 +55,7 @@ Write-Host "   All products:" -ForegroundColor Cyan
 
 Write-Host ""
 Write-Host "   Filtered to in-stock Kroger brand:" -ForegroundColor Cyan
-\$filtered = \$products | Where-Object { \$_.Brand -eq 'Kroger' -and \$_.InStock }
+\$filtered = \$products | Where-Object { \$_.Brand -EQ 'Kroger' -and \$_.InStock }
 \$filtered | ForEach-Object { Write-Host "     - \$(\$_.Name): \$(\$_.Price)" }
 
 Write-Host ""
@@ -69,11 +69,11 @@ Write-Host ""
 Write-Host "3. Cart operations example..." -ForegroundColor Yellow
 
 \$mockCartItem = @{
-    id         = 'cart_item_1'
-    productId  = '0011200000562'
-    upc        = '0011200000562'
-    quantity   = 2
-    price      = @{ regular = 3.49 }
+    id          = 'cart_item_1'
+    productId   = '0011200000562'
+    upc         = '0011200000562'
+    quantity    = 2
+    price       = @{ regular = 3.49 }
     description = 'Kroger Whole Milk'
 }
 

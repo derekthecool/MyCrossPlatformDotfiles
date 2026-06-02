@@ -1,7 +1,8 @@
 # Script-level token cache for OAuth2 tokens
 $Script:WebApiTokenCache = @{}
 
-function Get-WebApiToken {
+function Get-WebApiToken
+{
     <#
     .SYNOPSIS
     Retrieves or refreshes OAuth2 tokens for web API integrations.
@@ -59,9 +60,11 @@ function Get-WebApiToken {
     )
 
     # Check cache first
-    if (-not $ForceRefresh -and $Script:WebApiTokenCache.ContainsKey($ServiceName)) {
+    if (-not $ForceRefresh -and $Script:WebApiTokenCache.ContainsKey($ServiceName))
+    {
         $cachedToken = $Script:WebApiTokenCache[$ServiceName]
-        if (-not (Test-WebApiTokenExpired -Token $cachedToken)) {
+        if (-not (Test-WebApiTokenExpired -Token $cachedToken))
+        {
             Write-Verbose "Using cached token for $ServiceName"
             return $cachedToken
         }
@@ -70,7 +73,8 @@ function Get-WebApiToken {
     Write-Verbose "Fetching new token for $ServiceName"
 
     # Validate we have credentials
-    if (-not $ClientId -or -not $ClientSecret) {
+    if (-not $ClientId -or -not $ClientSecret)
+    {
         throw "Failed to retrieve credentials for $ServiceName. Please store secrets using: Set-Secret -Name '${ServiceName}ClientId' -Secret 'your-client-id' and Set-Secret -Name '${ServiceName}ApiKey' -Secret 'your-api-key'"
     }
 
@@ -82,7 +86,8 @@ function Get-WebApiToken {
         scope         = $Scope -join ' '
     }
 
-    try {
+    try
+    {
         # Request new token
         $response = Invoke-RestMethod -Uri $TokenEndpoint -Method Post -Body $tokenParams -ErrorAction Stop
 
@@ -94,13 +99,14 @@ function Get-WebApiToken {
 
         Write-Verbose "Successfully obtained and cached token for $ServiceName"
         return $response
-    }
-    catch {
+    } catch
+    {
         throw "Failed to obtain OAuth2 token for $ServiceName`: $($_.Exception.Message)"
     }
 }
 
-function Test-WebApiTokenExpired {
+function Test-WebApiTokenExpired
+{
     <#
     .SYNOPSIS
     Tests if an OAuth2 token is expired or will expire soon.
@@ -131,7 +137,8 @@ function Test-WebApiTokenExpired {
         [int]$BufferMinutes = 5
     )
 
-    if (-not $Token -or -not $Token.expires_at) {
+    if (-not $Token -or -not $Token.expires_at)
+    {
         return $true
     }
 
@@ -141,7 +148,8 @@ function Test-WebApiTokenExpired {
     return $expirationTime -lt $bufferTime
 }
 
-function Clear-WebApiTokenCache {
+function Clear-WebApiTokenCache
+{
     <#
     .SYNOPSIS
     Clears cached OAuth2 tokens.
@@ -164,13 +172,15 @@ function Clear-WebApiTokenCache {
         [string]$ServiceName
     )
 
-    if ($ServiceName) {
-        if ($Script:WebApiTokenCache.ContainsKey($ServiceName)) {
+    if ($ServiceName)
+    {
+        if ($Script:WebApiTokenCache.ContainsKey($ServiceName))
+        {
             $Script:WebApiTokenCache.Remove($ServiceName)
             Write-Verbose "Cleared token cache for $ServiceName"
         }
-    }
-    else {
+    } else
+    {
         $Script:WebApiTokenCache.Clear()
         Write-Verbose "Cleared all token caches"
     }

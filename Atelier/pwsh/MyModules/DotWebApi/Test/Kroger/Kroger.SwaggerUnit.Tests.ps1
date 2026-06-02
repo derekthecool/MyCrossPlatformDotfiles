@@ -284,7 +284,8 @@ Describe 'Cart API Structure Validation' {
         $cartItem.quantity | Should -BeLessThan 100
 
         # Validate modality enum
-        if ($cartItem.modality) {
+        if ($cartItem.modality)
+        {
             $cartItem.modality | Should -BeIn @('DELIVERY', 'PICKUP')
         }
     }
@@ -303,11 +304,13 @@ Describe 'Cart API Structure Validation' {
         $cartRequest.items | Should -Not -BeNullOrEmpty
         $cartRequest.items.Count | Should -BeGreaterThan 0
 
-        foreach ($item in $cartRequest.items) {
+        foreach ($item in $cartRequest.items)
+        {
             $item.upc | Should -Not -BeNullOrEmpty
             $item.quantity | Should -BeGreaterThan 0
 
-            if ($item.modality) {
+            if ($item.modality)
+            {
                 $item.modality | Should -BeIn @('DELIVERY', 'PICKUP')
             }
         }
@@ -341,22 +344,22 @@ Describe 'Cart API Structure Validation' {
 Describe 'Location API Structure Validation' {
     It 'Location object matches locations.location schema' {
         $mockLocation = @{
-            locationId = '01400376'
-            chain      = 'KROGER'
-            name       = 'Kroger Landen'
-            address    = @{
+            locationId  = '01400376'
+            chain       = 'KROGER'
+            name        = 'Kroger Landen'
+            address     = @{
                 addressLine1 = '2900 W. St. Rt. 22 & 3'
                 city         = 'Maineville'
                 state        = 'OH'
                 zipCode      = '45039'
             }
             geolocation = @{
-                latLng   = '39.3110881,-84.2751167'
+                latLng    = '39.3110881,-84.2751167'
                 latitude  = 39.3110881
                 longitude = -84.2751167
             }
-            phone  = '5551234567'
-            hours  = @{
+            phone       = '5551234567'
+            hours       = @{
                 monday    = @{ open = '06:00'; close = '22:00' }
                 tuesday   = @{ open = '06:00'; close = '22:00' }
                 wednesday = @{ open = '06:00'; close = '22:00' }
@@ -391,8 +394,8 @@ Describe 'Location API Structure Validation' {
 
     It 'Chain object matches locations.chain schema' {
         $mockChain = @{
-            name    = 'KROGER'
-            domain  = 'kroger.com'
+            name            = 'KROGER'
+            domain          = 'kroger.com'
             divisionNumbers = @('01', '02')
         }
 
@@ -463,7 +466,7 @@ Describe 'API Error Response Structure Validation' {
     It 'APIError.unauthorized structure matches swagger' {
         $mockError = @{
             errors = @{
-                error            = 'invalid_token'
+                error             = 'invalid_token'
                 error_description = 'The access token is invalid or has expired'
             }
         }

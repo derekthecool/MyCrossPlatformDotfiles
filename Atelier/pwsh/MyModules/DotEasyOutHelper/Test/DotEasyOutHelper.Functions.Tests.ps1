@@ -7,16 +7,17 @@ BeforeAll {
 
     # Create test object
     $TestObject = [PSCustomObject]@{
-        PSTypeName = 'Test.CustomType'
-        Name = 'Test Name'
-        Value = 42
+        PSTypeName  = 'Test.CustomType'
+        Name        = 'Test Name'
+        Value       = 42
         Description = 'Test Description'
     }
 }
 
 AfterAll {
     # Cleanup test directory
-    if (Test-Path (Join-Path $TestDrive 'EasyOutTest')) {
+    if (Test-Path (Join-Path $TestDrive 'EasyOutTest'))
+    {
         Remove-Item (Join-Path $TestDrive 'EasyOutTest') -Recurse -Force
     }
 }
@@ -55,7 +56,8 @@ Describe 'Use-EasyOut Function Tests' {
         $ezoutFile = Join-Path $TestDir 'EasyOutTest.EzFormat.ps1'
 
         # Ensure file doesn't exist
-        if (Test-Path $ezoutFile) {
+        if (Test-Path $ezoutFile)
+        {
             Remove-Item $ezoutFile -Force
         }
 
@@ -74,10 +76,11 @@ Describe 'Use-EasyOut Function Tests' {
     It 'Creates Formatting directory when using default path' {
         # Mock Menu to avoid interactive prompts
         Mock Menu {
-            if ($Args[0] -match 'TypeNames') {
+            if ($Args[0] -match 'TypeNames')
+            {
                 return 'Test.CustomType'
-            }
-            else {
+            } else
+            {
                 return @([PSCustomObject]@{ Name = 'Name' })
             }
         }
@@ -85,15 +88,16 @@ Describe 'Use-EasyOut Function Tests' {
         # Set current location to test directory
         Push-Location $TestDir
 
-        try {
+        try
+        {
             # Run function with default path (should create Formatting directory)
             $result = Use-EasyOut -InputObject $TestObject -Path './Formatting/Test_CustomType.format.ps1'
 
             # Check that Formatting directory was created
             $formattingDir = Join-Path $TestDir 'Formatting'
             Test-Path $formattingDir | Should -Be $true
-        }
-        finally {
+        } finally
+        {
             Pop-Location
         }
     }
@@ -103,17 +107,19 @@ Describe 'Use-EasyOut Function Tests' {
 
         # Mock Menu
         Mock Menu {
-            if ($Args[0] -match 'TypeNames') {
+            if ($Args[0] -match 'TypeNames')
+            {
                 return 'Test.CustomType'
-            }
-            else {
+            } else
+            {
                 return @([PSCustomObject]@{ Name = 'Name' })
             }
         }
 
         Push-Location $TestDir
 
-        try {
+        try
+        {
             $result = Use-EasyOut -InputObject $TestObject -Path $customPath
 
             # Should use the custom path
@@ -122,8 +128,8 @@ Describe 'Use-EasyOut Function Tests' {
             # Check that custom directory was created
             $customDir = Join-Path $TestDir 'CustomLocation'
             Test-Path $customDir | Should -Be $true
-        }
-        finally {
+        } finally
+        {
             Pop-Location
         }
     }
@@ -131,10 +137,11 @@ Describe 'Use-EasyOut Function Tests' {
     It 'Generates correct EZOut format syntax' {
         # Mock Menu
         Mock Menu {
-            if ($Args[0] -match 'TypeNames') {
+            if ($Args[0] -match 'TypeNames')
+            {
                 return 'Test.CustomType'
-            }
-            else {
+            } else
+            {
                 return @(
                     [PSCustomObject]@{ Name = 'Name' }
                     [PSCustomObject]@{ Name = 'Value' }
@@ -144,7 +151,8 @@ Describe 'Use-EasyOut Function Tests' {
 
         Push-Location $TestDir
 
-        try {
+        try
+        {
             $testPath = './Formatting/Test_CustomType.format.ps1'
             $result = Use-EasyOut -InputObject $TestObject -Path $testPath
 
@@ -157,8 +165,8 @@ Describe 'Use-EasyOut Function Tests' {
             $content | Should -Match "TypeName = 'Test\.CustomType'"
             $content | Should -Match "'Name'"
             $content | Should -Match "'Value'"
-        }
-        finally {
+        } finally
+        {
             Pop-Location
         }
     }
@@ -169,23 +177,25 @@ Describe 'Use-EasyOut Function Tests' {
 
         # Mock Menu
         Mock Menu {
-            if ($Args[0] -match 'TypeNames') {
+            if ($Args[0] -match 'TypeNames')
+            {
                 return $complexType
-            }
-            else {
+            } else
+            {
                 return @([PSCustomObject]@{ Name = 'Name' })
             }
         }
 
         Push-Location $TestDir
 
-        try {
+        try
+        {
             $result = Use-EasyOut -InputObject $TestObject -Path './Formatting/ComplexType.format.ps1'
 
             # Should successfully create file without special characters causing issues
             Test-Path './Formatting/ComplexType.format.ps1' | Should -Be $true
-        }
-        finally {
+        } finally
+        {
             Pop-Location
         }
     }
@@ -203,10 +213,11 @@ Describe 'Use-EasyOut Interactive Mode Tests' {
     It 'Returns input object in interactive mode' {
         # Mock Menu and Invoke-Expression
         Mock Menu {
-            if ($Args[0] -match 'TypeNames') {
+            if ($Args[0] -match 'TypeNames')
+            {
                 return 'Test.CustomType'
-            }
-            else {
+            } else
+            {
                 return @([PSCustomObject]@{ Name = 'Name' })
             }
         }

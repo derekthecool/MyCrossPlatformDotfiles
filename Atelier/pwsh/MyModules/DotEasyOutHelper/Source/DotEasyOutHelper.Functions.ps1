@@ -1,6 +1,7 @@
 # Property selector functions are in DotEasyOutHelper.PropertySelector.ps1
 
-function Use-EasyOut {
+function Use-EasyOut
+{
     <#
     .SYNOPSIS
     Interactive EZOut formatting helper with custom property selection.
@@ -56,9 +57,11 @@ function Use-EasyOut {
         [string]$ModuleName
     )
 
-    begin {
+    begin
+    {
         # Auto-detect module name from current directory
-        if (-not $ModuleName) {
+        if (-not $ModuleName)
+        {
             $currentDir = Get-Location
             $ModuleName = [System.IO.Path]::GetFileName($currentDir.Path)
             Write-Verbose "Auto-detected module name: $ModuleName"
@@ -67,7 +70,8 @@ function Use-EasyOut {
         # Check for EZOut build file and create if missing
         $ezoutFile = Join-Path -Path $currentDir.Path -ChildPath "$ModuleName.EzFormat.ps1"
 
-        if (-not (Test-Path $ezoutFile)) {
+        if (-not (Test-Path $ezoutFile))
+        {
             Write-Host "EZOut build file not found. Creating: $ezoutFile" -ForegroundColor Yellow
             Write-EZFormatFile | Set-Content $ezoutFile -Encoding UTF8
             Write-Host "Created EZOut build file. Run './$ModuleName.EzFormat.ps1' to generate format views." -ForegroundColor Green
@@ -75,9 +79,11 @@ function Use-EasyOut {
     }
 
     # Do not use process block since I only want the top level object
-    process {
+    process
+    {
     }
-    end {
+    end
+    {
         # Get type names and select the most specific one
         $typeNames = $InputObject.PSObject.TypeNames
         Write-Verbose "Available TypeNames: $($typeNames -join ', ')"
@@ -89,27 +95,31 @@ function Use-EasyOut {
             $_ -ne 'System.Management.Automation.PSCustomObject'
         } | Select-Object -First 1
 
-        if (-not $Type) {
+        if (-not $Type)
+        {
             $Type = $typeNames | Select-Object -First 1
         }
 
         Write-Verbose "Auto-selected type: $Type"
 
-        if (-not $Type) {
+        if (-not $Type)
+        {
             throw "Unable to determine type name from object"
         }
 
         # Get properties using custom property selector
         $Properties = Show-PropertySelector -InputObject $InputObject
 
-        if (-not $Properties -or $Properties.Count -eq 0) {
+        if (-not $Properties -or $Properties.Count -eq 0)
+        {
             Write-Warning "No properties selected. Using default properties."
             # Fallback: select common display properties
             $allProperties = $InputObject.PSObject.Properties | Select-Object -ExpandProperty Name
             $Properties = $allProperties | Where-Object { $_ -notlike 'PS*' -and $_ -notlike 'ApiData' } |
-                          Select-Object -First 5
+                Select-Object -First 5
 
-            if (-not $Properties) {
+            if (-not $Properties)
+            {
                 $Properties = $allProperties | Select-Object -First 5
             }
 
@@ -132,7 +142,8 @@ function Use-EasyOut {
 Write-FormatView @splat
 "@
 
-        if ($Interactive) {
+        if ($Interactive)
+        {
             Write-Host "Running EZOut for interactive formatting, not saving to a file. Code to run`n" -ForegroundColor Green
             Write-Host "$EasyOutString" -ForegroundColor Yellow
             $EasyOutString += ' | Out-FormatData | Push-FormatData'
@@ -142,19 +153,23 @@ Write-FormatView @splat
         }
 
         # Determine output path
-        $resolvedPath = if ($Path) {
+        $resolvedPath = if ($Path)
+        {
             $Path
-        }
-        else {
+        } else
+        {
             # Default to ./Formatting/[TypeName].format.ps1
-            $cleanTypeName = if ($Type) {
+            $cleanTypeName = if ($Type)
+            {
                 $Type -replace '[^\w\d]', '_'
-            } else {
+            } else
+            {
                 'CustomType'
             }
 
             # Ensure we don't have empty type names
-            if ([string]::IsNullOrWhiteSpace($cleanTypeName)) {
+            if ([string]::IsNullOrWhiteSpace($cleanTypeName))
+            {
                 $cleanTypeName = 'CustomType'
                 Write-Warning "Type name was empty, using 'CustomType' instead"
             }
@@ -165,13 +180,15 @@ Write-FormatView @splat
         Write-Verbose "Output path: $resolvedPath"
 
         # Double-check we don't have an invalid filename
-        if ($resolvedPath -match '\.\/Formatting\/\.format\.ps1$') {
+        if ($resolvedPath -match '\.\/Formatting\/\.format\.ps1$')
+        {
             throw "Invalid path generated: $resolvedPath. Type name may be empty."
         }
 
         # Create directory if it doesn't exist
         $directory = [System.IO.Path]::GetDirectoryName($resolvedPath)
-        if (-not (Test-Path $directory)) {
+        if (-not (Test-Path $directory))
+        {
             Write-Host "Creating directory: $directory" -ForegroundColor Yellow
             New-Item -ItemType Directory $directory -Force | Out-Null
         }

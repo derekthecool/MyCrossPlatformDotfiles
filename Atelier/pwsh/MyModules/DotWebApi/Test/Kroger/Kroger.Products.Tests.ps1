@@ -3,11 +3,11 @@ BeforeAll {
 
     # Mock token response
     $MockKrogerToken = @{
-        access_token  = 'mock_token_12345'
-        token_type    = 'Bearer'
-        expires_in    = 3600
-        expires_at    = (Get-Date).AddHours(1)
-        scope         = 'product.compact'
+        access_token = 'mock_token_12345'
+        token_type   = 'Bearer'
+        expires_in   = 3600
+        expires_at   = (Get-Date).AddHours(1)
+        scope        = 'product.compact'
     }
 
     # Mock product search response
@@ -22,11 +22,11 @@ BeforeAll {
                 size        = '1 gal'
                 items       = @(
                     @{
-                        price = @{
+                        price    = @{
                             regular = 3.49
                             promo   = 0
                         }
-                        stock  = @{
+                        stock    = @{
                             level = 'IN_STOCK'
                         }
                         location = 'A1-2'
@@ -49,11 +49,11 @@ BeforeAll {
                 size        = '0.5 gal'
                 items       = @(
                     @{
-                        price = @{
+                        price    = @{
                             regular = 4.99
                             promo   = 3.99
                         }
-                        stock  = @{
+                        stock    = @{
                             level = 'IN_STOCK'
                         }
                         location = 'B2-3'
@@ -64,7 +64,7 @@ BeforeAll {
         )
         meta = @{
             pagination = @{
-                pageSize = 25
+                pageSize   = 25
                 pageNumber = 1
                 totalItems = 2
             }
@@ -76,12 +76,14 @@ BeforeAll {
         param($Method, $Uri, $Body, $Headers, $ContentType, $TimeoutSec)
 
         # Mock token endpoint
-        if ($Uri -match 'oauth2/token') {
+        if ($Uri -match 'oauth2/token')
+        {
             return $MockKrogerToken
         }
 
         # Mock product search endpoint
-        if ($Uri -match '/products') {
+        if ($Uri -match '/products')
+        {
             return $MockProductSearchResponse
         }
 
@@ -167,11 +169,13 @@ Describe 'Search-KrogerProduct' {
         $emptyMock = {
             param($Method, $Uri, $Body, $Headers, $ContentType, $TimeoutSec)
 
-            if ($Uri -match 'oauth2/token') {
+            if ($Uri -match 'oauth2/token')
+            {
                 return $MockKrogerToken
             }
 
-            if ($Uri -match '/products') {
+            if ($Uri -match '/products')
+            {
                 return @{ data = @() }
             }
         }
@@ -185,11 +189,13 @@ Describe 'Search-KrogerProduct' {
         $Script:MockWebApiOverride = {
             param($Method, $Uri, $Body, $Headers, $ContentType, $TimeoutSec)
 
-            if ($Uri -match 'oauth2/token') {
+            if ($Uri -match 'oauth2/token')
+            {
                 return $MockKrogerToken
             }
 
-            if ($Uri -match '/products') {
+            if ($Uri -match '/products')
+            {
                 return $MockProductSearchResponse
             }
         }
@@ -241,11 +247,13 @@ Describe 'Kroger.Product Object Properties' {
         $saleProduct = $results | Where-Object { $_.OnSale }
         $regularProduct = $results | Where-Object { -not $_.OnSale }
 
-        if ($saleProduct) {
+        if ($saleProduct)
+        {
             $saleProduct.SalePrice | Should -BeGreaterThan 0
         }
 
-        if ($regularProduct) {
+        if ($regularProduct)
+        {
             $regularProduct.SalePrice | Should -BeNullOrEmpty
         }
     }

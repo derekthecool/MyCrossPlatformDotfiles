@@ -3,32 +3,32 @@ BeforeAll {
 
     # Mock token response
     $MockKrogerToken = @{
-        access_token  = 'mock_token_12345'
-        token_type    = 'Bearer'
-        expires_in    = 3600
-        expires_at    = (Get-Date).AddHours(1)
-        scope         = 'cart.basic cart.write'
+        access_token = 'mock_token_12345'
+        token_type   = 'Bearer'
+        expires_in   = 3600
+        expires_at   = (Get-Date).AddHours(1)
+        scope        = 'cart.basic cart.write'
     }
 
     # Mock cart response
     $MockCartResponse = @{
-        items = @(
+        items    = @(
             @{
-                id         = 'cart_item_1'
-                productId  = '0011200000562'
-                upc        = '0011200000562'
-                quantity   = 2
-                price      = @{
+                id          = 'cart_item_1'
+                productId   = '0011200000562'
+                upc         = '0011200000562'
+                quantity    = 2
+                price       = @{
                     regular = 3.49
                 }
                 description = 'Kroger Whole Milk'
             },
             @{
-                id         = 'cart_item_2'
-                productId  = '0001111045628'
-                upc        = '0001111045628'
-                quantity   = 1
-                price      = @{
+                id          = 'cart_item_2'
+                productId   = '0001111045628'
+                upc         = '0001111045628'
+                quantity    = 1
+                price       = @{
                     regular = 4.99
                 }
                 description = 'Organic Valley Milk'
@@ -41,7 +41,7 @@ BeforeAll {
 
     # Mock empty cart response
     $MockEmptyCartResponse = @{
-        items = @()
+        items    = @()
         metaData = @{
             total = 0
         }
@@ -52,34 +52,39 @@ BeforeAll {
         param($Method, $Uri, $Body, $ContentType, $TimeoutSec)
 
         # Mock token endpoint
-        if ($Uri -match 'oauth2/token') {
+        if ($Uri -match 'oauth2/token')
+        {
             return $MockKrogerToken
         }
 
         # Mock cart GET endpoint
-        if ($Uri -match '/cart' -and $Method -eq 'GET') {
+        if ($Uri -match '/cart' -and $Method -eq 'GET')
+        {
             return $MockCartResponse
         }
 
         # Mock cart POST endpoint (add item)
-        if ($Uri -match '/cart.*?/items' -and $Method -eq 'POST') {
+        if ($Uri -match '/cart.*?/items' -and $Method -eq 'POST')
+        {
             return @{
-                id         = 'new_cart_item_123'
-                quantity   = $Body.quantity
-                upc        = $Body.upc
+                id       = 'new_cart_item_123'
+                quantity = $Body.quantity
+                upc      = $Body.upc
             }
         }
 
         # Mock cart DELETE endpoint
-        if ($Uri -match '/cart.*?/items/' -and $Method -eq 'DELETE') {
+        if ($Uri -match '/cart.*?/items/' -and $Method -eq 'DELETE')
+        {
             return @{ success = $true }
         }
 
         # Mock cart PUT endpoint (update quantity)
-        if ($Uri -match '/cart.*?/items/' -and $Method -eq 'PUT') {
+        if ($Uri -match '/cart.*?/items/' -and $Method -eq 'PUT')
+        {
             return @{
-                id         = 'updated_cart_item'
-                quantity   = $Body.quantity
+                id       = 'updated_cart_item'
+                quantity = $Body.quantity
             }
         }
 
@@ -134,11 +139,13 @@ Describe 'Get-KrogerCart' {
         $emptyMock = {
             param($Method, $Uri, $Body, $ContentType, $TimeoutSec)
 
-            if ($Uri -match 'oauth2/token') {
+            if ($Uri -match 'oauth2/token')
+            {
                 return $MockKrogerToken
             }
 
-            if ($Uri -match '/cart' -and $Method -eq 'GET') {
+            if ($Uri -match '/cart' -and $Method -eq 'GET')
+            {
                 return $MockEmptyCartResponse
             }
 
@@ -154,30 +161,35 @@ Describe 'Get-KrogerCart' {
         $Script:MockWebApiOverride = {
             param($Method, $Uri, $Body, $ContentType, $TimeoutSec)
 
-            if ($Uri -match 'oauth2/token') {
+            if ($Uri -match 'oauth2/token')
+            {
                 return $MockKrogerToken
             }
 
-            if ($Uri -match '/cart' -and $Method -eq 'GET') {
+            if ($Uri -match '/cart' -and $Method -eq 'GET')
+            {
                 return $MockCartResponse
             }
 
-            if ($Uri -match '/cart.*?/items' -and $Method -eq 'POST') {
+            if ($Uri -match '/cart.*?/items' -and $Method -eq 'POST')
+            {
                 return @{
-                    id         = 'new_cart_item_123'
-                    quantity   = $Body.quantity
-                    upc        = $Body.upc
+                    id       = 'new_cart_item_123'
+                    quantity = $Body.quantity
+                    upc      = $Body.upc
                 }
             }
 
-            if ($Uri -match '/cart.*?/items/' -and $Method -eq 'DELETE') {
+            if ($Uri -match '/cart.*?/items/' -and $Method -eq 'DELETE')
+            {
                 return @{ success = $true }
             }
 
-            if ($Uri -match '/cart.*?/items/' -and $Method -eq 'PUT') {
+            if ($Uri -match '/cart.*?/items/' -and $Method -eq 'PUT')
+            {
                 return @{
-                    id         = 'updated_cart_item'
-                    quantity   = $Body.quantity
+                    id       = 'updated_cart_item'
+                    quantity = $Body.quantity
                 }
             }
 
@@ -233,11 +245,13 @@ Describe 'Add-KrogerCartItem' {
         $errorMock = {
             param($Method, $Uri, $Body, $ContentType, $TimeoutSec)
 
-            if ($Uri -match 'oauth2/token') {
+            if ($Uri -match 'oauth2/token')
+            {
                 return $MockKrogerToken
             }
 
-            if ($Uri -match '/cart.*?/items' -and $Method -eq 'POST') {
+            if ($Uri -match '/cart.*?/items' -and $Method -eq 'POST')
+            {
                 throw "Product not found"
             }
         }
@@ -252,30 +266,35 @@ Describe 'Add-KrogerCartItem' {
         $Script:MockWebApiOverride = {
             param($Method, $Uri, $Body, $ContentType, $TimeoutSec)
 
-            if ($Uri -match 'oauth2/token') {
+            if ($Uri -match 'oauth2/token')
+            {
                 return $MockKrogerToken
             }
 
-            if ($Uri -match '/cart' -and $Method -eq 'GET') {
+            if ($Uri -match '/cart' -and $Method -eq 'GET')
+            {
                 return $MockCartResponse
             }
 
-            if ($Uri -match '/cart.*?/items' -and $Method -eq 'POST') {
+            if ($Uri -match '/cart.*?/items' -and $Method -eq 'POST')
+            {
                 return @{
-                    id         = 'new_cart_item_123'
-                    quantity   = $Body.quantity
-                    upc        = $Body.upc
+                    id       = 'new_cart_item_123'
+                    quantity = $Body.quantity
+                    upc      = $Body.upc
                 }
             }
 
-            if ($Uri -match '/cart.*?/items/' -and $Method -eq 'DELETE') {
+            if ($Uri -match '/cart.*?/items/' -and $Method -eq 'DELETE')
+            {
                 return @{ success = $true }
             }
 
-            if ($Uri -match '/cart.*?/items/' -and $Method -eq 'PUT') {
+            if ($Uri -match '/cart.*?/items/' -and $Method -eq 'PUT')
+            {
                 return @{
-                    id         = 'updated_cart_item'
-                    quantity   = $Body.quantity
+                    id       = 'updated_cart_item'
+                    quantity = $Body.quantity
                 }
             }
 
@@ -303,10 +322,10 @@ Describe 'Remove-KrogerCartItem' {
 
     It 'Handles Kroger.CartItem objects from pipeline' {
         $mockCartItem = [PSCustomObject]@{
-            PSTypeName  = 'Kroger.CartItem'
-            CartItemId  = 'cart_item_1'
-            Name        = 'Test Product'
-            Quantity    = 2
+            PSTypeName = 'Kroger.CartItem'
+            CartItemId = 'cart_item_1'
+            Name       = 'Test Product'
+            Quantity   = 2
         }
 
         $result = $mockCartItem | Remove-KrogerCartItem
@@ -339,10 +358,10 @@ Describe 'Update-KrogerCartItem' {
 
     It 'Supports pipeline input with Kroger.CartItem objects' {
         $mockCartItem = [PSCustomObject]@{
-            PSTypeName  = 'Kroger.CartItem'
-            CartItemId  = 'cart_item_1'
-            Name        = 'Test Product'
-            Quantity    = 3
+            PSTypeName = 'Kroger.CartItem'
+            CartItemId = 'cart_item_1'
+            Name       = 'Test Product'
+            Quantity   = 3
         }
 
         $result = $mockCartItem | Update-KrogerCartItem
@@ -351,10 +370,10 @@ Describe 'Update-KrogerCartItem' {
 
     It 'Uses quantity from object when not specified' {
         $mockCartItem = [PSCustomObject]@{
-            PSTypeName  = 'Kroger.CartItem'
-            CartItemId  = 'cart_item_1'
-            Name        = 'Test Product'
-            Quantity    = 7
+            PSTypeName = 'Kroger.CartItem'
+            CartItemId = 'cart_item_1'
+            Name       = 'Test Product'
+            Quantity   = 7
         }
 
         $result = $mockCartItem | Update-KrogerCartItem

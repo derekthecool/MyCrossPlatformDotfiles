@@ -1,7 +1,8 @@
 # Script-level variable for mock API override (used in testing)
 $Script:MockWebApiOverride = $null
 
-function Invoke-WebApi {
+function Invoke-WebApi
+{
     <#
     .SYNOPSIS
     Invokes web API calls with consistent error handling and mock support.
@@ -60,7 +61,8 @@ function Invoke-WebApi {
     )
 
     # Check if we're in test mode with mock override
-    if ($null -ne $Script:MockWebApiOverride) {
+    if ($null -ne $Script:MockWebApiOverride)
+    {
         Write-Verbose "Using mock API override"
         return & $Script:MockWebApiOverride @PSBoundParameters
     }
@@ -74,47 +76,54 @@ function Invoke-WebApi {
     }
 
     # Add headers if provided
-    if ($Headers) {
+    if ($Headers)
+    {
         $requestParams.Headers = $Headers
     }
 
     # Add body if provided
-    if ($Body) {
+    if ($Body)
+    {
         # Convert body to JSON for methods that support it
-        if ($Method -in @('POST', 'PUT', 'PATCH')) {
+        if ($Method -in @('POST', 'PUT', 'PATCH'))
+        {
             $requestParams.Body = $Body | ConvertTo-Json -Depth 10 -Compress
-        }
-        else {
+        } else
+        {
             # For GET requests, add as query parameters
             $queryString = ($Body.GetEnumerator() | ForEach-Object {
-                "$($_.Key)=$([System.Web.HttpUtility]::UrlEncode($_.Value))"
-            }) -join '&'
+                    "$($_.Key)=$([System.Web.HttpUtility]::UrlEncode($_.Value))"
+                }) -join '&'
             $requestParams.Uri = "$Uri`?$queryString"
         }
     }
 
-    try {
+    try
+    {
         Write-Verbose "Invoking API call: $Method $Uri"
         $response = Invoke-RestMethod @requestParams -ErrorAction Stop
         Write-Verbose "API call successful"
         return $response
-    }
-    catch {
+    } catch
+    {
         # Enhanced error handling
-        $errorDetails = if ($_.ErrorDetails) {
-            try {
+        $errorDetails = if ($_.ErrorDetails)
+        {
+            try
+            {
                 $_.ErrorDetails.Message | ConvertFrom-Json
-            }
-            catch {
+            } catch
+            {
                 @{ message = $_.ErrorDetails.Message }
             }
-        }
-        else {
+        } else
+        {
             @{ message = $_.Exception.Message }
         }
 
         $errorMessage = "API call failed: $Method $Uri"
-        if ($errorDetails.message) {
+        if ($errorDetails.message)
+        {
             $errorMessage += " - $($errorDetails.message)"
         }
 
@@ -123,7 +132,8 @@ function Invoke-WebApi {
     }
 }
 
-function ConvertTo-KrogerProduct {
+function ConvertTo-KrogerProduct
+{
     <#
     .SYNOPSIS
     Converts Kroger API product data to KrogerProduct object with TypeName.
@@ -147,7 +157,8 @@ function ConvertTo-KrogerProduct {
         [object]$ApiData
     )
 
-    process {
+    process
+    {
         # Preserve raw API data structure
         $product = [PSCustomObject]$ApiData
 
@@ -159,7 +170,8 @@ function ConvertTo-KrogerProduct {
     }
 }
 
-function ConvertTo-KrogerCartItem {
+function ConvertTo-KrogerCartItem
+{
     <#
     .SYNOPSIS
     Converts Kroger API cart data to KrogerCartItem object with TypeName.
@@ -183,7 +195,8 @@ function ConvertTo-KrogerCartItem {
         [object]$ApiData
     )
 
-    process {
+    process
+    {
         # Preserve raw API data structure
         $cartItem = [PSCustomObject]$ApiData
 
