@@ -230,7 +230,7 @@ function Get-KrogerUserSession {
                         $sessionData = Import-Clixml -Path $sessionPath
                     }
                     else {
-                        Write-Warning "Token refresh failed, please re-authenticate"
+                        Write-Warning "Kroger authentication expired. Please re-run: Connect-KrogerPkce"
                         Remove-Item $sessionPath -Force -ErrorAction SilentlyContinue
                         return $null
                     }
@@ -330,7 +330,7 @@ function Update-KrogerUserToken {
             return $true
         }
         catch {
-            Write-Error "Failed to refresh token: $_"
+            Write-Verbose "Token refresh failed: $_"
             # Remove expired session file
             $sessionPath = Get-KrogerSessionPath
             if (Test-Path $sessionPath) {

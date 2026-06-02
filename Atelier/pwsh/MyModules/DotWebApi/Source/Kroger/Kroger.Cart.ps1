@@ -148,7 +148,7 @@ function Add-KrogerCartItem {
         }
 
         if (-not $userSession) {
-            throw "Cart operations require user authentication. Please run Connect-KrogerPkce to authenticate."
+            throw "Cart operations require authentication. Please run: Connect-KrogerPkce"
         }
 
         if (Test-WebApiTokenExpired -Token $userSession.token) {
@@ -156,11 +156,11 @@ function Add-KrogerCartItem {
             if (Update-KrogerUserToken) {
                 $userSession = Get-KrogerUserSession
                 if (-not $userSession) {
-                    throw "Token refresh failed. Please run Connect-KrogerPkce to re-authenticate."
+                    throw "Authentication expired. Please re-run: Connect-KrogerPkce"
                 }
             }
             else {
-                throw "Token refresh failed. Please run Connect-KrogerPkce to re-authenticate."
+                throw "Authentication expired. Please re-run: Connect-KrogerPkce"
             }
         }
 
