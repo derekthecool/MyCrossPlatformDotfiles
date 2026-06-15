@@ -11,7 +11,11 @@
 #>
 function Get-ConventionalCommitValues
 {
-    'build', 'chore', 'ci', 'docs', 'feat', 'fix', 'perf', 'refactor', 'revert', 'style', 'test'
+    [CmdletBinding()]
+    [Alias('gccv')]
+    param()
+
+    'feat', 'fix', 'docs', 'style', 'refactor', 'perf', 'test', 'build', 'ci', 'chore', 'config', 'revert', 'snippets', 'steno'
 }
 
 function Select-ConventionalCommitValue

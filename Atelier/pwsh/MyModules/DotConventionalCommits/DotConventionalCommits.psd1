@@ -15,7 +15,7 @@
     # must be explicitly set! Never use * because the module will not load if that item is called.
 
     CmdletsToExport   = @()
-    AliasesToExport   = @()
+    AliasesToExport   = @('gccv')
     FunctionsToExport = @(
         'Get-ConventionalCommitValues'
         'Select-ConventionalCommitValue'
