@@ -16,8 +16,6 @@
         'Get-DotnetOutdatedPackage'
         'CustomSortOrder'
         'Get-GeneralCompletion'
-        'Use-Kroger'
-        'Use-SpoonacularApi'
         'Start-VSCompiler'
         'Get-ISO'
         'Get-ISOFilename'
