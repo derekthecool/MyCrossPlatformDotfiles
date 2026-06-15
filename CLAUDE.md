@@ -26,6 +26,34 @@ $env:PATH += [IO.Path]::PathSeparator + "/new"   # not ":/new" (Unix-only)
 if ($IsWindows) { $env:LOCALAPPDATA } else { "$HOME/.config" }
 ```
 
+### Platform Detection
+```powershell
+if ($IsWindows) { $configPath = $env:LOCALAPPDATA }
+elseif ($IsLinux -or $IsMacOS) { $configPath = "$HOME/.config" }
+```
+
+### PowerShell Function Aliases
+Use `CmdletBinding()` with an empty `param()` block and `[Alias('name')]` attribute on functions. Never use `Set-Alias`.
+
+### Git Operations
+```bash
+# Bare repo (editing dotfiles)
+git --git-dir=$HOME/.cfg --work-tree=$HOME status
+
+# Normal repo (development)
+git status
+```
+
+```powershell
+# Bare repo (PowerShell only)
+dot status
+
+# Normal repo
+git status
+```
+
+---
+
 ## Critical Files
 
 - `Atelier/pwsh/MyModules/Dot/Source/Dot.Functions.ps1` — bare-repo `dot` function
