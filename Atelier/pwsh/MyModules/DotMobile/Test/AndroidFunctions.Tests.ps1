@@ -89,28 +89,317 @@ Describe 'Android ADB Functions Tests' {
             $module.ExportedFunctions['New-AdbScreenshot'] | Should -Not -BeNullOrEmpty
         }
 
-        It 'Calls adb exec-out with correct parameters' -Skip:([bool](!(Get-Command adb -ErrorAction SilentlyContinue))) {
-            Mock adb {}
+        It 'Prompts via Read-Host when -Name not provided' -Skip:([bool](!(Get-Command adb -ErrorAction SilentlyContinue))) {
+            Mock adb { $global:LASTEXITCODE = 0 }
+            # Loop mode: first prompt returns a name, second returns blank to exit.
+            $script:promptCount = 0
+            Mock Read-Host {
+                $script:promptCount++
+                if ($script:promptCount -eq 1) { 'prompted-name' } else { '' }
+            }
 
-            $testPath = '/tmp/test_screenshot'
-            New-AdbScreenshot -OutputPathNameWithoutFileEnding $testPath
-
-            Should -Invoke -CommandName 'adb' -Times 1 -ParameterFilter {
-                $args -contains 'exec-out' -and
-                $args -contains 'screencap' -and
-                $args -contains '-p'
+            $tempDir = Join-Path ([IO.Path]::GetTempPath()) "DotMobile-test-$([guid]::NewGuid())"
+            try
+            {
+                New-AdbScreenshot -Path $tempDir
+                Should -Invoke -CommandName 'Read-Host' -Times 2
+            }
+            finally
+            {
+                Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
             }
         }
 
-        It 'Creates file with .png extension' -Skip:([bool](!(Get-Command adb -ErrorAction SilentlyContinue))) {
-            Mock adb {}
+        It 'Loops until blank name is entered, capturing each' -Skip:([bool](!(Get-Command adb -ErrorAction SilentlyContinue))) {
+            Mock adb { $global:LASTEXITCODE = 0 }
+            $script:promptCount = 0
+            Mock Read-Host {
+                $script:promptCount++
+                switch ($script:promptCount)
+                {
+                    1 { 'shot-one' }
+                    2 { 'shot-two' }
+                    default { '' }
+                }
+            }
 
-            $testPath = '/tmp/test_screenshot'
-            New-AdbScreenshot -OutputPathNameWithoutFileEnding $testPath
+            $tempDir = Join-Path ([IO.Path]::GetTempPath()) "DotMobile-test-$([guid]::NewGuid())"
+            try
+            {
+                $result = New-AdbScreenshot -Path $tempDir
 
-            # The function redirects output to a file, so we can't easily test file creation
-            # But we can verify adb was called
-            Should -Invoke -CommandName 'adb' -Times 1
+                Should -Invoke -CommandName 'adb' -Times 2 -ParameterFilter { $args -contains 'pull' }
+                $result | Should -HaveCount 2
+                $result[0].Name | Should -Be 'shot-one.png'
+                $result[1].Name | Should -Be 'shot-two.png'
+            }
+            finally
+            {
+                Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+            }
+        }
+
+        It 'Uses -Name directly when provided (no Read-Host)' -Skip:([bool](!(Get-Command adb -ErrorAction SilentlyContinue))) {
+            Mock adb { $global:LASTEXITCODE = 0 }
+            Mock Read-Host { 'should-not-be-called' }
+
+            $tempDir = Join-Path ([IO.Path]::GetTempPath()) "DotMobile-test-$([guid]::NewGuid())"
+            try
+            {
+                New-AdbScreenshot -Name direct-name -Path $tempDir
+                Should -Invoke -CommandName 'Read-Host' -Times 0
+            }
+            finally
+            {
+                Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+            }
+        }
+
+        It 'Calls adb shell screencap with device-side path (binary-safe pattern)' -Skip:([bool](!(Get-Command adb -ErrorAction SilentlyContinue))) {
+            Mock adb { $global:LASTEXITCODE = 0 }
+
+            $tempDir = Join-Path ([IO.Path]::GetTempPath()) "DotMobile-test-$([guid]::NewGuid())"
+            try
+            {
+                New-AdbScreenshot -Name shot -Path $tempDir
+
+                Should -Invoke -CommandName 'adb' -Times 1 -ParameterFilter {
+                    $args -contains 'shell' -and
+                    $args -contains 'screencap' -and
+                    $args -contains '-p' -and
+                    ($args -join ' ') -match '/sdcard/DotMobile_capture_'
+                }
+            }
+            finally
+            {
+                Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+            }
+        }
+
+        It 'Calls adb pull to retrieve the captured PNG' -Skip:([bool](!(Get-Command adb -ErrorAction SilentlyContinue))) {
+            Mock adb { $global:LASTEXITCODE = 0 }
+
+            $tempDir = Join-Path ([IO.Path]::GetTempPath()) "DotMobile-test-$([guid]::NewGuid())"
+            try
+            {
+                New-AdbScreenshot -Name shot -Path $tempDir
+
+                Should -Invoke -CommandName 'adb' -Times 1 -ParameterFilter {
+                    $args -contains 'pull'
+                }
+            }
+            finally
+            {
+                Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+            }
+        }
+
+        It 'Calls adb shell rm -f for cleanup' -Skip:([bool](!(Get-Command adb -ErrorAction SilentlyContinue))) {
+            Mock adb { $global:LASTEXITCODE = 0 }
+
+            $tempDir = Join-Path ([IO.Path]::GetTempPath()) "DotMobile-test-$([guid]::NewGuid())"
+            try
+            {
+                New-AdbScreenshot -Name shot -Path $tempDir
+
+                Should -Invoke -CommandName 'adb' -Times 1 -ParameterFilter {
+                    $args -contains 'rm' -and $args -contains '-f'
+                }
+            }
+            finally
+            {
+                Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+            }
+        }
+
+        It 'Passes -s <serial> when Serial provided' -Skip:([bool](!(Get-Command adb -ErrorAction SilentlyContinue))) {
+            Mock adb { $global:LASTEXITCODE = 0 }
+
+            $tempDir = Join-Path ([IO.Path]::GetTempPath()) "DotMobile-test-$([guid]::NewGuid())"
+            try
+            {
+                New-AdbScreenshot -Name shot -Serial R5CN12345 -Path $tempDir
+
+                Should -Invoke -CommandName 'adb' -Times 1 -ParameterFilter {
+                    ($args -join ' ') -match '-s R5CN12345'
+                }
+            }
+            finally
+            {
+                Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+            }
+        }
+
+        It 'Invokes Add-DeviceFrame when -Frame is set' -Skip:([bool](!(Get-Command adb -ErrorAction SilentlyContinue))) {
+            Mock adb { $global:LASTEXITCODE = 0 }
+            Mock Add-DeviceFrame { [PSCustomObject]@{ FullName = 'mocked-framed.png' } } -ModuleName DotMobile
+
+            $tempDir = Join-Path ([IO.Path]::GetTempPath()) "DotMobile-test-$([guid]::NewGuid())"
+            try
+            {
+                New-AdbScreenshot -Name shot -Path $tempDir -Frame
+
+                Should -Invoke -CommandName 'Add-DeviceFrame' -Times 1 -ModuleName DotMobile
+            }
+            finally
+            {
+                Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+            }
+        }
+
+        It 'Does NOT invoke Add-DeviceFrame when -Frame is omitted' -Skip:([bool](!(Get-Command adb -ErrorAction SilentlyContinue))) {
+            Mock adb { $global:LASTEXITCODE = 0 }
+            Mock Add-DeviceFrame { } -ModuleName DotMobile
+
+            $tempDir = Join-Path ([IO.Path]::GetTempPath()) "DotMobile-test-$([guid]::NewGuid())"
+            try
+            {
+                New-AdbScreenshot -Name shot -Path $tempDir
+
+                Should -Invoke -CommandName 'Add-DeviceFrame' -Times 0 -ModuleName DotMobile
+            }
+            finally
+            {
+                Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+            }
+        }
+
+        It 'Removes existing PNGs in raw and sibling framed dirs when -RemoveExisting is set' -Skip:([bool](!(Get-Command adb -ErrorAction SilentlyContinue))) {
+            Mock adb { $global:LASTEXITCODE = 0 }
+
+            $tempRoot = Join-Path ([IO.Path]::GetTempPath()) "DotMobile-test-$([guid]::NewGuid())"
+            $rawDir = Join-Path $tempRoot 'raw'
+            $framedDir = Join-Path $tempRoot 'framed'
+            try
+            {
+                New-Item -ItemType Directory -Path $rawDir -Force | Out-Null
+                New-Item -ItemType Directory -Path $framedDir -Force | Out-Null
+                'old1', 'old2' | ForEach-Object {
+                    [IO.File]::WriteAllBytes((Join-Path $rawDir   "$_.png"), [byte[]](0x89, 0x50))
+                    [IO.File]::WriteAllBytes((Join-Path $framedDir "$_.png"), [byte[]](0x89, 0x50))
+                }
+
+                # -WhatIf: nothing actually removed, mock adb still called for the test
+                { New-AdbScreenshot -Name shot -Path $rawDir -RemoveExisting -WhatIf } | Should -Not -Throw
+                (Get-ChildItem $rawDir -Filter '*.png').Count | Should -Be 2
+                (Get-ChildItem $framedDir -Filter '*.png').Count | Should -Be 2
+
+                # Real run: existing PNGs gone, new one captured.
+                New-AdbScreenshot -Name shot -Path $rawDir -RemoveExisting
+                (Get-ChildItem $rawDir -Filter '*.png').Count | Should -Be 1
+            }
+            finally
+            {
+                Remove-Item $tempRoot -Recurse -Force -ErrorAction SilentlyContinue
+            }
+        }
+
+        It 'Respects -WhatIf: skips adb capture entirely' -Skip:([bool](!(Get-Command adb -ErrorAction SilentlyContinue))) {
+            Mock adb { $global:LASTEXITCODE = 0 }
+
+            $tempDir = Join-Path ([IO.Path]::GetTempPath()) "DotMobile-test-$([guid]::NewGuid())"
+            try
+            {
+                New-AdbScreenshot -Name shot -Path $tempDir -WhatIf
+
+                # Under -WhatIf, the function returns before any adb call.
+                Should -Invoke -CommandName 'adb' -Times 0
+            }
+            finally
+            {
+                Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+            }
+        }
+    }
+
+    Context 'Add-DeviceFrame' {
+        It 'Function is exported from module' {
+            $module.ExportedFunctions['Add-DeviceFrame'] | Should -Not -BeNullOrEmpty
+        }
+
+        It 'Throws when input screenshot missing' {
+            $tempDir = Join-Path ([IO.Path]::GetTempPath()) "DotMobile-test-$([guid]::NewGuid())"
+            try
+            {
+                New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
+                { Add-DeviceFrame -Name missing -Path $tempDir -DestinationPath $tempDir } | Should -Throw
+            }
+            finally
+            {
+                Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+            }
+        }
+
+        BeforeEach {
+            # Mocks need -ModuleName DotMobile because Add-DeviceFrame runs in the
+            # module's session state, not the test scope. Without -ModuleName, real
+            # magick gets invoked.
+            Mock magick { $global:LASTEXITCODE = 0 } -ModuleName DotMobile
+            Mock Get-Item { [PSCustomObject]@{ FullName = 'mocked-output.png' } } -ModuleName DotMobile
+
+            $script:testRawDir = Join-Path ([IO.Path]::GetTempPath()) "DotMobile-test-$([guid]::NewGuid())"
+            New-Item -ItemType Directory -Path $script:testRawDir -Force | Out-Null
+            $inputPng = Join-Path $script:testRawDir 'shot.png'
+            [IO.File]::WriteAllBytes($inputPng, [byte[]](0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A))
+        }
+
+        AfterEach {
+            Remove-Item $script:testRawDir -Recurse -Force -ErrorAction SilentlyContinue
+        }
+
+        It 'Calls magick 4 times for the framing pipeline' -Skip:([bool](!(Get-Command magick -ErrorAction SilentlyContinue))) {
+            Add-DeviceFrame -Name shot -Path $script:testRawDir -DestinationPath (Join-Path $script:testRawDir 'framed')
+            Should -Invoke -CommandName 'magick' -Times 4 -ModuleName DotMobile
+        }
+
+        It 'Uses -crop on the mask in step 1 with bundled mask path' -Skip:([bool](!(Get-Command magick -ErrorAction SilentlyContinue))) {
+            Add-DeviceFrame -Name shot -Path $script:testRawDir -DestinationPath (Join-Path $script:testRawDir 'framed')
+
+            Should -Invoke -CommandName 'magick' -Times 1 -ModuleName DotMobile -ParameterFilter {
+                $args -contains '-crop' -and
+                ($args -join ' ') -match 'Pixel9ProXL[\\/]mask\.png'
+            }
+        }
+
+        It 'Uses -compose copyopacity in step 3' -Skip:([bool](!(Get-Command magick -ErrorAction SilentlyContinue))) {
+            Add-DeviceFrame -Name shot -Path $script:testRawDir -DestinationPath (Join-Path $script:testRawDir 'framed')
+
+            Should -Invoke -CommandName 'magick' -Times 1 -ModuleName DotMobile -ParameterFilter {
+                $args -contains 'copyopacity'
+            }
+        }
+
+        It 'Composites onto bundled frame in step 4' -Skip:([bool](!(Get-Command magick -ErrorAction SilentlyContinue))) {
+            Add-DeviceFrame -Name shot -Path $script:testRawDir -DestinationPath (Join-Path $script:testRawDir 'framed')
+
+            Should -Invoke -CommandName 'magick' -Times 1 -ModuleName DotMobile -ParameterFilter {
+                ($args -join ' ') -match 'Pixel9ProXL[\\/]frame\.png' -and
+                $args -contains 'northwest'
+            }
+        }
+
+        It 'Accepts pipeline input and derives framed dir as sibling of raw dir' -Skip:([bool](!(Get-Command magick -ErrorAction SilentlyContinue))) {
+            # $script:testRawDir is shot.png's location; pipeline mode should write to
+            # <parent>/framed/shot.png. Move the raw file under a 'raw' subdir to make
+            # the sibling relationship explicit and verify the derivation.
+            $tempRoot = Split-Path $script:testRawDir -Parent
+            $rawSubDir = Join-Path $tempRoot 'raw'
+            New-Item -ItemType Directory -Path $rawSubDir -Force | Out-Null
+            Move-Item (Join-Path $script:testRawDir 'shot.png') (Join-Path $rawSubDir 'shot.png') -Force
+
+            $file = Get-Item (Join-Path $rawSubDir 'shot.png')
+            $file | Add-DeviceFrame
+
+            $sep = [IO.Path]::DirectorySeparatorChar
+            Should -Invoke -CommandName 'magick' -Times 1 -ModuleName DotMobile -ParameterFilter {
+                ($args -join ' ') -match ('framed' + [regex]::Escape($sep) + 'shot\.png')
+            }
+        }
+
+        It 'Respects -WhatIf: skips all magick calls' -Skip:([bool](!(Get-Command magick -ErrorAction SilentlyContinue))) {
+            Add-DeviceFrame -Name shot -Path $script:testRawDir -DestinationPath (Join-Path $script:testRawDir 'framed') -WhatIf
+
+            Should -Invoke -CommandName 'magick' -Times 0 -ModuleName DotMobile
         }
     }
 

@@ -18,6 +18,7 @@
         # Android functions
         'Get-AdbDevices'
         'New-AdbScreenshot'
+        'Add-DeviceFrame'
         'Get-AdbImages'
         'Update-AndroidApplications'
         'Get-AdbLogCode'
