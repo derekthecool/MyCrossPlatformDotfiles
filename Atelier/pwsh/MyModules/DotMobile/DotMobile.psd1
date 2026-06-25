@@ -19,6 +19,7 @@
         'Get-AdbDevices'
         'New-AdbScreenshot'
         'Add-DeviceFrame'
+        'New-FeatureGraphic'
         'Get-AdbImages'
         'Update-AndroidApplications'
         'Get-AdbLogCode'

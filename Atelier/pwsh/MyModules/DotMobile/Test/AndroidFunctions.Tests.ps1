@@ -403,6 +403,113 @@ Describe 'Android ADB Functions Tests' {
         }
     }
 
+    Context 'New-FeatureGraphic' {
+        BeforeEach {
+            Mock magick { $global:LASTEXITCODE = 0 } -ModuleName DotMobile
+            Mock Get-Item { [PSCustomObject]@{ FullName = 'mocked-feature.png' } } -ModuleName DotMobile
+
+            $script:fgTestDir = Join-Path ([IO.Path]::GetTempPath()) "DotMobile-fg-$([guid]::NewGuid())"
+            New-Item -ItemType Directory -Path $script:fgTestDir -Force | Out-Null
+            $script:fgShotPath = Join-Path $script:fgTestDir 'shot.png'
+            [IO.File]::WriteAllBytes($script:fgShotPath, [byte[]](0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A))
+        }
+
+        AfterEach {
+            Remove-Item $script:fgTestDir -Recurse -Force -ErrorAction SilentlyContinue
+        }
+
+        It 'Function is exported from module' {
+            $module.ExportedFunctions['New-FeatureGraphic'] | Should -Not -BeNullOrEmpty
+        }
+
+        It 'Throws when screenshot missing' {
+            { New-FeatureGraphic -ScreenshotPath (Join-Path $script:fgTestDir 'nope.png') -Title 'T' -OutputPath (Join-Path $script:fgTestDir 'out.png') } | Should -Throw
+        }
+
+        It 'Calls magick 5 times for canvas/resize/composite/text/flatten' -Skip:([bool](!(Get-Command magick -ErrorAction SilentlyContinue))) {
+            New-FeatureGraphic -ScreenshotPath $script:fgShotPath -Title 'svgaze' -OutputPath (Join-Path $script:fgTestDir 'out.png')
+            Should -Invoke -CommandName 'magick' -Times 5 -ModuleName DotMobile
+        }
+
+        It 'Uses gradient: primitive when -GradientColors is provided' -Skip:([bool](!(Get-Command magick -ErrorAction SilentlyContinue))) {
+            New-FeatureGraphic -ScreenshotPath $script:fgShotPath -Title 'T' -GradientColors '#111111', '#222222' -OutputPath (Join-Path $script:fgTestDir 'out.png')
+
+            Should -Invoke -CommandName 'magick' -Times 1 -ModuleName DotMobile -ParameterFilter {
+                ($args -join ' ') -match 'gradient:#111111-#222222'
+            }
+        }
+
+        It 'Uses xc: solid fill when -GradientColors is not provided' -Skip:([bool](!(Get-Command magick -ErrorAction SilentlyContinue))) {
+            New-FeatureGraphic -ScreenshotPath $script:fgShotPath -Title 'T' -BackgroundColor '#abcdef' -OutputPath (Join-Path $script:fgTestDir 'out.png')
+
+            Should -Invoke -CommandName 'magick' -Times 1 -ModuleName DotMobile -ParameterFilter {
+                ($args -join ' ') -match 'xc:#abcdef'
+            }
+        }
+
+        It 'Resizes screenshot to 256px wide in a dedicated step' -Skip:([bool](!(Get-Command magick -ErrorAction SilentlyContinue))) {
+            New-FeatureGraphic -ScreenshotPath $script:fgShotPath -Title 'T' -OutputPath (Join-Path $script:fgTestDir 'out.png')
+
+            Should -Invoke -CommandName 'magick' -Times 1 -ModuleName DotMobile -ParameterFilter {
+                $args -contains '256x' -and -not ($args -contains 'east')
+            }
+        }
+
+        It 'Composites the resized screenshot east-aligned' -Skip:([bool](!(Get-Command magick -ErrorAction SilentlyContinue))) {
+            New-FeatureGraphic -ScreenshotPath $script:fgShotPath -Title 'T' -OutputPath (Join-Path $script:fgTestDir 'out.png')
+
+            Should -Invoke -CommandName 'magick' -Times 1 -ModuleName DotMobile -ParameterFilter {
+                $args -contains 'east' -and $args -contains '-composite'
+            }
+        }
+
+        It 'Renders title at +82+180 via -annotate' -Skip:([bool](!(Get-Command magick -ErrorAction SilentlyContinue))) {
+            New-FeatureGraphic -ScreenshotPath $script:fgShotPath -Title 'MyApp' -OutputPath (Join-Path $script:fgTestDir 'out.png')
+
+            Should -Invoke -CommandName 'magick' -Times 1 -ModuleName DotMobile -ParameterFilter {
+                $args -contains '+82+180' -and $args -contains 'MyApp'
+            }
+        }
+
+        It 'Renders subtitle at +82+260 only when -Subtitle is provided' -Skip:([bool](!(Get-Command magick -ErrorAction SilentlyContinue))) {
+            New-FeatureGraphic -ScreenshotPath $script:fgShotPath -Title 'T' -Subtitle 'Tagline here' -OutputPath (Join-Path $script:fgTestDir 'out.png')
+
+            Should -Invoke -CommandName 'magick' -Times 1 -ModuleName DotMobile -ParameterFilter {
+                $args -contains '+82+260' -and $args -contains 'Tagline here'
+            }
+        }
+
+        It 'Omits subtitle annotate when -Subtitle is not provided' -Skip:([bool](!(Get-Command magick -ErrorAction SilentlyContinue))) {
+            New-FeatureGraphic -ScreenshotPath $script:fgShotPath -Title 'T' -OutputPath (Join-Path $script:fgTestDir 'out.png')
+
+            Should -Invoke -CommandName 'magick' -Times 0 -ModuleName DotMobile -ParameterFilter {
+                $args -contains '+82+260'
+            }
+        }
+
+        It 'Writes 24-bit PNG via png:color-type=2 in flatten step' -Skip:([bool](!(Get-Command magick -ErrorAction SilentlyContinue))) {
+            New-FeatureGraphic -ScreenshotPath $script:fgShotPath -Title 'T' -OutputPath (Join-Path $script:fgTestDir 'out.png')
+
+            Should -Invoke -CommandName 'magick' -Times 1 -ModuleName DotMobile -ParameterFilter {
+                $args -contains 'png:color-type=2' -and $args -contains 'remove'
+            }
+        }
+
+        It 'Passes -Font through to magick when provided' -Skip:([bool](!(Get-Command magick -ErrorAction SilentlyContinue))) {
+            New-FeatureGraphic -ScreenshotPath $script:fgShotPath -Title 'T' -Font '/tmp/fake.ttf' -OutputPath (Join-Path $script:fgTestDir 'out.png')
+
+            Should -Invoke -CommandName 'magick' -Times 1 -ModuleName DotMobile -ParameterFilter {
+                $args -contains '-font' -and $args -contains '/tmp/fake.ttf'
+            }
+        }
+
+        It 'Respects -WhatIf: skips all magick calls' -Skip:([bool](!(Get-Command magick -ErrorAction SilentlyContinue))) {
+            New-FeatureGraphic -ScreenshotPath $script:fgShotPath -Title 'T' -OutputPath (Join-Path $script:fgTestDir 'out.png') -WhatIf
+
+            Should -Invoke -CommandName 'magick' -Times 0 -ModuleName DotMobile
+        }
+    }
+
     Context 'Get-AdbImages' {
         It 'Function is exported from module' {
             $module.ExportedFunctions['Get-AdbImages'] | Should -Not -BeNullOrEmpty
