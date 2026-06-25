@@ -2,3 +2,5 @@
 
 # Neovim local configuration
 **/.nvim.lua
+
+**/.claude/settings.local.json

@@ -10,5 +10,9 @@
   {
     "type": "class",
     "app": "Insomnia"
+  },
+  {
+    "type": "process",
+    "app": "Zoom"
   }
 ]
