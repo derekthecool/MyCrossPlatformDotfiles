@@ -50,8 +50,7 @@ function Get-ImageMetaData
             if ($p -is [System.IO.FileInfo])
             {
                 $file = $p.FullName
-            }
-            else
+            } else
             {
                 $file = $p
             }
@@ -99,29 +98,29 @@ function Get-ImageMetaData
 
                 # Build result object with common properties at top level
                 $result = [PSCustomObject]@{
-                    Path          = $file
-                    FileName      = if ($data.FileName) { $data.FileName } else { [IO.Path]::GetFileName($file) }
-                    Extension     = [IO.Path]::GetExtension($file)
-                    Width         = $data.ImageWidth ?? $data.VideoWidth ?? $null
-                    Height        = $data.ImageHeight ?? $data.VideoHeight ?? $null
-                    GPSLatitude   = $data.GPSLatitude ?? $null
-                    GPSLongitude  = $data.GPSLongitude ?? $null
-                    GPSAltitude   = $data.GPSAltitude ?? $null
-                    HasGPS        = ($null -ne $data.GPSLatitude -and $null -ne $data.GPSLongitude)
-                    CameraMake    = $data.Make ?? $null
-                    CameraModel   = $data.Model ?? $null
-                    DateTime      = $data.CreateDate ?? $null
+                    Path             = $file
+                    FileName         = if ($data.FileName) { $data.FileName } else { [IO.Path]::GetFileName($file) }
+                    Extension        = [IO.Path]::GetExtension($file)
+                    Width            = $data.ImageWidth ?? $data.VideoWidth ?? $null
+                    Height           = $data.ImageHeight ?? $data.VideoHeight ?? $null
+                    GPSLatitude      = $data.GPSLatitude ?? $null
+                    GPSLongitude     = $data.GPSLongitude ?? $null
+                    GPSAltitude      = $data.GPSAltitude ?? $null
+                    HasGPS           = ($null -ne $data.GPSLatitude -and $null -ne $data.GPSLongitude)
+                    CameraMake       = $data.Make ?? $null
+                    CameraModel      = $data.Model ?? $null
+                    DateTime         = $data.CreateDate ?? $null
                     DateTimeOriginal = $data.DateTimeOriginal ?? $null
-                    ISO           = $data.ISO ?? $data.PhotographicSensitivity ?? $null
-                    FocalLength   = $data.FocalLength ?? $data.FocalLengthIn35mmFormat ?? $null
-                    FNumber       = $data.FNumber ?? $data.Aperture ?? $null
-                    ExposureTime  = $data.ExposureTime ?? $null
-                    Orientation   = $data.Orientation ?? $null
-                    Software      = $data.Software ?? $null
-                    MimeType     = $data.MimeType ?? $null
-                    FileSize     = $data.FileSize ?? $null
-                    Duration     = $data.Duration ?? $null
-                    FileType     = $data.FileType ?? $null
+                    ISO              = $data.ISO ?? $data.PhotographicSensitivity ?? $null
+                    FocalLength      = $data.FocalLength ?? $data.FocalLengthIn35mmFormat ?? $null
+                    FNumber          = $data.FNumber ?? $data.Aperture ?? $null
+                    ExposureTime     = $data.ExposureTime ?? $null
+                    Orientation      = $data.Orientation ?? $null
+                    Software         = $data.Software ?? $null
+                    MimeType         = $data.MimeType ?? $null
+                    FileSize         = $data.FileSize ?? $null
+                    Duration         = $data.Duration ?? $null
+                    FileType         = $data.FileType ?? $null
                 }
 
                 # Add all raw properties as nested object
@@ -137,8 +136,7 @@ function Get-ImageMetaData
                 # Add type name for display formatting
                 $result.PSTypeNames.Insert(0, 'DotImages.ImageMetadata')
                 $result
-            }
-            catch
+            } catch
             {
                 Write-Error "Failed to process '$file': $_"
             }

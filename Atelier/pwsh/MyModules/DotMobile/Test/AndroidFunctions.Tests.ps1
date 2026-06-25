@@ -103,8 +103,7 @@ Describe 'Android ADB Functions Tests' {
             {
                 New-AdbScreenshot -Path $tempDir
                 Should -Invoke -CommandName 'Read-Host' -Times 2
-            }
-            finally
+            } finally
             {
                 Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
             }
@@ -132,8 +131,7 @@ Describe 'Android ADB Functions Tests' {
                 $result | Should -HaveCount 2
                 $result[0].Name | Should -Be 'shot-one.png'
                 $result[1].Name | Should -Be 'shot-two.png'
-            }
-            finally
+            } finally
             {
                 Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
             }
@@ -148,8 +146,7 @@ Describe 'Android ADB Functions Tests' {
             {
                 New-AdbScreenshot -Name direct-name -Path $tempDir
                 Should -Invoke -CommandName 'Read-Host' -Times 0
-            }
-            finally
+            } finally
             {
                 Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
             }
@@ -169,8 +166,7 @@ Describe 'Android ADB Functions Tests' {
                     $args -contains '-p' -and
                     ($args -join ' ') -match '/sdcard/DotMobile_capture_'
                 }
-            }
-            finally
+            } finally
             {
                 Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
             }
@@ -187,8 +183,7 @@ Describe 'Android ADB Functions Tests' {
                 Should -Invoke -CommandName 'adb' -Times 1 -ParameterFilter {
                     $args -contains 'pull'
                 }
-            }
-            finally
+            } finally
             {
                 Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
             }
@@ -205,8 +200,7 @@ Describe 'Android ADB Functions Tests' {
                 Should -Invoke -CommandName 'adb' -Times 1 -ParameterFilter {
                     $args -contains 'rm' -and $args -contains '-f'
                 }
-            }
-            finally
+            } finally
             {
                 Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
             }
@@ -223,8 +217,7 @@ Describe 'Android ADB Functions Tests' {
                 Should -Invoke -CommandName 'adb' -Times 1 -ParameterFilter {
                     ($args -join ' ') -match '-s R5CN12345'
                 }
-            }
-            finally
+            } finally
             {
                 Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
             }
@@ -240,8 +233,7 @@ Describe 'Android ADB Functions Tests' {
                 New-AdbScreenshot -Name shot -Path $tempDir -Frame
 
                 Should -Invoke -CommandName 'Add-DeviceFrame' -Times 1 -ModuleName DotMobile
-            }
-            finally
+            } finally
             {
                 Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
             }
@@ -257,8 +249,7 @@ Describe 'Android ADB Functions Tests' {
                 New-AdbScreenshot -Name shot -Path $tempDir
 
                 Should -Invoke -CommandName 'Add-DeviceFrame' -Times 0 -ModuleName DotMobile
-            }
-            finally
+            } finally
             {
                 Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
             }
@@ -287,8 +278,7 @@ Describe 'Android ADB Functions Tests' {
                 # Real run: existing PNGs gone, new one captured.
                 New-AdbScreenshot -Name shot -Path $rawDir -RemoveExisting
                 (Get-ChildItem $rawDir -Filter '*.png').Count | Should -Be 1
-            }
-            finally
+            } finally
             {
                 Remove-Item $tempRoot -Recurse -Force -ErrorAction SilentlyContinue
             }
@@ -304,8 +294,7 @@ Describe 'Android ADB Functions Tests' {
 
                 # Under -WhatIf, the function returns before any adb call.
                 Should -Invoke -CommandName 'adb' -Times 0
-            }
-            finally
+            } finally
             {
                 Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
             }
@@ -323,8 +312,7 @@ Describe 'Android ADB Functions Tests' {
             {
                 New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
                 { Add-DeviceFrame -Name missing -Path $tempDir -DestinationPath $tempDir } | Should -Throw
-            }
-            finally
+            } finally
             {
                 Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
             }

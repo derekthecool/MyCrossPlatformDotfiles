@@ -1,14 +1,14 @@
 [
-    {
-        "app": "wezterm-gui",
-        "type": "process"
-    },
-    {
-        "app": "alacritty",
-        "type": "process"
-    },
-    {
-        "app": "devenv",
-        "type": "class"
-    }
+  {
+    "app": "wezterm-gui",
+    "type": "process"
+  },
+  {
+    "app": "alacritty",
+    "type": "process"
+  },
+  {
+    "app": "devenv",
+    "type": "class"
+  }
 ]

@@ -53,17 +53,19 @@ function New-AdbScreenshot
 
     while ($true)
     {
-        $currentName = if ($singleShot) {
+        $currentName = if ($singleShot)
+        {
             $Name
-        } else {
+        } else
+        {
             $prompted = Read-Host 'Screenshot name (blank to quit)'
             if ([string]::IsNullOrWhiteSpace($prompted)) { break }
             $prompted
         }
         if (-not $currentName.EndsWith('.png')) { $currentName += '.png' }
 
-        $outPath    = Join-Path $Path $currentName
-        $basename   = [IO.Path]::GetFileNameWithoutExtension($currentName)
+        $outPath = Join-Path $Path $currentName
+        $basename = [IO.Path]::GetFileNameWithoutExtension($currentName)
         $devicePath = "/sdcard/DotMobile_capture_$basename.png"
 
         # `adb exec-out screencap -p > file.png` corrupts PNG bytes through

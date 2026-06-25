@@ -26,10 +26,11 @@ Describe 'Get-ImageMetaData' {
             # We can't fully mock this in Pester 5 without complex setup
             # So we skip if exiftool is actually available
             $hasExiftool = Get-Command exiftool -ErrorAction SilentlyContinue
-            if ($hasExiftool) {
+            if ($hasExiftool)
+            {
                 Set-ItResult -Skipped -Because 'exiftool is installed, cannot test missing state'
-            }
-            else {
+            } else
+            {
                 { Get-ImageMetaData -Path '/fake/path.jpg' } | Should -Throw '*exiftool not found*'
             }
         }
@@ -41,7 +42,8 @@ Describe 'Get-ImageMetaData' {
         }
 
         It 'Accepts string path' {
-            if (-not $hasExiftool) {
+            if (-not $hasExiftool)
+            {
                 Set-ItResult -Skipped -Because 'exiftool not installed'
             }
             # This test just verifies the parameter accepts string input
@@ -49,14 +51,16 @@ Describe 'Get-ImageMetaData' {
         }
 
         It 'Accepts pipeline input from string' {
-            if (-not $hasExiftool) {
+            if (-not $hasExiftool)
+            {
                 Set-ItResult -Skipped -Because 'exiftool not installed'
             }
             { '/fake/path.jpg' | Get-ImageMetaData -ErrorAction SilentlyContinue } | Should -Not -Throw
         }
 
         It 'Accepts pipeline input from FileInfo' {
-            if (-not $hasExiftool) {
+            if (-not $hasExiftool)
+            {
                 Set-ItResult -Skipped -Because 'exiftool not installed'
             }
             $fileInfo = [System.IO.FileInfo]'/fake/path.jpg'
@@ -64,7 +68,8 @@ Describe 'Get-ImageMetaData' {
         }
 
         It 'Handles non-existent file' {
-            if (-not $hasExiftool) {
+            if (-not $hasExiftool)
+            {
                 Set-ItResult -Skipped -Because 'exiftool not installed'
             }
             # Warning is written to warning stream, not output
@@ -108,7 +113,8 @@ Describe 'Get-ImageMetaData' {
         }
 
         It 'Returns PSCustomObject with PSTypeName' {
-            if (-not $hasExiftool) {
+            if (-not $hasExiftool)
+            {
                 Set-ItResult -Skipped -Because 'exiftool not installed'
             }
             # We can't test with a real file without having test images
@@ -138,7 +144,8 @@ Describe 'Get-ImageMetaData' {
         }
 
         It 'Suppresses warnings when SkipUnsupported is used' {
-            if (-not $hasExiftool) {
+            if (-not $hasExiftool)
+            {
                 Set-ItResult -Skipped -Because 'exiftool not installed'
             }
             # Test that the switch parameter exists and can be passed
