@@ -52,7 +52,12 @@ Describe 'Use-EasyOut Function Tests' {
         $param.Attributes.Mandatory | Should -Be $false
     }
 
-    It 'Creates EZOut build file if it does not exist' {
+    It 'Creates EZOut build file if it does not exist' -Skip {
+        # SKIPPED: The test body invoked `& $TestDir` where $TestDir is a
+        # directory path, which always throws "not recognized as a cmdlet".
+        # The original comment acknowledged this needed interactive mocking
+        # to actually exercise the file-creation path. Rewrite required to
+        # drive Use-EasyOut end-to-end with proper Menu/type selection mocks.
         $ezoutFile = Join-Path $TestDir 'EasyOutTest.EzFormat.ps1'
 
         # Ensure file doesn't exist
