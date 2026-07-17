@@ -51,21 +51,21 @@ function Add-DeviceFrame
         if ($safeName.EndsWith('.png')) { $safeName = $safeName.Substring(0, $safeName.Length - 4) }
         $safeName = $safeName -replace '[/\\]', '_'
 
-        $inputPath  = Join-Path $Path            "$safeName.png"
+        $inputPath = Join-Path $Path            "$safeName.png"
         $outputPath = Join-Path $DestinationPath "$safeName.png"
 
         if (-not (Test-Path $inputPath)) { throw "Input screenshot not found: $inputPath" }
         if (-not (Test-Path $FramePath)) { throw "Frame asset not found: $FramePath" }
-        if (-not (Test-Path $MaskPath))  { throw "Mask asset not found: $MaskPath" }
+        if (-not (Test-Path $MaskPath)) { throw "Mask asset not found: $MaskPath" }
 
         if (-not $PSCmdlet.ShouldProcess($inputPath, "Apply device frame -> $outputPath")) { return }
 
         New-Item -ItemType Directory -Path $DestinationPath -Force | Out-Null
 
-        $tmpBase    = Join-Path ([IO.Path]::GetTempPath()) "DotMobile-frame-$safeName"
-        $tmpMaskVp  = "$tmpBase-mask-vp.png"
+        $tmpBase = Join-Path ([IO.Path]::GetTempPath()) "DotMobile-frame-$safeName"
+        $tmpMaskVp = "$tmpBase-mask-vp.png"
         $tmpResized = "$tmpBase-resized.png"
-        $tmpMasked  = "$tmpBase-masked.png"
+        $tmpMasked = "$tmpBase-masked.png"
 
         try
         {
@@ -114,8 +114,7 @@ function Add-DeviceFrame
             )
             & magick @step4 *> $null
             if ($LASTEXITCODE -ne 0) { throw "Composite failed (exit $LASTEXITCODE)." }
-        }
-        finally
+        } finally
         {
             Remove-Item $tmpMaskVp, $tmpResized, $tmpMasked -Force -ErrorAction SilentlyContinue
         }

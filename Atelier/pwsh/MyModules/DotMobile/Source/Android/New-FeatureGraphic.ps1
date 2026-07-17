@@ -61,11 +61,11 @@ function New-FeatureGraphic
         New-Item -ItemType Directory -Path $outDir -Force | Out-Null
     }
 
-    $tmpBase      = Join-Path ([IO.Path]::GetTempPath()) "DotMobile-feature-$([guid]::NewGuid())"
-    $tmpCanvas    = "$tmpBase-canvas.png"
+    $tmpBase = Join-Path ([IO.Path]::GetTempPath()) "DotMobile-feature-$([guid]::NewGuid())"
+    $tmpCanvas = "$tmpBase-canvas.png"
     $tmpShotResized = "$tmpBase-shot-256.png"
-    $tmpWithShot  = "$tmpBase-shot.png"
-    $tmpWithText  = "$tmpBase-text.png"
+    $tmpWithShot = "$tmpBase-shot.png"
+    $tmpWithText = "$tmpBase-text.png"
 
     try
     {
@@ -80,8 +80,7 @@ function New-FeatureGraphic
                 "gradient:$($GradientColors[0])-$($GradientColors[1])",
                 $tmpCanvas
             )
-        }
-        else
+        } else
         {
             $canvasArgs = @(
                 '-size', '1024x500',
@@ -146,8 +145,7 @@ function New-FeatureGraphic
         )
         & magick @flattenArgs *> $null
         if ($LASTEXITCODE -ne 0) { throw "Flatten/save failed (exit $LASTEXITCODE)." }
-    }
-    finally
+    } finally
     {
         Remove-Item $tmpCanvas, $tmpShotResized, $tmpWithShot, $tmpWithText -Force -ErrorAction SilentlyContinue
     }

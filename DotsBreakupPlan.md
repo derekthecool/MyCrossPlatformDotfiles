@@ -16,10 +16,10 @@ Guiding rules from the user:
 
 ### Trash (delete entirely)
 
-| File | Reason |
-|---|---|
-| `Dots/Demos/Dots.demo.ps1` | Demo file, no real functions |
-| `Expand-Number` (and alias `number`) | User considers low-value; trashing |
+| File                                                              | Reason                                                          |
+|-------------------------------------------------------------------|-----------------------------------------------------------------|
+| `Dots/Demos/Dots.demo.ps1`                                        | Demo file, no real functions                                    |
+| `Expand-Number` (and alias `number`)                              | User considers low-value; trashing                              |
 | `CustomSortOrder` (internal helper in `TabCompletion/Dotnet.ps1`) | Travels with dotnet completer — inline as private when migrated |
 
 ### New modules to create (5)
@@ -49,14 +49,14 @@ Each new module follows the standard layout: `<Name>.psd1`, `<Name>.psm1` (dot-s
 
 ### Migrations to existing modules
 
-| Function | Destination | New file |
-|---|---|---|
-| `ffmpeg-ReduceVideoSize` | `DotImages` | `Source/FFmpeg.ps1` |
-| `Add-MasonToolsToPath` | `DotInitializer` | `Source/MasonPath.ps1` |
-| `Watch-FileChange` | `DotCore` | `Source/WatchFileChange.ps1` |
-| `Convert-FileToHexString` | `DotCore` | `Source/ConvertFileToHexString.ps1` |
-| `Get-BytesToSize` | `DotCore` | `Source/GetBytesToSize.ps1` |
-| tshark argument completer | `DotPcap` | `Source/TsharkCompletion.ps1` (extract from `General-Completion.ps1`, inline the `Get-GeneralCompletion` pattern) |
+| Function                  | Destination      | New file                                                                                                          |
+|---------------------------|------------------|-------------------------------------------------------------------------------------------------------------------|
+| `ffmpeg-ReduceVideoSize`  | `DotImages`      | `Source/FFmpeg.ps1`                                                                                               |
+| `Add-MasonToolsToPath`    | `DotInitializer` | `Source/MasonPath.ps1`                                                                                            |
+| `Watch-FileChange`        | `DotCore`        | `Source/WatchFileChange.ps1`                                                                                      |
+| `Convert-FileToHexString` | `DotCore`        | `Source/ConvertFileToHexString.ps1`                                                                               |
+| `Get-BytesToSize`         | `DotCore`        | `Source/GetBytesToSize.ps1`                                                                                       |
+| tshark argument completer | `DotPcap`        | `Source/TsharkCompletion.ps1` (extract from `General-Completion.ps1`, inline the `Get-GeneralCompletion` pattern) |
 
 ### Module manifest updates
 
@@ -66,11 +66,11 @@ For each new/modified module, update `FunctionsToExport` and `AliasesToExport` i
 
 The current `MyModules/Tests/` central folder holds three test files for Dots functions. Move them to per-module `Test/` folders to match the dominant convention:
 
-| Current path | New path |
-|---|---|
+| Current path                                         | New path                                             |
+|------------------------------------------------------|------------------------------------------------------|
 | `Tests/NeovimRelated/Add-MasonToolsToPath.Tests.ps1` | `DotInitializer/Test/Add-MasonToolsToPath.Tests.ps1` |
-| `Tests/Benchmark/ProfilePerformance.Tests.ps1` | `DotSystem/Test/ProfilePerformance.Tests.ps1` |
-| `Tests/Download-Commands.Tests.ps1` | `DotSystem/Test/Download-Commands.Tests.ps1` |
+| `Tests/Benchmark/ProfilePerformance.Tests.ps1`       | `DotSystem/Test/ProfilePerformance.Tests.ps1`        |
+| `Tests/Download-Commands.Tests.ps1`                  | `DotSystem/Test/Download-Commands.Tests.ps1`         |
 
 After moves, the legacy `Tests/` folder should be checked for remaining content; if empty, delete it.
 
