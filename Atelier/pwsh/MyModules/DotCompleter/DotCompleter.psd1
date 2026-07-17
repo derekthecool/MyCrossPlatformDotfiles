@@ -1,12 +1,12 @@
 @{
-    RootModule        = 'DotImages.psm1'
+    RootModule        = 'DotCompleter.psm1'
     ModuleVersion     = '0.1.0'
-    GUID              = 'a7f3d8e2-5a4c-4f8e-9b1c-3d2e8f9a1b5c'
+    GUID              = 'b84d2790-0b36-4082-97e0-32c399b925a9'
     Author            = 'Derek Lomax'
-    Description       = 'Functions for extracting metadata from image and video files using exiftool'
+    Description       = 'Argument completer registrations for orphan CLI tools that have no dedicated Dot* module'
     PrivateData       = @{
         PSData = @{
-            Tags = @('dots', 'exif', 'metadata', 'image', 'exiftool')
+            Tags = @('dots', 'completion', 'tab-completion', 'argument-completer')
         }
     }
     VariablesToExport = ''
@@ -15,9 +15,8 @@
     # must be explicitly set! Never use * because the module will not load if that item is called.
 
     CmdletsToExport   = @()
-    AliasesToExport   = @('gim')
+    AliasesToExport   = @()
     FunctionsToExport = @(
-        'Get-ImageMetaData'
-        'ffmpeg-ReduceVideoSize'
+        'Get-GeneralCompletion'
     )
 }

@@ -1,8 +1,11 @@
 <#
-This script started with the 3rd example from the Get-Help -All Register-ArgumentCompleter
+    .SYNOPSIS
+    Native argument completer for the dotnet CLI.
 
-Then it has been enhanced to sort the completion items and move ones starting with symbols
-to the end of the list
+    .DESCRIPTION
+    Started from the 3rd example of `Get-Help -All Register-ArgumentCompleter`,
+    then enhanced to sort completion items and move ones starting with symbols
+    to the end of the list.
 #>
 $scriptblock = {
     param($wordToComplete, $commandAst, $cursorPosition)

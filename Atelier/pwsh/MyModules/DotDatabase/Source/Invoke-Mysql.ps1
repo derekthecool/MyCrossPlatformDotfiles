@@ -3,10 +3,14 @@ function Invoke-Mysql
     param (
         [Parameter(Mandatory)]
         [string]$Name,
+
         [int]$Port = 3306,
+
         [string]$Server = 'localhost',
+
         [Parameter(Mandatory)]
         [string]$Database = 'OrionPineappleFota',
+
         [Parameter(Mandatory)]
         [string]$Query
     )

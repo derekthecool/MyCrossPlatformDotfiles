@@ -1,12 +1,12 @@
 @{
-    RootModule        = 'DotImages.psm1'
+    RootModule        = 'DotDatabase.psm1'
     ModuleVersion     = '0.1.0'
-    GUID              = 'a7f3d8e2-5a4c-4f8e-9b1c-3d2e8f9a1b5c'
+    GUID              = '53b3f550-e37f-439c-a96a-1f021669bc3c'
     Author            = 'Derek Lomax'
-    Description       = 'Functions for extracting metadata from image and video files using exiftool'
+    Description       = 'Database helper functions (MySQL via SimplySql)'
     PrivateData       = @{
         PSData = @{
-            Tags = @('dots', 'exif', 'metadata', 'image', 'exiftool')
+            Tags = @('dots', 'mysql', 'database', 'simplysql')
         }
     }
     VariablesToExport = ''
@@ -15,9 +15,8 @@
     # must be explicitly set! Never use * because the module will not load if that item is called.
 
     CmdletsToExport   = @()
-    AliasesToExport   = @('gim')
+    AliasesToExport   = @()
     FunctionsToExport = @(
-        'Get-ImageMetaData'
-        'ffmpeg-ReduceVideoSize'
+        'Invoke-Mysql'
     )
 }

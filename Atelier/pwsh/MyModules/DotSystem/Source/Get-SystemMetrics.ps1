@@ -16,8 +16,6 @@ function Get-CombinedCPUUsagePercentage
         [int]$IntervalSeconds = 2  # Interval for measuring CPU usage
     )
 
-    # Documentation can be included here as needed.
-
     # Capture initial CPU usage and timestamp
     $startCpuTimes = Get-Process | Select-Object Name, Id, @{Name = 'CPU'; Expression = { $_.TotalProcessorTime.TotalMilliseconds } }
     $startTime = Get-Date

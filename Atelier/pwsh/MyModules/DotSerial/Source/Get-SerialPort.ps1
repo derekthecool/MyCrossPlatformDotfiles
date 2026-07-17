@@ -8,12 +8,12 @@
     .EXAMPLE
     Get-SerialPort
 
-Interestingly a python solution might work best:
-pip install pyserial
+    Interestingly a python solution might work best:
+    pip install pyserial
 
-import serial.tools.list_ports
-for port in serial.tools.list_ports.comports():
-    print(port.device, port.description)
+    import serial.tools.list_ports
+    for port in serial.tools.list_ports.comports():
+        print(port.device, port.description)
 
 # Windows output:
 COM21 Standard Serial over Bluetooth link (COM21)
@@ -32,7 +32,6 @@ function Get-SerialPort
     [CmdletBinding()]
     [Alias('ports')]
     param()
-    # TODO: (Derek Lomax) 1/27/2026 11:42:30 AM, split this into another module
     if (-not $(Get-Command python -ErrorAction SilentlyContinue))
     {
         throw "The command [python] not found cannot continue program"
@@ -41,7 +40,7 @@ function Get-SerialPort
     {
         throw "The command [pip] not found cannot continue program"
     }
-    
+
     $command = @'
 import json
 import serial.tools.list_ports

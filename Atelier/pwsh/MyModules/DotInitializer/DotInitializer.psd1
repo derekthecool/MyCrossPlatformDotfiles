@@ -27,5 +27,6 @@
         'Set-WindowsRegistrySettings'
         'Disable-AutoHideTaskBar'
         'Enable-AutoHideTaskBar'
+        'Add-MasonToolsToPath'
     )
 }

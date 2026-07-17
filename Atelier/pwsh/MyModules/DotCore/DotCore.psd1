@@ -27,5 +27,8 @@
         'ConvertFrom-Base64'
         'ConvertTo-Base64'
         'Edit-Content'
+        'Watch-FileChange'
+        'Convert-FileToHexString'
+        'Get-BytesToSize'
     )
 }

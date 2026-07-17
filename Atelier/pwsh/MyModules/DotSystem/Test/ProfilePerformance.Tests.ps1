@@ -1,5 +1,5 @@
 BeforeAll {
-    Import-Module $PSScriptRoot/../../Dots/Dots.psd1 -Force
+    Import-Module $PSScriptRoot/../../DotSystem/DotSystem.psd1 -Force
 }
 
 Describe 'Profile benchmarks' {
