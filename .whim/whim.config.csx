@@ -60,7 +60,7 @@ void DoConfig(IContext context)
     void AddWorkspace(string name, string icon)
     {
         workspaces.Add(name, icon);
-        context.WorkspaceManager.Add(icon);
+        context.Store.Dispatch(new AddWorkspaceTransform(icon));
     }
 
     AddWorkspace("terminal", "1");
@@ -147,7 +147,13 @@ void DoConfig(IContext context)
     context.CommandManager.Add(
         identifier: "close_window",
         title: "Close focused window",
-        callback: () => context.WorkspaceManager.ActiveWorkspace.LastFocusedWindow.Close()
+        callback: () =>
+        {
+            if (context.Store.Pick(Pickers.PickLastFocusedWindow()).TryGet(out IWindow window))
+            {
+                window.Close();
+            }
+        }
     );
 
     // Activate next workspace, skipping over those that are active on other monitors
