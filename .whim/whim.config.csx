@@ -7,9 +7,6 @@
 #r "C:\Program Files\Whim\plugins\Whim.Gaps\Whim.Gaps.dll"
 #r "C:\Program Files\Whim\plugins\Whim.LayoutPreview\Whim.LayoutPreview.dll"
 #r "C:\Program Files\Whim\plugins\Whim.SliceLayout\Whim.SliceLayout.dll"
-#r "C:\Program Files\Whim\plugins\Whim.TreeLayout\Whim.TreeLayout.dll"
-#r "C:\Program Files\Whim\plugins\Whim.TreeLayout.Bar\Whim.TreeLayout.Bar.dll"
-#r "C:\Program Files\Whim\plugins\Whim.TreeLayout.CommandPalette\Whim.TreeLayout.CommandPalette.dll"
 #r "C:\Program Files\Whim\plugins\Whim.Updater\Whim.Updater.dll"
 #r "C:\Program Files\Whim\plugins\Whim.Yaml\Whim.Yaml.dll"
 
@@ -29,9 +26,6 @@ using Whim.FocusIndicator;
 using Whim.Gaps;
 using Whim.LayoutPreview;
 using Whim.SliceLayout;
-using Whim.TreeLayout;
-using Whim.TreeLayout.Bar;
-using Whim.TreeLayout.CommandPalette;
 using Whim.Updater;
 using Whim.Yaml;
 using Windows.Win32.UI.Input.KeyboardAndMouse;

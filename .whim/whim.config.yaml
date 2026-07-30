@@ -9,13 +9,6 @@ layout_engines:
       variant:
         type: primary_stack
 
-    - type: tree
-      initial_direction: right
-
-    - type: slice
-      variant:
-        type: row
-
     - type: slice
       variant:
         type: column
@@ -24,15 +17,8 @@ layout_engines:
       variant:
         type: secondary_primary_stack
 
-    - type: slice
-      variant:
-        type: multi_column_stack
-        columns: [2, 1, 0]
-
     - type: focus
       maximize: false
-
-    - type: floating
 
 keybinds:
   entries:
@@ -98,7 +84,6 @@ plugins:
         - type: active_layout_widget
         - type: date_time_widget
           format: hh:mm:ss, MMM dd
-        - type: tree_layout_widget
 
   floating_window:
     is_enabled: true
