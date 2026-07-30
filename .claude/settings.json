@@ -68,6 +68,10 @@
       "Bash(find:* -exec awk *)"
     ]
   },
+  "statusLine": {
+    "type": "command",
+    "command": "pwsh -NoProfile -File ~/.claude/statusline-command.ps1"
+  },
   "enabledPlugins": {
     "very-good-ai-flutter-plugin@very-good-claude-code-marketplace": true,
     "ralph-loop@claude-plugins-official": true
@@ -232,8 +236,5 @@
       "Nacho Powering"
     ]
   },
-  "statusLine": {
-    "type": "command",
-    "command": "pwsh -NoProfile -File ~/.claude/statusline-command.ps1"
-  }
+  "theme": "dark"
 }
