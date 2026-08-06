@@ -18,11 +18,16 @@
     AliasesToExport   = @(
         'gwt'
         'swt'
+        'owt'
+        'rwt'
+        'dwt'
         'bisect'
     )
     FunctionsToExport = @(
         'Get-GitWorktree'
         'Switch-GitWorktree'
+        'Open-GitWorktree'
+        'Remove-GitWorktree'
         'Get-GitIgnore'
         'Get-LatestGithubRelease'
         'Start-GitBisect'

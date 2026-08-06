@@ -22,44 +22,82 @@ function Get-GitWorktree
     git worktree list |
         ConvertFrom-Text '(?<Path>\S+)\s+\w+\s\[(?<Name>\w+)\]' |
         ForEach-Object {
-            $treeDirectory = (Get-Content "$($_.Path)/.git") -split ' ' | Select-Object -Last 1
-            $LastUsed = Get-ChildItem -Recurse -File $treeDirectory |
-                Sort-Object LastWriteTime |
-                Select-Object -Last 1 -ExpandProperty LastWriteTime
-                [PSCustomObject]@{
-                    Path     =$_.Path
-                    Name     =$_.Name
-                    LastUsed =$LastUsed
-                }
-            } |
-            Sort-Object LastUsed
+            $gitFile = "$($_.Path)/.git"
+            $LastUsed = if (Test-Path $gitFile)
+            {
+                $treeDirectory = (Get-Content $gitFile) -split ' ' | Select-Object -Last 1
+                Get-ChildItem -Recurse -File $treeDirectory |
+                    Sort-Object LastWriteTime |
+                    Select-Object -Last 1 -ExpandProperty LastWriteTime
+            }
+            [PSCustomObject]@{
+                Path     = $_.Path
+                Name     = $_.Name
+                LastUsed = $LastUsed
+            }
+        } |
+        Sort-Object LastUsed
 }
 
 <#
     .SYNOPSIS
-    Remove a git worktree
+    Remove one or more git worktrees.
 
     .DESCRIPTION
-    Takes input from Get-GitWorktree objects and will remove the git worktree.
-    If the git worktree is not clean e.g. unstaged files it will not be deleted.
+    Takes input from Get-GitWorktree objects and removes each git worktree.
+    If a worktree has uncommitted changes git will refuse to remove it.
+    Supports -WhatIf to preview which worktrees would be deleted without
+    actually removing them.
+
+    .WARNING
+    Piping unfiltered Get-GitWorktree output will attempt to delete EVERY
+    worktree in the repository. Always filter first:
+        Get-GitWorktree | Where-Object { ... } | Remove-GitWorktree
+    or use Select-Object to limit the set before piping.
+
+    .PARAMETER Name
+    The name of the git worktree to remove. Accepts pipeline input by property
+    name from Get-GitWorktree output objects.
 
     .EXAMPLE
-    # Delete the first 5 git worktrees found (these will be the oldest and last used)
-    Get-GitWorktree | Select-Object -First 5 | Remove-GitWorktree
+    # Preview which worktrees would be removed without deleting anything
+    Get-GitWorktree | Where-Object { $_.LastUsed -lt (Get-Date).AddMonths(-3) } | Remove-GitWorktree -WhatIf
 
     .EXAMPLE
-    # Delete all git worktrees that have not been used for the last 3 month
+    # Remove worktrees not used in the last 3 months
     Get-GitWorktree | Where-Object { $_.LastUsed -lt (Get-Date).AddMonths(-3) } | Remove-GitWorktree
+
+    .EXAMPLE
+    # Remove the 5 oldest worktrees
+    Get-GitWorktree | Select-Object -First 5 | Remove-GitWorktree
 #>
-filter Remove-GitWorktree
+function Remove-GitWorktree
 {
-    [Alias('rwt')]
+    [CmdletBinding(SupportsShouldProcess)]
+    [Alias('rwt', 'dwt')]
     param (
         [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
-        [string]$Name
+        [string]$Name,
+
+        [Parameter()]
+        [switch]$Force
     )
-    Write-Verbose "Removing git worktree $Name"
-    & git worktree remove $Name
+
+    process
+    {
+        if ($PSCmdlet.ShouldProcess($Name, 'Remove git worktree'))
+        {
+            Write-Verbose "Removing git worktree $Name"
+            if ($Force)
+            {
+                & git worktree remove --force $Name
+            }
+            else
+            {
+                & git worktree remove $Name
+            }
+        }
+    }
 }
 
 function Switch-GitWorktree
@@ -74,6 +112,77 @@ function Switch-GitWorktree
     } else
     {
         Write-Error "No git worktrees found"
+    }
+}
+
+<#
+    .SYNOPSIS
+    Opens selected git worktrees in new tmux windows.
+
+    .DESCRIPTION
+    Uses fzf for interactive multi-select of git worktrees, then opens each
+    selected worktree in a new tmux window with the working directory and
+    window title set to the worktree path and name respectively.
+
+    .EXAMPLE
+    Open-GitWorktree
+
+    .EXAMPLE
+    Get-GitWorktree | Where-Object { $_.LastUsed -gt (Get-Date).AddDays(-7) } | Open-GitWorktree
+#>
+function Open-GitWorktree
+{
+    [CmdletBinding()]
+    [Alias('owt')]
+    param(
+        [Parameter(ValueFromPipeline)]
+        [PSCustomObject]$Worktree
+    )
+
+    begin
+    {
+        $trees = [System.Collections.Generic.List[PSCustomObject]]::new()
+    }
+
+    process
+    {
+        if ($Worktree)
+        {
+            $trees.Add($Worktree)
+        }
+    }
+
+    end
+    {
+        if ($trees.Count -eq 0)
+        {
+            $trees.AddRange(@(Get-GitWorktree))
+        }
+
+        if ($trees.Count -eq 0)
+        {
+            Write-Error 'No git worktrees found'
+            return
+        }
+
+        if (-not $env:TMUX)
+        {
+            Write-Error 'Not running inside a tmux session'
+            return
+        }
+
+        $selected = $trees |
+            ForEach-Object { "$($_.Name)  $($_.Path)" } |
+            Invoke-Fzf -Multi -Prompt 'Open worktree in tmux > '
+
+        if (-not $selected) { return }
+
+        foreach ($entry in $selected)
+        {
+            $name = ($entry -split '\s+')[0]
+            $tree = $trees | Where-Object { $_.Name -eq $name } | Select-Object -First 1
+            tmux new-window -c $tree.Path -n $tree.Name
+        }
     }
 }
 
