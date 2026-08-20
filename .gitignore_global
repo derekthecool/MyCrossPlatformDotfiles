@@ -4,3 +4,4 @@
 **/.nvim.lua
 
 **/.claude/settings.local.json
+.ssh/config.local

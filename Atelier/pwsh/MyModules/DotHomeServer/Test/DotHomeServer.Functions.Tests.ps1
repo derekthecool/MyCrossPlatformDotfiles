@@ -8,6 +8,6 @@ Describe 'DotHomeServer tests' -Skip:(-not(Test-Path Env:CI)) {
     }
 
     It 'Excludes are defined' {
-        $script:DevSyncExcludes | Should -Not -BeNullOrEmpty
+        InModuleScope DotHomeServer { $DevSyncExcludes } | Should -Not -BeNullOrEmpty
     }
 }
