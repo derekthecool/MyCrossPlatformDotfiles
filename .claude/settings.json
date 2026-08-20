@@ -68,10 +68,7 @@
             "Bash(find:* -exec awk *)"
         ]
     },
-<<<<<<< HEAD
-=======
   "model": "opus[1m]",
->>>>>>> 8ad7d61 (update claude settings)
   "statusLine": {
         "type": "command",
         "command": "pwsh -NoProfile -File ~/.claude/statusline-command.ps1"

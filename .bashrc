@@ -11,3 +11,5 @@ eval "$(fzf --bash)"
 # This file is in my dotfiles and single host specific stuff should not be
 single_computer_specific="$HOME/.single_computer_specific"
 [[ -s $single_computer_specific ]] && source "$single_computer_specific"
+
+. "$HOME/.local/bin/env"
