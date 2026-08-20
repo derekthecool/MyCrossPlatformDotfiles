@@ -4,7 +4,6 @@ $script:DevSyncExcludes = @(
     '.dart_tool'
     'node_modules'
     '.next'
-    'public'
     '.fvm'
     '.esphome'
     '.pub-cache'
@@ -17,6 +16,8 @@ $script:DevSyncExcludes = @(
     'lib/chibios'
     'lib/chibios-contrib'
     'vendor/qmk_firmware'
+    # Hugo build output only; tracked files named public/ elsewhere must sync
+    'lomax_simple_software_website/public'
 )
 
 function Sync-Dev
