@@ -5,8 +5,8 @@
 # format = "$all"
 right_format = ""
 continuation_prompt = '[▶▶ ](purple)'
-scan_timeout = 30
-command_timeout = 400
+scan_timeout = 60
+command_timeout = 1000
 add_newline = true
 
 [character]
