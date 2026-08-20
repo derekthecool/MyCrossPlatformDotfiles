@@ -29,14 +29,14 @@ function Get-GitWorktree
                 Get-ChildItem -Recurse -File $treeDirectory |
                     Sort-Object LastWriteTime |
                     Select-Object -Last 1 -ExpandProperty LastWriteTime
-            }
-            [PSCustomObject]@{
-                Path     = $_.Path
-                Name     = $_.Name
-                LastUsed = $LastUsed
-            }
-        } |
-        Sort-Object LastUsed
+                }
+                [PSCustomObject]@{
+                    Path     = $_.Path
+                    Name     = $_.Name
+                    LastUsed = $LastUsed
+                }
+            } |
+            Sort-Object LastUsed
 }
 
 <#
@@ -91,8 +91,7 @@ function Remove-GitWorktree
             if ($Force)
             {
                 & git worktree remove --force $Name
-            }
-            else
+            } else
             {
                 & git worktree remove $Name
             }
