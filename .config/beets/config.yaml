@@ -40,6 +40,15 @@ id3v23: yes              # MP3: v2.3 tags, semicolon-joined multi-value fields
 # NO `web` plugin (deliberate — not running a web service).
 plugins: [musicbrainz, chroma, fetchart, embedart, scrub, replaygain, lastgenre, lyrics, duplicates, missing]
 
+# Auto-apply threshold raised from the default 0.04: this library is heavily
+# YouTube-ripped with systematically mangled typography (ASCII apostrophes,
+# stripped diacritics), which inflates distance on otherwise-perfect matches
+# (pilot album: correct 22/22-track match at 0.132 distance skipped at the
+# default). 0.15 auto-applies >=85% similarity; wrong-album matches rarely
+# score that high, and anything weaker still skips to the review list.
+match:
+    strong_rec_thresh: 0.15
+
 import:
     copy: yes                    # copy (never move) out of read-only /import
     move: no
