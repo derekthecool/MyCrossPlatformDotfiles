@@ -1,0 +1,92 @@
+# =============================================================================
+# beets 2.13.1 configuration — runs INSIDE Docker only (see ./Dockerfile and
+# ./Invoke-Beets.ps1 in this directory).
+#
+# Container layout (see Invoke-Beets.ps1 mounts):
+#   /config  = host ~/.config/beets      (rw: config, library.db, state, logs)
+#   /import  = host ~/Music/modify_source (READ-ONLY: source, never written)
+#   /music   = host ~/Music/DerekMusic   (rw: destination library)
+# ~/Music/original is NEVER mounted -> beets cannot touch it.
+#
+# Import workflow:
+#   1. Full unattended pass:  Invoke-Beets import -q /import
+#      (weak MusicBrainz matches are SKIPPED and logged for review)
+#   2. Review skips:          grep '^skip' ~/.config/beets/import.log
+#   3. Re-run a skip WITH prompts:  Invoke-Beets import '/import/<Artist>/<Album>'
+# =============================================================================
+
+# Relative paths resolve under BEETSDIR=/config -> /config/library.db
+library: library.db
+# Destination INSIDE the container; host equivalent is ~/Music/DerekMusic
+directory: /music
+
+# Incremental import history (which dirs were already imported) lives here.
+# Default 'state.pickle' resolves to /config/state.pickle. Gitignored.
+
+art_filename: cover      # Music Assistant reads cover.jpg from album folders
+id3v23: yes              # MP3: v2.3 tags, semicolon-joined multi-value fields
+
+# musicbrainz MUST be re-listed: overriding `plugins:` drops the default value.
+#   musicbrainz  tag source (also required by chroma to resolve AcoustID hits)
+#   chroma       AcoustID fingerprinting of every imported track
+#   fetchart     downloads cover art -> cover.jpg (auto)
+#   embedart     embeds cover art into the files' tags (auto; MA wants embedded)
+#   scrub        wipes old junk tags before writing new ones (auto)
+#   replaygain   run manually post-import: `Invoke-Beets replaygain` (auto: no)
+#   lastgenre    run manually post-import: `Invoke-Beets lastgenre` (auto: no)
+#   lyrics       run manually post-import: `Invoke-Beets lyrics`  (auto: no)
+#   duplicates   audit-only command: `Invoke-Beets duplicates`
+#   missing      audit-only command: `Invoke-Beets missing`
+# NO `web` plugin (deliberate — not running a web service).
+plugins: [musicbrainz, chroma, fetchart, embedart, scrub, replaygain, lastgenre, lyrics, duplicates, missing]
+
+import:
+    copy: yes                    # copy (never move) out of read-only /import
+    move: no
+    write: yes                   # tags written into the copied files
+    delete: no
+
+    # NOTE: quiet is deliberately `no` — beets has NO --noquiet CLI flag, so a
+    # config-level `quiet: yes` could never be turned off for review sessions.
+    # Use `beet import -q` for the unattended full pass; review re-runs are
+    # interactive by default.
+    quiet: no
+    quiet_fallback: skip         # in -q mode, weak matches are skipped (reviewed later)
+    none_rec_action: ask         # interactive fallback for no-recommendation
+
+    resume: no                   # (forced off by incremental anyway)
+    incremental: yes             # record imported dirs, skip them next time
+    incremental_skip_later: yes  # do NOT record SKIPPED dirs -> retried next pass
+
+    duplicate_action: skip       # duplicates skipped + logged
+
+    log: /config/import.log      # host: ~/.config/beets/import.log (gitignored)
+
+# Path templates. `comp`/`singleton` are query-aliased (comp:true /
+# singleton:true); a literal query key like `albumtype:soundtrack` may be added
+# ABOVE default later (first match wins) if Soundtracks/ should be top-level.
+paths:
+    default: $albumartist/$album%aunique{}/$track $title
+    comp: Compilations/$album%aunique{}/$track $title
+    singleton: Non-Album/$artist/$title
+
+fetchart:
+    # filesystem first (existing folder art wins), then web sources
+    sources: [filesystem, coverart, itunes, amazon, albumart]
+    maxwidth: 1000               # keep cover.jpg a sane size (0 = unlimited)
+
+embedart:
+    auto: yes
+    maxwidth: 1000               # embedded art resized too
+
+replaygain:
+    auto: no                     # explicit post-import pass instead
+    backend: ffmpeg              # no pip extra needed; apt ffmpeg only
+
+lastgenre:
+    auto: no                     # per-artist/album Last.fm — run post-import
+    source: album
+    count: 1
+
+lyrics:
+    auto: no                     # per-track scraping — run post-import (slowest)

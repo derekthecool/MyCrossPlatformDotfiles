@@ -1,7 +1,10 @@
 $config = New-PesterConfiguration -Hashtable @{
     Run          = @{
         PassThru    = $true
-        Path        = './Atelier/pwsh/MyModules'
+        Path        = @(
+            './Atelier/pwsh/MyModules'
+            './.config/beets'
+        )
         # Kroger integration tests require live API credentials via
         # Microsoft.Powershell.SecretStore, which prompts for a vault password
         # in fresh sessions (CI, clean shells) and blocks the suite. Exclude

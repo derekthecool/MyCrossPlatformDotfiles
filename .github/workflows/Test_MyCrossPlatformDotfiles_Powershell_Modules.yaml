@@ -7,6 +7,8 @@ on:
     # Only on these paths or specific files
     paths:
       - "Atelier/pwsh/**"
+      - ".config/beets/**"
+      - "DotfilesTests.ps1"
 
 permissions: read-all
 

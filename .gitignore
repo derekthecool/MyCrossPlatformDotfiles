@@ -11,3 +11,8 @@ bin
 **/settings.local.json
 
 coverage.xml
+
+# beets (dockerized) runtime artifacts — config is tracked, generated data is not
+.config/beets/library.db*
+.config/beets/import.log
+.config/beets/state.pickle

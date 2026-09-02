@@ -1,0 +1,4 @@
+# Windows shim: beets on Windows reads %APPDATA%\beets\config.yaml; the real
+# config is the cross-platform one from the dotfiles checkout.
+# (beets include: is a YAML list; ~ expands; included file takes precedence.)
+include: [~/.config/beets/config.yaml]
