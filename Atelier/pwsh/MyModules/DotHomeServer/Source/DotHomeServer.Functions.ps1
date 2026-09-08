@@ -87,8 +87,7 @@ function Sync-Dev
         {
             $source = "${UserName}@${ComputerName}:/home/${UserName}/$tree/"
             $destination = Join-Path $LocalRoot $tree
-        }
-        else
+        } else
         {
             $source = (Join-Path $HOME $tree) + '/'
             if (-not (Test-Path -LiteralPath $source))
