@@ -21,5 +21,7 @@
     AliasesToExport   = @(
         'gwap'
     )
-    FunctionsToExport = @()
+    FunctionsToExport = @(
+        'Invoke-ssh'
+    )
 }
