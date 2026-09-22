@@ -1,3 +1,14 @@
+# Flutter apps keep their release artifacts (APK/AAB) in <project>/build/app/outputs;
+# those must survive the 'build' excludes below. rsync never descends into an excluded
+# directory, so each parent segment needs an explicit include first, and '*/build/**'
+# below re-prunes the rest of each build tree.
+$script:DevSyncIncludes = @(
+    '*/build/'
+    '*/build/app/'
+    '*/build/app/outputs/'
+    '*/build/app/outputs/**'
+)
+
 $script:DevSyncExcludes = @(
     'build'
     '.build'
@@ -12,6 +23,8 @@ $script:DevSyncExcludes = @(
     '.pio'
     '.venv'
     '__pycache__'
+    # Everything under a project build/ except the outputs includes above
+    '*/build/**'
     # Submodule working trees, re-fetchable on the remote via git
     'lib/chibios'
     'lib/chibios-contrib'
@@ -76,6 +89,10 @@ function Sync-Dev
     )
     if ($DryRun) { $rsyncArgs += '--dry-run' }
     if ($Delete) { $rsyncArgs += '--delete' }
+    foreach ($include in $script:DevSyncIncludes)
+    {
+        $rsyncArgs += "--include=$include"
+    }
     foreach ($exclude in $script:DevSyncExcludes)
     {
         $rsyncArgs += "--exclude=$exclude"

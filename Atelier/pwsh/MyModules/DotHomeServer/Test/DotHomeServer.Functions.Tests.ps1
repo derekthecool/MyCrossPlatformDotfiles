@@ -10,4 +10,11 @@ Describe 'DotHomeServer tests' -Skip:(-not(Test-Path Env:CI)) {
     It 'Excludes are defined' {
         InModuleScope DotHomeServer { $DevSyncExcludes } | Should -Not -BeNullOrEmpty
     }
+
+    It 'Flutter output dirs are whitelisted ahead of the build excludes' {
+        $includes = InModuleScope DotHomeServer { $DevSyncIncludes }
+        $excludes = InModuleScope DotHomeServer { $DevSyncExcludes }
+        $includes | Should -Contain '*/build/app/outputs/**'
+        $excludes | Should -Contain '*/build/**'
+    }
 }
