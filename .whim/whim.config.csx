@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using Microsoft.UI;
 using Microsoft.UI.Xaml.Markup;
@@ -29,6 +30,67 @@ using Whim.SliceLayout;
 using Whim.Updater;
 using Whim.Yaml;
 using Windows.Win32.UI.Input.KeyboardAndMouse;
+
+// Brave/Chrome run all profiles in a single shared process once you switch profiles from the
+// in-app avatar menu (ProcessId is identical across profile windows), so the only per-window
+// signal that distinguishes them is the AppUserModelID the taskbar uses to group them separately.
+internal static class AppUserModelIdHelper
+{
+    [DllImport("shell32.dll")]
+    private static extern int SHGetPropertyStoreForWindow(IntPtr hwnd, ref Guid riid, out IPropertyStore? propertyStore);
+
+    [ComImport, Guid("886d8eeb-8cf2-4446-8d02-cdba1dbdcf99"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    private interface IPropertyStore
+    {
+        int GetCount(out uint cProps);
+        int GetAt(uint iProp, out PROPERTYKEY pkey);
+        int GetValue(ref PROPERTYKEY key, out PROPVARIANT pv);
+        int SetValue(ref PROPERTYKEY key, ref PROPVARIANT pv);
+        int Commit();
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct PROPERTYKEY
+    {
+        public Guid fmtid;
+        public uint pid;
+        public PROPERTYKEY(Guid g, uint p) { fmtid = g; pid = p; }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct PROPVARIANT
+    {
+        public ushort vt;
+        public ushort wReserved1, wReserved2, wReserved3;
+        public IntPtr p;
+        public int p2;
+    }
+
+    private static readonly PROPERTYKEY PKEY_AppUserModel_ID =
+        new(new Guid("9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3"), 5);
+
+    public static string? GetAppUserModelId(IntPtr hwnd)
+    {
+        try
+        {
+            Guid iid = typeof(IPropertyStore).GUID;
+            if (SHGetPropertyStoreForWindow(hwnd, ref iid, out IPropertyStore? store) != 0 || store is null)
+                return null;
+
+            PROPERTYKEY key = PKEY_AppUserModel_ID;
+            if (store.GetValue(ref key, out PROPVARIANT pv) != 0)
+                return null;
+
+            return pv.vt == 31 /* VT_LPWSTR */ && pv.p != IntPtr.Zero ? Marshal.PtrToStringUni(pv.p) : null;
+        }
+        catch
+        {
+            // Any COM/threading failure (closed window, no property set, etc.) just means
+            // "couldn't tell" - fall through to normal routing rather than breaking Whim.
+            return null;
+        }
+    }
+}
 
 void DoConfig(IContext context)
 {
@@ -66,6 +128,21 @@ void DoConfig(IContext context)
     AddWorkspace("one", "7");
     AddWorkspace("two", "8");
     AddWorkspace("three", "9");
+
+    // Route Brave's "Freeus" profile to the "chat" workspace, separately from the "Derek" profile
+    // (which falls through to the broad brave->web rule loaded from 2.json below). Must be added
+    // before that rule is registered, since RouterManager is first-match-wins in insertion order.
+    context.RouterManager.Add(window =>
+    {
+        if (window.ProcessFileName is null || !window.ProcessFileName.Equals("brave.exe", StringComparison.OrdinalIgnoreCase))
+            return null;
+
+        string? aumid = AppUserModelIdHelper.GetAppUserModelId(window.Handle);
+        if (aumid is null || !aumid.EndsWith(".UserData.Profile1", StringComparison.OrdinalIgnoreCase))
+            return null;
+
+        return context.Store.Pick(Pickers.PickWorkspaceByName(workspaces["chat"])).TryGet(out IWorkspace ws) ? ws : null;
+    });
 
     // Load routes and filters from ~/Atelier/workspaces/*.json
     var workspacePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Atelier", "workspaces");
