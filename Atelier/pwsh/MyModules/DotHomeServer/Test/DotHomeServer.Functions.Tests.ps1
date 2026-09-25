@@ -17,4 +17,21 @@ Describe 'DotHomeServer tests' -Skip:(-not(Test-Path Env:CI)) {
         $includes | Should -Contain '*/build/app/outputs/**'
         $excludes | Should -Contain '*/build/**'
     }
+
+    It 'Get-DevSyncLocalTree keeps trees under the home directory' {
+        InModuleScope DotHomeServer { Get-DevSyncLocalTree -Tree 'LSS' } |
+            Should -Be (Join-Path $HOME 'LSS')
+        InModuleScope DotHomeServer { Get-DevSyncLocalTree -Tree 'projects' } |
+            Should -Be (Join-Path $HOME 'projects')
+    }
+
+    It 'Get-DevSyncLocalTree refuses the home directory itself' {
+        { InModuleScope DotHomeServer { Get-DevSyncLocalTree -Tree '.' } } |
+            Should -Throw
+    }
+
+    It 'Get-DevSyncLocalTree refuses trees that escape the home directory' {
+        { InModuleScope DotHomeServer { Get-DevSyncLocalTree -Tree '../etc' } } |
+            Should -Throw
+    }
 }

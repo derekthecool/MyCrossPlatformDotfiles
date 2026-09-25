@@ -33,6 +33,31 @@ $script:DevSyncExcludes = @(
     'lomax_simple_software_website/public'
 )
 
+function Get-DevSyncLocalTree
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory)]
+        [string]
+        $Tree
+    )
+
+    if ([IO.Path]::IsPathRooted($Tree))
+    {
+        throw "Refusing to sync '$Tree' - trees must be relative folder names under $HOME."
+    }
+
+    $localTree = Join-Path $HOME $Tree
+    $relative = [IO.Path]::GetRelativePath($HOME, $localTree)
+    if ($relative -eq '.' -or $relative -like '..*')
+    {
+        throw "Refusing to sync '$Tree' - trees must be folders under $HOME, not the home directory itself."
+    }
+
+    $localTree
+}
+
 function Sync-Dev
 {
     [CmdletBinding()]
@@ -52,9 +77,6 @@ function Sync-Dev
         [string[]]
         $Trees = @('LSS', 'projects'),
 
-        [string]
-        $LocalRoot = (Join-Path $HOME 'HomeServer'),
-
         [switch]
         $DryRun,
 
@@ -68,18 +90,6 @@ function Sync-Dev
         {
             throw "$tool is required but was not found in PATH."
         }
-    }
-
-    $LocalRoot = (Resolve-Path -LiteralPath $LocalRoot -ErrorAction SilentlyContinue).Path
-    if (-not $LocalRoot)
-    {
-        New-Item -ItemType Directory -Path (Join-Path $HOME 'HomeServer') -Force | Out-Null
-        $LocalRoot = (Resolve-Path -LiteralPath (Join-Path $HOME 'HomeServer')).Path
-    }
-
-    if ($LocalRoot -eq $HOME)
-    {
-        throw 'Refusing to sync into the home directory itself.'
     }
 
     $rsyncArgs = @(
@@ -100,13 +110,14 @@ function Sync-Dev
 
     foreach ($tree in $Trees)
     {
+        $localTree = Get-DevSyncLocalTree -Tree $tree
         if ($Direction -eq 'Pull')
         {
             $source = "${UserName}@${ComputerName}:/home/${UserName}/$tree/"
-            $destination = Join-Path $LocalRoot $tree
+            $destination = $localTree
         } else
         {
-            $source = (Join-Path $HOME $tree) + '/'
+            $source = $localTree + '/'
             if (-not (Test-Path -LiteralPath $source))
             {
                 Write-Warning "Skipping $tree, not found locally."
@@ -116,7 +127,6 @@ function Sync-Dev
         }
 
         Write-Host "[$Direction] $source -> $destination"
-        $remote = $UserName + '@' + $ComputerName
         & rsync @rsyncArgs $source $destination
         if ($LASTEXITCODE -ne 0)
         {
