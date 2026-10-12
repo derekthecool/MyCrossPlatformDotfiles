@@ -237,8 +237,9 @@
       "Nacho Powering"
     ]
   },
-  "theme": "dark",
+  "effortLevel": "high",
   "tui": "default",
   "skipWorkflowUsageWarning": true,
-  "effortLevel": "high"
+  "theme": "dark",
+  "switchModelsOnFlag": true
 }
