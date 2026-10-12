@@ -9,7 +9,10 @@
             Tags = @('dots', 'serial', 'pyserial')
         }
     }
-    VariablesToExport = ''
+    RequiredModules = @(
+        # Includes an amazing formatter for this module
+        'DotBeautiful'
+    )
 
     # For best lazy load performance CmdletsToExport, AliasesToExport, and FunctionsToExport.
     # must be explicitly set! Never use * because the module will not load if that item is called.
