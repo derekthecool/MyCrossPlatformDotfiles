@@ -94,13 +94,7 @@ internal static class AppUserModelIdHelper
 
 void DoConfig(IContext context)
 {
-    context.Logger.Config = new LoggerConfig();
-    // context.Logger.Config = new LoggerConfig() { BaseMinLogLevel = LogLevel.Debug };
-    // // The logger will log messages with a level of `Debug` or higher to a file.
-    // if (context.Logger.Config.FileSink is FileSinkConfig fileSinkConfig)
-    // {
-    //     fileSinkConfig.MinLogLevel = LogLevel.Debug;
-    // }
+    context.Logger.Config = new LoggerConfig() { BaseMinLogLevel = LogLevel.Debug };
 
     // YAML config. It's best to load this first so that you can use it in your C# config.
     YamlLoader.Load(context);
