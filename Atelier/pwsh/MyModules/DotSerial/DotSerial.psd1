@@ -9,7 +9,7 @@
             Tags = @('dots', 'serial', 'pyserial')
         }
     }
-    RequiredModules = @(
+    RequiredModules   = @(
         # Includes an amazing formatter for this module
         'DotBeautiful'
     )

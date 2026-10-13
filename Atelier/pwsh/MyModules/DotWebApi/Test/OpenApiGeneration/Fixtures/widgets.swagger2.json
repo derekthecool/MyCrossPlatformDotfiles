@@ -3,9 +3,9 @@
   "info": { "title": "Widget Service", "version": "1.0" },
   "host": "widgets.example.com",
   "basePath": "/v1",
-  "schemes": [ "https" ],
-  "consumes": [ "application/json" ],
-  "produces": [ "application/json" ],
+  "schemes": ["https"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
   "securityDefinitions": {
     "key": { "type": "apiKey", "in": "header", "name": "X-Key" }
   },
@@ -13,24 +13,54 @@
     "/widgets": {
       "get": {
         "operationId": "listWidgets",
-        "parameters": [ { "name": "color", "in": "query", "type": "string", "enum": [ "red", "blue" ] } ],
+        "parameters": [
+          {
+            "name": "color",
+            "in": "query",
+            "type": "string",
+            "enum": ["red", "blue"]
+          }
+        ],
         "responses": {
-          "200": { "description": "ok", "schema": { "type": "array", "items": { "$ref": "#/definitions/Widget" } } }
+          "200": {
+            "description": "ok",
+            "schema": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/Widget" }
+            }
+          }
         }
       },
       "post": {
         "operationId": "createWidget",
-        "parameters": [ { "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/Widget" } } ],
-        "responses": { "201": { "description": "created", "schema": { "$ref": "#/definitions/Widget" } } }
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/Widget" }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "created",
+            "schema": { "$ref": "#/definitions/Widget" }
+          }
+        }
       }
     },
     "/widgets/{id}/blueprint": {
       "post": {
         "operationId": "uploadBlueprint",
-        "consumes": [ "multipart/form-data" ],
+        "consumes": ["multipart/form-data"],
         "parameters": [
           { "name": "id", "in": "path", "required": true, "type": "integer" },
-          { "name": "blueprint", "in": "formData", "type": "file", "required": true },
+          {
+            "name": "blueprint",
+            "in": "formData",
+            "type": "file",
+            "required": true
+          },
           { "name": "note", "in": "formData", "type": "string" }
         ],
         "responses": { "200": { "description": "ok" } }
@@ -40,7 +70,7 @@
   "definitions": {
     "Widget": {
       "type": "object",
-      "required": [ "name" ],
+      "required": ["name"],
       "properties": {
         "name": { "type": "string" },
         "weight": { "type": "number", "minimum": 0 }

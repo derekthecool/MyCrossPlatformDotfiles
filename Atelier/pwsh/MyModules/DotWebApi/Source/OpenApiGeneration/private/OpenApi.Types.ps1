@@ -237,20 +237,20 @@ function New-OpenApiParameterDescriptor
     $text = if ($Description) { $Description } elseif ($TypeInfo.Description) { $TypeInfo.Description } elseif ($TypeInfo.Title) { $TypeInfo.Title } else { $null }
 
     [pscustomobject]@{
-        Name       = $null
-        Wire       = $Wire
-        In         = $In
-        TypeInfo   = $TypeInfo
-        Type       = $mapped.Type
-        IsSwitch   = $mapped.IsSwitch
-        IsFile     = $mapped.IsFile
-        Validate   = $mapped.Validate
-        Mandatory  = $Mandatory
-        Alias      = @()
-        Csv        = $false
-        Default    = Get-OpenApiDefaultText -TypeInfo $TypeInfo
-        Allowed    = if ($TypeInfo.Enum) { @($TypeInfo.Enum) } else { $null }
-        ObjectType = $null
+        Name        = $null
+        Wire        = $Wire
+        In          = $In
+        TypeInfo    = $TypeInfo
+        Type        = $mapped.Type
+        IsSwitch    = $mapped.IsSwitch
+        IsFile      = $mapped.IsFile
+        Validate    = $mapped.Validate
+        Mandatory   = $Mandatory
+        Alias       = @()
+        Csv         = $false
+        Default     = Get-OpenApiDefaultText -TypeInfo $TypeInfo
+        Allowed     = if ($TypeInfo.Enum) { @($TypeInfo.Enum) } else { $null }
+        ObjectType  = $null
         Description = $text
     }
 }
