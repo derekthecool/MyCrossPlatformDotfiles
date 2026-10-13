@@ -1,65 +1,128 @@
 {
   "swagger": "2.0",
-  "info": { "title": "PeerRegistry", "version": "1.0", "description": "Peer registration API." },
+  "info": {
+    "title": "PeerRegistry",
+    "version": "1.0",
+    "description": "Peer registration API."
+  },
   "host": "localhost:8080",
   "basePath": "/",
   "paths": {
     "/api/v1/admin/devices": {
       "get": {
-        "produces": [ "application/json" ],
-        "tags": [ "admin" ],
+        "produces": ["application/json"],
+        "tags": ["admin"],
         "summary": "List all devices",
         "responses": {
           "200": { "description": "OK" },
-          "500": { "description": "Internal Server Error", "schema": { "$ref": "#/definitions/api.ErrorResponse" } }
+          "500": {
+            "description": "Internal Server Error",
+            "schema": { "$ref": "#/definitions/api.ErrorResponse" }
+          }
         }
       },
       "post": {
-        "consumes": [ "application/json" ],
-        "produces": [ "application/json" ],
-        "tags": [ "admin" ],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["admin"],
         "summary": "Add devices to inventory",
-        "parameters": [ { "description": "Devices to add", "name": "body", "in": "body", "required": true, "schema": { "$ref": "#/definitions/api.AddDevicesRequest" } } ],
-        "responses": { "200": { "description": "OK", "schema": { "$ref": "#/definitions/api.AddDevicesResponse" } } }
+        "parameters": [
+          {
+            "description": "Devices to add",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/api.AddDevicesRequest" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": { "$ref": "#/definitions/api.AddDevicesResponse" }
+          }
+        }
       }
     },
     "/api/v1/admin/devices/{device_id}": {
       "get": {
-        "produces": [ "application/json" ],
-        "tags": [ "admin" ],
+        "produces": ["application/json"],
+        "tags": ["admin"],
         "summary": "Get device status",
-        "parameters": [ { "type": "string", "description": "Device ID", "name": "device_id", "in": "path", "required": true } ],
-        "responses": { "200": { "description": "OK", "schema": { "$ref": "#/definitions/db.Device" } } }
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Device ID",
+            "name": "device_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": { "$ref": "#/definitions/db.Device" }
+          }
+        }
       },
       "delete": {
-        "produces": [ "application/json" ],
-        "tags": [ "admin" ],
+        "produces": ["application/json"],
+        "tags": ["admin"],
         "summary": "Remove device from inventory",
-        "parameters": [ { "type": "string", "description": "Device ID", "name": "device_id", "in": "path", "required": true } ],
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Device ID",
+            "name": "device_id",
+            "in": "path",
+            "required": true
+          }
+        ],
         "responses": { "200": { "description": "OK" } }
       }
     },
     "/api/v1/admin/devices/{device_id}/readmit": {
       "post": {
-        "tags": [ "admin" ],
+        "tags": ["admin"],
         "summary": "Readmit device",
-        "parameters": [ { "type": "string", "name": "device_id", "in": "path", "required": true } ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "device_id",
+            "in": "path",
+            "required": true
+          }
+        ],
         "responses": { "200": { "description": "OK" } }
       }
     },
     "/api/v1/admin/devices/{device_id}/rotate": {
       "post": {
-        "tags": [ "admin" ],
+        "tags": ["admin"],
         "summary": "Force key rotation",
-        "parameters": [ { "type": "string", "name": "device_id", "in": "path", "required": true } ],
+        "parameters": [
+          {
+            "type": "string",
+            "name": "device_id",
+            "in": "path",
+            "required": true
+          }
+        ],
         "responses": { "200": { "description": "OK" } }
       }
     },
     "/api/v1/db-health": {
-      "get": { "tags": [ "system" ], "summary": "Database health check", "responses": { "200": { "description": "OK" } } }
+      "get": {
+        "tags": ["system"],
+        "summary": "Database health check",
+        "responses": { "200": { "description": "OK" } }
+      }
     },
     "/health": {
-      "get": { "tags": [ "system" ], "summary": "Health check", "responses": { "200": { "description": "OK" } } }
+      "get": {
+        "tags": ["system"],
+        "summary": "Health check",
+        "responses": { "200": { "description": "OK" } }
+      }
     }
   },
   "securityDefinitions": {
@@ -68,19 +131,30 @@
   "definitions": {
     "api.AddDevicesRequest": {
       "type": "object",
-      "properties": { "device_ids": { "type": "array", "items": { "type": "string" } } }
+      "properties": {
+        "device_ids": { "type": "array", "items": { "type": "string" } }
+      }
     },
     "api.AddDevicesResponse": {
       "type": "object",
-      "properties": { "added": { "type": "array", "items": { "type": "string" } }, "invalid": { "type": "array", "items": { "type": "string" } } }
+      "properties": {
+        "added": { "type": "array", "items": { "type": "string" } },
+        "invalid": { "type": "array", "items": { "type": "string" } }
+      }
     },
     "api.ErrorResponse": {
       "type": "object",
-      "properties": { "error": { "type": "string" }, "message": { "type": "string" } }
+      "properties": {
+        "error": { "type": "string" },
+        "message": { "type": "string" }
+      }
     },
     "db.Device": {
       "type": "object",
-      "properties": { "device_id": { "type": "string" }, "revoked": { "type": "boolean" } }
+      "properties": {
+        "device_id": { "type": "string" },
+        "revoked": { "type": "boolean" }
+      }
     }
   }
 }

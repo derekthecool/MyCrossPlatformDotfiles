@@ -61,9 +61,9 @@ a vault implicitly, so commands never prompt for a vault password.
 Two real-world conventions are handled for you:
 
 * Swagger 2.0 has no bearer type, so swaggo (Go) services declare `apiKey` in the `Authorization` header and expect
-  `Bearer <token>`. A bare token gets the `Bearer ` prefix; a value that already has a scheme is left alone.
+  `Bearer <token>`. A bare token gets the `Bearer` prefix; a value that already has a scheme is left alone.
 * Custom key headers often say "Enter: apikey {your-token}" while the service wants the bare token (an AutoRest-era API).
-  A pasted `apikey ` prefix is stripped for any `apiKey` header other than `Authorization`.
+  A pasted `apikey` prefix is stripped for any `apiKey` header other than `Authorization`.
 
 ## How operations become commands
 
@@ -148,14 +148,14 @@ slashes, and `-RawPathParameter name` does the same for any other name.
 
 ## Lessons learned from real specs
 
-| Spec | What it taught the generator |
-| --- | --- |
-| Kokoro (FastAPI, 3.1) | Responses are declared JSON but are audio → decide by real `Content-Type`; `input` collides with `$input`; `anyOf [T, null]`. |
-| Kroger (3.0.3) | OAuth2 schemes, `HEAD` operations, dotted parameter names, summaries that name worse than operationIds → score every naming source. |
-| Pet store fixture | Server variables, bearer auth, recursion/`allOf`, multipart, CSV array queries, case-sensitive patterns (`ValidatePattern` ignores case unless `Options = 'None'`). |
-| ASP.NET Core service (3.0.4) | No summaries/operationIds → route-based names; catch-all proxy route; `text/plain`+`application/json` duplicates; no `servers`. |
-| swaggo service (Swagger 2.0) | `Authorization` apiKey needs `Bearer `; `host` without `schemes` (localhost → http); `-ReservedName`, prepositional summaries. |
-| AutoRest-era service (3.0.4, 108 operations) | Method-style operationIds, `ApiKey` header with "apikey " text, spec `servers`, 140 commands that must not clash with an existing AutoRest module's. |
+| Spec                                         | What it taught the generator                                                                                                                                        |
+|----------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Kokoro (FastAPI, 3.1)                        | Responses are declared JSON but are audio → decide by real `Content-Type`; `input` collides with `$input`; `anyOf [T, null]`.                                       |
+| Kroger (3.0.3)                               | OAuth2 schemes, `HEAD` operations, dotted parameter names, summaries that name worse than operationIds → score every naming source.                                 |
+| Pet store fixture                            | Server variables, bearer auth, recursion/`allOf`, multipart, CSV array queries, case-sensitive patterns (`ValidatePattern` ignores case unless `Options = 'None'`). |
+| ASP.NET Core service (3.0.4)                 | No summaries/operationIds → route-based names; catch-all proxy route; `text/plain`+`application/json` duplicates; no `servers`.                                     |
+| swaggo service (Swagger 2.0)                 | `Authorization` apiKey needs `Bearer`; `host` without `schemes` (localhost → http); `-ReservedName`, prepositional summaries.                                       |
+| AutoRest-era service (3.0.4, 108 operations) | Method-style operationIds, `ApiKey` header with "apikey " text, spec `servers`, 140 commands that must not clash with an existing AutoRest module's.                |
 
 Smaller rules that came out of it: a parse error in any module source file stops the module from loading (the loader
 dot-sources everything); the manifest updater must not require a built `psm1` and reverts if its result is invalid; empty
