@@ -3,10 +3,10 @@
     ModuleVersion     = '0.1.0'
     GUID              = '8b3f4e7c-9a2d-4b6c-8e1f-5d7a3b2c1e9f'
     Author            = 'Derek Lomax'
-    Description       = 'General web API integration framework for PowerShell with support for multiple services including Kroger and Spoonacular.'
+    Description       = 'General web API integration framework for PowerShell with support for multiple services including Kroger, Spoonacular and Kokoro TTS, plus a generator that builds PowerShell clients from OpenAPI/Swagger documents.'
     PrivateData       = @{
         PSData = @{
-            Tags = @('dots', 'api', 'webapi', 'kroger', 'spoonacular', 'shopping')
+            Tags = @('dots', 'api', 'webapi', 'kroger', 'spoonacular', 'shopping', 'openapi', 'swagger', 'kokoro', 'tts')
         }
     }
     VariablesToExport = ''
@@ -21,6 +21,9 @@
         'kfind'
         'kadd'
         'kcart'
+
+        # OpenAPI generation aliases
+        'openapigen'
     )
     FunctionsToExport = @(
         # Common functions
@@ -55,6 +58,10 @@
 
         # Spoonacular functions (existing)
         'Use-SpoonacularApi'
+
+        # OpenAPI client generation
+        'New-OpenApiClient'
+        'Update-ModuleManifestExport'
     )
     FormatsToProcess  = @(
         'DotWebApi.format.ps1xml'

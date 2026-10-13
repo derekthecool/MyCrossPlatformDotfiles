@@ -1,0 +1,187 @@
+{
+  "openapi": "3.0.3",
+  "info": { "title": "Pet Store REST API", "version": "2.1.0" },
+  "servers": [
+    {
+      "url": "https://{host}/api/v3",
+      "variables": { "host": { "default": "pets.example.com" } }
+    }
+  ],
+  "security": [ { "bearerAuth": [] } ],
+  "paths": {
+    "/pets": {
+      "get": {
+        "operationId": "listPets",
+        "summary": "List all pets",
+        "tags": [ "pets" ],
+        "parameters": [
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "minimum": 1, "maximum": 100, "default": 20 } },
+          { "name": "status", "in": "query", "explode": false, "schema": { "type": "array", "items": { "type": "string", "enum": [ "available", "sold" ] } } },
+          { "name": "filter.name", "in": "query", "description": "Name contains", "schema": { "type": "string" } },
+          { "name": "includeDeleted", "in": "query", "schema": { "type": "boolean" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Pet" } } } }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createPet",
+        "summary": "Create a pet",
+        "tags": [ "pets" ],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/NewPet" } } }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Pet" } } }
+          }
+        }
+      }
+    },
+    "/pets/{petId}": {
+      "parameters": [ { "name": "petId", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } } ],
+      "get": {
+        "operationId": "showPetById",
+        "summary": "Info for a specific pet",
+        "tags": [ "pets" ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Pet" } } }
+          }
+        }
+      },
+      "head": {
+        "operationId": "petExists",
+        "responses": { "200": { "description": "exists" }, "404": { "description": "missing" } }
+      },
+      "put": {
+        "operationId": "updatePet",
+        "summary": "Update a pet",
+        "requestBody": {
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/NewPet" } } }
+        },
+        "responses": { "200": { "description": "ok", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Pet" } } } } }
+      },
+      "delete": {
+        "operationId": "deletePet",
+        "summary": "Delete a pet",
+        "responses": { "204": { "description": "gone" } }
+      }
+    },
+    "/pets/{petId}/photo": {
+      "post": {
+        "operationId": "uploadPhoto",
+        "summary": "Upload photo",
+        "parameters": [ { "name": "petId", "in": "path", "required": true, "schema": { "type": "integer" } } ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [ "file" ],
+                "properties": {
+                  "file": { "type": "string", "format": "binary" },
+                  "caption": { "type": "string" },
+                  "isPrimary": { "type": "boolean" }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "ok" } }
+      }
+    },
+    "/store/health": {
+      "get": {
+        "summary": "Health Check",
+        "security": [],
+        "responses": { "200": { "description": "ok", "content": { "application/json": { "schema": {} } } } }
+      }
+    },
+    "/reports/echo": {
+      "post": {
+        "operationId": "echoReport",
+        "summary": "Echo report",
+        "parameters": [ { "name": "x-trace-id", "in": "header", "schema": { "type": "string" } } ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [ "input" ],
+                "properties": {
+                  "input": { "type": "string" },
+                  "args": { "type": "array", "items": { "type": "string" } },
+                  "error": { "type": "string", "nullable": true },
+                  "headers": { "type": "string" },
+                  "tags": { "type": "array", "items": { "$ref": "#/components/schemas/Tag" } }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "ok", "content": { "text/plain": { "schema": { "type": "string" } } } } }
+      }
+    },
+    "/old": {
+      "get": {
+        "operationId": "oldThing",
+        "deprecated": true,
+        "responses": { "200": { "description": "ok" } }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": { "type": "http", "scheme": "bearer" },
+      "apiKeyAuth": { "type": "apiKey", "in": "header", "name": "X-Api-Key" }
+    },
+    "schemas": {
+      "Pet": {
+        "allOf": [
+          { "$ref": "#/components/schemas/NewPet" },
+          {
+            "type": "object",
+            "required": [ "id" ],
+            "properties": {
+              "id": { "type": "integer", "format": "int64" },
+              "children": { "type": "array", "items": { "$ref": "#/components/schemas/Pet" } }
+            }
+          }
+        ]
+      },
+      "NewPet": {
+        "type": "object",
+        "description": "A pet to be added.",
+        "required": [ "name" ],
+        "properties": {
+          "name": { "type": "string", "minLength": 1, "maxLength": 40 },
+          "tag": { "type": "string", "pattern": "^[a-z]+$" },
+          "status": { "type": "string", "enum": [ "available", "sold" ], "default": "available" },
+          "owner": { "$ref": "#/components/schemas/Owner" }
+        }
+      },
+      "Owner": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "email": { "type": "string" },
+          "parent": { "$ref": "#/components/schemas/Owner" }
+        }
+      },
+      "Tag": {
+        "type": "object",
+        "required": [ "label" ],
+        "properties": { "label": { "type": "string" } }
+      }
+    }
+  }
+}
