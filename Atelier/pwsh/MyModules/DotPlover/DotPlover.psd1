@@ -24,6 +24,7 @@
         'Get-PloverPath'
         'Invoke-Plover'
         'Get-TapeyTapePath'
+        'Watch-TapeyTape'
         'Get-PloverConfigurationDirectory'
         'Install-PloverPlugin'
         'Install-PloverSavedPlugins'
@@ -31,4 +32,3 @@
         'Install-PloverLatestRelease'
     )
 }
-

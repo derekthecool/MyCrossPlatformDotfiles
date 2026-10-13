@@ -116,6 +116,15 @@ function Get-TapeyTapePath
     "$(Get-PloverConfigurationDirectory)/tapey_tape.txt"
 }
 
+function Watch-TapeyTape
+{
+    param (
+        [Parameter()]
+        [string]$TailLength = 10
+    )
+    Get-Content -Tail $TailLength -Wait -Path (Get-TapeyTapePath)
+}
+
 function Get-PloverLatestRelease
 {
     <#
