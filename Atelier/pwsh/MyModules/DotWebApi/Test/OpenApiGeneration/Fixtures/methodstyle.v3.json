@@ -1,0 +1,74 @@
+{
+  "openapi": "3.0.4",
+  "info": { "title": "Phs.Api.Device", "version": "1.0" },
+  "servers": [ { "url": "https://device.example.com" } ],
+  "security": [ { "ApiKey": [] } ],
+  "paths": {
+    "/searchDevice/{deviceId}": {
+      "get": {
+        "tags": [ "Device" ],
+        "operationId": "GetSearchdeviceByDeviceid",
+        "parameters": [ { "name": "deviceId", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/{deviceId}/reset": {
+      "post": {
+        "tags": [ "Device" ],
+        "operationId": "PostResetByDeviceid",
+        "parameters": [ { "name": "deviceId", "in": "path", "required": true, "schema": { "type": "string" } } ],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/bulk/assign/async/put": {
+      "post": {
+        "tags": [ "Bulk" ],
+        "operationId": "PostBulkAssignAsyncPut",
+        "requestBody": { "content": { "application/json": { "schema": { "type": "array", "items": { "type": "string" } } } } },
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/bulk/subscriber/async/get": {
+      "post": {
+        "tags": [ "Bulk" ],
+        "operationId": "PostBulkSubscriberAsyncGet",
+        "requestBody": { "content": { "application/json": { "schema": { "type": "array", "items": { "type": "string" } } } } },
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/bulk/subscriber/async/put": {
+      "post": {
+        "tags": [ "Bulk" ],
+        "operationId": "PostBulkSubscriberAsyncPut",
+        "requestBody": { "content": { "application/json": { "schema": { "type": "array", "items": { "type": "string" } } } } },
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/geofence": {
+      "get": { "tags": [ "GeoFence" ], "operationId": "GetGeofence", "responses": { "200": { "description": "OK" } } },
+      "post": {
+        "tags": [ "GeoFence" ],
+        "operationId": "PostGeofence",
+        "requestBody": { "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Fence" } } } },
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/geofence/{id}": {
+      "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } } ],
+      "get": { "tags": [ "GeoFence" ], "operationId": "GetGeofenceById", "responses": { "200": { "description": "OK" } } },
+      "delete": { "tags": [ "GeoFence" ], "operationId": "DeleteGeofenceById", "responses": { "200": { "description": "OK" } } }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKey": { "type": "apiKey", "description": "Enter: apikey {your-token}", "name": "ApiKey", "in": "header" }
+    },
+    "schemas": {
+      "Fence": {
+        "type": "object",
+        "required": [ "name" ],
+        "properties": { "name": { "type": "string" }, "radius": { "type": "integer", "format": "int32" } }
+      }
+    }
+  }
+}

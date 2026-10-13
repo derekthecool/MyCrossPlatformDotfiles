@@ -110,9 +110,37 @@ Describe 'Update-ModuleManifestExport' {
         { Update-ModuleManifestExport -ManifestPath $script:manifest -FunctionName 'Get-Gen' -Region Gen } | Should -Throw '*explicit list*'
     }
 
+    Context 'a manifest whose exports a build step wrote as bare lists' {
+        BeforeEach {
+            # Update-ModuleManifest writes "FunctionsToExport = 'a', 'b'" and "AliasesToExport = 'one'" without @( ).
+            $script:bare = "@{`r`nRootModule = 'MyMod.psm1'`r`nModuleVersion = '0.1.0'`r`nFunctionsToExport = 'Get-Hand', 'Get-Gen', `r`n               'Set-Hand'`r`nCmdletsToExport = @()`r`nAliasesToExport = 'hand'`r`n}`r`n"
+            [System.IO.File]::WriteAllText($script:manifest, $script:bare, [System.Text.UTF8Encoding]::new($true))
+        }
+
+        It 'leaves the file exactly as it is when every generated name is already listed' {
+            $result = Update-ModuleManifestExport -ManifestPath $script:manifest -FunctionName 'Get-Gen', 'Get-Hand' -AliasName 'hand' -Region Gen -PassThru
+            [System.IO.File]::ReadAllText($script:manifest) | Should -BeExactly $script:bare
+            $result.Changed | Should -BeFalse
+        }
+
+        It 'adds only the generated names that are missing and keeps the file valid' {
+            Update-ModuleManifestExport -ManifestPath $script:manifest -FunctionName 'Get-Gen', 'New-Gen' -AliasName 'gen' -Region Gen
+            $data = Import-PowerShellDataFile -LiteralPath $script:manifest
+            $data.FunctionsToExport | Should -Be @('Get-Hand', 'Get-Gen', 'Set-Hand', 'New-Gen')
+            $data.AliasesToExport | Should -Be @('hand', 'gen')
+            (Get-Content -LiteralPath $script:manifest -Raw) | Should -Match '# BEGIN generated: Gen'
+        }
+    }
+
     It 'does not touch the file with -WhatIf' {
         Update-ModuleManifestExport -ManifestPath $script:manifest -FunctionName 'Get-Gen' -Region Gen -WhatIf
         Get-Content -LiteralPath $script:manifest -Raw | Should -BeExactly $script:original
+    }
+
+    It 'works when the RootModule is produced by a later build step (psm1 not present yet)' {
+        Remove-Item -LiteralPath (Join-Path $script:moduleDirectory 'MyMod.psm1')
+        { Update-ModuleManifestExport -ManifestPath $script:manifest -FunctionName 'Get-Gen' -Region Gen } | Should -Not -Throw
+        (Import-PowerShellDataFile -LiteralPath $script:manifest).FunctionsToExport | Should -Contain 'Get-Gen'
     }
 
     It 'throws for a missing manifest' {

@@ -66,7 +66,15 @@ $Script:OpenApiVerbSynonym = @{
     rename     = 'Rename'
     submit     = 'Submit'
     approve    = 'Approve'
+    force      = 'Invoke'
+    trigger    = 'Invoke'
+    readmit    = 'Restore'
+    reinstate  = 'Restore'
+    restore    = 'Restore'
+    revoke     = 'Revoke'
 }
+
+$Script:OpenApiMethodWord = 'get', 'post', 'put', 'patch', 'delete', 'head', 'options'
 
 $Script:OpenApiTestWord = 'check', 'test', 'ping', 'verify', 'validate', 'exists', 'exist'
 
@@ -306,7 +314,8 @@ function Resolve-OpenApiVerbWord
         return $result
     }
 
-    for ($i = 1; $i -lt $Word.Count; $i++)
+    # The last word is excluded: ids such as 'BulkAssignAsyncPut' end in an echo of the HTTP method, not a verb.
+    for ($i = 1; $i -lt $Word.Count - 1; $i++)
     {
         $candidate = $Word[$i].ToLowerInvariant()
         $mapped = if ($VerbMap.ContainsKey($candidate)) { $VerbMap[$candidate] } elseif ($Script:OpenApiVerbSynonym.ContainsKey($candidate)) { $Script:OpenApiVerbSynonym[$candidate] }
@@ -329,6 +338,59 @@ function Resolve-OpenApiVerbWord
         }
     }
     $result
+}
+
+function Get-OpenApiPathVerbNoun
+{
+    <#
+    .SYNOPSIS
+    Names an operation from its route alone (ASP.NET Core/Swashbuckle output has no summary or operationId).
+
+    .DESCRIPTION
+    Path segments become the noun, singular ('api' and version segments such as 'v1' are dropped, path
+    parameters ignored). A trailing action segment names the verb ('/devices/search' -> Search-Device);
+    otherwise the HTTP method does (GET Get, POST New, PUT Set, PATCH Update, DELETE Remove, HEAD Test).
+    #>
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$Path,
+
+        [Parameter(Mandatory)]
+        [string]$Method,
+
+        [Parameter()]
+        [hashtable]$VerbMap = @{}
+    )
+
+    $words = @($Path.Split('/') |
+            Where-Object { $_ -and $_ -notmatch '^\{' -and $_ -ne 'api' -and $_ -notmatch '^v\d+(\.\d+)*$' } |
+            ForEach-Object { Split-OpenApiWord -Text $_ })
+
+    $verb = $null
+    if ($words.Count -gt 0)
+    {
+        $last = $words[-1].ToLowerInvariant()
+        $mapped = if ($VerbMap.ContainsKey($last)) { $VerbMap[$last] } elseif ($Script:OpenApiVerbSynonym.ContainsKey($last)) { $Script:OpenApiVerbSynonym[$last] }
+        if ($mapped)
+        {
+            $verb = $mapped
+            $words = @($words | Select-Object -SkipLast 1)
+        }
+    }
+    if (-not $verb)
+    {
+        $verb = $Script:OpenApiMethodVerb[$Method]
+    }
+    if ($words.Count -eq 0)
+    {
+        $words = @('Item')
+    }
+
+    [pscustomobject]@{
+        Verb = $verb
+        Noun = ConvertTo-OpenApiPascalCase -Word @($words | ForEach-Object { Get-OpenApiSingularWord -Word $_ })
+    }
 }
 
 function Get-OpenApiVerbNoun
@@ -360,16 +422,34 @@ function Get-OpenApiVerbNoun
         [hashtable]$VerbMap = @{}
     )
 
+    if (-not ($Summary -and $Summary.Trim()) -and -not $OperationId)
+    {
+        return Get-OpenApiPathVerbNoun -Path $Path -Method $Method -VerbMap $VerbMap
+    }
+
     $best = $null
     $firstWords = $null
     foreach ($text in Get-OpenApiOperationTextCandidate -Path $Path -Method $Method -Summary $Summary -OperationId $OperationId)
     {
         $words = @(Split-OpenApiWord -Text $text)
+        # Method-style ids ('PostBulkAssignAsyncPut', 'GetSearchdeviceByDeviceid') lead with the HTTP method. That word
+        # is not part of the resource name; the method itself picks the verb unless a real verb follows.
+        $methodStyle = $text -ne $Summary.Trim() -and $words.Count -gt 1 -and $words[0].ToLowerInvariant() -in $Script:OpenApiMethodWord
+        if ($methodStyle)
+        {
+            $words = @($words | Select-Object -Skip 1)
+        }
         if (-not $firstWords)
         {
             $firstWords = $words
         }
         $resolved = Resolve-OpenApiVerbWord -Word $words -VerbMap $VerbMap
+        if ($methodStyle -and $resolved.Score -lt 3)
+        {
+            $resolved.NounWords = $words
+            $resolved.Verb = if ($Method -eq 'POST') { 'Invoke' } else { $Script:OpenApiMethodVerb[$Method] }
+            $resolved.Score = 2
+        }
         if ($null -eq $best -or $resolved.Score -gt $best.Score)
         {
             $best = $resolved
@@ -382,6 +462,26 @@ function Get-OpenApiVerbNoun
     {
         # 'Location By Id' names the resource, not the lookup key.
         if ($nounWords[$i].ToLowerInvariant() -eq 'by')
+        {
+            $nounWords = @($nounWords | Select-Object -First $i)
+            break
+        }
+    }
+    if ($nounWords.Count -gt 0 -and $nounWords[0].ToLowerInvariant() -eq 'by')
+    {
+        # 'Reset By Deviceid' (path /{deviceId}/reset): the thing acted on is what the key identifies.
+        $keyWords = @()
+        if ($Path -match '\{([^}/]+)\}')
+        {
+            $keyWords = @(Split-OpenApiWord -Text $Matches[1] | Where-Object { $_.ToLowerInvariant() -notin 'id', 'identifier', 'key' })
+        }
+        $nounWords = if ($keyWords.Count -gt 0) { $keyWords } else { @('Item') }
+    }
+    $preposition = 'to', 'from', 'in', 'into', 'for', 'of', 'on', 'with', 'at'
+    for ($i = 1; $i -lt $nounWords.Count; $i++)
+    {
+        # 'Add devices to inventory' / 'Remove device from inventory' name the device, not where it goes.
+        if ($nounWords[$i].ToLowerInvariant() -in $preposition)
         {
             $nounWords = @($nounWords | Select-Object -First $i)
             break
@@ -477,6 +577,7 @@ function Resolve-OpenApiFunctionName
             Noun          = $Prefix + $parts.Noun
             Override      = $override
             EndsWithParam = ($item.Path -match '\}/?$')
+            LastParameter = if ($item.Path -match '\{([^}/]+)\}/?$') { $Matches[1] } else { $null }
         }
     }
 
@@ -499,10 +600,16 @@ function Resolve-OpenApiFunctionName
         $candidates.Add("$($draft.Verb)-$($draft.Noun)")
         if ($draft.EndsWithParam)
         {
-            $candidates.Add("$($draft.Verb)-$($draft.Noun)ById")
+            # '/models/{model}' and '/things/{thingId}' are plain lookups ById; '/programs/{a}/{b}/{hostname}' is By<Key>.
+            $parameterWords = @(Split-OpenApiWord -Text $draft.LastParameter)
+            $lastNounWord = ($draft.Noun -csplit '(?=[A-Z])' | Where-Object { $_ })[-1]
+            $isIdLike = $parameterWords[-1] -ieq 'id' -or ($parameterWords -join '') -ieq $lastNounWord -or ($parameterWords -join '') -ieq (Get-OpenApiSingularWord -Word $lastNounWord)
+            $suffix = if ($isIdLike) { 'ById' } else { 'By' + (ConvertTo-OpenApiPascalCase -Word $parameterWords) }
+            $candidates.Add("$($draft.Verb)-$($draft.Noun)$suffix")
         }
         $candidates.Add("$($draft.Verb)-$($draft.Noun)$($draft.Record.Method.Substring(0, 1).ToUpperInvariant() + $draft.Record.Method.Substring(1).ToLowerInvariant())")
         $chosen = $candidates | Where-Object { $used.Add($_) } | Select-Object -First 1
+        $disambiguated = $chosen -and $chosen -ne $candidates[0]
         $index = 2
         while (-not $chosen)
         {
@@ -510,11 +617,13 @@ function Resolve-OpenApiFunctionName
             if ($used.Add($attempt))
             {
                 $chosen = $attempt
+                $disambiguated = $true
             }
             $index++
         }
 
         $draft.Record | Add-Member -NotePropertyName Name -NotePropertyValue $chosen -Force
+        $draft.Record | Add-Member -NotePropertyName Disambiguated -NotePropertyValue ([bool]$disambiguated) -Force
         $draft.Record | Add-Member -NotePropertyName Verb -NotePropertyValue $draft.Verb -Force
         $draft.Record | Add-Member -NotePropertyName Noun -NotePropertyValue ($chosen -split '-', 2)[1] -Force
     }

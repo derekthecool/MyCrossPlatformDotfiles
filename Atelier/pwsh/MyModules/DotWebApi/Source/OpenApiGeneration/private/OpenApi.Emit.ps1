@@ -287,10 +287,11 @@ function ConvertTo-OpenApiFunctionSource
     }
     if ($Model.HasInputObject)
     {
-        $blocks.Add(@(
-                "        [Parameter(Mandatory, ParameterSetName = 'InputObject', ValueFromPipeline)]"
-                '        [object]$InputObject'
-            ))
+        # With required body properties two sets keep "give properties" and "give an object" mutually exclusive.
+        # With none, sets are unnecessary (and make a bare call ambiguous), so -InputObject is simply optional.
+        $anyRequired = @($parameters | Where-Object { $_.In -eq 'body' -and $_.Mandatory }).Count -gt 0
+        $inputAttribute = if ($anyRequired) { "        [Parameter(Mandatory, ParameterSetName = 'InputObject', ValueFromPipeline)]" } else { '        [Parameter(ValueFromPipeline)]' }
+        $blocks.Add(@($inputAttribute, '        [object]$InputObject'))
     }
     $blocks.Add(@(
             '        [Parameter()]'
@@ -355,6 +356,10 @@ function ConvertTo-OpenApiFunctionSource
         }
         $out.Add('')
         $request.Add(@('PathParameter', '$pathParameter'))
+        if (@($Model.RawPath).Count -gt 0)
+        {
+            $request.Add(@('RawPathName', (ConvertTo-OpenApiLiteral -Value @($Model.RawPath))))
+        }
     }
 
     foreach ($location in 'query', 'header')
@@ -400,7 +405,7 @@ function ConvertTo-OpenApiFunctionSource
             {
                 $primary = if ($Model.PrimaryBodyProperty) { " -PrimaryProperty $(ConvertTo-OpenApiLiteral -Value $Model.PrimaryBodyProperty)" } else { '' }
                 $mapped = @($bodyParameters | Where-Object { $_.Name -cne $_.Wire })
-                $out.Add("        if (`$PSCmdlet.ParameterSetName -eq 'InputObject')")
+                $out.Add("        if (`$PSBoundParameters.ContainsKey('InputObject'))")
                 $out.Add('        {')
                 $mapArgument = ''
                 if ($mapped.Count -gt 0)

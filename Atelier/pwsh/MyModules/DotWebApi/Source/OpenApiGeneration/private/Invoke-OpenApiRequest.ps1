@@ -1,8 +1,8 @@
-# Shared runtime for clients produced by New-OpenApiClient.
+# Shared request runtime for clients made by the DotWebApi generator.
 #
-# This file is also copied (with 'OpenApi' replaced by '<Prefix>Api' in every
-# identifier) next to generated clients when -RuntimeMode Embedded is used, so
-# keep it self-contained: no calls into the rest of DotWebApi.
+# In -RuntimeMode Embedded this file is copied next to the generated clients with every identifier
+# renamed to <RuntimeName>Api* (a plain text replacement, so keep that stem out of comments and strings
+# you do not want renamed). Keep it self-contained: no calls into the rest of DotWebApi.
 
 $Script:OpenApiSessionCredential = @{}
 
@@ -503,6 +503,9 @@ function Invoke-OpenApiRequest
     Hashtable emitted by the generator: ApiName, DefaultEndpoint, ServerUrl, BasePath,
     SecuritySchemes.
 
+    .PARAMETER RawPathName
+    Path parameters whose '/' characters are kept (catch-all routes such as /proxy/{path}).
+
     .PARAMETER Query
     Query parameters keyed by wire name. Arrays are repeated (explode) unless the name is in -CsvQueryName.
 
@@ -528,6 +531,9 @@ function Invoke-OpenApiRequest
 
         [Parameter()]
         [hashtable]$PathParameter,
+
+        [Parameter()]
+        [string[]]$RawPathName,
 
         [Parameter()]
         [System.Collections.IDictionary]$Query,
@@ -571,7 +577,15 @@ function Invoke-OpenApiRequest
     $path = $PathTemplate
     foreach ($name in $(if ($PathParameter) { @($PathParameter.Keys) }))
     {
-        $escaped = [uri]::EscapeDataString((ConvertTo-OpenApiQueryValue -Value $PathParameter[$name]))
+        $text = ConvertTo-OpenApiQueryValue -Value $PathParameter[$name]
+        $escaped = if ($RawPathName -contains $name)
+        {
+            # Catch-all segment: escape each piece but keep the slashes.
+            ($text -split '/' | ForEach-Object { [uri]::EscapeDataString($_) }) -join '/'
+        } else
+        {
+            [uri]::EscapeDataString($text)
+        }
         $path = $path.Replace("{$name}", $escaped)
     }
 
@@ -618,7 +632,22 @@ function Invoke-OpenApiRequest
                 {
                     'query' { $queryTable[$scheme.Name] = $tokenValue }
                     'cookie' { $requestHeaders['Cookie'] = '{0}={1}' -f $scheme.Name, $tokenValue }
-                    default { $requestHeaders[$scheme.Name] = $tokenValue }
+                    default
+                    {
+                        # Swagger 2.0 has no bearer type, so swaggo/Go services declare "apiKey in header Authorization"
+                        # and expect 'Bearer <token>'. A bare token gets the prefix; a value with a scheme is left alone.
+                        $headerValue = $tokenValue
+                        if ($scheme.Name -ieq 'Authorization' -and $headerValue -notmatch '\s')
+                        {
+                            $headerValue = "Bearer $headerValue"
+                        } elseif ($scheme.Name -ine 'Authorization' -and $headerValue -match '^apikey\s+')
+                        {
+                            # Specs often say "Enter: apikey {your-token}" for a custom key header (a Swagger UI convention)
+                            # while the service wants the bare token, so tolerate a pasted 'apikey ' prefix.
+                            $headerValue = $headerValue -replace '^apikey\s+', ''
+                        }
+                        $requestHeaders[$scheme.Name] = $headerValue
+                    }
                 }
             }
             '^(oauth2|openIdConnect)$'

@@ -434,7 +434,10 @@ function New-OpenApiOperationModel
         [pscustomobject]$Record,
 
         [Parameter(Mandatory)]
-        [string]$ClientName
+        [string]$ClientName,
+
+        [Parameter()]
+        [string[]]$RawPathParameter = @()
     )
 
     $operation = $Record.Operation
@@ -521,6 +524,12 @@ function New-OpenApiOperationModel
     Set-OpenApiParameterName -Descriptor $ordered
 
     $response = Get-OpenApiResponseModel -Document $Document -Operation $operation -Method $Record.Method -ClientName $ClientName
+
+    # Catch-all routes (/proxy/{path}) must keep their slashes; only an explicit or catch-all-looking trailing parameter does.
+    $catchAll = '^\*{0,2}(path|filepath|file_path|catchall|catch_all|rest|wildcard|remainder)$'
+    $rawPath = @($descriptors | Where-Object {
+            $_.In -eq 'path' -and ($_.Wire -in $RawPathParameter -or ($_.Wire -match $catchAll -and $Record.Path -match "\{$([regex]::Escape($_.Wire))\}/?$"))
+        } | ForEach-Object { $_.Wire })
     $hasInputObject = ($bodyKind -in 'json', 'form') -and @($bodyDescriptors | Where-Object { $_.In -eq 'body' }).Count -gt 0 -and $bodyKind -ne 'rootvalue'
 
     [pscustomobject]@{
@@ -535,6 +544,7 @@ function New-OpenApiOperationModel
         HasInputObject      = $hasInputObject
         PrimaryBodyProperty = $primaryBodyProperty
         Response            = $response
+        RawPath             = $rawPath
         SupportsOutFile     = ($response.Kind -in 'unknown', 'binary', 'text')
         ShouldProcess       = ($Record.Method -in 'DELETE', 'PUT', 'PATCH')
         ConfirmImpact       = if ($Record.Method -eq 'DELETE') { 'High' } else { 'Medium' }

@@ -113,14 +113,18 @@ function ConvertFrom-OpenApiV2Document
     $basePath = if ($source['basePath']) { [string]$source['basePath'] } else { '' }
     if ($source['host'])
     {
-        $scheme = if ($source['schemes']) { @($source['schemes'])[0] } else { 'https' }
+        # Swagger 2.0 says a missing 'schemes' means "the scheme used to fetch this document", which we cannot know.
+        # Local development hosts and explicit non-443 ports are far more often plain http (swaggo's localhost:8080).
+        $scheme = if ($source['schemes']) { @($source['schemes'])[0] }
+        elseif ([string]$source['host'] -match '^(localhost|127\.|\[::1\]|\d{1,3}(\.\d{1,3}){3})' -or ([string]$source['host'] -match ':(\d+)$' -and $Matches[1] -ne '443')) { 'http' }
+        else { 'https' }
         $v3['servers'] = @(@{ url = '{0}://{1}{2}' -f $scheme, $source['host'], $basePath.TrimEnd('/') })
     } elseif ($basePath)
     {
         $v3['servers'] = @(@{ url = $basePath })
     }
 
-    foreach ($name in @($source['securityDefinitions'].Keys))
+    foreach ($name in $(if ($source['securityDefinitions']) { @($source['securityDefinitions'].Keys) }))
     {
         $definition = $source['securityDefinitions'][$name]
         $v3['components']['securitySchemes'][$name] = switch ($definition['type'])

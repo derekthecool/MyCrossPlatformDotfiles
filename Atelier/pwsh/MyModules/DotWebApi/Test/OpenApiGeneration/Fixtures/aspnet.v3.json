@@ -1,0 +1,103 @@
+{
+  "openapi": "3.0.4",
+  "info": { "title": "FleetManager", "version": "1.0" },
+  "paths": {
+    "/api/devices/search": {
+      "post": {
+        "tags": [ "DeviceSearch" ],
+        "requestBody": {
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/DeviceSearchRequest" } },
+            "text/json": { "schema": { "$ref": "#/components/schemas/DeviceSearchRequest" } },
+            "application/*+json": { "schema": { "$ref": "#/components/schemas/DeviceSearchRequest" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/DeviceSearchResult" } } },
+              "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/DeviceSearchResult" } } }
+            }
+          }
+        }
+      }
+    },
+    "/api/device-types": {
+      "post": {
+        "tags": [ "DeviceTypes" ],
+        "requestBody": {
+          "content": { "application/json": { "schema": { "type": "array", "items": { "type": "string" } } } }
+        },
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/api/duplicate-devices": {
+      "get": {
+        "tags": [ "DuplicateDevices" ],
+        "parameters": [ { "name": "status", "in": "query", "schema": { "type": "string" } } ],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/api/duplicate-devices/{id}": {
+      "get": {
+        "tags": [ "DuplicateDevices" ],
+        "parameters": [ { "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int32" } } ],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/api/programs": {
+      "get": { "tags": [ "Programs" ], "responses": { "200": { "description": "OK" } } }
+    },
+    "/api/programs/{broker}/{deviceType}/{hostname}": {
+      "parameters": [
+        { "name": "broker", "in": "path", "required": true, "schema": { "type": "string" } },
+        { "name": "deviceType", "in": "path", "required": true, "schema": { "type": "string" } },
+        { "name": "hostname", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": { "tags": [ "Programs" ], "responses": { "200": { "description": "OK" } } },
+      "delete": { "tags": [ "Programs" ], "responses": { "200": { "description": "OK" } } }
+    },
+    "/api/programs/{broker}/{deviceType}/{hostname}/devices/count": {
+      "get": {
+        "tags": [ "Programs" ],
+        "parameters": [
+          { "name": "broker", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "deviceType", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "hostname", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/api/programs/{deviceType}/{computerName}/proxy/{path}": {
+      "parameters": [
+        { "name": "deviceType", "in": "path", "required": true, "schema": { "type": "string" } },
+        { "name": "computerName", "in": "path", "required": true, "schema": { "type": "string" } },
+        { "name": "path", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": { "tags": [ "Proxy" ], "responses": { "200": { "description": "OK" } } },
+      "post": { "tags": [ "Proxy" ], "responses": { "200": { "description": "OK" } } },
+      "put": { "tags": [ "Proxy" ], "responses": { "200": { "description": "OK" } } },
+      "delete": { "tags": [ "Proxy" ], "responses": { "200": { "description": "OK" } } },
+      "patch": { "tags": [ "Proxy" ], "responses": { "200": { "description": "OK" } } }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DeviceSearchRequest": {
+        "type": "object",
+        "properties": { "deviceIds": { "type": "array", "items": { "type": "string" }, "nullable": true } },
+        "additionalProperties": false
+      },
+      "DeviceSearchResult": {
+        "type": "object",
+        "properties": {
+          "input": { "type": "string", "nullable": true },
+          "deviceId": { "type": "string", "nullable": true },
+          "status": { "type": "string", "nullable": true }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

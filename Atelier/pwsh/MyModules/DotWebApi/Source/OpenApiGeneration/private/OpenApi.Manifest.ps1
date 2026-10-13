@@ -7,7 +7,7 @@ function Get-ModuleSourceExport
     Finds the functions and aliases a set of .ps1 files would export, skipping any 'private' folder.
 
     .DESCRIPTION
-    Adapted from Set-ModuleManifestFunctionsAndAliases (FreeusPowershell psakefile.ps1). Parses each
+    Adapted from a psakefile task (Set-ModuleManifestFunctionsAndAliases). Parses each
     file with the PowerShell AST and collects top-level function names, Set-Alias/New-Alias names and
     [Alias()] attributes on a function's param block. Nested helper functions are not reported.
 
@@ -188,10 +188,17 @@ function Set-ManifestExportArray
         $keyIndent = '    '
     }
 
+    # A manifest rewritten by Update-ModuleManifest (or a build that calls it) holds bare lists such as
+    # FunctionsToExport = 'a', 'b' and AliasesToExport = 'gs' rather than @( ... ).
+    $bareList = $false
     if ($original -match '^\s*@\(')
     {
         $inner = $original.Substring($original.IndexOf('(') + 1)
         $inner = $inner.Substring(0, $inner.LastIndexOf(')'))
+    } elseif ($original -match "^\s*['`"][^'`"*]")
+    {
+        $inner = $original
+        $bareList = $true
     } elseif ($original -match "^\s*(''|`"`")?\s*$")
     {
         $inner = ''
@@ -218,6 +225,13 @@ function Set-ManifestExportArray
             }
         }
         $quoted = @($Name | Sort-Object -Unique | Where-Object { -not $handwritten.Contains($_) } | ForEach-Object { "'" + $_.Replace("'", "''") + "'" })
+
+        # A bare list that already names everything (the usual state after a build rebuilt the exports)
+        # stays exactly as it is.
+        if ($bareList -and $quoted.Count -eq 0)
+        {
+            return $Text
+        }
 
         $itemIndent = $keyIndent + '    '
         foreach ($line in $inner -split "\r?\n")

@@ -111,7 +111,24 @@ function Update-ModuleManifestExport
     if ($changed -and $PSCmdlet.ShouldProcess($manifest, 'Update FunctionsToExport/AliasesToExport'))
     {
         [System.IO.File]::WriteAllText($manifest, $updated, [System.Text.UTF8Encoding]::new($hasBom))
-        $null = Test-ModuleManifest -Path $manifest -ErrorAction Stop -WarningAction SilentlyContinue
+        try
+        {
+            $null = Import-PowerShellDataFile -LiteralPath $manifest -ErrorAction Stop
+            # Modules whose .psm1 is produced by a build step (psake bundles source/*.ps1) have no RootModule yet;
+            # Test-ModuleManifest would reject them for a reason unrelated to this edit.
+            $root = (Import-PowerShellDataFile -LiteralPath $manifest).RootModule
+            if ($root -and (Test-Path -LiteralPath (Join-Path -Path (Split-Path -Path $manifest -Parent) -ChildPath $root)))
+            {
+                $null = Test-ModuleManifest -Path $manifest -ErrorAction Stop -WarningAction SilentlyContinue
+            } else
+            {
+                Write-Verbose "Skipping Test-ModuleManifest: RootModule '$root' is not built yet."
+            }
+        } catch
+        {
+            [System.IO.File]::WriteAllText($manifest, $original, [System.Text.UTF8Encoding]::new($hasBom))
+            throw "The updated manifest is not valid and was reverted: $($_.Exception.Message)"
+        }
     }
 
     if ($PassThru)
