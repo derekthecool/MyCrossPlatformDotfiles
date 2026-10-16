@@ -73,6 +73,28 @@
     "type": "command",
     "command": "pwsh -NoProfile -File ~/.claude/statusline-command.ps1"
   },
+  "hooks": {
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pwsh -NoProfile -File ~/.claude/wezterm-notifications.ps1"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pwsh -NoProfile -File ~/.claude/wezterm-notifications.ps1"
+          }
+        ]
+      }
+    ]
+  },
   "enabledPlugins": {
     "very-good-ai-flutter-plugin@very-good-claude-code-marketplace": true,
     "ralph-loop@claude-plugins-official": true
