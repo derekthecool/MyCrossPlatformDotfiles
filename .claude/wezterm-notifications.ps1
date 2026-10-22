@@ -13,6 +13,32 @@
 # Manual test, run inside a WezTerm pane (writes the sequence straight to the terminal):
 #   ./wezterm-notifications.ps1 -Direct -TestEvent Stop
 #   ./wezterm-notifications.ps1 -Direct -TestEvent permission_prompt
+#
+# The toast fires either way, but the tab will NOT light up: attention.lua deliberately ignores a bell
+# from the pane you are already looking at, and clears the flag again as soon as you focus that pane.
+# To see the tab highlight, give yourself time to switch to another tab first:
+#   Start-Sleep 5; ./wezterm-notifications.ps1 -Direct -TestEvent Stop
+#
+# Windows toasts need WezTerm's AppUserModelID registered, once per machine
+# -------------------------------------------------------------------------
+# WezTerm hands the OSC 777 to Windows under the AUMID `org.wezfurlong.wezterm`. Windows only paints a
+# banner for an AUMID it can resolve to a name and an icon, and an unpackaged app gets that from a Start
+# Menu shortcut or from the registry -- a scoop install writes neither. Without it Windows still accepts
+# and stores every toast (they are in wpndatabase.db, and in the Win+N history) but no banner is ever
+# drawn, which looks exactly like the hook being broken. Re-apply after a scoop reinstall:
+#
+#   $icon = Join-Path $env:LOCALAPPDATA 'wezterm\wezterm.png'   # extracted from wezterm-gui.exe
+#   $key  = 'HKCU:\Software\Classes\AppUserModelId\org.wezfurlong.wezterm'
+#   New-Item -Path $key -Force | Out-Null
+#   New-ItemProperty -Path $key -Name DisplayName    -Value 'WezTerm' -PropertyType String -Force
+#   New-ItemProperty -Path $key -Name IconUri        -Value $icon     -PropertyType String -Force
+#   New-ItemProperty -Path $key -Name ShowInSettings -Value 1         -PropertyType DWord  -Force
+#
+# Keep the icon outside the scoop app directory; an update replaces that whole folder.
+#
+# Running Claude inside a Neovim :terminal needs the Neovim half of this bridge as well: `belloff`
+# defaults to `all` and drops the BEL, and OSC 777 stops at `TermRequest` instead of being passed on.
+# See nvim/lua/config/terminal-notifications.lua.
 
 [CmdletBinding()]
 param(
