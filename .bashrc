@@ -12,4 +12,4 @@ eval "$(fzf --bash)"
 single_computer_specific="$HOME/.single_computer_specific"
 [[ -s $single_computer_specific ]] && source "$single_computer_specific"
 
-. "$HOME/.local/bin/env"
+[ -s "$HOME/.local/bin/env" ] && . "$HOME/.local/bin/env"
