@@ -1,0 +1,93 @@
+// Whim startup applications.
+//
+// Edited live - Whim re-reads this on every start/restart (Alt+q). Nothing here is
+// launched if it is already running.
+//
+// Per-app keys (all optional except "name" and "paths"):
+//   name        Label used in logs and the startup report.
+//   paths       Ordered candidates; the FIRST one that exists wins. Supports
+//               ~, %ENVVAR%, and * / ? wildcards. When a wildcard matches several
+//               paths the highest version/newest name wins (e.g. "Plover *").
+//   args        Command line arguments.
+//   enabled     Set false to keep an entry around without launching it.
+//   process     Process name(s) used for the "already running?" check. Defaults to
+//               the resolved exe name. Accepts a string or a list of strings.
+//   aumidEndsWith / aumidExcludes
+//               Use a per-window AppUserModelID check instead of the process check.
+//               Needed for Chromium profiles, which all share one brave.exe process.
+//               Brave's DEFAULT profile uses the bare id ("Brave.<hash>"); every other
+//               profile appends ".UserData.<ProfileDir>". So the default profile is
+//               matched with aumidExcludes: ".UserData." and the others with
+//               aumidEndsWith: ".UserData.Profile1".
+//               Run the "Report startup application status" command to see live ids.
+//   delayMs     Extra delay before this app launches (added to the stagger).
+//   cwd         Working directory.
+{
+  "initialDelayMs": 2000,
+  "staggerMs": 500,
+
+  "apps": [
+    {
+      "name": "WezTerm (nightly)",
+      "paths": [
+        "~/scoop/apps/wezterm-nightly/current/wezterm-gui.exe",
+        "~/scoop/apps/wezterm/current/wezterm-gui.exe",
+        "%ProgramFiles%/WezTerm/wezterm-gui.exe"
+      ],
+      "process": "wezterm-gui"
+    },
+
+    {
+      "name": "Keypirinha",
+      "paths": [
+        "~/scoop/apps/keypirinha/current/keypirinha.exe",
+        "%ProgramFiles%/Keypirinha/keypirinha.exe",
+        "%ProgramFiles(x86)%/Keypirinha/keypirinha.exe"
+      ],
+      "process": ["keypirinha-x64", "keypirinha"]
+    },
+
+    {
+      "name": "Plover",
+      "paths": [
+        "%ProgramFiles%/Open Steno Project/Plover */plover.exe",
+        "%ProgramFiles(x86)%/Open Steno Project/Plover */plover.exe",
+        "~/scoop/apps/plover/current/plover.exe"
+      ],
+      "process": "plover"
+    },
+
+    {
+      "name": "Brave - Derek",
+      "paths": [
+        "%LOCALAPPDATA%/BraveSoftware/Brave-Browser/Application/brave.exe",
+        "%ProgramFiles%/BraveSoftware/Brave-Browser/Application/brave.exe",
+        "%ProgramFiles(x86)%/BraveSoftware/Brave-Browser/Application/brave.exe"
+      ],
+      "args": "--profile-directory=\"Default\"",
+      "aumidExcludes": ".UserData."
+    },
+
+    {
+      "name": "Brave - Freeus",
+      "paths": [
+        "%LOCALAPPDATA%/BraveSoftware/Brave-Browser/Application/brave.exe",
+        "%ProgramFiles%/BraveSoftware/Brave-Browser/Application/brave.exe",
+        "%ProgramFiles(x86)%/BraveSoftware/Brave-Browser/Application/brave.exe"
+      ],
+      "args": "--profile-directory=\"Profile 1\"",
+      "aumidEndsWith": ".UserData.Profile1",
+      "delayMs": 1500
+    },
+
+    {
+      "name": "Quokka Companion",
+      "paths": [
+        "~/.local/bin/Quokka Companion.exe",
+        "%LOCALAPPDATA%/Quokka Companion/Quokka Companion.exe",
+        "%LOCALAPPDATA%/Programs/Quokka Companion/Quokka Companion.exe"
+      ],
+      "process": "Quokka Companion"
+    }
+  ]
+}
