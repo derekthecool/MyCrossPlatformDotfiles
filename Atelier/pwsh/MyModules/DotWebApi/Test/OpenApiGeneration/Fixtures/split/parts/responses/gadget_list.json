@@ -1,4 +1,11 @@
 {
   "description": "A page of gadgets",
-  "content": { "application/json": { "schema": { "type": "array", "items": { "$ref": "../schemas/gadget.json" } } } }
+  "content": {
+    "application/json": {
+      "schema": {
+        "type": "array",
+        "items": { "$ref": "../schemas/gadget.json" }
+      }
+    }
+  }
 }

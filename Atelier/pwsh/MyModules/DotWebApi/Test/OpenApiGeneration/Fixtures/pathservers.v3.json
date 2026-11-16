@@ -4,7 +4,10 @@
   "paths": {
     "/b/things": {
       "servers": [{ "url": "https://b.example.test/v2" }],
-      "get": { "summary": "List things", "responses": { "200": { "description": "OK" } } }
+      "get": {
+        "summary": "List things",
+        "responses": { "200": { "description": "OK" } }
+      }
     },
     "/a/things": {
       "get": {

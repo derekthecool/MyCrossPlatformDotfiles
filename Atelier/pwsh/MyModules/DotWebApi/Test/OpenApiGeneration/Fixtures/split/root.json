@@ -18,7 +18,11 @@
         "responses": {
           "201": {
             "description": "Created",
-            "content": { "application/json": { "schema": { "$ref": "./parts/schemas/gadget.json" } } }
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "./parts/schemas/gadget.json" }
+              }
+            }
           }
         }
       }
@@ -26,14 +30,23 @@
     "/gadgets/{id}": {
       "get": {
         "summary": "Get gadget",
-        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": { "$ref": "./parts/schemas/gadget.json" },
-                "examples": { "sample": { "$ref": "./parts/examples/never-read.json" } }
+                "examples": {
+                  "sample": { "$ref": "./parts/examples/never-read.json" }
+                }
               }
             }
           }
@@ -43,7 +56,10 @@
   },
   "components": {
     "schemas": {
-      "Item": { "type": "object", "properties": { "root": { "type": "string" } } }
+      "Item": {
+        "type": "object",
+        "properties": { "root": { "type": "string" } }
+      }
     }
   }
 }

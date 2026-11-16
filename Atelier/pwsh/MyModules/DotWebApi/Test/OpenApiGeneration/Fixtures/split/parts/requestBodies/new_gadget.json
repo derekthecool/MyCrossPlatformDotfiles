@@ -1,4 +1,6 @@
 {
   "required": true,
-  "content": { "application/json": { "schema": { "$ref": "../schemas/gadget.json" } } }
+  "content": {
+    "application/json": { "schema": { "$ref": "../schemas/gadget.json" } }
+  }
 }

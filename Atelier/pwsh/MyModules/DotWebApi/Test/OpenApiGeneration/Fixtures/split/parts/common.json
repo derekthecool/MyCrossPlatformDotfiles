@@ -1,10 +1,18 @@
 {
   "components": {
     "parameters": {
-      "Page": { "name": "page", "in": "query", "description": "Page number", "schema": { "type": "integer", "minimum": 1 } }
+      "Page": {
+        "name": "page",
+        "in": "query",
+        "description": "Page number",
+        "schema": { "type": "integer", "minimum": 1 }
+      }
     },
     "schemas": {
-      "Item": { "type": "object", "properties": { "common": { "type": "string" } } }
+      "Item": {
+        "type": "object",
+        "properties": { "common": { "type": "string" } }
+      }
     }
   }
 }

@@ -6,12 +6,12 @@ need the `powershell-yaml` module (`ConvertFrom-Yaml`), which `Atelier/pwsh/Boot
 
 ## Clients committed in DotWebApi
 
-| Client | Commands | Spec | Default endpoint |
-| --- | --- | --- | --- |
-| Kokoro TTS | `*-Kokoro*` | `Source/Kokoro/kokoro_tts_openapi.json` | `http://192.168.1.103:8880` |
-| Frigate NVR | `*-Frigate*` (194 operations) | `Source/Frigate/frigate-api.yaml` | `http://192.168.1.91:5000` (spec adds `/api`) |
-| Open Food Facts | `*-OpenFoodFacts*` | `Source/OpenFoodFacts/spec/api.yaml` plus the files it refers to | `https://world.openfoodfacts.org` |
-| Open-Meteo | `Get-OpenMeteoForecast`, `…AirQuality`, `…Climate`, `…Elevation`, `…Ensemble`, `…Flood`, `…HistoricalWeather`, `…Marine`, `…Seasonal` | `Source/OpenMeteo/spec/*.yml` | one host per API, from the spec |
+| Client          | Commands                                                                                                                              | Spec                                                             | Default endpoint                              |
+|-----------------|---------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------|-----------------------------------------------|
+| Kokoro TTS      | `*-Kokoro*`                                                                                                                           | `Source/Kokoro/kokoro_tts_openapi.json`                          | `http://192.168.1.103:8880`                   |
+| Frigate NVR     | `*-Frigate*` (194 operations)                                                                                                         | `Source/Frigate/frigate-api.yaml`                                | `http://192.168.1.91:5000` (spec adds `/api`) |
+| Open Food Facts | `*-OpenFoodFacts*`                                                                                                                    | `Source/OpenFoodFacts/spec/api.yaml` plus the files it refers to | `https://world.openfoodfacts.org`             |
+| Open-Meteo      | `Get-OpenMeteoForecast`, `…AirQuality`, `…Climate`, `…Elevation`, `…Ensemble`, `…Flood`, `…HistoricalWeather`, `…Marine`, `…Seasonal` | `Source/OpenMeteo/spec/*.yml`                                    | one host per API, from the spec               |
 
 `examples/GeneratedClients.psd1` is the single table of what is generated (spec, output folder, default endpoint,
 `-NameOverride`s, where the spec came from and its licence). Regenerate from it, which also rewrites each client's
@@ -172,17 +172,17 @@ slashes, and `-RawPathParameter name` does the same for any other name.
 
 ## Lessons learned from real specs
 
-| Spec                                         | What it taught the generator                                                                                                                                        |
-|----------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Kokoro (FastAPI, 3.1)                        | Responses are declared JSON but are audio → decide by real `Content-Type`; `input` collides with `$input`; `anyOf [T, null]`.                                       |
-| Kroger (3.0.3)                               | OAuth2 schemes, `HEAD` operations, dotted parameter names, summaries that name worse than operationIds → score every naming source.                                 |
-| Pet store fixture                            | Server variables, bearer auth, recursion/`allOf`, multipart, CSV array queries, case-sensitive patterns (`ValidatePattern` ignores case unless `Options = 'None'`). |
-| ASP.NET Core service (3.0.4)                 | No summaries/operationIds → route-based names; catch-all proxy route; `text/plain`+`application/json` duplicates; no `servers`.                                     |
-| swaggo service (Swagger 2.0)                 | `Authorization` apiKey needs `Bearer`; `host` without `schemes` (localhost → http); `-ReservedName`, prepositional summaries.                                       |
-| AutoRest-era service (3.0.4, 108 operations) | Method-style operationIds, `ApiKey` header with "apikey " text, spec `servers`, 140 commands that must not clash with an existing AutoRest module's.                |
+| Spec                                         | What it taught the generator                                                                                                                                                                                                                                      |
+|----------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Kokoro (FastAPI, 3.1)                        | Responses are declared JSON but are audio → decide by real `Content-Type`; `input` collides with `$input`; `anyOf [T, null]`.                                                                                                                                     |
+| Kroger (3.0.3)                               | OAuth2 schemes, `HEAD` operations, dotted parameter names, summaries that name worse than operationIds → score every naming source.                                                                                                                               |
+| Pet store fixture                            | Server variables, bearer auth, recursion/`allOf`, multipart, CSV array queries, case-sensitive patterns (`ValidatePattern` ignores case unless `Options = 'None'`).                                                                                               |
+| ASP.NET Core service (3.0.4)                 | No summaries/operationIds → route-based names; catch-all proxy route; `text/plain`+`application/json` duplicates; no `servers`.                                                                                                                                   |
+| swaggo service (Swagger 2.0)                 | `Authorization` apiKey needs `Bearer`; `host` without `schemes` (localhost → http); `-ReservedName`, prepositional summaries.                                                                                                                                     |
+| AutoRest-era service (3.0.4, 108 operations) | Method-style operationIds, `ApiKey` header with "apikey " text, spec `servers`, 140 commands that must not clash with an existing AutoRest module's.                                                                                                              |
 | Frigate (FastAPI, YAML, 194 operations)      | YAML input; many near-duplicate names (`/events` vs `/event_ids`, `.jpg` vs `.webp`) → shortest path wins and path words disambiguate instead of `Get`/`Post` suffixes; `Restart-FrigateRestart`; `username`/`password` fields → SecureString (PSScriptAnalyzer). |
-| Open Food Facts (3.1, 79 files)              | A spec split over files with relative `$ref`s (whole-file and pointer, nested, self-referencing) → folded into one document with a combined hash; examples are not followed; production vs staging in `servers`. |
-| Open-Meteo (3.1, 9 specs)                    | Servers declared only on the path item; one spec and host per API; a `latitude` that is a comma-separated string, not an array. |
+| Open Food Facts (3.1, 79 files)              | A spec split over files with relative `$ref`s (whole-file and pointer, nested, self-referencing) → folded into one document with a combined hash; examples are not followed; production vs staging in `servers`.                                                  |
+| Open-Meteo (3.1, 9 specs)                    | Servers declared only on the path item; one spec and host per API; a `latitude` that is a comma-separated string, not an array.                                                                                                                                   |
 
 Smaller rules that came out of it: a parse error in any module source file stops the module from loading (the loader
 dot-sources everything); the manifest updater must not require a built `psm1` and reverts if its result is invalid; empty
