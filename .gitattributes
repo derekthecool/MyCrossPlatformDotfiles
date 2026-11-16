@@ -1,2 +1,8 @@
 *.lua text eol=lf
 *.toml text eol=lf
+
+# API specs that generated clients hash (DotWebApi): keep LF so the hash matches on every platform
+Atelier/pwsh/MyModules/DotWebApi/Source/Kokoro/*.json text eol=lf
+Atelier/pwsh/MyModules/DotWebApi/Source/Frigate/*.yaml text eol=lf
+Atelier/pwsh/MyModules/DotWebApi/Source/OpenFoodFacts/spec/** text eol=lf
+Atelier/pwsh/MyModules/DotWebApi/Source/OpenMeteo/spec/*.yml text eol=lf

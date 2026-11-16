@@ -15,7 +15,9 @@ APPLY_FIXES: all
 # ENABLE_LINTERS:
 
 # Global filter for GitHub actions directory -- changes will be rejected by commit
-FILTER_REGEX_EXCLUDE: ".*github/workflows/.*"
+# Also skips the API specs under DotWebApi/Source/: the generated clients carry a hash of their spec, so a linter that
+# reformats a spec makes the drift test fail until the client is regenerated.
+FILTER_REGEX_EXCLUDE: '.*github/workflows/.*|.*/DotWebApi/Source/(Kokoro|Frigate|OpenFoodFacts|OpenMeteo)/.*\.(json|ya?ml)$'
 
 DISABLE:
   - COPYPASTE
