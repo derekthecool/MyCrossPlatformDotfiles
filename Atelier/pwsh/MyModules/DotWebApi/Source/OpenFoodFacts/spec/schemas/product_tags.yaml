@@ -1,0 +1,54 @@
+type: object
+description: |
+  Data about a product which is represented as tags
+allOf:
+  - $ref: './product_base_tags.yaml'
+  - type: object
+    properties:
+      brands_hierarchy:
+        type: array
+        description: |
+          An array of brands tag entries (for display and editing).
+      
+          That is the id of brands found in taxonomy + 
+          brands not found in taxonomy (as-is, with no normalization).
+      
+          This is the field that should be used for display purposes, as it is not lossy.
+        items:
+          $ref: ./tags/taxonomy_tag_entry.yaml      
+      brands_lc:
+        type: string
+        description: Language code of the last edit for brands
+      
+      categories_hierarchy:
+        type: array
+        description: |
+          An array of categories tag entries (for display and editing).
+      
+          That is the id of categories found in taxonomy + 
+          categories not found in taxonomy (as-is, with no normalization).
+      
+          This is the field that should be used for display purposes, as it is not lossy.
+        items:
+          $ref: ./tags/taxonomy_tag_entry.yaml      
+      categories_lc:
+        type: string
+        description: Language code of the last edit for categories
+
+      countries_hierarchy:
+        type: array
+        items:
+          type: string
+      countries_lc:
+        type: string
+        description: Countries language code
+
+      emb_codes_orig:
+        type: string
+
+      labels_hierarchy:
+        type: array
+        items:
+          type: string
+      labels_lc:
+        type: string
