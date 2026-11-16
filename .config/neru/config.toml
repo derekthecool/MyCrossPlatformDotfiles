@@ -58,6 +58,8 @@ text = "#E8EEFF"
 # See https://github.com/y3owk1n/neru/blob/main/docs/reference/cli.md
 [hotkeys]
 "Primary+Shift+Space" = "hints"
+# "Primary+Shift+F" = "hints --search --confirm-on-label"   # Search-first: type the element's own words
+"Primary+Shift+T" = "hints --strategy vision --split-word --search"   # Hint every VISIBLE word (OCR)
 "Primary+Shift+G" = "grid"
 "Primary+Shift+C" = "recursive_grid"
 "Primary+Shift+B" = "bisect"
@@ -118,7 +120,7 @@ text = "#E8EEFF"
 enabled = true
 strategy = "axtree"                         # axtree, vision, contour, segment
 capture_scope = "window"                    # window, screen
-hint_characters = "asdfghjkl"
+hint_characters = "0123456789"              # Steno: ascending-digit labels (01-09, 12-19, 23-29...) are one stroke
 label_direction = "normal"                  # normal, reverse
 max_depth = 50                              # 0 = unlimited
 include_menubar_hints = false
@@ -163,7 +165,7 @@ visible_check_enabled = false
 
 [hints.hotkeys]
 "Escape" = "idle"
-"/" = "action search_hints"
+"/" = "action search_hints --confirm-on-label"
 "Backspace" = "action backspace"
 "Tab" = "action cycle_hint"
 "Shift+Tab" = "action cycle_hint --backward"
@@ -246,8 +248,8 @@ targets = "words"                           # words, phrases, controls
 [grid]
 enabled = true
 capture_scope = "screen"                    # screen, window
-characters = "abcdefghijklmnpqrstuvwxyz"
-sublayer_keys = "abcdefghijklmnpqrstuvwxyz" # First 9 used (empty = infer from characters)
+characters = "0123456789"                   # Steno: digit cell labels
+sublayer_keys = "123456789"                 # First 9 used (3x3 subgrid)
 max_label_length = 4                        # 2-4
 row_labels = ""                             # Empty = infer from characters
 col_labels = ""                             # Empty = infer from characters
@@ -283,7 +285,7 @@ enabled = true
 capture_scope = "screen"                    # screen, window
 grid_cols = 3                               # >= 1
 grid_rows = 3                               # >= 1
-keys = "rtyfghvbn"                          # grid_cols * grid_rows chars
+keys = "123456789"                          # Steno: 3x3 keypad layout, one digit per level
 min_size_width = 1                          # px
 min_size_height = 1                         # px
 max_depth = 10                              # 1-20
