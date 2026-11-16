@@ -62,6 +62,10 @@
         # OpenAPI client generation
         'New-OpenApiClient'
         'Update-ModuleManifestExport'
+        # Kokoro helpers (hand-written; keep outside the generated block)
+        'Start-KokoroPlayback'
+        'Start-KokoroRead'
+
         # BEGIN generated: Kokoro
         'Clear-KokoroDefaultEndpoint'
         'ConvertTo-KokoroPhoneme'

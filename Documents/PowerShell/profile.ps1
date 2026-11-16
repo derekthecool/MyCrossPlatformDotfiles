@@ -1,6 +1,7 @@
 # PowerShell 7 (pwsh) profile
 
 #region Profile Timing
+$env:DOTS_PWSH_TIMING = $true
 if (-not $env:DOTS_PWSH_TIMING)
 {
     $profileTimings = [ordered]@{}
@@ -57,6 +58,7 @@ $PSDefaultParameterValues = @{
     'Import-Module:DisableNameChecking' = $true                # To not warning me of functions or scripts not using verb-noun names
     'Invoke-RestMethod:ContentType'     = 'application/json'   # This is almost always used
     'ConvertTo-Json:Compress'           = $true                # Prefer compact json string formatting
+    'Join-String:Separator'             = ', '                 # Using comma space separation by default e.g. "one, two, three"
 }
 if (-not $env:DOTS_PWSH_TIMING) { $profileTimings['AfterPSDefaults'] = Get-Date }
 
