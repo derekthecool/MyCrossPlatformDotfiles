@@ -1,0 +1,38 @@
+openapi: 3.1.0
+info:
+  title: Gadget Service
+  version: "2.0"
+  description: |
+    Line one.
+    Line two.
+paths:
+  /gadgets:
+    servers:
+      - url: https://gadgets.example.test
+      - url: https://paid.gadgets.example.test
+    get:
+      summary: List gadgets
+      description: >
+        Folded text
+        stays on one line.
+      parameters:
+        - name: kind
+          in: query
+          schema:
+            type: string
+            enum: [small, large, "extra large"]
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 50, default: 10 }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: { type: integer }
+                    name: { type: string }

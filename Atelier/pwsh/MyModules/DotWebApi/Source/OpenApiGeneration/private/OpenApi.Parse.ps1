@@ -8,7 +8,8 @@ function Import-OpenApiDocument
     Loads an OpenAPI 3.x / Swagger 2.0 document from a file or URL and normalises it to the 3.x shape.
 
     .OUTPUTS
-    PSCustomObject with Document (hashtable), Sha256 (of the raw bytes) and SourceName (leaf name only).
+    PSCustomObject with Document (hashtable), Sha256 (of the raw bytes, or of every file when the spec is split
+    over several), SourceName (leaf name only) and ExternalFiles (the other files that were read).
     #>
     [CmdletBinding(DefaultParameterSetName = 'Path')]
     param(
@@ -19,33 +20,88 @@ function Import-OpenApiDocument
         [uri]$Uri
     )
 
-    if ($PSCmdlet.ParameterSetName -eq 'Path')
+    $location = if ($PSCmdlet.ParameterSetName -eq 'Path')
     {
-        $resolved = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Path)
-        if (-not (Test-Path -LiteralPath $resolved -PathType Leaf))
-        {
-            throw "OpenAPI document not found: $resolved"
-        }
-        $bytes = [System.IO.File]::ReadAllBytes($resolved)
-        $text = [System.Text.Encoding]::UTF8.GetString($bytes).TrimStart([char]0xFEFF)
-        $sourceName = Split-Path -Path $resolved -Leaf
+        $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Path)
     } else
     {
-        $response = Invoke-WebRequest -Uri $Uri -ErrorAction Stop
+        $Uri.AbsoluteUri
+    }
+    $source = Read-OpenApiSource -Location $location
+    $sourceName = $source.SourceName
+    $document = $source.Document
+    $hash = $source.Sha256
+    $externalFiles = @()
+
+    if ($document.Contains('swagger') -and "$($document['swagger'])" -like '2.*')
+    {
+        $document = ConvertFrom-OpenApiV2Document -Document $document
+    } elseif (-not $document.Contains('openapi'))
+    {
+        throw "$sourceName has neither an 'openapi' nor a 'swagger' version field."
+    } elseif ("$($document['openapi'])" -notmatch '^3\.')
+    {
+        throw "Unsupported OpenAPI version '$($document['openapi'])'. Supported: 3.0.x, 3.1.x and Swagger 2.0."
+    } else
+    {
+        # Specs split over several files are folded into one document (and one combined hash).
+        $bundle = Merge-OpenApiExternalReference -Document $document -Location $location -RootSha256 $hash
+        $hash = $bundle.Sha256
+        $externalFiles = $bundle.Files
+    }
+
+    [pscustomobject]@{
+        Document      = $document
+        Sha256        = $hash
+        SourceName    = $sourceName
+        ExternalFiles = @($externalFiles)
+    }
+}
+
+function Read-OpenApiSource
+{
+    <#
+    .SYNOPSIS
+    Reads and parses one JSON or YAML document from a file path or http(s) URL.
+
+    .DESCRIPTION
+    YAML needs ConvertFrom-Yaml from the powershell-yaml module (listed in Atelier/pwsh/Bootstrap-RequiredModules.ps1).
+
+    .OUTPUTS
+    PSCustomObject with Document (hashtable), Sha256 (of the raw bytes) and SourceName (leaf name only).
+    #>
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$Location
+    )
+
+    if ($Location -match '^https?://')
+    {
+        $uri = [uri]$Location
+        $response = Invoke-WebRequest -Uri $uri -ErrorAction Stop
         $text = if ($response.Content -is [byte[]]) { [System.Text.Encoding]::UTF8.GetString($response.Content) } else { [string]$response.Content }
         $bytes = [System.Text.Encoding]::UTF8.GetBytes($text)
-        $sourceName = $Uri.Segments[-1]
+        $sourceName = $uri.Segments[-1]
         if (-not $sourceName -or $sourceName -eq '/')
         {
-            $sourceName = $Uri.Host
+            $sourceName = $uri.Host
         }
+    } else
+    {
+        if (-not (Test-Path -LiteralPath $Location -PathType Leaf))
+        {
+            throw "OpenAPI document not found: $Location"
+        }
+        $bytes = [System.IO.File]::ReadAllBytes($Location)
+        $text = [System.Text.Encoding]::UTF8.GetString($bytes).TrimStart([char]0xFEFF)
+        $sourceName = Split-Path -Path $Location -Leaf
     }
 
     $sha = [System.Security.Cryptography.SHA256]::HashData($bytes)
     $hash = [System.BitConverter]::ToString($sha).Replace('-', '').ToLowerInvariant()
 
-    $trimmed = $text.TrimStart()
-    if ($trimmed.StartsWith('{'))
+    if ($text.TrimStart().StartsWith('{'))
     {
         try
         {
@@ -58,20 +114,19 @@ function Import-OpenApiDocument
     {
         if (-not (Get-Command -Name ConvertFrom-Yaml -ErrorAction SilentlyContinue))
         {
-            throw "$sourceName is not JSON and ConvertFrom-Yaml is not available. Install the powershell-yaml module or supply a JSON document."
+            throw "$sourceName is not JSON and ConvertFrom-Yaml is not available. Install the powershell-yaml module (Install-PSResource powershell-yaml -TrustRepository) or supply a JSON document."
         }
-        $document = $text | ConvertFrom-Yaml -Ordered
+        try
+        {
+            $document = $text | ConvertFrom-Yaml -Ordered -ErrorAction Stop
+        } catch
+        {
+            throw "Could not parse $sourceName as YAML: $($_.Exception.Message)"
+        }
     }
-
-    if ($document.Contains('swagger') -and "$($document['swagger'])" -like '2.*')
+    if ($document -isnot [System.Collections.IDictionary])
     {
-        $document = ConvertFrom-OpenApiV2Document -Document $document
-    } elseif (-not $document.Contains('openapi'))
-    {
-        throw "$sourceName has neither an 'openapi' nor a 'swagger' version field."
-    } elseif ("$($document['openapi'])" -notmatch '^3\.')
-    {
-        throw "Unsupported OpenAPI version '$($document['openapi'])'. Supported: 3.0.x, 3.1.x and Swagger 2.0."
+        throw "$sourceName does not contain a mapping at its top level."
     }
 
     [pscustomobject]@{

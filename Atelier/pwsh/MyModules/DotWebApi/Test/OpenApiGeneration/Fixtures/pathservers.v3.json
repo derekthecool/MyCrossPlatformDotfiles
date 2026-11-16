@@ -1,0 +1,17 @@
+{
+  "openapi": "3.1.0",
+  "info": { "title": "Path Servers", "version": "1.0" },
+  "paths": {
+    "/b/things": {
+      "servers": [{ "url": "https://b.example.test/v2" }],
+      "get": { "summary": "List things", "responses": { "200": { "description": "OK" } } }
+    },
+    "/a/things": {
+      "get": {
+        "summary": "List other things",
+        "servers": [{ "url": "https://a.example.test" }],
+        "responses": { "200": { "description": "OK" } }
+      }
+    }
+  }
+}

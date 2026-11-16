@@ -1,0 +1,49 @@
+{
+  "openapi": "3.0.3",
+  "info": { "title": "Split Demo", "version": "1.0" },
+  "servers": [{ "url": "https://split.example.test/api" }],
+  "paths": {
+    "/gadgets": {
+      "get": {
+        "summary": "List gadgets",
+        "parameters": [
+          { "$ref": "./parts/parameters/limit.json" },
+          { "$ref": "./parts/common.json#/components/parameters/Page" }
+        ],
+        "responses": { "200": { "$ref": "./parts/responses/gadget_list.json" } }
+      },
+      "post": {
+        "summary": "Create gadget",
+        "requestBody": { "$ref": "./parts/requestBodies/new_gadget.json" },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": { "application/json": { "schema": { "$ref": "./parts/schemas/gadget.json" } } }
+          }
+        }
+      }
+    },
+    "/gadgets/{id}": {
+      "get": {
+        "summary": "Get gadget",
+        "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "./parts/schemas/gadget.json" },
+                "examples": { "sample": { "$ref": "./parts/examples/never-read.json" } }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Item": { "type": "object", "properties": { "root": { "type": "string" } } }
+    }
+  }
+}

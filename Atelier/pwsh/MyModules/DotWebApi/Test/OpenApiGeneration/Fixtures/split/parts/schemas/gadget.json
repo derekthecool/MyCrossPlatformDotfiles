@@ -1,0 +1,10 @@
+{
+  "type": "object",
+  "required": ["name"],
+  "properties": {
+    "name": { "type": "string", "description": "Gadget name" },
+    "size": { "type": "integer" },
+    "children": { "type": "array", "items": { "$ref": "#" } },
+    "tag": { "$ref": "../common.json#/components/schemas/Item" }
+  }
+}

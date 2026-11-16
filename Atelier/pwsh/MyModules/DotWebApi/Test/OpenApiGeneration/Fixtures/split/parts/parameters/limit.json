@@ -1,0 +1,1 @@
+{ "name": "limit", "in": "query", "description": "Page size", "schema": { "type": "integer", "minimum": 1, "maximum": 100 } }
