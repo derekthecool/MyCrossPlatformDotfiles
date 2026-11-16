@@ -48,7 +48,27 @@ function Get-OpenApiServerInfo
     $server = @($Document['servers']) | Where-Object { $_ } | Select-Object -First 1
     if (-not $server -or -not $server['url'])
     {
-        return $result
+        # Some specs only declare servers on a path item or operation; the first one found (paths sorted) is the default.
+        $server = $null
+        foreach ($path in @($Document['paths'].Keys | Sort-Object))
+        {
+            $item = $Document['paths'][$path]
+            if ($item -isnot [System.Collections.IDictionary])
+            {
+                continue
+            }
+            $found = @($item['servers']) + @('get', 'put', 'post', 'delete', 'patch', 'head', 'options' | ForEach-Object { if ($item[$_] -is [System.Collections.IDictionary]) { $item[$_]['servers'] } }) |
+                Where-Object { $_ -is [System.Collections.IDictionary] -and $_['url'] } | Select-Object -First 1
+            if ($found)
+            {
+                $server = $found
+                break
+            }
+        }
+        if (-not $server)
+        {
+            return $result
+        }
     }
 
     $url = [string]$server['url']

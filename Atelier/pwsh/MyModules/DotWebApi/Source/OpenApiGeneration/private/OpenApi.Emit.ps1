@@ -49,6 +49,7 @@ function Get-OpenApiExampleValue
     switch -Wildcard ($Descriptor.Type)
     {
         '`[string`]' { return "'example'" }
+        '`[securestring`]' { return '(Read-Host -AsSecureString)' }
         '`[int`]' { return '1' }
         '`[long`]' { return '1' }
         '`[double`]' { return '1.0' }
@@ -119,6 +120,10 @@ function Format-OpenApiParameterHelp
     ".PARAMETER $($Descriptor.Name)"
     $text = if ($Descriptor.Description) { $Descriptor.Description } else { "The '$($Descriptor.Wire)' $($Descriptor.In) value." }
     Format-OpenApiHelpText -Text $text -Indent ''
+    if ($Descriptor.IsSecret)
+    {
+        'A SecureString (see ConvertTo-SecureString); it is converted to text only to build the request.'
+    }
     if ($Descriptor.Allowed)
     {
         "Allowed values: $((@($Descriptor.Allowed) | ForEach-Object { [string]$_ }) -join ', ')."
@@ -339,7 +344,12 @@ function ConvertTo-OpenApiFunctionSource
     $out.Add('    process')
     $out.Add('    {')
 
-    $valueOf = { param($d) if ($d.IsSwitch) { "[bool]`$$($d.Name)" } else { "`$$($d.Name)" } }
+    $valueOf = {
+        param($d)
+        if ($d.IsSwitch) { "[bool]`$$($d.Name)" }
+        elseif ($d.IsSecret) { "[System.Net.NetworkCredential]::new('', `$$($d.Name)).Password" }
+        else { "`$$($d.Name)" }
+    }
 
     $request = [System.Collections.Generic.List[object]]::new()
     $request.Add(@('ClientInfo', "`$Script:$ClientVariable"))

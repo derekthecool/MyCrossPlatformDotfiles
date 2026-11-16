@@ -254,6 +254,10 @@ function ConvertTo-OpenApiQueryValue
     {
         return $Value.ToString().ToLowerInvariant()
     }
+    if ($Value -is [securestring])
+    {
+        return [System.Net.NetworkCredential]::new('', $Value).Password
+    }
     if ($Value -is [datetime])
     {
         return $Value.ToString('o')
@@ -314,6 +318,13 @@ function ConvertTo-OpenApiBodyTable
                 $wire = if ($PropertyMap.ContainsKey($property.Name)) { $PropertyMap[$property.Name] } else { $property.Name }
                 $table[$wire] = $property.Value
             }
+        }
+    }
+    foreach ($key in @($table.Keys))
+    {
+        if ($table[$key] -is [securestring])
+        {
+            $table[$key] = [System.Net.NetworkCredential]::new('', $table[$key]).Password
         }
     }
     $table

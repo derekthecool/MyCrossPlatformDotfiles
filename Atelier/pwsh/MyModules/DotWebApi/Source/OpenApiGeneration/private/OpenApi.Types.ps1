@@ -236,15 +236,22 @@ function New-OpenApiParameterDescriptor
     $mapped = Get-OpenApiPowerShellType -TypeInfo $TypeInfo -Mandatory:$Mandatory
     $text = if ($Description) { $Description } elseif ($TypeInfo.Description) { $TypeInfo.Description } elseif ($TypeInfo.Title) { $TypeInfo.Title } else { $null }
 
+    # A password field is a SecureString parameter; it becomes text only when the request is built.
+    $isSecret = $mapped.Type -eq '[string]' -and -not $TypeInfo.Enum -and $In -in 'query', 'header', 'body' -and
+    ($TypeInfo.Format -eq 'password' -or ($Wire -replace '[-_ ]', '') -imatch '^(old|new|current|confirm|repeat)?(password|passwd|pwd|passphrase)$')
+    $type = if ($isSecret) { '[securestring]' } else { $mapped.Type }
+    $validate = if ($isSecret) { @() } else { $mapped.Validate }
+
     [pscustomobject]@{
         Name        = $null
         Wire        = $Wire
         In          = $In
         TypeInfo    = $TypeInfo
-        Type        = $mapped.Type
+        Type        = $type
         IsSwitch    = $mapped.IsSwitch
         IsFile      = $mapped.IsFile
-        Validate    = $mapped.Validate
+        IsSecret    = $isSecret
+        Validate    = $validate
         Mandatory   = $Mandatory
         Alias       = @()
         Csv         = $false

@@ -163,7 +163,7 @@ function Get-OpenApiSingularWord
     )
 
     $lower = $Word.ToLowerInvariant()
-    if ($lower.Length -le 3 -or $lower -match '(ss|us|is|ics|news|series|species|alias|canvas|atlas|bias|gas|lens|status)$')
+    if ($lower.Length -le 3 -or $lower -match '(ss|us|is|ics|news|series|species|alias|canvas|atlas|bias|gas|lens|status|stats)$')
     {
         return $Word
     }
@@ -512,10 +512,73 @@ function Get-OpenApiVerbNoun
 
     $nounWords[-1] = Get-OpenApiSingularWord -Word $nounWords[-1]
 
+    # 'Create new user' is New-User, and a lone 'Restart' acting on the API itself is Restart-<Prefix>.
+    if ($nounWords.Count -gt 1 -and $nounWords[0] -ieq $verb)
+    {
+        $nounWords = @($nounWords | Select-Object -Skip 1)
+    } elseif ($nounWords.Count -eq 1 -and $nounWords[0] -ieq $verb)
+    {
+        $nounWords = @()
+    }
+
     [pscustomobject]@{
         Verb = $verb
         Noun = ConvertTo-OpenApiPascalCase -Word $nounWords
     }
+}
+
+function Get-OpenApiPathSuffix
+{
+    <#
+    .SYNOPSIS
+    Words from a path's fixed segments that the noun does not already say, used to tell two operations apart.
+
+    .DESCRIPTION
+    '/debug_replay/start_from_export' for the noun 'DebugReplay' gives 'FromExport'; '/preview/{f}/thumbnail.webp'
+    for 'PreviewThumbnail' gives 'Webp'. Returns an empty string when the noun already covers the whole path.
+    #>
+    [CmdletBinding()]
+    [OutputType([string])]
+    param(
+        [Parameter(Mandatory)]
+        [string]$Path,
+
+        [Parameter(Mandatory)]
+        [AllowEmptyString()]
+        [string]$Noun
+    )
+
+    $known = @($Noun -csplit '(?=[A-Z])' | Where-Object { $_ } | ForEach-Object { (Get-OpenApiSingularWord -Word $_).ToLowerInvariant() })
+    $words = foreach ($segment in $Path.Split('/'))
+    {
+        $segment = ($segment -replace '\{[^}]*\}', '').Trim('.')
+        if (-not $segment)
+        {
+            continue
+        }
+        $extension = $null
+        if ($segment -match '^(?<base>.+)\.(?<ext>[A-Za-z0-9]{2,5})$')
+        {
+            $segment = $Matches['base']
+            $extension = $Matches['ext']
+        }
+        Split-OpenApiWord -Text $segment
+        if ($extension)
+        {
+            $extension
+        }
+    }
+    $left = [System.Collections.Generic.List[string]]::new()
+    foreach ($word in $words)
+    {
+        $singular = (Get-OpenApiSingularWord -Word $word).ToLowerInvariant()
+        if ($singular -in $known -or $singular -match '^v[0-9]+$' -or $singular -eq 'api' -or $left -contains $word)
+        {
+            continue
+        }
+        $left.Add($word)
+    }
+    ConvertTo-OpenApiPascalCase -Word @($left | Select-Object -Last 2)
 }
 
 function Resolve-OpenApiFunctionName
@@ -525,9 +588,9 @@ function Resolve-OpenApiFunctionName
     Assigns a unique Verb-PrefixNoun function name to every operation record.
 
     .DESCRIPTION
-    Duplicates are resolved deterministically: the record whose path ends in a path parameter gets
-    'ById', then the HTTP method name, then a number. -NameOverride (keyed by operationId or 'METHOD /path')
-    wins over everything.
+    Duplicates are resolved deterministically. The shortest path keeps the plain name; the others try 'ById'
+    (path ends in a parameter), the path words the noun lacks, 'By<FirstKey>' (path starts with a parameter),
+    the HTTP method name, then a number. -NameOverride (keyed by operationId or 'METHOD /path') wins over everything.
 
     .PARAMETER Operation
     Records with Path, Method, Summary, OperationId.
@@ -593,7 +656,8 @@ function Resolve-OpenApiFunctionName
         $draft.Record | Add-Member -NotePropertyName Noun -NotePropertyValue ($draft.Override -split '-', 2)[1] -Force
     }
 
-    $ordered = $drafts | Where-Object { -not $_.Override } | Sort-Object -Property @{ Expression = { $_.EndsWithParam } }, @{ Expression = { $_.Record.Path } }, @{ Expression = { $_.Record.Method } }
+    # The plainest name goes to the operation with the shortest path, so '/events' beats '/events/summary'.
+    $ordered = $drafts | Where-Object { -not $_.Override } | Sort-Object -Property @{ Expression = { $_.EndsWithParam } }, @{ Expression = { @($_.Record.Path.Split('/') | Where-Object { $_ }).Count } }, @{ Expression = { $_.Record.Path.Length } }, @{ Expression = { $_.Record.Path } }, @{ Expression = { $_.Record.Method } }
     foreach ($draft in $ordered)
     {
         $candidates = [System.Collections.Generic.List[string]]::new()
@@ -606,6 +670,17 @@ function Resolve-OpenApiFunctionName
             $isIdLike = $parameterWords[-1] -ieq 'id' -or ($parameterWords -join '') -ieq $lastNounWord -or ($parameterWords -join '') -ieq (Get-OpenApiSingularWord -Word $lastNounWord)
             $suffix = if ($isIdLike) { 'ById' } else { 'By' + (ConvertTo-OpenApiPascalCase -Word $parameterWords) }
             $candidates.Add("$($draft.Verb)-$($draft.Noun)$suffix")
+        }
+        # Words the path says that the noun does not ('/debug_replay/start_from_export' -> ...FromExport).
+        $pathSuffix = Get-OpenApiPathSuffix -Path $draft.Record.Path -Noun $draft.Noun.Substring($Prefix.Length)
+        if ($pathSuffix)
+        {
+            $candidates.Add("$($draft.Verb)-$($draft.Noun)$pathSuffix")
+        }
+        # '/{camera}/recordings/summary' next to '/recordings/summary' is the per-camera one.
+        if ($draft.Record.Path -match '^/\{(?<key>[^}/]+)\}')
+        {
+            $candidates.Add("$($draft.Verb)-$($draft.Noun)By$(ConvertTo-OpenApiPascalCase -Word @(Split-OpenApiWord -Text $Matches['key']))")
         }
         $candidates.Add("$($draft.Verb)-$($draft.Noun)$($draft.Record.Method.Substring(0, 1).ToUpperInvariant() + $draft.Record.Method.Substring(1).ToLowerInvariant())")
         $chosen = $candidates | Where-Object { $used.Add($_) } | Select-Object -First 1
